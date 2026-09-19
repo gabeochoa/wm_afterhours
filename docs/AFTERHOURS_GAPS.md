@@ -201,7 +201,9 @@ Intrinsic size sums unrounded gaps, then placement snaps accumulated positions. 
 
 ### Validation and checkbox follow-ups
 
-`enforce_min_touch_target` is exposed but has no registered validator. `ClearViolations`/`RenderOverlay` use the default collection and miss markers on split UI children. Native checkmarks still depend on a V glyph; WM draws its own. Test flag off/on, split/single collection cleanup, and custom-font checked/disabled controls. See the root todo for source references.
+Fixed: minimum click/drag bounds validation, UI-collection marker cleanup, and overlay placement before frame completion. The faulty assumptions were that exposing a flag registered its validator and that UI children lived in the default collection. Both collection modes pass; try `touch_targets` for thresholds and correction/cleanup.
+
+Remaining: native checkmarks depend on a V glyph; WM draws its own. Test a native replacement with custom fonts, scaling and disabled states.
 
 ### Text measurement and rendering use different font inputs
 

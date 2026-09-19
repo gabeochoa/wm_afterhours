@@ -26,8 +26,8 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ## Library follow-ups retained from earlier reviews
 
-- [ ] Connect `enforce_min_touch_target` to an opt-in validator of interactive hit bounds; its current flag has no consumer. Cover visibility, disabled policy, configurable thresholds and both collection modes.
-- [ ] Use the UI collection for validation-marker cleanup and overlays; default-collection queries miss split UI children. Test highlights clearing after correction, without processing the shared root twice.
+- [x] Validate minimum click/drag target sizes with configurable thresholds, visibility and disabled exclusions, and both collection modes. Try `touch_targets`.
+- [x] Use the UI collection for validation-marker cleanup and overlays; corrected targets clear their highlights without processing the shared root twice.
 - [ ] Provide a font-independent native checkmark or drawing hook while preserving string overrides. WM currently draws its own mark. Test custom fonts, scaling and disabled states.
 
 ## Afterhours-dependent work (deferred)

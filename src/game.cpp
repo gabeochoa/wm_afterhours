@@ -161,6 +161,7 @@ void game() {
     afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
+    afterhours::ui::validation::register_render_overlay<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -168,7 +169,7 @@ void game() {
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
-  afterhours::ui::validation::register_systems<InputAction>(systems);
+  afterhours::ui::validation::register_update_systems(systems);
 
   while (running && !raylib::WindowShouldClose()) {
     float dt = raylib::GetFrameTime();
@@ -285,6 +286,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
+    afterhours::ui::validation::register_render_overlay<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -294,7 +296,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
-  afterhours::ui::validation::register_systems<InputAction>(systems);
+  afterhours::ui::validation::register_update_systems(systems);
 
   TestApp test = it->second();
   test_system_ptr->set_test(test_name, std::move(test));
@@ -452,6 +454,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
     afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
+    afterhours::ui::validation::register_render_overlay<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -559,7 +562,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
 
-  afterhours::ui::validation::register_systems<InputAction>(systems);
+  afterhours::ui::validation::register_update_systems(systems);
 
   while (running && !raylib::WindowShouldClose()) {
 #ifdef AFTER_HOURS_ENABLE_MCP
@@ -699,6 +702,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
+    afterhours::ui::validation::register_render_overlay<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -999,7 +1003,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   afterhours::testing::register_unknown_handler(systems);
   afterhours::testing::register_cleanup(systems);
 
-  afterhours::ui::validation::register_systems<InputAction>(systems);
+  afterhours::ui::validation::register_update_systems(systems);
 
   // Main E2E loop
   // In headless mode, skip WindowShouldClose check (no window exists)

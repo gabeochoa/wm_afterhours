@@ -1,0 +1,37 @@
+goto_screen touch_targets
+resize 1280 720
+wait 0.3
+assert_within_parents
+assert_ui touch_status_0 text="Too small"
+assert_ui touch_status_1 text="Pass"
+assert_ui touch_status_2 text="Pass"
+assert_ui touch_status_3 text="Skipped"
+click_ui touch_sample_0
+wait 0.2
+assert_ui touch_clicks text="Button presses: 1"
+click_ui touch_resize
+wait 0.2
+assert_ui touch_sample_0 w=48 h=48
+assert_ui touch_status_0 text="Pass"
+click_ui touch_minimum
+wait 0.2
+assert_ui touch_status_1 text="Too small"
+assert_ui touch_status_2 text="Pass"
+click_ui touch_enabled
+wait 0.2
+assert_ui touch_status_1 text="Validation off"
+click_ui touch_enabled
+wait 0.2
+assert_ui touch_status_1 text="Too small"
+click_ui touch_minimum
+wait 0.2
+assert_ui touch_status_1 text="Pass"
+click_ui touch_sample_3
+wait 0.2
+assert_ui touch_clicks text="Button presses: 1"
+goto_screen buttons
+wait 0.2
+goto_screen touch_targets
+wait 0.3
+assert_ui touch_status_0 text="Too small"
+assert_ui touch_status_1 text="Pass"
