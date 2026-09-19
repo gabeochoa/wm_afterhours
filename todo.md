@@ -28,7 +28,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [x] Validate minimum click/drag target sizes with configurable thresholds, visibility and disabled exclusions, and both collection modes. Try `touch_targets`.
 - [x] Use the UI collection for validation-marker cleanup and overlays; corrected targets clear their highlights without processing the shared root twice.
-- [ ] Provide a font-independent native checkmark or drawing hook while preserving string overrides. WM currently draws its own mark. Test custom fonts, scaling and disabled states.
+- [x] Native checkbox marks work independently of fonts, preserve string overrides, and respect sizing, disabled colors and opacity. WM uses them in `checkboxes`.
 
 ## Afterhours-dependent work (deferred)
 

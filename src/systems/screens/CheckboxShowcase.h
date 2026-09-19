@@ -42,16 +42,6 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     last_change = "Demo defaults restored";
   }
 
-  static void draw_mark(RectangleType r, bool checked, afterhours::Color color) {
-    const float stroke = r.width / 11.f;
-    raylib::DrawRectangleLinesEx(r, stroke, color);
-    if (!checked) return;
-    raylib::DrawLineEx({r.x + r.width * .20f, r.y + r.height * .50f},
-                      {r.x + r.width * .43f, r.y + r.height * .73f}, stroke, color);
-    raylib::DrawLineEx({r.x + r.width * .43f, r.y + r.height * .73f},
-                      {r.x + r.width * .82f, r.y + r.height * .25f}, stroke, color);
-  }
-
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     const auto theme = afterhours::ui::theme_presets::neon_dark();
@@ -82,11 +72,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(subdued ? muted : ink)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    const auto mark = [&](afterhours::Entity &parent, float x, float y, bool checked, bool disabled) {
+    const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled) {
       div(context, mk(parent, id++), box(x, y, 22, 22).with_ignore_pointer_events()
-          .with_on_draw_fg([checked, color = disabled ? afterhours::Color{139, 154, 177, 255} : ink](RectangleType r) {
-            draw_mark(r, checked, color);
-          }));
+          .with_border(disabled ? afterhours::colors::darken(ink, .5f) : ink, pixels(2 * s)));
     };
     const auto check_row = [&](afterhours::Entity &parent, bool &value, const std::string &text,
                                float y, afterhours::Color background, const std::string &name,
@@ -96,10 +84,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
       if (control.has<HasCheckboxState>()) control.get<HasCheckboxState>().on = value;
       const auto changed = checkbox(context, pair, value,
           box(20, y, 516, 44).with_label("").with_custom_background(background)
-              .with_checkbox_indicators("", "").with_corner_radius(6 * s)
+              .with_alignment(TextAlignment::Left).with_text_inset(14 * s, 0)
+              .with_custom_text_color(ink).with_corner_radius(6 * s)
               .with_font("AtkinsonMock", pixels(23 * s)).with_disabled(disabled)
               .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
-      mark(parent, 34, y + 11, value, disabled);
+      outline(parent, 34, y + 11, disabled);
       label(parent, text, 72, y + 7, 334, 30, 23, name + "_label");
       label(parent, disabled ? (lock_reason.empty() ? "Disabled" : lock_reason) : (value ? "Checked" : "Unchecked"),
             422, y + 10, 104, 26, 17, name + "_state", true);
@@ -141,11 +130,15 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < box_values.size(); ++i) {
       const float x = 20 + static_cast<float>(i) * 129;
       label(left_col.ent(), std::to_string(i + 1) + " / " + role_names[i], x, 282, 120, 23, 17, "", true);
-      if (primitive::toggle_button(context, mk(left_col.ent(), id++), box(x + 38, 311, 44, 44)
+      auto pair = mk(left_col.ent(), id++);
+      auto &control = deref(pair).first;
+      if (control.has<HasCheckboxState>()) control.get<HasCheckboxState>().on = *box_values[i];
+      if (checkbox(context, pair, *box_values[i], box(x + 38, 311, 44, 44)
           .with_label("").with_background(box_roles[i]).with_corner_radius(3 * s)
-          .with_click_activation(ClickActivationMode::Release).with_debug_name("nl_option_" + std::to_string(i + 1)), *box_values[i]))
+          .with_custom_text_color(ink).with_font("AtkinsonMock", pixels(23 * s))
+          .with_click_activation(ClickActivationMode::Release).with_debug_name("nl_option_" + std::to_string(i + 1))))
         last_change = "Box " + std::to_string(i + 1) + (*box_values[i] ? " checked" : " unchecked");
-      mark(left_col.ent(), x + 49, 322, *box_values[i], false);
+      outline(left_col.ent(), x + 49, 322, false);
       label(left_col.ent(), *box_values[i] ? "Checked" : "Unchecked", x, 363, 120, 23, 18,
             "nl_state_" + std::to_string(i + 1), true);
     }

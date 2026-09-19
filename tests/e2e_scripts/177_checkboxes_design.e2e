@@ -19,6 +19,13 @@ assert_ui nl_option_1 w=44 h=44
 assert_ui nl_option_4 w=44 h=44
 assert_within_parents
 screenshot checkboxes_design
+click_ui nl_option_2
+wait 0.2
+expect_checkbox nl_option_2 checked
+expect_text "Box 2 checked"
+click_ui nl_option_2
+wait 0.2
+expect_checkbox nl_option_2 unchecked
 click_ui checkbox_match_roles
 wait 0.2
 expect_checkbox labeled_primary checked

@@ -203,7 +203,9 @@ Intrinsic size sums unrounded gaps, then placement snaps accumulated positions. 
 
 Fixed: minimum click/drag bounds validation, UI-collection marker cleanup, and overlay placement before frame completion. The faulty assumptions were that exposing a flag registered its validator and that UI children lived in the default collection. Both collection modes pass; try `touch_targets` for thresholds and correction/cleanup.
 
-Remaining: native checkmarks depend on a V glyph; WM draws its own. Test a native replacement with custom fonts, scaling and disabled states.
+Fixed: native checkbox marks now use drawn strokes in both renderers. A V glyph was assumed to be a checkmark across fonts. The checkbox also inherited its row’s left alignment and lost the caller’s text color role and inset; the indicator now receives those settings explicitly. WM uses the native mark, with custom text and empty overrides retained.
+
+Remaining: uniform borders discard configured thickness in both renderers (`draw_rectangle_rounded_lines` receives no width). WM’s native checkbox outlines are thinner than its old 2px drawing. Pass the resolved width through and test at multiple scales.
 
 ### Text measurement and rendering use different font inputs
 
