@@ -9,7 +9,7 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 - [x] Optional queued execution: own submitted arguments, drain commands at an app-chosen safe point, and report results afterward. Cartographer and Puzzle dispatch through later systems.
 - [x] Optional overlay controls: opening/closing, focus restoration, and an app-specified input layer so typing cannot trigger gameplay.
 - [x] Usage hints and command availability with an explanation; recheck before immediate or queued execution. WM demonstrates this with `reset`.
-- [ ] Reusable command picker without the output log, supporting categories, shortcut labels, and fuzzy search for Hanabi and Wordproc.
+- [x] Separate command-picker plugin with categories, shortcut labels, fuzzy search and a virtual list. Try the WM `command_picker` screen.
 
 - [ ] Respect render layers when drawing scrollbars over modal overlays; see [gap](docs/AFTERHOURS_GAPS.md#scrollbars-over-modal-overlays).
 

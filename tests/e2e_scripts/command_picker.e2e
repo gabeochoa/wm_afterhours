@@ -1,0 +1,74 @@
+goto_screen command_picker
+resize 1280 720
+wait 0.4
+expect_text "Command picker"
+expect_focused command_picker_search
+expect_text "Appearance"
+expect_text "Blue accent"
+screenshot command_picker
+focus_ui command_picker_search
+type "grn"
+wait 0.2
+expect_text "Green accent"
+expect_no_text "Blue accent"
+key ENTER
+wait 0.3
+expect_text "Accent: Green"
+key ESCAPE
+wait 0.2
+type "reset"
+wait 0.2
+expect_text "Unavailable: Counter is already zero"
+key ENTER
+wait 0.3
+expect_text "Counter: 0"
+key ESCAPE
+wait 0.2
+type "counter"
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "Counter: 1"
+key DOWN
+key ENTER
+wait 0.3
+expect_text "Counter: 0"
+key ESCAPE
+wait 0.2
+type "toggle"
+wait 0.2
+expect_text "G"
+click_ui command_picker_row_0
+wait 0.3
+expect_text "Grid: on"
+focus_ui command_picker_search
+key ESCAPE
+wait 0.2
+type "zoom 200"
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "Zoom: 200%"
+key ESCAPE
+wait 0.2
+key UP
+wait 0.3
+expect_text "Zoom to 75%"
+assert_within_parents
+screenshot command_picker_scrolled
+key ENTER
+wait 0.3
+expect_text "Zoom: 75%"
+type "zzzzzz"
+wait 0.2
+expect_text "No matching commands"
+key ENTER
+wait 0.2
+expect_text "Zoom: 75%"
+screenshot command_picker_empty
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot command_picker_1080
