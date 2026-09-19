@@ -27,13 +27,13 @@ Missing-glyph drawing, automatic recovery and general error reporting remain def
 
 Cmd was incorrectly treated as Ctrl, and the handler ignored Super. Hanabi accepted Ctrl to work around this, masking physical-modifier differences. Cmd/Super/Win/Meta now inject Super; Ctrl stays distinct. Reset, skip and timeout also clear held keys. `e2e_key_command_test` covers aliases, combined chords, release and cancellation. Hanabi's workaround remains consumer-owned.
 
-### UP-19: Parse quoted property values consistently in E2E commands
+### UP-19: Quoted E2E arguments fixed
 
-- Evidence: `floatinghotel/docs/afterhours-gaps.md:557` reports `assert_ui file_header_label "text=a-small.cpp  +1  (new file)"` being parsed as an unknown property beginning with a quote. Its current `tests/review_50/item_21.e2e` uses space-free text properties instead.
-- Library: the generic branch at `src/plugins/e2e_testing/runner.h:245` splits arguments with stream extraction. Specialized commands implement their own quoting rules, so a property value containing spaces cannot be expressed consistently.
-- Assumption: whitespace always separates arguments, even inside quoted text. This can prevent a test from naming the value visibly on screen.
-- Change: a shared argument tokenizer with a documented escape rule; preserve commands intentionally consuming the rest of the line as free text.
-- Closure: quoted multiword values, embedded quotes, backslashes, empty values, multiple properties, malformed input and existing scripts with literal text.
+`assert_ui file_header_label "text=a-small.cpp  +1  (new file)"` failed because generic commands split on whitespace while built-ins used separate quote rules. I assumed quoting worked across commands.
+
+A shared reader now handles quoted arguments, escaped quotes/backslashes and empty values. Free-text commands preserve unquoted input. Malformed quotes fail with a line number. Tests reproduce Floatinghotel's assertion through the actual handler and check batch error isolation.
+
+On Floatinghotel's next library bump, remove its second parse with `std::quoted` in `HandleShowToast`, `HandleNativeMenuAction` and `HandleExpectReviewExport` (`src/ecs/e2e_command_handlers.h`). Arguments now arrive decoded; parsing them again truncates multiword values. Its separate pinned checkout is unchanged.
 
 ### UP-20: Expose image and sprite tint through component configuration
 

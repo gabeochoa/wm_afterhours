@@ -19,7 +19,7 @@ These items are collection results, not implementation approvals. Source evidenc
 causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAPS.md#consumer-gap-refresh-2026-09-13).
 
 - [ ] **UP-17 follow-up:** Define missing-glyph rendering and atlas recovery. Atlas-independent measurement and its cache regression are now implemented; see `vendor/afterhours/docs/font-atlas-measurement.md`. Fallback drawing, automatic recovery and removal of Hanabi's guard remain deferred.
-- [ ] **UP-19:** Parse quoted E2E property values, escaped quotes and backslashes consistently. Floatinghotel cannot assert its multiword file-header property through the generic parser.
+- [x] **UP-19:** Shared E2E argument parsing handles quoted properties, escaped quotes/backslashes and empty values.
 - [ ] **UP-20:** Add native image/sprite tint configuration composed with opacity. Kart uses custom Raylib drawing for driver-colored sprites.
 - [ ] **UP-21:** Make immediate-renderer E2E text visibility respect ancestor clips, matching the already corrected batched path. Distinguish full visibility from partial visibility and text existence.
 - [ ] **UP-22:** Resolve semantic font tiers through the selected scaling mode so Adaptive zoom scales text with controls. Explicit screen-relative sizes should retain their meaning.
@@ -140,6 +140,8 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [ ] Review native rotation/curved text and grapheme-aware placement. WM's new typography composition demonstrates whole-word layout and optional motion only.
 
 ### Other project ownership
+
+- [ ] floatinghotel: on its next afterhours bump, remove redundant `std::quoted` parsing from the toast, native-menu and review-export E2E handlers. See UP-19 in [gaps](docs/AFTERHOURS_GAPS.md).
 
 - [ ] floatinghotel: replace its five pixel-intended fractional-roundness calls during its next library bump.
 - [ ] Reconcile shipped API claims in the five historical gap documents across floatinghotel, hanabi and the other consumers. Those repositories are outside this WM-only pass.

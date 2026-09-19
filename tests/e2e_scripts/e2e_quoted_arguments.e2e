@@ -1,0 +1,24 @@
+goto_screen terminal
+resize 1280 720
+wait 0.3
+assert_ui "terminal_open_overlay" "text=Open overlay (F2)" hidden=false
+assert_ui_text "Developer terminal" text="Developer terminal"
+focus_ui "terminal_input"
+type "clear"
+key ENTER
+wait 0.2
+type "echo 'He said \"hello\"'"
+expect_input_text "terminal_input" "echo 'He said \"hello\"'"
+key ENTER
+wait 0.2
+expect_text "He said \"hello\""
+assert_ui_text "He said \"hello\"" "text=He said \"hello\"" hidden=false
+type "C:\\new\\file.txt \"quoted\""
+expect_input_text "terminal_input" "C:\\new\\file.txt \"quoted\""
+select_all
+key BACKSPACE
+expect_input_text "terminal_input" ""
+type echo  literal "quotes" C:\new\file.txt
+expect_input_text terminal_input echo  literal "quotes" C:\new\file.txt
+select_all
+key BACKSPACE
