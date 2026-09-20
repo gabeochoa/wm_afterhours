@@ -23,7 +23,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     std::vector<Example> examples;
   };
   const std::vector<Group> groups{
-      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}}},
+      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
       {"navigation", "Navigation and overlays", {}},
       {"status", "Status and loading", {}},
       {"cards", "Cards and text", {}},
@@ -42,6 +42,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool icon_b = false;
   bool error = false;
   int submits = 0;
+  bool cleared = false;
+  int swap_index = 0;
 
   enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold };
 
@@ -53,6 +55,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     icon_b = false;
     error = false;
     submits = 0;
+    cleared = false;
+    swap_index = 0;
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
     afterhours::motion::anim(Key::Shake).from(0.f);
     afterhours::motion::anim(Key::ErrorHold).from(0.f);
@@ -295,6 +299,60 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 4, "Press Submit. The field shakes 0, +6, -6, +4, 0 px over 280 ms, shows the error, and clears it after 3 s.", 60, 190, 1100, 18, true);
       label(stage.ent(), 5, std::string("error: ") + (error ? "shown" : "clear"), 60, 230, 400, 20, false, "error_state");
       label(stage.ent(), 6, "submits: " + std::to_string(submits), 60, 260, 400, 20, false, "submit_count");
+    }
+    else if (slug == "input_clear") {
+      const motion::Timeline out{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      auto field = div(context, mk(stage.ent(), 1),
+                       box(60, 90, 420, 44).with_debug_name("clear_field").with_corner_radius(8 * s)
+                           .with_border(muted, 1.5f * s).with_custom_background(paper).with_clip_children());
+      div(context, mk(field.ent(), 0),
+          ComponentConfig{}.with_size({pixels(400 * s), pixels(44 * s)}).with_absolute_position(10 * s, 0.f)
+              .with_label("Search the transitions").with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(ink)
+              .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+              .with_debug_name("clear_text")
+              .on_state(cleared, {.translate_y = {0.f, 12.f * s}, .opacity = {1.f, 0.f}}, out));
+      div(context, mk(field.ent(), 1),
+          ComponentConfig{}.with_size({pixels(400 * s), pixels(44 * s)}).with_absolute_position(10 * s, 0.f)
+              .with_label("Type to search").with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(muted)
+              .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+              .with_debug_name("clear_placeholder")
+              .on_appear({.translate_y = -12.f * s, .opacity = 0.f})
+              .on_state(cleared, {.translate_y = {-12.f * s, 0.f}, .opacity = {0.f, 1.f}}, out));
+      if (tab(stage.ent(), 2, "Clear", 500, 90, 100, false, "clear_btn")) cleared = true;
+      if (tab(stage.ent(), 3, "Reset text", 612, 90, 130, false, "text_reset_btn")) cleared = false;
+      for (auto child_id : field.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (child.valid()) track_motion(child.asE());
+      }
+      label(stage.ent(), 4, "Clear drops the old text 12 px while it fades; the placeholder settles in from above. Fade only, no glow yet.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 5, std::string("text: ") + (cleared ? "cleared" : "present"), 60, 190, 400, 20, false, "clear_state");
+    } else if (slug == "text_swap") {
+      static const char *states[] = {"Saved", "Saving changes", "Could not save"};
+      const motion::Timeline swap{.keys = {{0.f, 0.f}, {0.15f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
+      const size_t stamp = static_cast<size_t>(swap_index);
+      const int previous = (swap_index + 2) % 3;
+      auto cell = div(context, mk(stage.ent(), 1), box(60, 90, 300, 36).with_debug_name("swap_cell").with_clip_children()
+                                                        .with_background(Theme::Usage::None));
+      div(context, mk(cell.ent(), 0),
+          ComponentConfig{}.with_size({pixels(300 * s), pixels(36 * s)}).with_absolute_position(0.f, 0.f)
+              .with_label(states[previous]).with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
+              .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+              .with_debug_name("swap_out")
+              .on_appear({.translate_y = -4.f * s, .opacity = 0.f})
+              .on_change(stamp, {.translate_y = {0.f, -4.f * s}, .opacity = {1.f, 0.f}}, swap));
+      div(context, mk(cell.ent(), 1),
+          ComponentConfig{}.with_size({pixels(300 * s), pixels(36 * s)}).with_absolute_position(0.f, 0.f)
+              .with_label(states[swap_index]).with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
+              .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+              .with_debug_name("swap_in")
+              .on_change(stamp, {.translate_y = {4.f * s, 0.f}, .opacity = {0.f, 1.f}}, swap));
+      if (tab(stage.ent(), 2, "Next state", 380, 88, 140, false, "swap_btn")) swap_index = (swap_index + 1) % 3;
+      for (auto child_id : cell.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (child.valid()) track_motion(child.asE());
+      }
+      label(stage.ent(), 3, "Next state lifts the old label 4 px as it fades; the new one rises in from 4 px below. 150 ms each, overlapping.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 4, "state: " + std::to_string(swap_index), 60, 190, 400, 20, false, "swap_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }
