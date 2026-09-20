@@ -1,0 +1,25 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_badge
+mouse_move 20 20
+wait 0.6
+expect_text "Notification badge"
+expect_text "badge: hidden"
+expect_text "motion: settled"
+click_ui badge_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "badge: shown"
+wait 2
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=376 y=258 w=18 h=18 tol=2 color=#ff7369
+screenshot transition_badge_shown
+click_ui badge_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "badge: hidden"
+wait 2
+expect_text "motion: settled"

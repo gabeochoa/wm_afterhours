@@ -609,7 +609,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (tab(stage.ent(), 1, "Show toast", 60, 84, 160, false, "toast_btn")) {
         toast_shown = true;
         ++toasts;
-        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.f, 1.f}}}).on_complete([this] { toast_shown = false; });
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; toast_shown = false; });
       }
       if (tab(stage.ent(), 2, "Dismiss", 232, 84, 120, false, "toast_dismiss")) toast_shown = false;
       auto toast = div(context, mk(stage.ent(), 3), box(60, 360, 360, 56).with_debug_name("toast").with_corner_radius(12 * s)

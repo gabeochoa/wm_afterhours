@@ -1,0 +1,32 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_toast
+mouse_move 20 20
+wait 0.6
+expect_text "Toast open/close"
+expect_text "toast: hidden"
+expect_text "motion: settled"
+click_ui toast_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "toast: shown"
+expect_text "toasts: 1"
+wait 1
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=100 y=540 w=360 h=56 tol=2 color=#282830
+screenshot transition_toast_shown
+wait 3
+expect_text "toast: hidden"
+click_ui toast_btn
+mouse_move 20 20
+wait 1
+click_ui toast_dismiss
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "toast: hidden"
+wait 1
+expect_text "motion: settled"
+expect_text "toasts: 2"
