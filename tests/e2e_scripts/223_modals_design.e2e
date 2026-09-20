@@ -139,6 +139,13 @@ click_ui modals_nested_action_1
 wait 0.3
 expect_text "Enable notifications: On"
 expect_text "Dark mode: Off"
+focus_ui modals_notifications_toggle
+key ENTER
+wait 0.2
+expect_text "Enable notifications: Off"
+key ENTER
+wait 0.2
+expect_text "Enable notifications: On"
 click_ui modals_settings_done
 wait 0.3
 click_ui modals_reset

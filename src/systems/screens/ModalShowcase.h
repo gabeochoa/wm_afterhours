@@ -42,8 +42,6 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
   struct FormOptions { bool a = false; bool b = true; };
   FormOptions saved_options, draft_options;
-  bool form_reset_pending = false;
-  bool settings_reset_pending = false;
   bool notifications = true;
   bool dark_mode = false;
   bool confirm_opened = false;
@@ -116,7 +114,6 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (launch(12, "Simple Modal", 264, 150, 240, "btn_simple")) show_basic_modal = true;
     if (launch(13, "Composable Modal", 532, 150, 280, "btn_composable")) {
       draft_options = saved_options;
-      form_reset_pending = true;
       form_status = "Open";
       show_composable_modal = true;
     }
@@ -225,11 +222,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     const auto checkbox_field = [&](afterhours::Entity &parent, int id, bool &value,
                                     const std::string &label, const std::string &debug,
-                                    float width, float height, bool reset = false) {
-      auto ep = mk(parent, id);
-      auto [control, control_parent] = deref(ep);
-      if (reset && control.has<HasCheckboxState>()) control.get<HasCheckboxState>().on = value;
-      auto result = checkbox(context, ep, value,
+                                    float width, float height) {
+      auto result = checkbox(context, mk(parent, id), value,
           content_config(width, height).with_label(label).with_debug_name(debug).with_checkbox_indicators("On", "Off"));
       const auto &children = result.cmp().children;
       if (children.size() != 2) return;
@@ -260,10 +254,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_label("Edit these options. Save keeps them; Cancel discards edits."));
       // Checkboxes
       checkbox_field(m.ent(), 1, draft_options.a,
-          draft_options.a ? "Option A: On" : "Option A: Off", "modals_option_a", 532, 36, form_reset_pending);
+          draft_options.a ? "Option A: On" : "Option A: Off", "modals_option_a", 532, 36);
       checkbox_field(m.ent(), 2, draft_options.b,
-          draft_options.b ? "Option B: On" : "Option B: Off", "modals_option_b", 532, 36, form_reset_pending);
-      form_reset_pending = false;
+          draft_options.b ? "Option B: On" : "Option B: Off", "modals_option_b", 532, 36);
       // Progress indicator
       div(context, mk(m.ent(), 3), content_config(532, 36).with_label("Progress: 65% / static example"));
       // Buttons row
@@ -321,10 +314,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_label("Preferences update immediately in this example."));
       checkbox_field(settings.ent(), 1, notifications,
           notifications ? "Enable notifications: On" : "Enable notifications: Off",
-          "modals_notifications", 552, 40, settings_reset_pending);
+          "modals_notifications", 552, 40);
       checkbox_field(settings.ent(), 2, dark_mode,
-          dark_mode ? "Dark mode: On" : "Dark mode: Off", "modals_dark_mode", 552, 40, settings_reset_pending);
-      settings_reset_pending = false;
+          dark_mode ? "Dark mode: On" : "Dark mode: Off", "modals_dark_mode", 552, 40);
       auto buttons = hstack(context, mk(settings.ent(), 3), content_config(552, 48)
           .with_no_wrap().with_justify_content(JustifyContent::SpaceBetween));
       if (button(context, mk(buttons.ent(), 0),
@@ -345,7 +337,6 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (nested_was_open && !show_stacked_confirm && nested.confirmed()) {
       notifications = true;
       dark_mode = false;
-      settings_reset_pending = true;
     }
     const auto result_name = [](afterhours::DialogResult result, bool opened, bool open) {
       if (open) return std::string("Open");
