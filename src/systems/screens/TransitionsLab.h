@@ -12,6 +12,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
+  std::shared_ptr<int> alive = std::make_shared<int>(0);
   struct Example {
     const char *slug;
     const char *title;
@@ -22,7 +23,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     std::vector<Example> examples;
   };
   const std::vector<Group> groups{
-      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}}},
+      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}}},
       {"navigation", "Navigation and overlays", {}},
       {"status", "Status and loading", {}},
       {"cards", "Cards and text", {}},
@@ -39,8 +40,10 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool liked = false;
   int likes = 0;
   bool icon_b = false;
+  bool error = false;
+  int submits = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold };
 
   void reset_examples() {
     checked = false;
@@ -48,7 +51,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     liked = false;
     likes = 0;
     icon_b = false;
+    error = false;
+    submits = 0;
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
+    afterhours::motion::anim(Key::Shake).from(0.f);
+    afterhours::motion::anim(Key::ErrorHold).from(0.f);
     afterhours::motion::anim<ColorType>(Key::LikeFill).from(ColorType{170, 165, 175, 255});
   }
 
@@ -232,6 +239,62 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(stage.ent(), 2, "Click the cell. One glyph shrinks and fades while the other grows in, 250 ms ease in-out.", 150, 100, 1000, 18, true);
       label(stage.ent(), 3, std::string("icon: ") + (icon_b ? "b" : "a"), 60, 170, 400, 20, false, "icon_state");
+    }
+    else if (slug == "learn_more") {
+      auto &shift = motion::anim(Key::LearnShift);
+      auto &spread = motion::anim(Key::LearnSpread);
+      const float dx = shift.value(), deg = spread.value();
+      auto link = button(context, mk(stage.ent(), 1),
+                         box(60, 90, 200, 40).with_label("Learn more").with_debug_name("learn_more")
+                             .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(accent)
+                             .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(0)))
+                             .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
+                             .with_on_draw_fg([dx, deg, s, accent](RectangleType r) {
+                               const float tip_x = r.x + 138.f * s + dx * s, tip_y = r.y + r.height / 2.f;
+                               const float arm = 9.f * s;
+                               const float base = 3.14159265f / 4.f, open_by = deg * 3.14159265f / 180.f;
+                               const float up = -(base + open_by / 2.f), down = base + open_by / 2.f;
+                               afterhours::draw_line_ex({tip_x, tip_y}, {tip_x - arm * std::cos(up), tip_y + arm * std::sin(up)}, 2.f * s, accent);
+                               afterhours::draw_line_ex({tip_x, tip_y}, {tip_x - arm * std::cos(down), tip_y + arm * std::sin(down)}, 2.f * s, accent);
+                             }));
+      const bool hot = context.was_hot(link.id());
+      const motion::Spring ease{.response = 0.35f};
+      if (!shift.started()) shift.from(0.f);
+      if (!spread.started()) spread.from(0.f);
+      if (shift.target() != (hot ? 2.f : 0.f)) shift.to(hot ? 2.f : 0.f, ease);
+      if (spread.target() != (hot ? 8.f : 0.f)) spread.to(hot ? 8.f : 0.f, ease);
+      in_flight |= shift.active() || spread.active();
+      label(stage.ent(), 2, "Hover the link. The chevron slides 2 px right and its arms open by 8 degrees.", 300, 100, 900, 18, true);
+      label(stage.ent(), 3, std::string("hover: ") + (hot ? "yes" : "no"), 60, 170, 400, 20, false, "learn_hover");
+      label(stage.ent(), 4, "shift: " + std::to_string(int(std::lround(dx))) + "px  spread: " + std::to_string(int(std::lround(deg))) + "deg", 60, 200, 500, 20, false, "learn_values");
+    } else if (slug == "error_shake") {
+      auto &shake = motion::anim(Key::Shake);
+      auto &hold = motion::anim(Key::ErrorHold);
+      const float sx = shake.value();
+      const afterhours::Color pink{255, 235, 238, 255}, danger{220, 60, 70, 255};
+      div(context, mk(stage.ent(), 1),
+          box(60 + sx, 90, 360, 44).with_label("user@example").with_debug_name("error_field")
+              .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+              .with_padding(Padding::all(pixels(10 * s))).with_corner_radius(8 * s).with_border(muted, 1.5f * s)
+              .with_custom_background(paper)
+              .on_state(error, {.background = {paper, pink}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}}));
+      div(context, mk(stage.ent(), 2),
+          box(60, 140, 500, 26).with_label("Enter a valid email address.").with_debug_name("error_message")
+              .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(danger).with_alignment(TextAlignment::Left)
+              .with_background(Theme::Usage::None).with_ignore_pointer_events()
+              .on_appear({.opacity = 0.f})
+              .on_state(error, {.opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.28f, 1.f}}}));
+      if (tab(stage.ent(), 3, "Submit", 440, 90, 120, false, "submit_btn")) {
+        ++submits;
+        error = true;
+        shake.from(0.f).to(6.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.08f, 1.f}, {0.16f, -1.f}, {0.22f, 0.667f}, {0.28f, 0.f}},
+                                                  .curve = motion::curves::ease_out_quad});
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.28f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; error = false; });
+      }
+      in_flight |= shake.active();
+      label(stage.ent(), 4, "Press Submit. The field shakes 0, +6, -6, +4, 0 px over 280 ms, shows the error, and clears it after 3 s.", 60, 190, 1100, 18, true);
+      label(stage.ent(), 5, std::string("error: ") + (error ? "shown" : "clear"), 60, 230, 400, 20, false, "error_state");
+      label(stage.ent(), 6, "submits: " + std::to_string(submits), 60, 260, 400, 20, false, "submit_count");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

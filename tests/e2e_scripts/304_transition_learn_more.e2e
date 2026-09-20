@@ -1,0 +1,25 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_learn_more
+mouse_move 20 20
+wait 0.5
+expect_text "Learn more hover"
+expect_text "hover: no"
+expect_text "shift: 0px  spread: 0deg"
+expect_text "motion: settled"
+mouse_move 140 290
+expect_text "motion: in flight"
+expect_text "hover: yes"
+wait 1.5
+expect_text "shift: 2px  spread: 8deg"
+expect_text "motion: settled"
+screenshot transition_learn_more_hover
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "hover: no"
+wait 1.5
+expect_text "shift: 0px  spread: 0deg"
+expect_text "motion: settled"

@@ -1,0 +1,27 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_error_shake
+mouse_move 20 20
+wait 0.5
+expect_text "Error state shake"
+expect_text "error: clear"
+expect_text "submits: 0"
+expect_text "motion: settled"
+click_ui submit_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "error: shown"
+expect_text "submits: 1"
+wait 0.6
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=100 y=270 w=360 h=44 tol=2 color=#ffebee
+screenshot transition_error_shake_shown
+wait 3.5
+expect_text "error: clear"
+click_ui reset_btn
+mouse_move 20 20
+wait 0.3
+expect_text "submits: 0"
