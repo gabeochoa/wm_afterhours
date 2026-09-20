@@ -1,0 +1,26 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_spinner
+mouse_move 20 20
+wait 0.6
+expect_text "Spinner to check"
+expect_text "state: spinning"
+click_ui spinner_btn
+mouse_move 20 20
+expect_text "state: done"
+expect_text "completions: 1"
+expect_text "motion: in flight"
+wait 1.2
+expect_drawn_at rectangle_rounded x=340 y=260 w=52 h=52 tol=3 color=#34a860
+screenshot transition_spinner_done
+wait 2
+expect_text "state: spinning"
+disable_animations
+click_ui spinner_btn
+mouse_move 20 20
+expect_text "completions: 2"
+expect_text "state: spinning"
+enable_animations

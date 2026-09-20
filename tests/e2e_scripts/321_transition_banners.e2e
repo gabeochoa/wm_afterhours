@@ -1,0 +1,46 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_banners
+mouse_move 20 20
+wait 0.3
+expect_text "Banner stacking"
+expect_text "banners: 0"
+click_ui banner_add
+mouse_move 20 20
+expect_text "banners: 1"
+expect_text "motion: in flight"
+wait 1
+click_ui banner_add
+mouse_move 20 20
+wait 1
+click_ui banner_add
+mouse_move 20 20
+wait 1
+expect_text "banners: 3"
+expect_text "motion: settled"
+expect_text "Update 3 is ready"
+screenshot transition_banners_three
+click_ui banner_add
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1.5
+expect_text "banners: 3"
+expect_text "motion: settled"
+expect_text "Update 4 is ready"
+expect_no_text "Update 1 is ready"
+mouse_move 240 400
+expect_text "spread: yes"
+expect_text "motion: in flight"
+wait 1
+expect_text "motion: settled"
+screenshot transition_banners_spread
+mouse_move 20 20
+expect_text "spread: no"
+wait 1
+click_ui reset_btn
+mouse_move 20 20
+wait 0.3
+expect_text "banners: 0"
