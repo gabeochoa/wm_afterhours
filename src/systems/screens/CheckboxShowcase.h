@@ -79,10 +79,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto check_row = [&](afterhours::Entity &parent, bool &value, const std::string &text,
                                float y, afterhours::Color background, const std::string &name,
                                bool disabled = false, const std::string &lock_reason = "") {
-      auto pair = mk(parent, id++);
-      auto &control = deref(pair).first;
-      if (control.has<HasCheckboxState>()) control.get<HasCheckboxState>().on = value;
-      const auto changed = checkbox(context, pair, value,
+      const auto changed = checkbox(context, mk(parent, id++), value,
           box(20, y, 516, 44).with_label("").with_custom_background(background)
               .with_alignment(TextAlignment::Left).with_text_inset(14 * s, 0)
               .with_custom_text_color(ink).with_corner_radius(6 * s)
@@ -130,10 +127,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < box_values.size(); ++i) {
       const float x = 20 + static_cast<float>(i) * 129;
       label(left_col.ent(), std::to_string(i + 1) + " / " + role_names[i], x, 282, 120, 23, 17, "", true);
-      auto pair = mk(left_col.ent(), id++);
-      auto &control = deref(pair).first;
-      if (control.has<HasCheckboxState>()) control.get<HasCheckboxState>().on = *box_values[i];
-      if (checkbox(context, pair, *box_values[i], box(x + 38, 311, 44, 44)
+      if (checkbox(context, mk(left_col.ent(), id++), *box_values[i], box(x + 38, 311, 44, 44)
           .with_label("").with_background(box_roles[i]).with_corner_radius(3 * s)
           .with_custom_text_color(ink).with_font("AtkinsonMock", pixels(23 * s))
           .with_click_activation(ClickActivationMode::Release).with_debug_name("nl_option_" + std::to_string(i + 1))))

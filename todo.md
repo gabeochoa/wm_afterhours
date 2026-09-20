@@ -86,7 +86,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Review text-area wheel scrolling, returned focus target and scaled auto-grow padding; see `docs/AFTERHOURS_GAPS.md`.
 
-- [ ] Review external checkbox state synchronization so app resets do not require editing `HasCheckboxState`; see `docs/AFTERHOURS_GAPS.md`.
+- [x] Checkboxes follow the app’s boolean before processing input; resets no longer require editing `HasCheckboxState`.
 
 - [ ] Add reviewed chart options for series stroke, hover-label visibility and explicit axis bounds; native chart styling limitations remain in `docs/AFTERHOURS_GAPS.md`.
 

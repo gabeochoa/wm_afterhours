@@ -161,7 +161,7 @@ Font inheritance and accurate measured wrapping/placement were fixed in the defa
 
 ### Checkbox external state is treated as initialization only
 
-The bool reference initializes `HasCheckboxState` once; retained state then overwrites app resets. WM synchronizes the component manually. Define controlled-value ownership and test external reset followed by pointer/keyboard changes.
+Fixed: checkbox reads the supplied boolean before processing input on every call. The old code assumed retained state owned the value and overwrote app resets. External changes update disabled controls too and do not report a click; pending input toggles the supplied value. WM’s checkbox, modal and circle demos no longer write internal state.
 
 ### Chart styling and axis-domain controls
 

@@ -87,6 +87,21 @@ expect_checkbox ch_1 checked
 expect_checkbox ch_2 unchecked
 expect_checkbox ch_3 unchecked
 expect_text "Disabled values: checked / unchecked"
+click_ui nl_option_2
+wait 0.2
+expect_checkbox nl_option_2 checked
+focus_ui nl_option_2
+key ENTER
+wait 0.2
+expect_checkbox nl_option_2 unchecked
+focus_ui labeled_primary
+key ENTER
+wait 0.2
+expect_checkbox labeled_primary unchecked
+click_ui checkbox_reset
+wait 0.2
+expect_checkbox labeled_primary checked
+expect_checkbox nl_option_2 unchecked
 resize 1920 1080
 wait 0.3
 assert_ui nl_option_1 w=66 h=66
