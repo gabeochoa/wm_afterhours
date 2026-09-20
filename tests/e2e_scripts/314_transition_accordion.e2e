@@ -1,0 +1,27 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_accordion
+mouse_move 20 20
+wait 0.6
+expect_text "Accordion"
+expect_text "accordion: closed"
+expect_text "height: 0px"
+assert_ui acc_next x=100 y=308 w=420 h=44
+click_ui acc_header
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "accordion: open"
+wait 1
+expect_text "motion: settled"
+expect_text "height: 96px"
+assert_ui acc_next x=100 y=404 w=420 h=44
+screenshot transition_accordion_open
+click_ui acc_header
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1
+expect_text "height: 0px"
+assert_ui acc_next x=100 y=308 w=420 h=44

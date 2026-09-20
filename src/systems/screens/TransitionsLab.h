@@ -25,8 +25,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   };
   const std::vector<Group> groups{
       {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
-      {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}}},
-      {"status", "Status and loading", {}},
+      {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
+      {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}}},
       {"cards", "Cards and text", {}},
       {"effects", "Visual effects", {}},
   };
@@ -52,8 +52,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool panel_open = false;
   bool page_two = false;
   int tab_index = 0;
+  bool accordion_open = false;
+  bool morph_open = false;
+  bool toast_shown = false;
+  int toasts = 0;
+  bool badge_shown = false;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold };
 
   void reset_examples() {
     checked = false;
@@ -72,6 +77,12 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     panel_open = false;
     page_two = false;
     tab_index = 0;
+    accordion_open = false;
+    morph_open = false;
+    toast_shown = false;
+    toasts = 0;
+    badge_shown = false;
+    afterhours::motion::anim(Key::ToastHold).from(0.f);
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
     afterhours::motion::anim(Key::Shake).from(0.f);
     afterhours::motion::anim(Key::ErrorHold).from(0.f);
@@ -517,6 +528,124 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       in_flight |= px.active() || pw.active();
       label(stage.ent(), 3, "One pill slides under the selected tab and resizes to it, 250 ms ease-out. The pill is measured, not the content.", 60, 150, 1100, 18, true);
       label(stage.ent(), 4, "tab: " + std::to_string(tab_index), 60, 190, 400, 20, false, "tabs_state");
+    }
+    else if (slug == "accordion") {
+      auto &h = motion::anim(Key::AccHeight);
+      const float content_h = 96.f * s;
+      const motion::Timeline ease{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      if (!h.started()) h.from(0.f);
+      const float want = accordion_open ? content_h : 0.f;
+      if (h.target() != want) h.to(want, ease);
+      auto column = div(context, mk(stage.ent(), 1), box(60, 84, 420, 300).with_debug_name("acc_column").with_flex_direction(FlexDirection::Column)
+                                                          .with_background(Theme::Usage::None));
+      auto header = button(context, mk(column.ent(), 0),
+                           ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)}).with_label("Shipping details")
+                               .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                               .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_padding(Padding::all(pixels(10 * s)))
+                               .with_debug_name("acc_header"));
+      div(context, mk(header.ent(), 0), ComponentConfig{}.with_size({pixels(24 * s), pixels(24 * s)}).with_absolute_position(386 * s, 10 * s)
+                                            .with_label("v").with_font("AtkinsonMockBold", pixels(18 * s)).with_custom_text_color(ink)
+                                            .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                            .with_debug_name("acc_chevron").on_state(accordion_open, {.rotation = {0.f, 180.f}}, ease));
+      if (header) accordion_open = !accordion_open;
+      auto content = div(context, mk(column.ent(), 1), ComponentConfig{}.with_size({pixels(420 * s), pixels(h.value())}).with_clip_children()
+                                                             .with_background(Theme::Usage::None).with_debug_name("acc_content")
+                                                             .on_state(accordion_open, {.opacity = {0.f, 1.f}}, ease));
+      div(context, mk(content.ent(), 0), ComponentConfig{}.with_size({pixels(420 * s), pixels(content_h)}).with_absolute_position(0.f, 0.f)
+                                             .with_label("Orders ship within two business days. Tracking arrives by email once the parcel leaves the warehouse.")
+                                             .with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(muted).with_alignment(TextAlignment::Left)
+                                             .with_padding(Padding::all(pixels(10 * s))).with_text_overflow(TextOverflow::Wrap)
+                                             .with_background(Theme::Usage::None).with_ignore_pointer_events());
+      div(context, mk(column.ent(), 2), ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)}).with_label("Returns")
+                                            .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                                            .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_padding(Padding::all(pixels(10 * s)))
+                                            .with_ignore_pointer_events().with_debug_name("acc_next"));
+      in_flight |= h.active();
+      track_motion(content.ent());
+      label(stage.ent(), 3, "The content height is a track fed straight into with_size, so the row below reflows; the chevron flips 180 degrees. 250 ms.", 500, 100, 720, 18, true);
+      label(stage.ent(), 4, std::string("accordion: ") + (accordion_open ? "open" : "closed"), 500, 150, 400, 20, false, "acc_state");
+      label(stage.ent(), 5, "height: " + std::to_string(int(std::lround(h.value() / s))) + "px", 500, 180, 400, 20, false, "acc_height");
+    } else if (slug == "morph") {
+      auto &w = motion::anim(Key::MorphW);
+      auto &hh = motion::anim(Key::MorphH);
+      const float closed_w = 40.f * s, closed_h = 40.f * s, open_w = 183.f * s, open_h = 172.f * s;
+      if (!w.started()) w.from(closed_w);
+      if (!hh.started()) hh.from(closed_h);
+      const motion::Timeline grow{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const motion::Timeline shrink{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const float want_w = morph_open ? open_w : closed_w, want_h = morph_open ? open_h : closed_h;
+      if (w.target() != want_w) w.to(want_w, morph_open ? grow : shrink);
+      if (hh.target() != want_h) hh.to(want_h, morph_open ? grow : shrink);
+      const float right = 460.f * s, bottom = 320.f * s;
+      auto surface = button(context, mk(stage.ent(), 1),
+                            ComponentConfig{}.with_size({pixels(w.value()), pixels(hh.value())})
+                                .with_absolute_position(right - w.value(), bottom - hh.value())
+                                .with_custom_background(accent).with_corner_radius(40 * s).with_padding(Padding::all(pixels(0)))
+                                .with_clip_children().with_debug_name("morph_surface")
+                                .on_state(morph_open, {.corner_radius = {40.f * s, 20.f * s}}, grow));
+      div(context, mk(surface.ent(), 0), ComponentConfig{}.with_size({pixels(40 * s), pixels(40 * s)}).with_absolute_position(0.f, 0.f)
+                                             .with_label("+").with_font("AtkinsonMockBold", pixels(24 * s)).with_custom_text_color(paper)
+                                             .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                             .with_debug_name("morph_plus")
+                                             .on_state(morph_open, {.translate_x = {0.f, -40.f * s}, .opacity = {1.f, 0.f}, .rotation = {0.f, 45.f}},
+                                                       motion::Timeline{.keys = {{0.f, 0.f}, {0.2f, 1.f}}}));
+      static const char *rows[] = {"New file", "New folder", "Upload"};
+      for (int i = 0; i < 3; ++i)
+        div(context, mk(surface.ent(), 1 + i), ComponentConfig{}.with_size({pixels(160 * s), pixels(36 * s)}).with_absolute_position(12 * s, (16 + i * 44) * s)
+                                                   .with_label(rows[i]).with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(paper)
+                                                   .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                                   .with_debug_name(std::string("morph_row_") + std::to_string(i))
+                                                   .on_appear({.translate_x = 40.f * s, .opacity = 0.f})
+                                                   .on_state(morph_open, {.translate_x = {40.f * s, 0.f}, .opacity = {0.f, 1.f}}, grow));
+      if (surface) morph_open = !morph_open;
+      in_flight |= w.active() || hh.active();
+      track_motion(surface.ent());
+      label(stage.ent(), 3, "A 40 px round trigger grows to 183 x 172 pinned to its bottom-right corner; radius 40 to 20, plus slides out, rows slide in. 350 ms open, 250 ms close.", 60, 100, 1150, 18, true);
+      label(stage.ent(), 4, std::string("morph: ") + (morph_open ? "open" : "closed"), 500, 200, 400, 20, false, "morph_state");
+      label(stage.ent(), 5, "size: " + std::to_string(int(std::lround(w.value() / s))) + " x " + std::to_string(int(std::lround(hh.value() / s))), 500, 230, 400, 20, false, "morph_size");
+    }
+    else if (slug == "toast") {
+      auto &hold = motion::anim(Key::ToastHold);
+      if (tab(stage.ent(), 1, "Show toast", 60, 84, 160, false, "toast_btn")) {
+        toast_shown = true;
+        ++toasts;
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.f, 1.f}}}).on_complete([this] { toast_shown = false; });
+      }
+      if (tab(stage.ent(), 2, "Dismiss", 232, 84, 120, false, "toast_dismiss")) toast_shown = false;
+      auto toast = div(context, mk(stage.ent(), 3), box(60, 360, 360, 56).with_debug_name("toast").with_corner_radius(12 * s)
+                                                         .with_custom_background({40, 40, 48, 255}).with_label("Saved to your library")
+                                                         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(paper)
+                                                         .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(16 * s)))
+                                                         .with_soft_shadow(2 * s, 8 * s, 20 * s, {0, 0, 0, 40}).with_ignore_pointer_events()
+                                                         .on_appear({.translate_y = 16.f * s, .scale = 0.97f, .opacity = 0.f})
+                                                         .on_state(toast_shown, {.translate_y = {16.f * s, 0.f}, .scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
+                                                                   motion::Timeline{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      track_motion(toast.ent());
+      label(stage.ent(), 4, "The toast enters from 16 px below at scale 0.97 over 350 ms and leaves the same way; it dismisses itself after 3 s.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 5, std::string("toast: ") + (toast_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "toast_state");
+      label(stage.ent(), 6, "toasts: " + std::to_string(toasts), 60, 220, 400, 20, false, "toast_count");
+    } else if (slug == "badge") {
+      if (tab(stage.ent(), 1, badge_shown ? "Clear badge" : "Notify", 60, 84, 160, false, "badge_btn")) badge_shown = !badge_shown;
+      auto bell = div(context, mk(stage.ent(), 2), box(300, 84, 48, 48).with_debug_name("badge_anchor").with_corner_radius(12 * s)
+                                                       .with_custom_background({244, 240, 246, 255}).with_label("@")
+                                                       .with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Center));
+      auto wrap = div(context, mk(bell.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(36 * s, -6 * s)
+                                                      .with_background(Theme::Usage::None).with_debug_name("badge_wrap").with_ignore_pointer_events()
+                                                      .on_appear({.translate_x = -8.2f * s, .translate_y = 12.4f * s})
+                                                      .on_state(badge_shown, {.translate_x = {-8.2f * s, 0.f}, .translate_y = {12.4f * s, 0.f}},
+                                                                motion::Timeline{.keys = {{0.f, 0.f}, {0.26f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      div(context, mk(wrap.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(0.f, 0.f)
+                                          .with_custom_background(coral).with_corner_radius(9 * s).with_debug_name("badge_dot").with_ignore_pointer_events()
+                                          .with_label("3").with_font("AtkinsonMockBold", pixels(11 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                          .on_appear({.scale = 0.f, .opacity = 0.f})
+                                          .on_state(badge_shown, {.scale = {0.f, 1.f}, .opacity = {0.f, 1.f}}, motion::Spring{.response = 0.5f, .bounce = 0.35f}));
+      track_motion(wrap.ent());
+      for (auto child_id : wrap.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (child.valid()) track_motion(child.asE());
+      }
+      label(stage.ent(), 3, "The wrapper slides in diagonally (260 ms) while the dot pops from scale 0 on a 500 ms spring; clearing collapses it faster.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 4, std::string("badge: ") + (badge_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "badge_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

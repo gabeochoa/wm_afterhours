@@ -1,0 +1,26 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_morph
+mouse_move 20 20
+wait 0.6
+expect_text "Dropdown menu morph"
+expect_text "morph: closed"
+expect_text "size: 40 x 40"
+expect_drawn_at rectangle_rounded x=460 y=460 w=40 h=40 tol=2 color=#5078dc
+click_ui morph_surface
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "morph: open"
+wait 1.5
+expect_text "motion: settled"
+expect_text "size: 183 x 172"
+expect_drawn_at rectangle_rounded x=317 y=328 w=183 h=172 tol=2 color=#5078dc
+screenshot transition_morph_open
+click_ui morph_surface
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1.5
+expect_text "size: 40 x 40"
