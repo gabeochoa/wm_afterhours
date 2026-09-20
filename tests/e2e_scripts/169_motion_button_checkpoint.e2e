@@ -103,3 +103,24 @@ click 148 668
 mouse_move 100 100
 wait 0.3
 expect_text "child clicks: 1"
+
+toggle_checkbox reduced_motion
+mouse_move 100 100
+wait 0.3
+mouse_move 640 340
+wait_frames 2
+expect_text "hover: yes"
+expect_text "scale: 105%"
+expect_text "motion: settled"
+mouse_move 100 100
+wait_frames 2
+expect_text "motion: settled"
+toggle_checkbox reduced_motion
+mouse_move 100 100
+wait 0.3
+mouse_move 640 340
+expect_text "motion: in flight"
+mouse_move 100 100
+wait 1.5
+expect_text "motion: settled"
+expect_draw_calls_below 80

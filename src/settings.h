@@ -45,4 +45,7 @@ struct Settings {
 
   bool &get_post_processing_enabled();
   void toggle_post_processing();
+
+  bool get_reduced_motion_enabled() const;
+  void set_reduced_motion_enabled(bool);
 };

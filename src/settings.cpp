@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include <afterhours/src/plugins/animation.h>
+
 #include <algorithm>
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -40,6 +42,7 @@ struct S_Data {
 
   bool fullscreen_enabled = false;
   bool post_processing_enabled = true;
+  bool reduced_motion_enabled = false;
 
   std::filesystem::path loaded_from;
 };
@@ -71,6 +74,7 @@ void to_json(nlohmann::json &j, const S_Data &data) {
 
   j["fullscreen_enabled"] = data.fullscreen_enabled;
   j["post_processing_enabled"] = data.post_processing_enabled;
+  j["reduced_motion_enabled"] = data.reduced_motion_enabled;
 }
 
 void from_json(const nlohmann::json &j, S_Data &data) {
@@ -85,6 +89,9 @@ void from_json(const nlohmann::json &j, S_Data &data) {
 
   if (j.contains("post_processing_enabled")) {
     data.post_processing_enabled = j.at("post_processing_enabled");
+  }
+  if (j.contains("reduced_motion_enabled")) {
+    data.reduced_motion_enabled = j.at("reduced_motion_enabled");
   }
 }
 
@@ -135,6 +142,7 @@ void Settings::refresh_settings() {
   update_sfx_volume(data->sfx_volume);
   update_master_volume(data->master_volume);
   match_fullscreen_to_setting(data->fullscreen_enabled);
+  afterhours::animation::set_instant(data->reduced_motion_enabled);
 }
 
 void Settings::toggle_fullscreen() {
@@ -146,6 +154,13 @@ bool &Settings::get_fullscreen_enabled() { return data->fullscreen_enabled; }
 
 bool &Settings::get_post_processing_enabled() {
   return data->post_processing_enabled;
+}
+bool Settings::get_reduced_motion_enabled() const {
+  return data->reduced_motion_enabled;
+}
+void Settings::set_reduced_motion_enabled(bool enabled) {
+  data->reduced_motion_enabled = enabled;
+  afterhours::animation::set_instant(enabled);
 }
 
 void Settings::toggle_post_processing() {

@@ -2,6 +2,7 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../settings.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
@@ -83,6 +84,11 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
     label(26, std::string("focus: ") + (context.has_focus(be.id) ? "yes" : "no"), 500, 532, 400, 30, 22);
     label(27, "clicks: " + std::to_string(clicks), 500, 568, 400, 30, 22);
     label(28, "child clicks: " + std::to_string(child_clicks), 500, 640, 400, 30, 22);
+    bool reduced = Settings::get().get_reduced_motion_enabled();
+    if (checkbox(context, mk(entity, 13), reduced,
+                 box(880, 460, 320, 36).with_label("Reduced motion").with_font("AtkinsonMock", pixels(20 * s))
+                     .with_custom_text_color(ink).with_debug_name("reduced_motion")))
+      Settings::get().set_reduced_motion_enabled(reduced);
   }
 };
 
