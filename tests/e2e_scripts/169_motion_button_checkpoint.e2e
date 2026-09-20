@@ -1,0 +1,87 @@
+goto_screen motion_button
+resize 1280 720
+mouse_move 100 100
+wait 0.05
+expect_text "motion: in flight"
+wait 2
+expect_text "hover: no"
+expect_text "focus: yes"
+expect_text "scale: 103%"
+expect_text "y: 0px"
+expect_text "opacity: 100%"
+expect_text "motion: settled"
+click 100 100
+mouse_move 100 100
+wait 1.5
+expect_text "hover: no"
+expect_text "motion: settled"
+screenshot motion_button_rest
+
+mouse_move 640 340
+expect_text "motion: in flight"
+expect_text "hover: yes"
+wait 1.5
+expect_text "scale: 105%"
+expect_text "y: -4px"
+expect_text "motion: settled"
+screenshot motion_button_hover
+
+mouse_down 640 340
+expect_text "motion: in flight"
+expect_text "pressed: yes"
+wait 1.5
+expect_text "scale: 92%"
+expect_text "motion: settled"
+screenshot motion_button_press
+
+mouse_up 640 340
+mouse_move 640 340
+wait 1.5
+expect_text "pressed: no"
+expect_text "hover: yes"
+expect_text "focus: yes"
+expect_text "clicks: 1"
+expect_text "scale: 105%"
+
+mouse_move 100 100
+expect_text "motion: in flight"
+expect_text "hover: no"
+mouse_move 640 340
+expect_text "motion: in flight"
+expect_text "hover: yes"
+wait 1.5
+expect_text "scale: 105%"
+expect_text "motion: settled"
+
+mouse_move 100 100
+wait 1.5
+expect_text "hover: no"
+expect_text "focus: yes"
+expect_text "scale: 103%"
+expect_text "y: 0px"
+expect_text "motion: settled"
+screenshot motion_button_focus
+
+disable_animations
+mouse_move 640 340
+wait_frames 2
+expect_text "hover: yes"
+expect_text "scale: 105%"
+expect_text "y: -4px"
+expect_text "motion: settled"
+mouse_move 100 100
+wait_frames 2
+expect_text "scale: 103%"
+expect_text "motion: settled"
+enable_animations
+
+mouse_move 640 340
+expect_text "motion: in flight"
+goto_screen simple_button
+wait 0.2
+goto_screen motion_button
+mouse_move 100 100
+wait 2
+expect_text "hover: no"
+expect_text "motion: settled"
+screenshot motion_button_after_teardown
