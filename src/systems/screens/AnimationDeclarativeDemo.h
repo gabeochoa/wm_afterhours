@@ -22,8 +22,16 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
   int click_count = 0;
   std::string last_trigger = "none";
 
+  static afterhours::motion::Spring spring(float freq, float decay) {
+    return afterhours::motion::Spring::from_freq_decay(freq, decay);
+  }
+  static afterhours::motion::Timeline ease_out(float seconds) {
+    return {.keys = {{0.f, 0.f}, {seconds, 1.f}}, .curve = afterhours::motion::curves::ease_out_quad};
+  }
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float dt) override {
+    using afterhours::motion::Timeline;
     // Set dt for animation updates
     context.dt = dt;
 
@@ -96,10 +104,8 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().scale(1.0f, 1.2f).spring(10.0f, 6.0f))
-            .with_animation(
-                Anim::on_hover().translate_y(0.0f, -8.0f * s).spring(12.0f, 7.0f)));
+            .on_hover({.scale = 1.2f}, spring(10.0f, 6.0f))
+            .on_hover({.translate_y = -8.0f * s}, spring(12.0f, 7.0f)));
 
     // ========== BUTTON 2: Click Scale ==========
     float btn2_x = center_x - spacing * 0.5f - button_size / 2.0f;
@@ -116,8 +122,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
                    .with_rounded_corners(RoundedCorners())
                    .with_corner_radius(9.f * s)
-                   .with_animation(
-                       Anim::on_click().scale(1.0f, 0.85f).spring(15.0f, 10.0f))
+                   .on_press({.scale = 0.85f}, spring(15.0f, 10.0f))
                    .with_debug_name("click_btn"));
 
     // ========== BUTTON 3: Both Hover + Click ==========
@@ -135,10 +140,8 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
                    .with_rounded_corners(RoundedCorners())
                    .with_corner_radius(9.f * s)
-                   .with_animation(
-                       Anim::on_hover().translate_y(0.0f, -8.0f * s).ease_out(0.08f))
-                   .with_animation(
-                       Anim::on_click().scale(1.0f, 0.9f).spring(18.0f, 12.0f))
+                   .on_hover({.translate_y = -8.0f * s}, ease_out(0.08f))
+                   .on_press({.scale = 0.9f}, spring(18.0f, 12.0f))
                    .with_debug_name("both_btn"));
 
     // ========== BUTTON 4: Appear Animation ==========
@@ -155,10 +158,8 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_appear().scale(0.3f, 1.0f).spring(10.0f, 6.0f))
-            .with_animation(
-                Anim::on_appear().opacity(0.0f, 1.0f).ease_out(0.2f)));
+            .on_appear({.scale = {0.3f, 1.0f}}, spring(10.0f, 6.0f))
+            .on_appear({.opacity = {0.0f, 1.0f}}, ease_out(0.2f)));
 
     // Second row - different animation types (all buttons for hover tracking)
     float row2_y = button_y + 162.f * s;
@@ -176,8 +177,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().translate_x(0.0f, 20.0f * s).spring(15.0f, 8.0f)));
+            .on_hover({.translate_x = 20.0f * s}, spring(15.0f, 8.0f)));
 
     // ========== Bounce on hover ==========
     auto bounce = button(
@@ -192,9 +192,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(Anim::on_hover()
-                                .translate_y(0.0f, -15.0f * s)
-                                .spring(12.0f, 5.0f)));
+            .on_hover({.translate_y = -15.0f * s}, spring(12.0f, 5.0f)));
 
     // ========== Fade on hover ==========
     auto fade = button(
@@ -209,8 +207,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().opacity(1.0f, 0.6f).ease_out(0.1f)));
+            .on_hover({.opacity = 0.6f}, ease_out(0.1f)));
 
     // ========== Loop animation ==========
     auto pulse = div(context, mk(entity, 80),
@@ -224,8 +221,10 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::loop().scale(0.95f, 1.05f).ease_in_out(0.4f)));
+            .on_appear({.scale = {0.95f, 1.05f}},
+                       Timeline{.keys = {{0.f, 0.f}, {0.4f, 1.f}},
+                                .repeat = Timeline::Repeat::PingPong,
+                                .curve = afterhours::motion::curves::ease_in_out_quad}));
 
     // Third row - composition tests (slide+rotate combinations)
     float row3_y = row2_y + 162.f * s;
@@ -243,10 +242,8 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().translate_x(0.0f, 15.0f * s).spring(10.0f, 6.0f))
-            .with_animation(
-                Anim::on_hover().rotate(0.0f, 5.0f).spring(12.0f, 7.0f)));
+            .on_hover({.translate_x = 15.0f * s}, spring(10.0f, 6.0f))
+            .on_hover({.rotation = 5.0f}, spring(12.0f, 7.0f)));
 
     // ========== Rotate then Slide (rotate + translate_x) ==========
     auto rotate_slide = button(
@@ -261,11 +258,8 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().rotate(0.0f, -5.0f).spring(12.0f, 7.0f))
-            .with_animation(Anim::on_hover()
-                                .translate_x(0.0f, -15.0f * s)
-                                .spring(10.0f, 6.0f)));
+            .on_hover({.rotation = -5.0f}, spring(12.0f, 7.0f))
+            .on_hover({.translate_x = -15.0f * s}, spring(10.0f, 6.0f)));
 
     // ========== All combined: scale + translate + rotate ==========
     auto combined = button(
@@ -280,12 +274,9 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_corner_radius(9.f * s)
-            .with_animation(
-                Anim::on_hover().scale(1.0f, 1.15f).spring(10.0f, 6.0f))
-            .with_animation(
-                Anim::on_hover().translate_y(0.0f, -10.0f * s).spring(12.0f, 7.0f))
-            .with_animation(
-                Anim::on_hover().rotate(0.0f, 3.0f).spring(14.0f, 8.0f)));
+            .on_hover({.scale = 1.15f}, spring(10.0f, 6.0f))
+            .on_hover({.translate_y = -10.0f * s}, spring(12.0f, 7.0f))
+            .on_hover({.rotation = 3.0f}, spring(14.0f, 8.0f)));
 
     const std::array<const char *, 11> names{"Hover", "Click", "Hover + click", "Appear", "Slide", "Bounce", "Fade", "Pulse", "Slide + rotate", "Rotate + slide", "Combined"};
     const std::array<const char *, 11> captions{
@@ -297,8 +288,9 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
       const float x = (i % 4) * 282.f;
       const float y = (i / 4) * 162.f;
       label(captions[i], x + 12, 236 + y, 250, 16, muted);
-      const auto &state = tiles[i]->get<HasAnimationState>();
-      const bool moving = state.scale.is_active || state.translate_x.is_active || state.translate_y.is_active || state.rotation.is_active || state.opacity.is_active;
+      bool moving = false;
+      if (tiles[i]->has<afterhours::motion::HasTracks>())
+        for (const auto &[key, tr] : tiles[i]->get<afterhours::motion::HasTracks>().floats) moving |= tr.active();
       const std::string phase = i == 7 ? "Looping" : moving ? "Animating" : i == 3 ? "Entry complete" : context.was_hot(tiles[i]->id) ? "Hovered" : "Ready";
       label(phase, x + 12, 256 + y, 250, 16, muted);
       if (i < 8) continue;
@@ -306,7 +298,10 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
           .with_on_draw_fg([s](RectangleType r) { raylib::DrawRectangleLinesEx(r, s, {148, 161, 188, 255}); })
           .with_ignore_pointer_events());
     }
-    if (replay_entry) appear.ent().removeComponentIfExists<HasAnimationState>();
+    if (replay_entry) {
+      appear.ent().removeComponentIfExists<HasMotionState>();
+      appear.ent().removeComponentIfExists<afterhours::motion::HasTracks>();
+    }
     const std::array<bool, 11> activated{bool(hover), bool(click), bool(both), false, bool(slide), bool(bounce), bool(fade), false, bool(slide_rotate), bool(rotate_slide), bool(combined)};
     for (int i = 0; i < 11; ++i) {
       if (!activated[i]) continue;
@@ -319,10 +314,10 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     label("Numbers give declaration order.", 858, 565, 242, 16, muted);
     div(context, mk(entity, 100), box(0, 636, 1112, 62).with_custom_background({36, 43, 57, 255}).with_corner_radius(8 * s));
     label("Hover tile configuration", 16, 637, 1100, 18, muted);
-    label("Anim::on_hover().scale(1.0f, 1.2f).spring(10.0f, 6.0f)", 16, 663, 1100, 23, text_light, true);
+    label(".on_hover({.scale = 1.2f}, Spring::from_freq_decay(10.0f, 6.0f))", 16, 663, 1100, 23, text_light, true);
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(animation_declarative, "Animations",
-                        "Declarative animations with .with_animation() API",
+                        "Declarative animations with trigger blocks",
                         AnimationDeclarativeDemo)

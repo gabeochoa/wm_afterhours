@@ -39,35 +39,30 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
       InteractiveAnimKey::Button3Scale};
   static constexpr std::array<const char *, 3> names{"Blue", "Green", "Purple"};
 
-  float get_anim_value(InteractiveAnimKey key) {
-    return afterhours::animation::manager<InteractiveAnimKey>().ensure_track(key).current;
+  static afterhours::motion::Track<float> &track(InteractiveAnimKey key) {
+    return afterhours::motion::anim(key);
   }
 
+  float get_anim_value(InteractiveAnimKey key) { return track(key).value(); }
+
   void animate_button_press(size_t index, bool preview = false) {
+    using afterhours::motion::Timeline;
+    using afterhours::motion::curves::ease_out_quad;
     preview_mode[index] = preview;
     const float duration_scale = preview ? 4.f : 1.f;
+    const auto leg = [&](float seconds) {
+      return Timeline{.keys = {{0.f, 0.f}, {seconds * duration_scale, 1.f}}, .curve = ease_out_quad};
+    };
     // Quick scale down and back up for press feedback
-    afterhours::animation::anim<InteractiveAnimKey>(keys[index])
-        .from(1.f)
-        .to(.85f, .08f * duration_scale, afterhours::animation::EasingType::EaseOutQuad)
-        .to(1.10f, .12f * duration_scale, afterhours::animation::EasingType::EaseOutQuad)
-        .to(1.f, .10f * duration_scale, afterhours::animation::EasingType::EaseOutQuad);
+    track(keys[index]).from(1.f).to(.85f, leg(.08f)).then(1.10f, leg(.12f)).then(1.f, leg(.10f));
   }
 
   void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float dt) override {
-    // Update animation manager
-    auto &manager = afterhours::animation::manager<InteractiveAnimKey>();
-    manager.update(dt);
-
+                     UIContext<InputAction> &context, float) override {
     // Initialize animation tracks to 1.0 on first run for screenshot
     if (first_run) {
       first_run = false;
-      for (auto key : keys) {
-        auto &track = manager.ensure_track(key);
-        track = {};
-        track.current = 1.f;
-      }
+      for (auto key : keys) track(key).from(1.f);
     }
 
     // Setup theme
@@ -137,7 +132,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
             x + 32, 430, 304, 34, 27, text_light, prefix + "_scale", true);
       label(fmt::format("{} activations: {}", names[i], activation_counts[i]),
             x + 20, 475, 328, 26, 22, text_light, prefix + "_count");
-      const bool active = manager.ensure_track(keys[i]).active;
+      const bool active = track(keys[i]).active();
       const std::string phase = preview_mode[i] ? (active ? "Slow preview running / 1.20 s" : "Slow preview complete / 1.20 s")
                                               : (active ? "Press response running / 0.30 s" : "Ready / 0.30 s response");
       label(phase, x + 20, 509, 328, 24, 19, muted, prefix + "_phase");
