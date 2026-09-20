@@ -1,0 +1,22 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_cards
+click_ui ex_avatars
+mouse_move 20 20
+wait 0.6
+expect_text "Avatar group hover"
+expect_text "active: -1"
+expect_text "motion: settled"
+mouse_move 204 304
+expect_text "active: 2"
+expect_text "motion: in flight"
+wait 1.5
+expect_text "motion: settled"
+screenshot transition_avatars_hover
+mouse_move 20 20
+expect_text "active: -1"
+expect_text "motion: in flight"
+wait 1.5
+expect_text "motion: settled"
