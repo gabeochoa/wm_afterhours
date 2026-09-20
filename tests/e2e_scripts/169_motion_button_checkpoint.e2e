@@ -93,3 +93,13 @@ expect_drawn_at rectangle_rounded x=880 y=300 w=220 h=88 tol=2 color=#283c78
 mouse_move 100 100
 wait 1.5
 expect_drawn_at rectangle_rounded x=880 y=300 w=200 h=80 tol=2 color=#64b4c8
+
+expect_drawn_at rectangle_rounded x=288 y=648 w=120 h=40 tol=2
+click 348 668
+mouse_move 100 100
+wait 0.3
+expect_text "child clicks: 1"
+click 148 668
+mouse_move 100 100
+wait 0.3
+expect_text "child clicks: 1"

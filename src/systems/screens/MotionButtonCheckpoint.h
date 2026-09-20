@@ -11,6 +11,7 @@ using namespace afterhours::ui::imm;
 
 struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
   int clicks = 0;
+  int child_clicks = 0;
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
     namespace motion = afterhours::motion;
@@ -48,6 +49,15 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                .with_origin(0.f, 0.f)
                .on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}}));
 
+    auto slab = div(context, mk(entity, 12),
+                    box(80, 640, 320, 56).with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
+                        .with_debug_name("slab").on_appear({.translate_x = 200.f * s}, motion::Spring::smooth()));
+    if (button(context, mk(slab.ent(), 0),
+               ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
+                   .with_label("Child").with_custom_background({200, 170, 220, 255}).with_font("AtkinsonMock", pixels(18 * s))
+                   .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("child_btn")))
+      ++child_clicks;
+
     float scale = 1.f, ty = 0.f, opacity = 1.f;
     bool in_flight = false;
     afterhours::Entity &be = btn.ent();
@@ -72,6 +82,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
     label(25, std::string("pressed: ") + (context.was_active(be.id) ? "yes" : "no"), 500, 496, 400, 30, 22);
     label(26, std::string("focus: ") + (context.has_focus(be.id) ? "yes" : "no"), 500, 532, 400, 30, 22);
     label(27, "clicks: " + std::to_string(clicks), 500, 568, 400, 30, 22);
+    label(28, "child clicks: " + std::to_string(child_clicks), 500, 640, 400, 30, 22);
   }
 };
 
