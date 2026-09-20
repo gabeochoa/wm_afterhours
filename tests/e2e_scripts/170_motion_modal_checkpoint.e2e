@@ -1,0 +1,69 @@
+goto_screen motion_modal
+resize 1280 720
+mouse_move 100 100
+wait 0.5
+expect_text "phase: hidden"
+click_ui open_btn
+mouse_move 100 100
+expect_text "phase: entering"
+wait 1.5
+expect_text "phase: visible"
+expect_text "open: yes"
+screenshot motion_modal_visible
+click_ui inner_btn
+mouse_move 100 100
+wait 0.3
+expect_text "inner clicks: 1"
+click_ui bg_btn
+mouse_move 100 100
+wait 0.3
+expect_text "bg clicks: 0"
+
+click_ui close_btn
+mouse_move 100 100
+expect_text "phase: exiting"
+expect_text "open: no"
+click_ui bg_btn
+click_ui inner_btn
+escape
+expect_text "phase: exiting"
+expect_text "bg clicks: 0"
+expect_text "inner clicks: 1"
+mouse_move 100 100
+wait 2.5
+expect_text "phase: hidden"
+expect_text "inner clicks: 1"
+expect_text "bg clicks: 0"
+expect_text "focus: open_btn"
+click_ui bg_btn
+mouse_move 100 100
+wait 0.3
+expect_text "bg clicks: 1"
+
+click_ui open_btn
+mouse_move 100 100
+wait 1.5
+expect_text "phase: visible"
+click_ui close_reopen_btn
+mouse_move 100 100
+expect_text "phase: exiting"
+expect_text "phase: entering"
+wait 1.5
+expect_text "phase: visible"
+expect_text "open: yes"
+click_ui close_btn
+mouse_move 100 100
+wait 2.5
+expect_text "phase: hidden"
+
+click_ui open_btn
+mouse_move 100 100
+wait 1.5
+click_ui close_btn
+mouse_move 100 100
+expect_text "phase: exiting"
+goto_screen simple_button
+wait 0.3
+click_ui simple_increment
+wait 0.3
+expect_text "Click count: 1"
