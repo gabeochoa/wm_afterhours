@@ -61,7 +61,7 @@ Config measurement now uses the selected mode, and text-area wrapping uses the s
 
 ### Animation sequences ignore the first segment easing
 
-`AnimHandle::sequence()` omits the first `current_easing`, using linear or a previous segment's easing. At 0.5s a 0→1.15, 0.6s EaseOutQuad segment gives 0.958333 instead of 1.118056. WM uses chained `.to()`. Copy first-segment easing and test fresh/replayed sequences.
+Fixed. `AnimHandle::sequence()` initialized the target and duration but assumed the existing easing was suitable. Fresh tracks used Linear; reused tracks inherited their last easing. It now copies the first segment's easing too. At 0.5s the WM scale sequence reaches 1.118056 instead of 0.958333. Tests cover fresh/replayed tracks, mixed-easing loops and appended sequences; WM uses `.sequence()`.
 
 ### Declarative animation timing depends on frame rate
 

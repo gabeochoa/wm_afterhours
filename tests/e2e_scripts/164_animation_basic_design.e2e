@@ -27,6 +27,11 @@ expect_text "Last replay: slide  /  1.20 of 1.2 s"
 click_ui replay_scale
 wait 1.5
 expect_text "Last replay: scale  /  1.00 of 1.0 s"
+focus_element replay_scale
+key ENTER
+wait 1.5
+expect_text "scale: 100%"
+expect_text "Last replay: scale  /  1.00 of 1.0 s"
 assert_within_parents
 resize 1920 1080
 wait 0.3

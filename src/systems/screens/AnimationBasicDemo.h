@@ -75,8 +75,10 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     if (!only || *only == BasicAnimKey::ScaleUp)
       afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::ScaleUp)
         .from(0.0f)
-        .to(1.15f, 0.6f, afterhours::animation::EasingType::EaseOutQuad)
-        .to(1.0f, 0.4f, afterhours::animation::EasingType::EaseOutQuad);
+        .sequence({
+            {1.15f, 0.6f, afterhours::animation::EasingType::EaseOutQuad},
+            {1.0f, 0.4f, afterhours::animation::EasingType::EaseOutQuad},
+        });
   }
 
   float get_anim_value(BasicAnimKey key, float /*default_val*/ = 0.0f) {

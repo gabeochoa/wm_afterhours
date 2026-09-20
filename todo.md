@@ -96,8 +96,8 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ### First-segment animation easing
 
-- [ ] Make `AnimHandle::sequence()` apply the first segment's easing on fresh and replayed tracks.
-  `animation_basic` uses chained `.to()` calls until the library fix is reviewed.
+- [x] `AnimHandle::sequence()` applies the first segment's easing on fresh, replayed and looping tracks.
+  `animation_basic` uses the native sequence API.
   See [the measured gap](docs/AFTERHOURS_GAPS.md#animation-sequences-ignore-the-first-segment-easing).
 
 ### Scroll state after changing overflow
