@@ -46,7 +46,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background({100, 180, 200, 255}).with_font("AtkinsonMock", pixels(20 * s))
                .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("origin_btn")
                .with_origin(0.f, 0.f)
-               .on_hover({.scale = 1.1f}));
+               .on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}}));
 
     float scale = 1.f, ty = 0.f, opacity = 1.f;
     bool in_flight = false;
