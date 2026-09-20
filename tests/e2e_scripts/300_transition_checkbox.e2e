@@ -1,0 +1,41 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_checkbox
+mouse_move 20 20
+wait 0.3
+expect_text "Checkbox check"
+expect_text "checked: no"
+expect_text "stroke: 0%"
+expect_text "motion: settled"
+click_ui check_box
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "checked: yes"
+wait 1.5
+expect_text "stroke: 100%"
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=100 y=270 w=44 h=44 tol=2 color=#5078dc
+screenshot transition_checkbox_checked
+click_ui check_box
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "checked: no"
+wait 1.5
+expect_text "stroke: 0%"
+expect_text "motion: settled"
+click_ui check_box
+mouse_move 20 20
+wait 1.5
+click_ui replay_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1.5
+expect_text "stroke: 100%"
+click_ui reset_btn
+mouse_move 20 20
+wait 0.5
+expect_text "checked: no"
+expect_text "stroke: 0%"

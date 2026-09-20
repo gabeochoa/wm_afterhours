@@ -1,0 +1,32 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_toggle
+mouse_move 20 20
+wait 0.3
+expect_text "Toggle"
+expect_text "on: no"
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=103 y=273 w=26 h=26 tol=2
+click_ui toggle_track
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "on: yes"
+wait 2
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=127 y=273 w=26 h=26 tol=2
+expect_drawn_at rectangle_rounded x=100 y=270 w=56 h=32 tol=2 color=#5078dc
+screenshot transition_toggle_on
+click_ui toggle_track
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "on: no"
+wait 2
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=103 y=273 w=26 h=26 tol=2
+click_ui reset_btn
+mouse_move 20 20
+wait 0.5
+expect_text "on: no"
