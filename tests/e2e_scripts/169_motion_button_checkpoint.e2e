@@ -85,3 +85,11 @@ wait 2
 expect_text "hover: no"
 expect_text "motion: settled"
 screenshot motion_button_after_teardown
+
+mouse_move 980 340
+expect_text "motion: settled"
+wait 1.5
+expect_drawn_at rectangle_rounded x=880 y=300 w=220 h=88 tol=2
+mouse_move 100 100
+wait 1.5
+expect_drawn_at rectangle_rounded x=880 y=300 w=200 h=80 tol=2

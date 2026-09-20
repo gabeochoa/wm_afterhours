@@ -41,6 +41,12 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                           .on_hover({.scale = 1.05f, .translate_y = -4.f * s})
                           .on_press({.scale = 0.92f}));
     if (btn) ++clicks;
+    button(context, mk(entity, 11),
+           box(880, 300, 200, 80).with_label("Corner pinned")
+               .with_custom_background({100, 180, 200, 255}).with_font("AtkinsonMock", pixels(20 * s))
+               .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("origin_btn")
+               .with_origin(0.f, 0.f)
+               .on_hover({.scale = 1.1f}));
 
     float scale = 1.f, ty = 0.f, opacity = 1.f;
     bool in_flight = false;
