@@ -1,0 +1,24 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_page
+mouse_move 20 20
+wait 0.8
+expect_text "Page side-by-side"
+expect_text "page: 1"
+expect_text "motion: settled"
+click_ui page_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "page: 2"
+wait 1
+expect_text "motion: settled"
+screenshot transition_page_two
+click_ui page_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "page: 1"
+wait 1
+expect_text "motion: settled"

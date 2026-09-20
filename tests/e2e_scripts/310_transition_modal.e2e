@@ -1,0 +1,22 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_modal
+mouse_move 20 20
+wait 0.6
+expect_text "Modal open/close"
+expect_text "phase: hidden"
+click_ui modal_open_btn
+mouse_move 20 20
+expect_text "phase: entering"
+wait 1
+expect_text "phase: visible"
+screenshot transition_modal_open
+click_ui modal_done
+mouse_move 20 20
+expect_text "phase: exiting"
+wait 1
+expect_text "phase: hidden"
+expect_text "motion: settled"

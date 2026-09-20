@@ -1,0 +1,25 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_panel
+mouse_move 20 20
+wait 0.8
+expect_text "Panel reveal"
+expect_text "panel: closed"
+expect_text "motion: settled"
+click_ui panel_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "panel: open"
+wait 1.5
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=100 y=320 w=320 h=187 tol=2 color=#5078dc
+screenshot transition_panel_open
+click_ui panel_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "panel: closed"
+wait 1.5
+expect_text "motion: settled"

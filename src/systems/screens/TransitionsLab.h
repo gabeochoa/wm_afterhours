@@ -6,6 +6,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/modal.h>
 #include <array>
 
 using namespace afterhours::ui;
@@ -24,7 +25,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   };
   const std::vector<Group> groups{
       {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
-      {"navigation", "Navigation and overlays", {}},
+      {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}}},
       {"status", "Status and loading", {}},
       {"cards", "Cards and text", {}},
       {"effects", "Visual effects", {}},
@@ -44,8 +45,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   int submits = 0;
   bool cleared = false;
   int swap_index = 0;
+  bool menu_open = false;
+  std::string menu_choice = "none";
+  int tooltip_trigger = -1;
+  bool modal_open = false;
+  bool panel_open = false;
+  bool page_two = false;
+  int tab_index = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW };
 
   void reset_examples() {
     checked = false;
@@ -57,6 +65,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     submits = 0;
     cleared = false;
     swap_index = 0;
+    menu_open = false;
+    menu_choice = "none";
+    tooltip_trigger = -1;
+    modal_open = false;
+    panel_open = false;
+    page_two = false;
+    tab_index = 0;
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
     afterhours::motion::anim(Key::Shake).from(0.f);
     afterhours::motion::anim(Key::ErrorHold).from(0.f);
@@ -82,9 +97,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events().with_debug_name(debug));
     };
     const auto tab = [&](afterhours::Entity &parent, int id, const std::string &text, float x, float y, float w,
-                         bool selected, const std::string &debug) {
+                         bool selected, const std::string &debug, float h = 40.f) {
       return button(context, mk(parent, id),
-                    box(x, y, w, 40).with_label(text).with_font("AtkinsonMock", pixels(17 * s))
+                    box(x, y, w, h).with_label(text).with_font("AtkinsonMock", pixels(h > 36.f ? 17 * s : 15 * s))
                         .with_custom_background(selected ? coral : afterhours::Color{244, 240, 246, 255})
                         .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name(debug)
                         .on_hover({.scale = 1.03f}).on_press({.scale = 0.96f}));
@@ -95,13 +110,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     label(entity, 1, "Transitions Lab", 40, 24, 600, 30);
 
     for (size_t g = 0; g < groups.size(); ++g)
-      if (tab(entity, 10 + int(g), groups[g].title, 40 + g * 240.f, 70, 228, g == group, std::string("group_") + groups[g].slug))
+      if (tab(entity, 10 + int(g), groups[g].title, 40 + g * 240.f, 60, 228, g == group, std::string("group_") + groups[g].slug))
         group = g;
     const Group &current = groups[group];
     if (example[group] >= current.examples.size()) example[group] = 0;
     for (size_t e = 0; e < current.examples.size(); ++e)
-      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + e * 200.f, 122, 188, e == example[group],
-              std::string("ex_") + current.examples[e].slug))
+      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + (e % 8) * 148.f, 106 + (e / 8) * 36.f, 140,
+              e == example[group], std::string("ex_") + current.examples[e].slug, 32.f))
         example[group] = e;
 
     if (tab(entity, 40, "Replay", 40, 660, 120, false, "replay_btn")) ++replay_stamp;
@@ -353,6 +368,155 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(stage.ent(), 3, "Next state lifts the old label 4 px as it fades; the new one rises in from 4 px below. 150 ms each, overlapping.", 60, 150, 1100, 18, true);
       label(stage.ent(), 4, "state: " + std::to_string(swap_index), 60, 190, 400, 20, false, "swap_state");
+    }
+    else if (slug == "menu") {
+      if (tab(stage.ent(), 1, menu_open ? "Close menu" : "Open menu", 60, 84, 160, false, "menu_trigger")) menu_open = !menu_open;
+      auto panel = div(context, mk(stage.ent(), 2),
+                       box(60, 132, 220, 152).with_debug_name("menu_panel").with_corner_radius(12 * s)
+                           .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s)
+                           .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_origin(0.f, 0.f)
+                           .with_padding(Padding::all(pixels(8 * s)))
+                           .with_flex_direction(FlexDirection::Column)
+                           .on_appear({.scale = 0.97f, .opacity = 0.f})
+                           .on_state(menu_open, {.scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
+                                     motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      static const char *items[] = {"Rename", "Duplicate", "Archive"};
+      for (int i = 0; i < 3; ++i) {
+        ComponentConfig cfg = ComponentConfig{}.with_size({pixels(204 * s), pixels(40 * s)}).with_label(items[i])
+                                  .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
+                                  .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(8 * s)))
+                                  .with_custom_background(paper).with_corner_radius(6 * s)
+                                  .with_debug_name(std::string("menu_item_") + std::to_string(i))
+                                  .on_hover({.background = afterhours::Color{244, 240, 246, 255}}, motion::Spring::snappy());
+        if (!menu_open) cfg.with_ignore_pointer_events().with_skip_tabbing(true);
+        if (button(context, mk(panel.ent(), i), cfg) && menu_open) {
+          menu_choice = items[i];
+          menu_open = false;
+        }
+      }
+      track_motion(panel.ent());
+      label(stage.ent(), 3, "The popover scales from 0.97 at its top-left corner while fading in over 250 ms; closed it keeps no pointer or tab stop.", 320, 100, 900, 18, true);
+      label(stage.ent(), 4, std::string("menu: ") + (menu_open ? "open" : "closed"), 320, 140, 400, 20, false, "menu_state");
+      label(stage.ent(), 5, "choice: " + menu_choice, 320, 170, 400, 20, false, "menu_choice");
+    } else if (slug == "tooltip") {
+      static const char *tips[] = {"Bold the selection", "Italicise the selection", "Underline the selection"};
+      static const char *names[] = {"Bold", "Italic", "Underline"};
+      int hovered = -1;
+      for (int i = 0; i < 3; ++i) {
+        auto b = tab(stage.ent(), 1 + i, names[i], 60 + i * 140.f, 140, 120, false, std::string("tip_trigger_") + std::to_string(i));
+        if (context.was_hot(b.id())) hovered = i;
+      }
+      if (hovered >= 0) tooltip_trigger = hovered;
+      auto &tx = motion::anim(Key::TooltipX);
+      const float want_x = 60.f + std::max(tooltip_trigger, 0) * 140.f;
+      if (!tx.started()) tx.from(want_x);
+      if (tx.target() != want_x) tx.to(want_x, motion::Timeline{.keys = {{0.f, 0.f}, {0.16f, 1.f}}, .curve = motion::curves::ease_out_quad});
+      const bool shown = hovered >= 0;
+      auto bubble = div(context, mk(stage.ent(), 5),
+                        box(tx.value(), 92, 220, 36).with_debug_name("tooltip_bubble").with_corner_radius(8 * s)
+                            .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s)
+                            .with_label(tooltip_trigger >= 0 ? tips[tooltip_trigger] : "").with_font("AtkinsonMock", pixels(15 * s))
+                            .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
+                            .with_soft_shadow(2 * s, 4 * s, 12 * s, {80, 60, 100, 30}).with_ignore_pointer_events()
+                            .on_appear({.scale = 0.98f, .opacity = 0.f})
+                            .on_state(shown, {.scale = {0.98f, 1.f}, .opacity = {0.f, 1.f}},
+                                      motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      track_motion(bubble.ent());
+      in_flight |= tx.active();
+      label(stage.ent(), 6, "Hover a button. One shared bubble fades and scales in, slides between neighbours over 160 ms, and fades out on leave.", 60, 200, 1100, 18, true);
+      label(stage.ent(), 7, std::string("tooltip: ") + (shown ? "shown" : "hidden"), 60, 240, 400, 20, false, "tooltip_state");
+      label(stage.ent(), 8, "trigger: " + std::to_string(tooltip_trigger), 60, 270, 400, 20, false, "tooltip_trigger");
+    }
+    else if (slug == "modal") {
+      if (tab(stage.ent(), 1, "Open dialog", 60, 84, 160, false, "modal_open_btn")) modal_open = true;
+      auto dialog = afterhours::modal(context, mk(stage.ent(), 2), modal_open,
+                                      afterhours::ModalConfig{}.with_title("Fading dialog").with_size(h720(420), h720(200))
+                                          .with_motion(motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad},
+                                                       motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}}));
+      if (dialog) {
+        div(context, mk(dialog.ent(), 1), ComponentConfig{}.with_size({percent(1.f), h720(60)}).with_label("The panel fades and the backdrop with it. Input behind stays blocked until the exit settles.")
+            .with_font_size(h720(16)).with_text_overflow(TextOverflow::Wrap).with_debug_name("modal_body"));
+        if (button(context, mk(dialog.ent(), 2), ComponentConfig{}.with_size({h720(120), h720(40)}).with_label("Done")
+                       .with_custom_background(coral).with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("modal_done")))
+          modal_open = false;
+      }
+      const auto &m = dialog.ent().get<afterhours::modal::Modal>();
+      const char *phase = m.phase == afterhours::modal::Modal::Phase::Hidden ? "hidden" : m.phase == afterhours::modal::Modal::Phase::Entering ? "entering"
+                          : m.phase == afterhours::modal::Modal::Phase::Visible ? "visible" : "exiting";
+      in_flight |= m.phase == afterhours::modal::Modal::Phase::Entering || m.phase == afterhours::modal::Modal::Phase::Exiting;
+      label(stage.ent(), 3, "Open 250 ms ease-out, close 150 ms. The surface motion only: the plugin owns backdrop, focus and input.", 260, 100, 950, 18, true);
+      label(stage.ent(), 4, std::string("phase: ") + phase, 60, 170, 400, 20, false, "modal_phase");
+    } else if (slug == "panel") {
+      if (tab(stage.ent(), 1, panel_open ? "Hide panel" : "Show panel", 60, 84, 160, false, "panel_btn")) panel_open = !panel_open;
+      auto frame = div(context, mk(stage.ent(), 2), box(60, 140, 320, 187).with_debug_name("panel_frame").with_corner_radius(12 * s)
+                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
+      auto panel = div(context, mk(frame.ent(), 0),
+                       ComponentConfig{}.with_size({pixels(320 * s), pixels(187 * s)}).with_absolute_position(0.f, 0.f)
+                           .with_custom_background(accent).with_corner_radius(12 * s).with_debug_name("panel_body")
+                           .with_label("Panel").with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(paper)
+                           .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+                           .on_appear({.translate_y = 93.5f * s, .opacity = 0.f})
+                           .on_state(panel_open, {.translate_y = {93.5f * s, 0.f}, .opacity = {0.f, 1.f}},
+                                     motion::Timeline{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      track_motion(panel.ent());
+      label(stage.ent(), 3, "The panel rises half its height into a clipping frame while fading in, 400 ms ease-out.", 400, 150, 800, 18, true);
+      label(stage.ent(), 4, std::string("panel: ") + (panel_open ? "open" : "closed"), 400, 190, 400, 20, false, "panel_state");
+    }
+    else if (slug == "page") {
+      auto frame = div(context, mk(stage.ent(), 1), box(60, 84, 420, 240).with_debug_name("page_frame").with_corner_radius(12 * s)
+                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
+      const motion::Timeline slide{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const auto page = [&](int id, const char *title, afterhours::Color bg, bool is_two, const char *debug) {
+        ComponentConfig cfg = ComponentConfig{}.with_size({pixels(420 * s), pixels(240 * s)}).with_absolute_position(0.f, 0.f)
+                                  .with_custom_background(bg).with_corner_radius(12 * s).with_label(title)
+                                  .with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(paper)
+                                  .with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name(debug);
+        if (is_two)
+          cfg.on_appear({.translate_x = 8.f * s, .opacity = 0.f}).on_state(page_two, {.translate_x = {8.f * s, 0.f}, .opacity = {0.f, 1.f}}, slide);
+        else
+          cfg.on_state(page_two, {.translate_x = {0.f, -8.f * s}, .opacity = {1.f, 0.f}}, slide);
+        return div(context, mk(frame.ent(), id), cfg);
+      };
+      page(0, "Page 1", accent, false, "page_one");
+      page(1, "Page 2", {90, 170, 120, 255}, true, "page_two");
+      if (tab(stage.ent(), 2, page_two ? "Back" : "Forward", 500, 84, 120, false, "page_btn")) page_two = !page_two;
+      for (auto child_id : frame.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (child.valid()) track_motion(child.asE());
+      }
+      label(stage.ent(), 3, "Two overlapping pages trade places: 8 px of travel and a cross-fade, 250 ms.", 500, 140, 700, 18, true);
+      label(stage.ent(), 4, std::string("page: ") + (page_two ? "2" : "1"), 500, 180, 400, 20, false, "page_state");
+    } else if (slug == "tabs") {
+      static const char *names[] = {"Debug", "Ask", "Plan"};
+      static const float widths[] = {110.f, 80.f, 90.f};
+      float xs[3]; float run = 0.f;
+      for (int i = 0; i < 3; ++i) { xs[i] = run; run += widths[i] + 6.f; }
+      auto bar = div(context, mk(stage.ent(), 1), box(60, 84, run + 6.f, 44).with_debug_name("tabs_bar").with_corner_radius(10 * s)
+                                                       .with_custom_background({241, 241, 241, 255}));
+      auto &px = motion::anim(Key::PillX);
+      auto &pw = motion::anim(Key::PillW);
+      const float want_x = (6.f + xs[tab_index]) * s, want_w = widths[tab_index] * s;
+      const motion::Timeline move{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      if (!px.started()) px.from(want_x);
+      if (!pw.started()) pw.from(want_w);
+      if (px.target() != want_x) px.to(want_x, move);
+      if (pw.target() != want_w) pw.to(want_w, move);
+      div(context, mk(bar.ent(), 0), ComponentConfig{}.with_size({pixels(pw.value()), pixels(32 * s)}).with_absolute_position(px.value(), 6.f * s)
+                                         .with_custom_background(paper).with_corner_radius(8 * s).with_debug_name("tabs_pill")
+                                         .with_soft_shadow(0.f, 1.f * s, 3.f * s, {0, 0, 0, 30}).with_ignore_pointer_events());
+      for (int i = 0; i < 3; ++i) {
+        if (button(context, mk(bar.ent(), 1 + i),
+                   ComponentConfig{}.with_size({pixels(widths[i] * s), pixels(32 * s)}).with_absolute_position((6.f + xs[i]) * s, 6.f * s)
+                       .with_label(names[i]).with_font("AtkinsonMock", pixels(17 * s))
+                       .with_custom_text_color(i == tab_index ? afterhours::Color{15, 15, 15, 255} : afterhours::Color{15, 15, 15, 200})
+                       .with_alignment(TextAlignment::Center).with_padding(Padding::all(pixels(0)))
+                       .with_custom_background(afterhours::colors::transparent()).with_corner_radius(8 * s)
+                       .with_debug_name(std::string("tab_") + std::to_string(i))))
+          tab_index = i;
+      }
+      in_flight |= px.active() || pw.active();
+      label(stage.ent(), 3, "One pill slides under the selected tab and resizes to it, 250 ms ease-out. The pill is measured, not the content.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 4, "tab: " + std::to_string(tab_index), 60, 190, 400, 20, false, "tabs_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

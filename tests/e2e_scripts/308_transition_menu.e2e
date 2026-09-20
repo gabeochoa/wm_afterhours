@@ -1,0 +1,34 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_navigation
+click_ui ex_menu
+mouse_move 20 20
+wait 0.6
+expect_text "Menu dropdown"
+expect_text "menu: closed"
+expect_text "motion: settled"
+click_ui menu_item_1
+mouse_move 20 20
+wait 0.3
+expect_text "choice: none"
+click_ui menu_trigger
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "menu: open"
+wait 1
+expect_text "motion: settled"
+expect_drawn_at rectangle_rounded x=100 y=312 w=220 h=152 tol=2
+screenshot transition_menu_open
+click_ui menu_item_1
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "menu: closed"
+expect_text "choice: Duplicate"
+wait 1
+expect_text "motion: settled"
+click_ui reset_btn
+mouse_move 20 20
+wait 0.3
+expect_text "choice: none"
