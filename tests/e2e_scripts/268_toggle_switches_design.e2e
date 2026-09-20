@@ -60,6 +60,13 @@ assert_ui toggle_auto_save_state text=On
 click_ui toggle_reset
 wait 0.3
 assert_ui toggle_auto_save_state text=Off
+focus_ui toggle_dark_mode
+key ENTER
+wait 0.2
+assert_ui toggle_dark_mode_state text=Off
+click_ui toggle_reset
+wait 0.3
+assert_ui toggle_dark_mode_state text=On
 resize 1920 1080
 wait 0.3
 assert_ui toggle_card x=456 y=36 w=1008 h=1008

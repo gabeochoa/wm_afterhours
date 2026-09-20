@@ -64,8 +64,6 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
       label(120 + id, caption, 344, y, 340, 38, 21);
       auto ep = mk(root.ent(), 140 + id);
       auto [control, parent] = deref(ep);
-      if (reset_pending && circle && control.has<HasCheckboxState>())
-        control.get<HasCheckboxState>().on = value;
       if (reset_pending && !circle && control.has<HasToggleSwitchState>()) {
         auto &state = control.get<HasToggleSwitchState>();
         state.on = value;
