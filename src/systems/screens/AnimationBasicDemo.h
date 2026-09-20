@@ -32,7 +32,17 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
 
   std::optional<BasicAnimKey> last_replayed;
 
+  static afterhours::motion::Track<float> &track(BasicAnimKey key) {
+    return afterhours::motion::anim(key);
+  }
+
+  static float duration(BasicAnimKey key) {
+    return key == BasicAnimKey::SlideIn ? 1.2f : key == BasicAnimKey::FadeIn ? 1.6f : 1.f;
+  }
+
   void start_animations(std::optional<BasicAnimKey> only = std::nullopt) {
+    using afterhours::motion::Timeline;
+    using afterhours::motion::curves::ease_out_quad;
     if (animations_started && !only)
       return;
     animations_started = true;
@@ -41,66 +51,38 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     if (first_run) {
       // For first run, set to end values so screenshot shows something
       first_run = false;
-      auto &fade_track =
-          afterhours::animation::manager<BasicAnimKey>().ensure_track(
-              BasicAnimKey::FadeIn);
-      fade_track = {};
-      fade_track.current = 1.0f;
-      auto &slide_track =
-          afterhours::animation::manager<BasicAnimKey>().ensure_track(
-              BasicAnimKey::SlideIn);
-      slide_track = {};
-      slide_track.current = 0.0f;
-      auto &scale_track =
-          afterhours::animation::manager<BasicAnimKey>().ensure_track(
-              BasicAnimKey::ScaleUp);
-      scale_track = {};
-      scale_track.current = 1.0f;
+      track(BasicAnimKey::FadeIn).from(1.0f);
+      track(BasicAnimKey::SlideIn).from(0.0f);
+      track(BasicAnimKey::ScaleUp).from(1.0f);
       return;
     }
 
     // Fade: 0 -> 1 over 1.6s (slower for visibility)
     if (!only || *only == BasicAnimKey::FadeIn)
-      afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::FadeIn)
-        .from(0.0f)
-        .to(1.0f, 1.6f, afterhours::animation::EasingType::EaseOutQuad);
+      track(BasicAnimKey::FadeIn).from(0.0f).to(
+          1.0f, Timeline{.keys = {{0.f, 0.f}, {1.6f, 1.f}}, .curve = ease_out_quad});
 
     // Slide: -200 -> 0 over 1.2s (slower for visibility)
     if (!only || *only == BasicAnimKey::SlideIn)
-      afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::SlideIn)
-        .from(-200.0f)
-        .to(0.0f, 1.2f, afterhours::animation::EasingType::EaseOutQuad);
+      track(BasicAnimKey::SlideIn).from(-200.0f).to(
+          0.0f, Timeline{.keys = {{0.f, 0.f}, {1.2f, 1.f}}, .curve = ease_out_quad});
 
     // Scale: 0 -> 1 over 1.0s with bounce effect (sequence)
     if (!only || *only == BasicAnimKey::ScaleUp)
-      afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::ScaleUp)
-        .from(0.0f)
-        .sequence({
-            {1.15f, 0.6f, afterhours::animation::EasingType::EaseOutQuad},
-            {1.0f, 0.4f, afterhours::animation::EasingType::EaseOutQuad},
-        });
+      track(BasicAnimKey::ScaleUp).from(0.0f).to(
+          1.0f, Timeline{.keys = {{0.f, 0.f}, {0.6f, 1.15f}, {1.0f, 1.f}}, .curve = ease_out_quad});
   }
 
-  float get_anim_value(BasicAnimKey key, float /*default_val*/ = 0.0f) {
-    auto val = afterhours::animation::manager<BasicAnimKey>().get_value(key);
-    if (val.has_value()) return val.value();
-    // If animation finished, return the end value
-    auto &track =
-        afterhours::animation::manager<BasicAnimKey>().ensure_track(key);
-    return track.current;
-  }
+  float get_anim_value(BasicAnimKey key) { return track(key).value(); }
 
   float elapsed(BasicAnimKey key) {
-    const auto &track = afterhours::animation::manager<BasicAnimKey>().ensure_track(key);
-    const float duration = key == BasicAnimKey::SlideIn ? 1.2f : key == BasicAnimKey::FadeIn ? 1.6f : 1.f;
-    if (!track.active) return duration;
-    return std::min(duration, track.elapsed + (key == BasicAnimKey::ScaleUp && track.queue.empty() ? .6f : 0.f));
+    const auto &tr = track(key);
+    if (!tr.active()) return duration(key);
+    return std::min(duration(key), tr.elapsed());
   }
 
   void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float dt) override {
-    // Update animation manager
-    afterhours::animation::manager<BasicAnimKey>().update(dt);
+                     UIContext<InputAction> &context, float) override {
     // Start animations on first frame
     start_animations();
     context.theme = afterhours::ui::theme_presets::neon_dark();
@@ -142,7 +124,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 3; ++i) {
       const float x = i * 388.f;
       const float value = get_anim_value(keys[i]);
-      const bool active = afterhours::animation::manager<BasicAnimKey>().ensure_track(keys[i]).active;
+      const bool active = track(keys[i]).active();
       div(context, mk(root.ent(), id++), box(left + x, 140, 368, 412)
           .with_custom_background({32, 38, 51, 255}).with_border(border, s).with_corner_radius(12 * s));
       label(titles[i], x + 20, 152, 328, 33, 27, colors[i]);
@@ -204,15 +186,15 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
       }
     }
     const BasicAnimKey clock_key = last_replayed.value_or(BasicAnimKey::FadeIn);
-    const float duration = clock_key == BasicAnimKey::FadeIn ? 1.6f : clock_key == BasicAnimKey::SlideIn ? 1.2f : 1.f;
+    const float clock_duration = duration(clock_key);
     const float time = elapsed(clock_key);
     const std::string replay_name = !last_replayed ? "all three" : clock_key == BasicAnimKey::FadeIn ? "fade" : clock_key == BasicAnimKey::SlideIn ? "slide" : "scale";
-    label(fmt::format("Last replay: {}  /  {:.2f} of {:.1f} s", replay_name, time, duration), 0, 567, 1144, 28, 21, text_light, "basic_timeline_label");
+    label(fmt::format("Last replay: {}  /  {:.2f} of {:.1f} s", replay_name, time, clock_duration), 0, 567, 1144, 28, 21, text_light, "basic_timeline_label");
     div(context, mk(root.ent(), id++), box(left, 604, 1144, 8)
         .with_custom_background({66, 79, 101, 255}).with_ignore_pointer_events()
-        .with_on_draw_fg([time, duration](RectangleType r) {
-          afterhours::draw_rectangle({r.x, r.y, r.width * time / duration, r.height}, {129, 167, 232, 255});
-          raylib::DrawCircleV({r.x + r.width * time / duration, r.y + r.height / 2}, r.height * .8f, {235, 240, 250, 255});
+        .with_on_draw_fg([time, clock_duration](RectangleType r) {
+          afterhours::draw_rectangle({r.x, r.y, r.width * time / clock_duration, r.height}, {129, 167, 232, 255});
+          raylib::DrawCircleV({r.x + r.width * time / clock_duration, r.y + r.height / 2}, r.height * .8f, {235, 240, 250, 255});
         }));
     // ========== Restart Button ==========
     if (button(context, mk(root.ent(), id++), box(left, 636, 240, 44)
@@ -223,7 +205,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
       start_animations();
     }
     bool running = false;
-    for (auto key : keys) running |= afterhours::animation::manager<BasicAnimKey>().ensure_track(key).active;
+    for (auto key : keys) running |= track(key).active();
     label(running ? "Running" : "Complete", 270, 644, 170, 30, 23, text_light, "basic_phase");
     label("Thumbnails show 0%, 50% and 100% of each duration.", 500, 644, 644, 30, 19, muted);
   }

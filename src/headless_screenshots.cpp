@@ -219,6 +219,7 @@ create_screen_systems(const std::string &screen_name) {
   afterhours::toast::register_update_systems(systems);
   afterhours::toast::register_layout_systems<InputAction>(systems);
   afterhours::modal::register_update_systems<InputAction>(systems);
+  afterhours::motion::register_update_systems(systems);
 
   afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
@@ -762,6 +763,7 @@ int run_all_tests_headless() {
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
+    afterhours::motion::register_update_systems(systems);
 
     // TestSystem drives the coroutine
     auto test_system = std::make_unique<TestSystem>();
