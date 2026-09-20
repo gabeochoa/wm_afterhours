@@ -27,7 +27,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}}},
-      {"cards", "Cards and text", {}},
+      {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}}},
       {"effects", "Visual effects", {}},
   };
 
@@ -61,11 +61,14 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool skeleton_revealed = false;
   bool spinner_done = false;
   int completions = 0;
+  bool card_expanded = true;
+  bool texts_shown = false;
+  int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH };
 
   void reset_examples() {
     checked = false;
@@ -93,6 +96,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     skeleton_revealed = false;
     spinner_done = false;
     completions = 0;
+    card_expanded = true;
+    texts_shown = false;
+    matrix_pattern = 0;
     banners.clear();
     next_banner = 0;
     afterhours::motion::anim(Key::SpinCheck).from(0.f);
@@ -862,6 +868,137 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 3, "A new banner rises 80 px into the front; older ones step back 12 px, shrink 6 % and dim per depth. A fourth arrival dismisses the oldest. Hover the stack to spread it.", 440, 160, 780, 18, true);
       label(stage.ent(), 4, "banners: " + std::to_string(visible), 440, 220, 400, 20, false, "banner_count");
       label(stage.ent(), 5, std::string("spread: ") + (hovered ? "yes" : "no"), 440, 250, 400, 20, false, "banner_spread");
+    }
+    else if (slug == "card_resize") {
+      auto &cw = motion::anim(Key::CardW);
+      auto &ch = motion::anim(Key::CardH);
+      const float big_w = 260.f * s, big_h = 180.f * s, small_w = 160.f * s, small_h = 100.f * s;
+      if (!cw.started()) cw.from(big_w);
+      if (!ch.started()) ch.from(big_h);
+      const motion::Timeline resize{.keys = {{0.f, 0.f}, {0.3f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const float want_w = card_expanded ? big_w : small_w, want_h = card_expanded ? big_h : small_h;
+      if (cw.target() != want_w) cw.to(want_w, resize);
+      if (ch.target() != want_h) ch.to(want_h, resize);
+      if (tab(stage.ent(), 1, card_expanded ? "Compact" : "Expand", 60, 84, 140, false, "card_btn")) card_expanded = !card_expanded;
+      auto card = div(context, mk(stage.ent(), 2),
+                      ComponentConfig{}.with_size({pixels(cw.value()), pixels(ch.value())}).with_absolute_position(60 * s, 140 * s)
+                          .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s).with_corner_radius(14 * s)
+                          .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_padding(Padding::all(pixels(14 * s)))
+                          .with_clip_children().with_debug_name("resize_card")
+                          .with_label("Only width and height animate; the text reflows inside the changing box.")
+                          .with_font("AtkinsonMock", pixels(15 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                          .with_text_overflow(TextOverflow::Wrap));
+      in_flight |= cw.active() || ch.active();
+      label(stage.ent(), 3, "The same container tweens between 260 x 180 and 160 x 100 over 300 ms.", 360, 150, 800, 18, true);
+      label(stage.ent(), 4, "size: " + std::to_string(int(std::lround(cw.value() / s))) + " x " + std::to_string(int(std::lround(ch.value() / s))), 360, 190, 400, 20, false, "card_size");
+    } else if (slug == "card_stack") {
+      auto zone = div(context, mk(stage.ent(), 1), box(60, 84, 420, 260).with_debug_name("stack_zone").with_background(Theme::Usage::None));
+      const RectangleType zr = zone.cmp().rect();
+      const bool fanned = context.mouse.pos.x >= zr.x && context.mouse.pos.x <= zr.x + zr.width &&
+                          context.mouse.pos.y >= zr.y && context.mouse.pos.y <= zr.y + zr.height;
+      static const afterhours::Color tints[] = {{120, 160, 230, 255}, {230, 150, 120, 255}, {130, 200, 150, 255}};
+      static const float base_x[] = {0.f, 14.f, 28.f}, base_rot[] = {-4.f, 0.f, 4.f};
+      static const float fan_x[] = {-70.f, 0.f, 70.f}, fan_rot[] = {-12.f, 0.f, 12.f};
+      const motion::Spring open{.response = 0.41f, .bounce = 0.5f}, close{.response = 0.36f, .bounce = 0.35f};
+      for (int i = 0; i < 3; ++i) {
+        auto card = button(context, mk(zone.ent(), i),
+                           ComponentConfig{}.with_size({pixels(150 * s), pixels(200 * s)}).with_absolute_position((130 + base_x[i]) * s, 30 * s)
+                               .with_custom_background(tints[i]).with_corner_radius(14 * s).with_padding(Padding::all(pixels(0)))
+                               .with_soft_shadow(2 * s, 8 * s, 18 * s, {40, 30, 60, 50}).with_debug_name(std::string("stack_card_") + std::to_string(i))
+                               .with_label(std::string("Card ") + std::to_string(i + 1)).with_font("AtkinsonMock", pixels(18 * s))
+                               .with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                               .on_appear({.rotation = base_rot[i], .opacity = i == 1 ? 1.f : 0.85f})
+                               .on_state(fanned, {.translate_x = {0.f, (fan_x[i] - base_x[i] + 14.f) * s}, .rotation = {base_rot[i], fan_rot[i]}, .opacity = {i == 1 ? 1.f : 0.85f, 1.f}},
+                                         fanned ? open : close)
+                               .on_hover({.scale = 1.04f}, motion::Spring{.response = 0.61f}));
+        track_motion(card.ent());
+      }
+      label(stage.ent(), 2, "Hover the stack: the three cards fan out on a spring with overshoot, back cards turn fully opaque, and the card under the pointer grows 4 %.", 60, 350, 1100, 18, true);
+      label(stage.ent(), 3, std::string("fan: ") + (fanned ? "open" : "closed"), 500, 100, 400, 20, false, "stack_state");
+    }
+    else if (slug == "avatars") {
+      static const afterhours::Color tints[] = {{120, 160, 230, 255}, {230, 150, 120, 255}, {130, 200, 150, 255}, {200, 150, 220, 255}, {230, 200, 110, 255}};
+      int active = -1;
+      std::array<afterhours::Entity *, 5> ents{};
+      for (int i = 0; i < 5; ++i) {
+        auto av = button(context, mk(stage.ent(), 1 + i),
+                         ComponentConfig{}.with_size({pixels(48 * s), pixels(48 * s)}).with_absolute_position((60 + i * 40) * s, 100 * s)
+                             .with_custom_background(tints[i]).with_corner_radius(24 * s).with_padding(Padding::all(pixels(0)))
+                             .with_border(paper, 2.f * s).with_render_layer(5 + i).with_debug_name(std::string("avatar_") + std::to_string(i))
+                             .with_label(std::string(1, char('A' + i))).with_font("AtkinsonMockBold", pixels(18 * s))
+                             .with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                             .on_hover({.scale = 1.05f}, motion::Spring{.response = 0.32f, .bounce = 0.6f}));
+        ents[i] = &av.ent();
+        if (context.was_hot(av.id())) active = i;
+      }
+      const motion::Spring in{.response = 0.32f}, out{.response = 0.32f, .bounce = 0.75f};
+      for (int j = 0; j < 5; ++j) {
+        const float want = active < 0 ? 0.f : -4.f * s * std::pow(0.45f, float(std::abs(active - j)));
+        auto &lift = ents[j]->addComponentIfMissing<motion::HasTracks>().track<float>(100);
+        if (!lift.started()) lift.from(0.f);
+        if (lift.target() != want) lift.to(want, active < 0 ? out : in);
+        ents[j]->addComponentIfMissing<HasUIModifiers>().translate_y += lift.value();
+        track_motion(*ents[j]);
+      }
+      label(stage.ent(), 6, "Hover an avatar: it rises 4 px and grows 5 %; neighbours rise by 0.45 per step of distance. Leaving settles through a stronger overshoot.", 60, 200, 1100, 18, true);
+      label(stage.ent(), 7, "active: " + std::to_string(active), 60, 240, 400, 20, false, "avatar_active");
+    } else if (slug == "texts_reveal") {
+      if (tab(stage.ent(), 1, texts_shown ? "Hide" : "Reveal", 60, 84, 140, false, "texts_btn")) texts_shown = !texts_shown;
+      const motion::Timeline first{.keys = {{0.f, 0.f}, {0.5f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const motion::Timeline second{.keys = {{0.f, 0.f}, {0.04f, 0.f}, {0.54f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      const motion::Timeline hide{.keys = {{0.f, 0.f}, {0.2f, 1.f}}};
+      const auto line = [&](int id, const char *text, float y, const motion::Timeline &tl, const char *debug) {
+        auto l = div(context, mk(stage.ent(), id),
+                     box(60, y, 700, 40).with_label(text).with_font("AtkinsonMock", pixels(id == 2 ? 30 * s : 20 * s))
+                         .with_custom_text_color(id == 2 ? ink : muted).with_alignment(TextAlignment::Left)
+                         .with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name(debug)
+                         .on_appear({.translate_y = 12.f * s, .opacity = 0.f})
+                         .on_state(texts_shown, {.translate_y = {12.f * s, 0.f}, .opacity = {0.f, 1.f}}, texts_shown ? tl : hide));
+        track_motion(l.ent());
+      };
+      line(2, "Motion that explains itself", 150, first, "reveal_line_1");
+      line(3, "Two lines rise 12 px while fading in; the second starts 40 ms after the first.", 196, second, "reveal_line_2");
+      label(stage.ent(), 4, std::string("texts: ") + (texts_shown ? "shown" : "hidden"), 60, 260, 400, 20, false, "texts_state");
+    }
+    else if (slug == "matrix") {
+      static const char *pattern_names[] = {"Scan", "Twinkle", "Orbit", "Pulse"};
+      bool changed = false;
+      for (int i = 0; i < 4; ++i)
+        if (tab(stage.ent(), 1 + i, pattern_names[i], 60 + i * 110.f, 84, 100, i == matrix_pattern, std::string("matrix_") + std::to_string(i), 32.f) && matrix_pattern != i) {
+          matrix_pattern = i;
+          changed = true;
+        }
+      static const int twinkle[16] = {7, 2, 11, 5, 14, 9, 0, 12, 3, 15, 6, 10, 13, 1, 8, 4};
+      static const int orbit[8] = {1, 2, 7, 11, 14, 13, 8, 4};
+      const float cycle = 1.2f;
+      const afterhours::Color base{217, 217, 217, 255}, on{133, 133, 143, 255};
+      auto grid = div(context, mk(stage.ent(), 10), box(60, 150, 100, 100).with_debug_name("matrix").with_background(Theme::Usage::None));
+      for (int i = 0; i < 16; ++i) {
+        const int col = i % 4, row = i / 4;
+        float delay = 0.f;
+        bool lit = true;
+        switch (matrix_pattern) {
+        case 0: delay = col * cycle / 10.f; break;
+        case 1: for (int k = 0; k < 16; ++k) if (twinkle[k] == i) delay = k * cycle / 16.f; break;
+        case 2: { lit = false; for (int k = 0; k < 8; ++k) if (orbit[k] == i) { lit = true; delay = k * cycle / 8.f; } break; }
+        case 3: { const bool inner = i == 5 || i == 6 || i == 9 || i == 10; delay = inner ? 0.f : cycle * 0.16f; break; }
+        }
+        ComponentConfig cfg = ComponentConfig{}.with_size({pixels(16 * s), pixels(16 * s)}).with_absolute_position(col * 24.f * s, row * 24.f * s)
+                                  .with_custom_background(base).with_corner_radius(8 * s).with_ignore_pointer_events()
+                                  .with_debug_name(std::string("dot_") + std::to_string(i));
+        if (lit)
+          cfg.on_appear({.background = {base, on}},
+                        motion::Timeline{.keys = {{0.f, 0.f}, {delay, 0.f}, {delay + 0.18f, 1.f}, {delay + 0.54f, 0.f}, {cycle + delay, 0.f}},
+                                         .repeat = motion::Timeline::Repeat::Loop, .curve = motion::curves::ease_in_out_quad});
+        auto dot = div(context, mk(grid.ent(), i), cfg);
+        if (changed) {
+          dot.ent().removeComponentIfExists<HasMotionState>();
+          dot.ent().removeComponentIfExists<motion::HasTracks>();
+        }
+        track_motion(dot.ent());
+      }
+      label(stage.ent(), 20, "A 4 x 4 matrix pulses colour on a 1.2 s loop: column scan, a fixed twinkle order, a perimeter orbit, or centre-out. Timed colour changes, no movement.", 200, 160, 1000, 18, true);
+      label(stage.ent(), 21, std::string("pattern: ") + pattern_names[matrix_pattern], 200, 200, 400, 20, false, "matrix_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

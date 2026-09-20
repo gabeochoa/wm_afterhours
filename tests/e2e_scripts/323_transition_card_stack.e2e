@@ -1,0 +1,22 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_cards
+click_ui ex_card_stack
+mouse_move 20 20
+wait 0.8
+expect_text "Card stack hover"
+expect_text "fan: closed"
+expect_text "motion: settled"
+mouse_move 320 400
+expect_text "fan: open"
+expect_text "motion: in flight"
+wait 2
+expect_text "motion: settled"
+screenshot transition_card_stack_fanned
+mouse_move 20 20
+expect_text "fan: closed"
+expect_text "motion: in flight"
+wait 2
+expect_text "motion: settled"

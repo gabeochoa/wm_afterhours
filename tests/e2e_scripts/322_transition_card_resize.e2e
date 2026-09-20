@@ -1,0 +1,23 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_cards
+click_ui ex_card_resize
+mouse_move 20 20
+wait 0.6
+expect_text "Card resize"
+expect_text "size: 260 x 180"
+assert_ui resize_card x=100 y=320 w=260 h=180
+click_ui card_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1
+expect_text "motion: settled"
+expect_text "size: 160 x 100"
+assert_ui resize_card x=100 y=320 w=160 h=100
+screenshot transition_card_compact
+click_ui card_btn
+mouse_move 20 20
+wait 1
+expect_text "size: 260 x 180"
