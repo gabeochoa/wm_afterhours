@@ -1,0 +1,23 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_skeleton
+mouse_move 20 20
+wait 0.3
+expect_text "Skeleton loader"
+expect_text "content: loading"
+click_ui skeleton_btn
+mouse_move 20 20
+expect_text "content: loading"
+expect_text "motion: in flight"
+wait 1.2
+expect_text "content: revealed"
+wait 1
+screenshot transition_skeleton_revealed
+click_ui replay_btn
+mouse_move 20 20
+expect_text "content: loading"
+wait 1.5
+expect_text "content: revealed"

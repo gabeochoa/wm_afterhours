@@ -26,7 +26,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   const std::vector<Group> groups{
       {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
-      {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}}},
+      {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}}},
       {"cards", "Cards and text", {}},
       {"effects", "Visual effects", {}},
   };
@@ -57,8 +57,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool toast_shown = false;
   int toasts = 0;
   bool badge_shown = false;
+  bool success_shown = false;
+  bool skeleton_revealed = false;
+  bool spinner_done = false;
+  int completions = 0;
+  struct Banner { int id; std::string text; bool leaving = false; };
+  std::vector<Banner> banners;
+  int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave };
 
   void reset_examples() {
     checked = false;
@@ -82,7 +89,18 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     toast_shown = false;
     toasts = 0;
     badge_shown = false;
+    success_shown = false;
+    skeleton_revealed = false;
+    spinner_done = false;
+    completions = 0;
+    banners.clear();
+    next_banner = 0;
+    afterhours::motion::anim(Key::SpinCheck).from(0.f);
+    afterhours::motion::anim(Key::SpinHold).from(0.f);
+    afterhours::motion::anim(Key::BannerLeave).from(0.f);
     afterhours::motion::anim(Key::ToastHold).from(0.f);
+    afterhours::motion::anim(Key::SuccessDraw).from(0.f);
+    afterhours::motion::anim(Key::SkeletonLoad).from(0.f);
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
     afterhours::motion::anim(Key::Shake).from(0.f);
     afterhours::motion::anim(Key::ErrorHold).from(0.f);
@@ -646,6 +664,204 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(stage.ent(), 3, "The wrapper slides in diagonally (260 ms) while the dot pops from scale 0 on a 500 ms spring; clearing collapses it faster.", 60, 150, 1100, 18, true);
       label(stage.ent(), 4, std::string("badge: ") + (badge_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "badge_state");
+    }
+    else if (slug == "success") {
+      auto &draw = motion::anim(Key::SuccessDraw);
+      const float p = draw.value();
+      if (tab(stage.ent(), 1, success_shown ? "Hide" : "Show success", 60, 84, 160, false, "success_btn")) {
+        success_shown = !success_shown;
+        if (success_shown) {
+          draw.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.5f, 1.f}}, .curve = motion::curves::ease_out_quad}).delay(0.08f);
+        } else {
+          draw.to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}});
+        }
+      }
+      const afterhours::Color green{52, 168, 96, 255};
+      auto icon = div(context, mk(stage.ent(), 2),
+                      box(300, 80, 56, 56).with_debug_name("success_icon").with_corner_radius(28 * s).with_custom_background(green)
+                          .with_ignore_pointer_events()
+                          .with_on_draw_fg([p, s](RectangleType r) {
+                            if (p <= 0.f) return;
+                            const Vector2Type a{r.x + r.width * 0.28f, r.y + r.height * 0.52f};
+                            const Vector2Type b{r.x + r.width * 0.44f, r.y + r.height * 0.68f};
+                            const Vector2Type c{r.x + r.width * 0.74f, r.y + r.height * 0.34f};
+                            const float l1 = std::hypot(b.x - a.x, b.y - a.y), l2 = std::hypot(c.x - b.x, c.y - b.y);
+                            const float total = (l1 + l2) * std::clamp(p, 0.f, 1.f);
+                            const afterhours::Color white{255, 255, 255, 255};
+                            if (total <= l1) {
+                              const float t = total / l1;
+                              afterhours::draw_line_ex(a, {a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t}, 4.f * s, white);
+                            } else {
+                              afterhours::draw_line_ex(a, b, 4.f * s, white);
+                              const float t = (total - l1) / l2;
+                              afterhours::draw_line_ex(b, {b.x + (c.x - b.x) * t, b.y + (c.y - b.y) * t}, 4.f * s, white);
+                            }
+                          })
+                          .on_appear({.rotation = 80.f, .translate_y = 40.f * s, .opacity = 0.f})
+                          .on_state(success_shown, {.rotation = {80.f, 0.f}, .translate_y = {40.f * s, 0.f}, .opacity = {0.f, 1.f}},
+                                    motion::Spring{.response = 0.5f, .bounce = 0.3f}));
+      track_motion(icon.ent());
+      in_flight |= draw.active();
+      label(stage.ent(), 3, "The badge rises 40 px while rotating in from 80 degrees on a spring; the check stroke draws after an 80 ms delay over 500 ms.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 4, std::string("success: ") + (success_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "success_state");
+      label(stage.ent(), 5, "stroke: " + std::to_string(int(std::lround(p * 100.f))) + "%", 60, 220, 400, 20, false, "success_stroke");
+      {
+        float rot = 0.f;
+        if (icon.ent().has<motion::HasTracks>()) {
+          auto &t = icon.ent().get<motion::HasTracks>().floats;
+          if (auto it = t.find(static_cast<size_t>(MotionProperty::Rotation)); it != t.end()) rot = it->second.value();
+        }
+        label(stage.ent(), 6, "rotation: " + std::to_string(rot), 60, 250, 400, 20, false, "success_rotation");
+      }
+    } else if (slug == "skeleton") {
+      auto &load = motion::anim(Key::SkeletonLoad);
+      bool restart = false;
+      if (tab(stage.ent(), 1, "Load", 60, 84, 120, false, "skeleton_btn") || (replay_stamp != seen_replay && (seen_replay = replay_stamp, true))) {
+        skeleton_revealed = false;
+        restart = true;
+        load.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {1.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; skeleton_revealed = true; });
+      }
+      auto card = div(context, mk(stage.ent(), 2), box(60, 140, 360, 120).with_debug_name("skeleton_card").with_corner_radius(12 * s)
+                                                        .with_custom_background({244, 240, 246, 255}).with_padding(Padding::all(pixels(16 * s))));
+      const motion::Timeline pulse{.keys = {{0.f, 0.f}, {0.5f, 1.f}}, .repeat = motion::Timeline::Repeat::PingPong, .curve = motion::curves::ease_in_out_quad};
+      const motion::Timeline reveal{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
+      const auto bar = [&](int id, float y, float w) {
+        div(context, mk(card.ent(), id), ComponentConfig{}.with_size({pixels(w * s), pixels(16 * s)}).with_absolute_position(16 * s, y * s)
+                                             .with_custom_background({215, 208, 220, 255}).with_corner_radius(8 * s).with_ignore_pointer_events()
+                                             .with_debug_name(std::string("skeleton_bar_") + std::to_string(id))
+                                             .on_appear({.opacity = {1.f, 0.5f}}, pulse)
+                                             .on_state(skeleton_revealed, {.opacity = 0.f}, reveal));
+      };
+      bar(0, 16, 220);
+      bar(1, 48, 300);
+      bar(2, 80, 180);
+      div(context, mk(card.ent(), 3), ComponentConfig{}.with_size({pixels(328 * s), pixels(88 * s)}).with_absolute_position(16 * s, 16 * s)
+                                          .with_label("Order #4821 shipped. Expected Thursday; tracking is in your inbox.")
+                                          .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                                          .with_text_overflow(TextOverflow::Wrap).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                          .with_debug_name("skeleton_content")
+                                          .on_appear({.opacity = 0.f})
+                                          .on_state(skeleton_revealed, {.opacity = {0.f, 1.f}}, reveal));
+      for (auto child_id : card.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (!child.valid()) continue;
+        track_motion(child.asE());
+        if (restart) {
+          child.asE().removeComponentIfExists<HasMotionState>();
+          child.asE().removeComponentIfExists<motion::HasTracks>();
+        }
+      }
+      in_flight |= load.active();
+      label(stage.ent(), 4, "Bars pulse between opacity 1 and 0.5 while loading; after 1 s the content cross-fades in over 400 ms. Replay restarts the load.", 60, 280, 1100, 18, true);
+      label(stage.ent(), 5, std::string("content: ") + (skeleton_revealed ? "revealed" : "loading"), 60, 320, 400, 20, false, "skeleton_state");
+    }
+    else if (slug == "spinner") {
+      auto &angle = motion::anim(Key::SpinAngle);
+      auto &check = motion::anim(Key::SpinCheck);
+      auto &hold = motion::anim(Key::SpinHold);
+      if (!angle.started())
+        angle.from(0.f).to(360.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.9f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop}).essential();
+      if (tab(stage.ent(), 1, "Complete", 60, 84, 140, false, "spinner_btn") && !spinner_done) {
+        spinner_done = true;
+        ++completions;
+        check.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.6f, 1.f}}, .curve = motion::curves::ease_out_quad}).delay(0.23f);
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {2.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
+          spinner_done = false;
+          afterhours::motion::anim(Key::SpinCheck).to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}});
+        });
+      }
+      const float a = angle.value(), p = check.value();
+      const bool done = spinner_done;
+      const afterhours::Color green{52, 168, 96, 255}, ring{200, 195, 205, 255};
+      auto badge = div(context, mk(stage.ent(), 2),
+                       box(300, 80, 48, 48).with_debug_name("spinner_badge").with_corner_radius(24 * s)
+                           .with_custom_background(afterhours::colors::transparent()).with_ignore_pointer_events()
+                           .with_on_draw_fg([a, p, done, s, green, ring](RectangleType r) {
+                             const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f, outer = r.width / 2.f;
+                             if (!done) {
+                               afterhours::draw_ring(cx, cy, outer - 4.f * s, outer, 48, ring);
+                               afterhours::draw_ring_segment(cx, cy, outer - 4.f * s, outer, a, a + 90.f, 24, green);
+                               return;
+                             }
+                             if (p <= 0.f) return;
+                             const Vector2Type pa{r.x + r.width * 0.28f, r.y + r.height * 0.52f};
+                             const Vector2Type pb{r.x + r.width * 0.44f, r.y + r.height * 0.68f};
+                             const Vector2Type pc{r.x + r.width * 0.74f, r.y + r.height * 0.34f};
+                             const float l1 = std::hypot(pb.x - pa.x, pb.y - pa.y), l2 = std::hypot(pc.x - pb.x, pc.y - pb.y);
+                             const float total = (l1 + l2) * std::clamp(p, 0.f, 1.f);
+                             const afterhours::Color white{255, 255, 255, 255};
+                             if (total <= l1) {
+                               const float t = total / l1;
+                               afterhours::draw_line_ex(pa, {pa.x + (pb.x - pa.x) * t, pa.y + (pb.y - pa.y) * t}, 4.f * s, white);
+                             } else {
+                               afterhours::draw_line_ex(pa, pb, 4.f * s, white);
+                               const float t = (total - l1) / l2;
+                               afterhours::draw_line_ex(pb, {pb.x + (pc.x - pb.x) * t, pb.y + (pc.y - pb.y) * t}, 4.f * s, white);
+                             }
+                           })
+                           .on_state(spinner_done, {.scale = {1.f, 1.09f}, .background = {afterhours::colors::transparent(), green}},
+                                     motion::Spring{.response = 0.35f, .bounce = 0.5f})
+                           .on_change(static_cast<size_t>(completions), {.translate_y = {-3.f * s, 0.f}}, motion::Spring{.response = 0.3f, .bounce = 0.6f}));
+      track_motion(badge.ent());
+      in_flight |= check.active() || hold.active();
+      label(stage.ent(), 3, "The ring spins on a 900 ms loop (essential, so it keeps turning under reduced motion). Complete grows a green badge with a 3 px bob and draws the check after 230 ms; it resets after 2 s.", 60, 150, 1150, 18, true);
+      label(stage.ent(), 4, std::string("state: ") + (spinner_done ? "done" : "spinning"), 60, 200, 400, 20, false, "spinner_state");
+      label(stage.ent(), 5, "completions: " + std::to_string(completions), 60, 230, 400, 20, false, "spinner_count");
+    } else if (slug == "banners") {
+      auto &leave = motion::anim(Key::BannerLeave);
+      if (tab(stage.ent(), 1, "Add banner", 60, 84, 160, false, "banner_add")) {
+        banners.insert(banners.begin(), Banner{next_banner, "Update " + std::to_string(next_banner + 1) + " is ready"});
+        ++next_banner;
+        int depth = 0;
+        for (auto &b : banners) {
+          if (b.leaving) continue;
+          if (depth >= 3) b.leaving = true;
+          ++depth;
+        }
+        leave.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.31f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
+          std::erase_if(banners, [](const Banner &b) { return b.leaving; });
+        });
+      }
+      auto stack = div(context, mk(stage.ent(), 2), box(60, 150, 360, 220).with_debug_name("banner_stack").with_background(Theme::Usage::None));
+      const RectangleType stack_rect = stack.cmp().rect();
+      const bool hovered = context.mouse.pos.x >= stack_rect.x && context.mouse.pos.x <= stack_rect.x + stack_rect.width &&
+                           context.mouse.pos.y >= stack_rect.y && context.mouse.pos.y <= stack_rect.y + stack_rect.height;
+      const float banner_h = 56.f * s;
+      const motion::Timeline settle{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_quad};
+      int depth = 0;
+      int visible = 0;
+      for (auto &b : banners) {
+        const int d = b.leaving ? 3 : depth;
+        if (!b.leaving) { ++depth; ++visible; }
+        const float want_y = hovered ? -(banner_h + 8.f * s) * d : -12.f * s * d;
+        const float want_scale = hovered ? 1.f : 1.f - 0.06f * d;
+        const float want_alpha = b.leaving ? 0.f : (hovered ? 1.f : 1.f - 0.32f * d);
+        auto row = div(context, mk(stack.ent(), 100 + b.id),
+                       ComponentConfig{}.with_size({pixels(360 * s), pixels(banner_h)}).with_absolute_position(0.f, 220 * s - banner_h)
+                           .with_custom_background({40, 40, 48, 255}).with_corner_radius(12 * s).with_label(b.text)
+                           .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Left)
+                           .with_padding(Padding::all(pixels(16 * s))).with_render_layer(10 - d).with_ignore_pointer_events()
+                           .with_debug_name(std::string("banner_") + std::to_string(b.id))
+                           .on_appear({.translate_y = {80.f * s, 0.f}, .opacity = {0.f, 1.f}, .scale = {0.97f, 1.f}}, settle));
+        auto &tracks = row.ent().addComponentIfMissing<motion::HasTracks>();
+        auto &ty = tracks.track<float>(100);
+        auto &sc = tracks.track<float>(101);
+        auto &al = tracks.track<float>(102);
+        if (!ty.started()) ty.from(want_y);
+        if (!sc.started()) sc.from(want_scale);
+        if (!al.started()) al.from(want_alpha);
+        if (ty.target() != want_y) ty.to(want_y, settle);
+        if (sc.target() != want_scale) sc.to(want_scale, settle);
+        if (al.target() != want_alpha) al.to(want_alpha, b.leaving ? motion::Mode{motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}}} : motion::Mode{settle});
+        auto &mods = row.ent().addComponentIfMissing<HasUIModifiers>();
+        mods.translate_y += ty.value();
+        mods.scale *= sc.value();
+        row.ent().addComponentIfMissing<HasOpacity>().value *= al.value();
+        track_motion(row.ent());
+      }
+      label(stage.ent(), 3, "A new banner rises 80 px into the front; older ones step back 12 px, shrink 6 % and dim per depth. A fourth arrival dismisses the oldest. Hover the stack to spread it.", 440, 160, 780, 18, true);
+      label(stage.ent(), 4, "banners: " + std::to_string(visible), 440, 220, 400, 20, false, "banner_count");
+      label(stage.ent(), 5, std::string("spread: ") + (hovered ? "yes" : "no"), 440, 250, 400, 20, false, "banner_spread");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

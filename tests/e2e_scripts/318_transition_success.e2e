@@ -1,0 +1,27 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_success
+mouse_move 20 20
+wait 0.8
+expect_text "Success check"
+expect_text "success: hidden"
+expect_text "stroke: 0%"
+expect_text "motion: settled"
+click_ui success_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "success: shown"
+wait 2
+expect_text "motion: settled"
+expect_text "stroke: 100%"
+expect_drawn_at rectangle_rounded x=340 y=260 w=56 h=56 tol=2 color=#34a860
+screenshot transition_success_shown
+click_ui success_btn
+mouse_move 20 20
+expect_text "success: hidden"
+wait 2
+expect_text "stroke: 0%"
+expect_text "motion: settled"
