@@ -127,9 +127,9 @@ The renderability gates in `rendering.h` omit `HasNineSliceBorder`; border-only 
 
 No input means either idle or unsupported hardware. WM reports compiled macOS support separately from unknown device capability. Add a portable availability result before claiming hardware support.
 
-### Configuration-owned skip-tabbing flags persist after being disabled
+### Configuration-owned skip-tabbing flags persist after being disabled — fixed
 
-`apply_flags` adds `SkipWhenTabbing` for true but never removes it for false. An enabled pagination arrow stays outside `focused_ids`. WM removes the tag. Reconcile config-owned state while preserving manually installed flags; test true→false.
+`apply_flags` treated config and manual skip-tabbing as the same permanent tag, leaving re-enabled pagination arrows outside `focused_ids`. Config now updates `UIComponent::skip_when_tabbing` every frame; `SkipWhenTabbing` remains independently owned by app/tray code. Forward/backward traversal and overlapping manual tags are covered. WM no longer removes the tag.
 
 ### Styled labels cannot configure line spacing
 

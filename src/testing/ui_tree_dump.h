@@ -107,7 +107,7 @@ inline nlohmann::json build(afterhours::Entity &entity,
 
   node["clickable"] = entity.has<HasClickListener>();
   node["draggable"] = entity.has<HasDragListener>();
-  node["focusable"] = !entity.has<SkipWhenTabbing>();
+  node["focusable"] = !cmp.skip_when_tabbing && !entity.has<SkipWhenTabbing>();
 
   if (entity.has<HasLabel>()) {
     const HasLabel &lbl = entity.get<HasLabel>();

@@ -27,6 +27,16 @@ expect_text "Selected: Page 1 of 5"
 click_ui pag1_next
 wait 0.2
 expect_text "Selected: Page 2 of 5"
+focus_element pag1_btn_0
+shift_tab
+wait 0.2
+expect_focused pag1_previous
+key ENTER
+wait 0.2
+expect_text "Selected: Page 1 of 5"
+click_ui pag1_next
+wait 0.2
+expect_text "Selected: Page 2 of 5"
 expect_text "Explore buttons, sliders, and selectors."
 expect_text "Difficulty: Medium / 2 of 4"
 expect_text "Selected: Blue / 3 of 5"
@@ -42,6 +52,20 @@ key ENTER
 wait 0.2
 expect_text "Selected: Page 4 of 5"
 expect_text "Choose colors, type, and shape for your UI."
+focus_element pag1_btn_4
+tab
+wait 0.2
+expect_focused pag1_next
+key ENTER
+wait 0.2
+expect_text "Selected: Page 5 of 5"
+focus_element pag1_btn_4
+tab
+wait 0.2
+expect_focused pag2_previous
+click_ui pag1_previous
+wait 0.2
+expect_text "Selected: Page 4 of 5"
 click_ui pag2_btn_3
 wait 0.2
 expect_text "Difficulty: Expert / 4 of 4"

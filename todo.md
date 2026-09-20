@@ -56,7 +56,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Add consistent configurable line spacing for styled labels; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Reconcile configuration-owned skip-tabbing flags on true-to-false transitions; see docs/AFTERHOURS_GAPS.md.
+- [x] Skip-tabbing configuration follows each frame, restoring keyboard access when cleared while preserving manually added tags.
 
 - [ ] Expose gesture hardware capability separately from idle input; see docs/AFTERHOURS_GAPS.md.
 

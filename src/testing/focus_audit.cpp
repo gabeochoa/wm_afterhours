@@ -47,7 +47,7 @@ Json describe(Entity &entity, UIContext<InputAction> &context) {
                {"hidden", cmp.should_hide || entity.has<ShouldHide>()},
                {"focusable", can_be_focused(context, entity)},
                {"input_allowed", context.is_input_allowed(entity.id)},
-               {"skip_tab", entity.has<SkipWhenTabbing>()},
+               {"skip_tab", cmp.skip_when_tabbing || entity.has<SkipWhenTabbing>()},
                {"clickable", entity.has<HasClickListener>()},
                {"draggable", entity.has<HasDragListener>()},
                {"cluster", entity.has<FocusClusterRoot>()},

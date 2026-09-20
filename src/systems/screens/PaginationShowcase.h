@@ -85,7 +85,6 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         result.ent().removeComponent<HasClickListener>();
         return false;
       }
-      result.ent().removeComponentIfExists<SkipWhenTabbing>();
       return static_cast<bool>(result);
     };
     const auto choose = [&](int id, const std::string &text, bool selected, float x, float y,
