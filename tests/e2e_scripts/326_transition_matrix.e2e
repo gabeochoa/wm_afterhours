@@ -1,0 +1,25 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_cards
+click_ui ex_matrix
+mouse_move 20 20
+wait 0.6
+expect_text "Matrix dot loader"
+expect_text "pattern: Scan"
+expect_text "motion: in flight"
+screenshot transition_matrix_scan
+click_ui matrix_2
+mouse_move 20 20
+wait 0.3
+expect_text "pattern: Orbit"
+expect_text "motion: in flight"
+click_ui matrix_3
+mouse_move 20 20
+wait 0.3
+expect_text "pattern: Pulse"
+disable_animations
+wait 0.3
+expect_text "motion: settled"
+enable_animations
