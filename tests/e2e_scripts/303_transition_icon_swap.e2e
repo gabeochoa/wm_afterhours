@@ -1,0 +1,28 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_icon_swap
+mouse_move 20 20
+wait 1
+expect_text "Icon swap"
+expect_text "icon: a"
+expect_text "motion: settled"
+click_ui icon_swap
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "icon: b"
+wait 1
+expect_text "motion: settled"
+screenshot transition_icon_swap_b
+click_ui icon_swap
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "icon: a"
+wait 1
+expect_text "motion: settled"
+click_ui reset_btn
+mouse_move 20 20
+wait 0.5
+expect_text "icon: a"

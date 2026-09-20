@@ -22,7 +22,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     std::vector<Example> examples;
   };
   const std::vector<Group> groups{
-      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}}},
+      {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}}},
       {"navigation", "Navigation and overlays", {}},
       {"status", "Status and loading", {}},
       {"cards", "Cards and text", {}},
@@ -36,13 +36,20 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
 
   bool checked = false;
   bool toggled = false;
+  bool liked = false;
+  int likes = 0;
+  bool icon_b = false;
 
-  enum struct Key : size_t { CheckDraw };
+  enum struct Key : size_t { CheckDraw, LikeFill };
 
   void reset_examples() {
     checked = false;
     toggled = false;
+    liked = false;
+    likes = 0;
+    icon_b = false;
     afterhours::motion::anim(Key::CheckDraw).from(0.f);
+    afterhours::motion::anim<ColorType>(Key::LikeFill).from(ColorType{170, 165, 175, 255});
   }
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
@@ -173,6 +180,58 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(stage.ent(), 2, "Click the switch. The thumb overshoots its stop and settles.", 130, 96, 900, 18, true);
       label(stage.ent(), 3, std::string("on: ") + (toggled ? "yes" : "no"), 60, 170, 400, 20, false, "toggle_state");
+    }
+    else if (slug == "like") {
+      const afterhours::Color grey{170, 165, 175, 255}, red{244, 0, 81, 255};
+      auto &fill = motion::anim<ColorType>(Key::LikeFill);
+      if (!fill.started()) fill.from(grey);
+      const afterhours::Color heart = fill.value();
+      auto heart_btn = button(context, mk(stage.ent(), 1),
+                              box(60, 84, 64, 64).with_debug_name("like_btn").with_padding(Padding::all(pixels(0)))
+                                  .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
+                                  .on_change(static_cast<size_t>(likes), {.scale = {0.82f, 1.f}}, motion::Spring{.response = 0.35f, .bounce = 0.6f})
+                                  .with_on_draw_fg([heart](RectangleType r) {
+                                    const float w = r.width, h = r.height;
+                                    afterhours::draw_circle_v({r.x + 0.3f * w, r.y + 0.36f * h}, 0.22f * w, heart);
+                                    afterhours::draw_circle_v({r.x + 0.7f * w, r.y + 0.36f * h}, 0.22f * w, heart);
+                                    afterhours::draw_triangle({r.x + 0.5f * w, r.y + 0.92f * h}, {r.x + 0.92f * w, r.y + 0.44f * h},
+                                                              {r.x + 0.08f * w, r.y + 0.44f * h}, heart);
+                                  }));
+      if (heart_btn) {
+        liked = !liked;
+        if (liked) ++likes;
+        fill.to(liked ? red : grey, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}});
+      }
+      track_motion(heart_btn.ent());
+      in_flight |= fill.active();
+      label(stage.ent(), 2, "Click the heart. Liking fills it and pops through a spring; unliking only drains the fill.", 150, 100, 1000, 18, true);
+      label(stage.ent(), 3, std::string("liked: ") + (liked ? "yes" : "no"), 60, 170, 400, 20, false, "like_state");
+      label(stage.ent(), 4, "likes: " + std::to_string(likes), 60, 200, 400, 20, false, "like_count");
+    } else if (slug == "icon_swap") {
+      const motion::Timeline swap{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
+      auto cell = button(context, mk(stage.ent(), 1),
+                         box(60, 84, 64, 64).with_debug_name("icon_swap").with_padding(Padding::all(pixels(0)))
+                             .with_custom_background({244, 240, 246, 255}).with_corner_radius(12 * s));
+      const auto glyph = [&](int id, const char *text, bool shown_when_b, const char *debug) {
+        ComponentConfig cfg = ComponentConfig{}.with_size({pixels(64 * s), pixels(64 * s)}).with_absolute_position(0.f, 0.f)
+                                  .with_label(text).with_font("AtkinsonMockBold", pixels(34 * s)).with_custom_text_color(ink)
+                                  .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None)
+                                  .with_ignore_pointer_events().with_debug_name(debug);
+        if (shown_when_b)
+          cfg.on_appear({.scale = 0.25f, .opacity = 0.f}).on_state(icon_b, {.scale = {0.25f, 1.f}, .opacity = {0.f, 1.f}}, swap);
+        else
+          cfg.on_state(icon_b, {.scale = {1.f, 0.25f}, .opacity = {1.f, 0.f}}, swap);
+        div(context, mk(cell.ent(), id), cfg);
+      };
+      glyph(0, "+", false, "icon_a");
+      glyph(1, "x", true, "icon_b");
+      if (cell) icon_b = !icon_b;
+      for (auto child_id : cell.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (child.valid()) track_motion(child.asE());
+      }
+      label(stage.ent(), 2, "Click the cell. One glyph shrinks and fades while the other grows in, 250 ms ease in-out.", 150, 100, 1000, 18, true);
+      label(stage.ent(), 3, std::string("icon: ") + (icon_b ? "b" : "a"), 60, 170, 400, 20, false, "icon_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }
