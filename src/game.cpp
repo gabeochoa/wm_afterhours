@@ -11,6 +11,7 @@
 #include "systems/ExampleScreenRegistry.h"
 #include "testing/ui_tree_dump.h"
 #include "testing/focus_audit.h"
+#include "systems/ApplyBlurPass.h"
 #include "systems/RenderRenderTexture.h"
 #include "systems/RenderScreenHUD.h"
 #include "systems/RenderSystemHelpers.h"
@@ -163,6 +164,7 @@ void game() {
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     afterhours::ui::validation::register_render_overlay<InputAction>(systems);
+    systems.register_render_system(std::make_unique<ApplyBlurPass>());
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -289,6 +291,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     afterhours::ui::validation::register_render_overlay<InputAction>(systems);
+    systems.register_render_system(std::make_unique<ApplyBlurPass>());
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -458,6 +461,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     afterhours::ui::validation::register_render_overlay<InputAction>(systems);
+    systems.register_render_system(std::make_unique<ApplyBlurPass>());
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -707,6 +711,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     afterhours::ui::validation::register_render_overlay<InputAction>(systems);
+    systems.register_render_system(std::make_unique<ApplyBlurPass>());
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());

@@ -7,6 +7,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/effects.h>
+#include <afterhours/src/plugins/particles.h>
 #include <afterhours/src/plugins/modal.h>
 #include <array>
 
@@ -29,7 +30,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}}},
   };
 
   size_t group = 0;
@@ -75,6 +76,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   std::optional<afterhours::effects::Effect> tint_effect;
   int shader_reloads = 0;
   float tint_strength = 1.f;
+  bool blurred = false;
+  afterhours::particles::Emitter<512> confetti;
+  afterhours::particles::Emitter<64> burst;
+  afterhours::particles::Emitter<64> smoke;
+  int bursts = 0;
+  bool like_burst_liked = false;
+  int smoke_rings = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
@@ -119,6 +127,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     shimmer_playing = true;
     counter_value = 0;
     popin_value = 1289;
+    blurred = false;
+    confetti.clear();
+    burst.clear();
+    smoke.clear();
+    bursts = 0;
+    like_burst_liked = false;
+    smoke_rings = 0;
     for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
     afterhours::motion::anim(Key::ReasonOffset).from(0.f);
     afterhours::motion::anim(Key::ReasonHold).from(0.f);
@@ -1184,6 +1199,137 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 4, "Everything drawn inside Effect::Scope goes through resources/shaders/tint.fs; the uniform is set per frame. Reload re-reads the file from disk.", 400, 160, 800, 18, true);
       label(stage.ent(), 5, std::string("effect: ") + (tint_effect->ok() ? "ok" : "missing"), 400, 210, 400, 20, false, "effect_state");
       label(stage.ent(), 6, "reloads: " + std::to_string(shader_reloads), 400, 240, 400, 20, false, "effect_reloads");
+    }
+    else if (slug == "blur") {
+      if (tab(stage.ent(), 1, blurred ? "Sharpen" : "Blur", 60, 84, 140, false, "blur_btn")) blurred = !blurred;
+      auto card = div(context, mk(stage.ent(), 2), box(60, 150, 360, 160).with_debug_name("blur_card").with_corner_radius(12 * s)
+                                                        .with_custom_background({230, 150, 120, 255}).with_label("Frosted over 400 ms")
+                                                        .with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                                        .with_ignore_pointer_events()
+                                                        .on_state(blurred, {.blur = {0.f, 6.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      track_motion(card.ent());
+      float radius = 0.f;
+      if (card.ent().has<HasBlur>()) radius = card.ent().get<HasBlur>().radius;
+      label(stage.ent(), 3, "The card's region of the frame is blurred after the UI draws: two gaussian passes at half resolution, radius capped at 8 px. Region blur, not element blur.", 440, 160, 780, 18, true);
+      label(stage.ent(), 4, std::string("blur: ") + (blurred ? "on" : "off"), 440, 210, 400, 20, false, "blur_state");
+      label(stage.ent(), 5, "radius: " + std::to_string(int(std::lround(radius))) + "px", 440, 240, 400, 20, false, "blur_radius");
+    }
+    else if (slug == "confetti") {
+      namespace pt = afterhours::particles;
+      const RectangleType stage_r = stage.cmp().rect();
+      const float floor_y = stage_r.y + 400.f * s;
+      confetti.gravity = {0.f, 1300.f * s};
+      confetti.floor_y = floor_y;
+      confetti.restitution = 0.6f;
+      if (tab(stage.ent(), 1, "Animate", 60, 84, 140, false, "confetti_btn") || (replay_stamp != seen_replay && (seen_replay = replay_stamp, true))) {
+        ++bursts;
+        confetti.clear();
+        static const afterhours::Color palette[] = {{255, 115, 105, 255}, {80, 120, 220, 255}, {255, 215, 140, 255}, {130, 200, 150, 255}, {200, 150, 220, 255}};
+        for (int i = 0; i < 120; ++i) {
+          auto &p = confetti.spawn();
+          const float r0 = pt::hash01(i + bursts * 1000), r1 = pt::hash01(i * 7 + 3 + bursts), r2 = pt::hash01(i * 13 + 5 + bursts);
+          p.pos = {stage_r.x + (200.f + r0 * 800.f) * s, stage_r.y + (-40.f - r1 * 200.f) * s};
+          p.vel = {(r2 - 0.5f) * 160.f * s, 0.f};
+          p.size = (4.f + r1 * 3.f) * s;
+          p.spin = (r0 - 0.5f) * 720.f;
+          p.life = 3.5f + r2;
+          p.color = palette[i % 5];
+        }
+      }
+      confetti.update(context.dt);
+      const auto snapshot = &confetti;
+      div(context, mk(stage.ent(), 2), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("confetti_stage")
+                                            .with_on_draw_fg([snapshot](RectangleType) {
+                                              snapshot->each([](const pt::Particle &p) {
+                                                const float fade = p.progress() > 0.8f ? 1.f - (p.progress() - 0.8f) / 0.2f : 1.f;
+                                                afterhours::Color c = p.color;
+                                                c.a = static_cast<unsigned char>(255.f * fade);
+                                                afterhours::draw_rectangle_rounded_rotated({p.pos.x - p.size / 2.f, p.pos.y - p.size / 2.f, p.size, p.size * 0.6f}, 0.f, 0, c, std::bitset<4>().reset(), p.rotation);
+                                              });
+                                            }));
+      in_flight |= confetti.count() > 0;
+      label(stage.ent(), 3, "120 rectangles fall under gravity, tumble, bounce on the floor and fade out. Pooled emitter, 512 cap.", 220, 100, 950, 18, true);
+      label(stage.ent(), 4, "particles: " + std::to_string(confetti.count()), 220, 140, 400, 20, false, "confetti_count");
+      label(stage.ent(), 5, "bursts: " + std::to_string(bursts), 220, 170, 400, 20, false, "confetti_bursts");
+    } else if (slug == "like_burst") {
+      namespace pt = afterhours::particles;
+      const afterhours::Color red{244, 0, 81, 255}, grey{170, 165, 175, 255};
+      auto heart = button(context, mk(stage.ent(), 1),
+                          box(80, 100, 64, 64).with_debug_name("burst_heart").with_padding(Padding::all(pixels(0)))
+                              .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
+                              .on_change(static_cast<size_t>(bursts), {.scale = {0.82f, 1.f}}, motion::Spring{.response = 0.35f, .bounce = 0.6f})
+                              .with_on_draw_fg([liked = like_burst_liked, red, grey](RectangleType r) {
+                                const afterhours::Color c = liked ? red : grey;
+                                const float w = r.width, h = r.height;
+                                afterhours::draw_circle_v({r.x + 0.3f * w, r.y + 0.36f * h}, 0.22f * w, c);
+                                afterhours::draw_circle_v({r.x + 0.7f * w, r.y + 0.36f * h}, 0.22f * w, c);
+                                afterhours::draw_triangle({r.x + 0.5f * w, r.y + 0.92f * h}, {r.x + 0.92f * w, r.y + 0.44f * h}, {r.x + 0.08f * w, r.y + 0.44f * h}, c);
+                              }));
+      if (heart) {
+        like_burst_liked = !like_burst_liked;
+        if (like_burst_liked) {
+          ++bursts;
+          const RectangleType hr = heart.cmp().rect();
+          for (int i = 0; i < 8; ++i) {
+            auto &p = burst.spawn();
+            const float angle = (float(i) / 8.f) * 6.2831853f + (pt::hash01(i + bursts * 31) - 0.5f) * 0.56f;
+            const float travel = 20.f * s * (0.68f + pt::hash01(i * 3 + bursts) * 0.5f);
+            p.pos = {hr.x + hr.width / 2.f, hr.y + hr.height / 2.f};
+            p.vel = {std::cos(angle) * travel / 0.3f, std::sin(angle) * travel / 0.3f};
+            p.size = 2.5f * s * (0.8f + pt::hash01(i + 9) * 0.6f);
+            p.life = 0.6f;
+            p.color = red;
+          }
+        }
+      }
+      burst.drag = 6.f;
+      burst.update(context.dt);
+      const auto snapshot = &burst;
+      div(context, mk(stage.ent(), 2), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("burst_stage")
+                                            .with_on_draw_fg([snapshot](RectangleType) {
+                                              snapshot->each([](const pt::Particle &p) {
+                                                afterhours::Color c = p.color;
+                                                c.a = static_cast<unsigned char>(255.f * (1.f - p.progress()));
+                                                afterhours::draw_circle_v(p.pos, p.size * (1.f - 0.5f * p.progress()), c);
+                                              });
+                                            }));
+      in_flight |= burst.count() > 0;
+      track_motion(heart.ent());
+      label(stage.ent(), 3, "Liking compresses the heart to 0.82, springs back, and throws eight dots outward with drag; unliking does neither.", 200, 110, 950, 18, true);
+      label(stage.ent(), 4, std::string("liked: ") + (like_burst_liked ? "yes" : "no"), 200, 150, 400, 20, false, "burst_state");
+      label(stage.ent(), 5, "dots: " + std::to_string(burst.count()), 200, 180, 400, 20, false, "burst_count");
+    } else if (slug == "smoke") {
+      namespace pt = afterhours::particles;
+      if (tab(stage.ent(), 1, "Puff", 60, 84, 120, false, "smoke_btn")) {
+        ++smoke_rings;
+        const RectangleType stage_r = stage.cmp().rect();
+        const Vector2Type centre{stage_r.x + 300.f * s, stage_r.y + 250.f * s};
+        for (int i = 0; i < 30; ++i) {
+          auto &p = smoke.spawn();
+          const float angle = (float(i) / 30.f) * 6.2831853f;
+          const float speed = 30.f * s * (0.9f + pt::hash01(i + smoke_rings * 17) * 0.3f);
+          p.pos = centre;
+          p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+          p.size = 12.f * s;
+          p.life = 1.5f;
+          p.color = {120, 120, 130, 255};
+        }
+      }
+      smoke.drag = 1.2f;
+      smoke.update(context.dt);
+      const auto snapshot = &smoke;
+      div(context, mk(stage.ent(), 2), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("smoke_stage")
+                                            .with_on_draw_fg([snapshot](RectangleType) {
+                                              snapshot->each([](const pt::Particle &p) {
+                                                afterhours::Color c = p.color;
+                                                c.a = static_cast<unsigned char>(110.f * (1.f - p.progress()));
+                                                afterhours::draw_circle_v(p.pos, p.size * (1.f + 2.f * p.progress()), c);
+                                              });
+                                            }));
+      in_flight |= smoke.count() > 0;
+      label(stage.ent(), 3, "A ring of thirty soft discs drifts outward, grows and fades over 1.5 s: the landing puff for drag-and-drop and the dissolve.", 200, 100, 950, 18, true);
+      label(stage.ent(), 4, "rings: " + std::to_string(smoke_rings), 200, 140, 400, 20, false, "smoke_rings");
+      label(stage.ent(), 5, "discs: " + std::to_string(smoke.count()), 200, 170, 400, 20, false, "smoke_count");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }
