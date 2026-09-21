@@ -1,0 +1,26 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_streaming
+mouse_move 20 20
+wait 0.6
+expect_text "Streaming text"
+expect_text "words: 0/19"
+click_ui stream_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "runs: 1"
+wait 2
+expect_text "words: 19/19"
+expect_text "motion: settled"
+expect_text "Every"
+expect_text "once."
+screenshot transition_streaming_done
+click_ui replay_btn
+mouse_move 20 20
+expect_text "runs: 2"
+expect_text "motion: in flight"
+wait 2
+expect_text "words: 19/19"

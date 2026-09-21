@@ -26,8 +26,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   const std::vector<Group> groups{
       {"controls", "Controls", {{"checkbox", "Checkbox check"}, {"toggle", "Toggle"}, {"like", "Like button"}, {"icon_swap", "Icon swap"}, {"learn_more", "Learn more hover"}, {"error_shake", "Error state shake"}, {"input_clear", "Input clear"}, {"text_swap", "Text states swap"}}},
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
-      {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}}},
-      {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}}},
+      {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
+      {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
       {"effects", "Visual effects", {}},
   };
 
@@ -62,13 +62,22 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool spinner_done = false;
   int completions = 0;
   bool card_expanded = true;
+  bool stream_playing = false;
+  int stream_runs = 0;
+  bool thinking_playing = true;
+  int thinking_index = 0;
+  bool reasoning_playing = true;
+  int reasoning_steps = 0;
+  bool shimmer_playing = true;
+  int counter_value = 0;
+  int popin_value = 1289;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3 };
 
   void reset_examples() {
     checked = false;
@@ -97,6 +106,20 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     spinner_done = false;
     completions = 0;
     card_expanded = true;
+    stream_playing = false;
+    stream_runs = 0;
+    thinking_playing = true;
+    thinking_index = 0;
+    reasoning_playing = true;
+    reasoning_steps = 0;
+    shimmer_playing = true;
+    counter_value = 0;
+    popin_value = 1289;
+    for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
+    afterhours::motion::anim(Key::ReasonOffset).from(0.f);
+    afterhours::motion::anim(Key::ReasonHold).from(0.f);
+    afterhours::motion::anim(Key::StreamCount).from(0.f);
+    afterhours::motion::anim(Key::ThinkHold).from(0.f);
     texts_shown = false;
     matrix_pattern = 0;
     banners.clear();
@@ -999,6 +1022,145 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(stage.ent(), 20, "A 4 x 4 matrix pulses colour on a 1.2 s loop: column scan, a fixed twinkle order, a perimeter orbit, or centre-out. Timed colour changes, no movement.", 200, 160, 1000, 18, true);
       label(stage.ent(), 21, std::string("pattern: ") + pattern_names[matrix_pattern], 200, 200, 400, 20, false, "matrix_state");
+    }
+    else if (slug == "streaming") {
+      static const std::vector<std::string> words = {"Every", "word", "resolves", "on", "its", "own,", "so", "a", "reply", "reads",
+                                                     "as", "it", "arrives", "instead", "of", "landing", "all", "at", "once."};
+      auto &count = motion::anim(Key::StreamCount);
+      if (tab(stage.ent(), 1, "Stream", 60, 84, 140, false, "stream_btn") || (replay_stamp != seen_replay && (seen_replay = replay_stamp, true))) {
+        ++stream_runs;
+        stream_playing = true;
+        count.from(0.f).to(float(words.size()), motion::Timeline{.keys = {{0.f, 0.f}, {0.06f * words.size(), 1.f}}})
+            .on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; stream_playing = false; });
+      }
+      const int shown = std::clamp(int(count.value()), 0, int(words.size()));
+      std::string text;
+      for (int i = 0; i < shown; ++i) text += (i ? " " : "") + words[i];
+      auto para = div(context, mk(stage.ent(), 2),
+                      box(60, 150, 1100, 40).with_label(text).with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
+                          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                          .with_debug_name("stream_text")
+                          .with_unit_motion({.unit = TextUnit::Word, .from_y = 0.f, .from_opacity = 0.f, .duration = 0.35f, .stagger = 0.f}));
+      in_flight |= count.active() || text_units_active(para.ent());
+      label(stage.ent(), 3, "A new word every 60 ms; each fades in over 350 ms, so neighbours overlap. Replays the whole paragraph; not a network parser.", 60, 220, 1100, 18, true);
+      label(stage.ent(), 4, "words: " + std::to_string(shown) + "/" + std::to_string(words.size()), 60, 260, 400, 20, false, "stream_count");
+      label(stage.ent(), 5, "runs: " + std::to_string(stream_runs), 60, 290, 400, 20, false, "stream_runs");
+    } else if (slug == "thinking") {
+      static const char *states[] = {"Thinking", "Reading the request", "Checking the sources", "Drafting a reply"};
+      auto &hold = motion::anim(Key::ThinkHold);
+      if (thinking_playing && !hold.active())
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {2.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; thinking_index = (thinking_index + 1) % 4; });
+      if (tab(stage.ent(), 1, thinking_playing ? "Pause" : "Play", 60, 84, 120, false, "thinking_btn")) {
+        thinking_playing = !thinking_playing;
+        if (!thinking_playing) hold.from(0.f);
+      }
+      auto line = div(context, mk(stage.ent(), 2),
+                      box(60, 150, 500, 40).with_label(states[thinking_index]).with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(muted)
+                          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                          .with_debug_name("thinking_text")
+                          .with_unit_motion({.unit = TextUnit::Word, .from_y = 8.f * s, .from_opacity = 0.f, .duration = 0.15f, .stagger = 0.05f}));
+      in_flight |= text_units_active(line.ent());
+      label(stage.ent(), 3, "The status swaps every 2 s; the incoming words rise 8 px and fade in, 150 ms each with a 50 ms gap. Shimmer needs gradient text (M3).", 60, 220, 1100, 18, true);
+      label(stage.ent(), 4, "state: " + std::to_string(thinking_index), 60, 260, 400, 20, false, "thinking_state");
+      label(stage.ent(), 5, std::string("playing: ") + (thinking_playing ? "yes" : "no"), 60, 290, 400, 20, false, "thinking_playing");
+    }
+    else if (slug == "reasoning") {
+      static const char *lines[] = {"Reading the brief.", "The user wants a plan, not a lecture.", "Check what already exists.",
+                                    "Three helpers cover most of it.", "Two gaps remain: layout and input.", "Propose the smaller change first.",
+                                    "Name the risk and the fallback.", "Done thinking; write it down."};
+      constexpr int line_count = 8;
+      const float line_h = 26.f * s;
+      auto &offset = motion::anim(Key::ReasonOffset);
+      auto &hold = motion::anim(Key::ReasonHold);
+      if (!offset.started()) offset.from(0.f);
+      if (reasoning_playing && !hold.active() && !offset.active()) {
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.84f, 1.f}}}).on_complete([this, line_h, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
+          ++reasoning_steps;
+          auto &off = afterhours::motion::anim(Key::ReasonOffset);
+          const float next = float((reasoning_steps * 2) % line_count) * line_h;
+          if (next == 0.f) off.from(0.f);
+          else off.to(next, afterhours::motion::Timeline{.keys = {{0.f, 0.f}, {0.5f, 1.f}}, .curve = afterhours::motion::curves::ease_out_quad});
+        });
+      }
+      if (tab(stage.ent(), 1, reasoning_playing ? "Pause" : "Play", 60, 84, 120, false, "reasoning_btn")) {
+        reasoning_playing = !reasoning_playing;
+        if (!reasoning_playing) hold.from(0.f);
+      }
+      auto viewport = div(context, mk(stage.ent(), 2), box(60, 140, 560, line_h * 4.f / s).with_debug_name("reasoning_viewport")
+                                                          .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_clip_children());
+      for (int i = 0; i < line_count * 2; ++i)
+        div(context, mk(viewport.ent(), i), ComponentConfig{}.with_size({pixels(540 * s), pixels(line_h)})
+                                               .with_absolute_position(10 * s, float(i) * line_h - offset.value())
+                                               .with_label(lines[i % line_count]).with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(ink)
+                                               .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                               .with_debug_name(std::string("reason_line_") + std::to_string(i)));
+      in_flight |= offset.active();
+      label(stage.ent(), 3, "The transcript steps up two lines at a time inside a fixed viewport: 840 ms hold, 500 ms move. A duplicate copy lets it wrap without a jump.", 640, 150, 580, 18, true);
+      label(stage.ent(), 4, "steps: " + std::to_string(reasoning_steps), 640, 210, 400, 20, false, "reasoning_steps");
+      label(stage.ent(), 5, std::string("playing: ") + (reasoning_playing ? "yes" : "no"), 640, 240, 400, 20, false, "reasoning_playing");
+    } else if (slug == "shimmer") {
+      auto &sx = motion::anim(Key::ShimmerX);
+      const float text_w = 320.f * s;
+      if (!sx.started() || (shimmer_playing && !sx.active()))
+        sx.from(-80.f * s).to(text_w, motion::Timeline{.keys = {{0.f, 0.f}, {2.f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop});
+      if (tab(stage.ent(), 1, shimmer_playing ? "Stop" : "Play", 60, 84, 120, false, "shimmer_btn")) {
+        shimmer_playing = !shimmer_playing;
+        if (!shimmer_playing) sx.from(sx.value());
+      }
+      auto base = div(context, mk(stage.ent(), 2), box(60, 150, text_w / s, 40).with_label("Generating your summary").with_font("AtkinsonMockBold", pixels(26 * s))
+                                                       .with_custom_text_color({124, 124, 124, 255}).with_alignment(TextAlignment::Left)
+                                                       .with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("shimmer_base"));
+      auto window = div(context, mk(base.ent(), 0), ComponentConfig{}.with_size({pixels(80 * s), pixels(40 * s)}).with_absolute_position(sx.value(), 0.f)
+                                                        .with_background(Theme::Usage::None).with_clip_children().with_ignore_pointer_events().with_debug_name("shimmer_window"));
+      div(context, mk(window.ent(), 0), ComponentConfig{}.with_size({pixels(text_w), pixels(40 * s)}).with_absolute_position(-sx.value(), 0.f)
+                                            .with_label("Generating your summary").with_font("AtkinsonMockBold", pixels(26 * s)).with_custom_text_color({13, 13, 13, 255})
+                                            .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("shimmer_highlight"));
+      in_flight |= sx.active();
+      label(stage.ent(), 3, "A narrow highlight window sweeps across a stationary label every 2 s: the same text in the highlight colour, clipped to the window and offset back so it stays aligned.", 60, 220, 1100, 18, true);
+      label(stage.ent(), 4, std::string("playing: ") + (shimmer_playing ? "yes" : "no"), 60, 260, 400, 20, false, "shimmer_playing");
+    }
+    else if (slug == "counter") {
+      const float cell_h = 30.f * s;
+      const auto spin_to = [&](int value) {
+        counter_value = value;
+        for (int col = 0; col < 4; ++col) {
+          const int digit = (value / int(std::pow(10, 3 - col))) % 10;
+          auto &reel = motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + col));
+          if (!reel.started()) reel.from(0.f);
+          reel.from(0.f).to(float(3 * 10 + digit) * cell_h,
+                            motion::Timeline{.keys = {{0.f, 0.f}, {1.4f, 1.f}}, .curve = motion::curves::ease_out_cubic})
+              .delay(0.09f * col);
+        }
+      };
+      if (tab(stage.ent(), 1, "Spin", 60, 84, 120, false, "counter_btn") || (replay_stamp != seen_replay && (seen_replay = replay_stamp, true)))
+        spin_to((counter_value * 7 + 1234) % 10000);
+      for (int col = 0; col < 4; ++col) {
+        auto &reel = motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + col));
+        if (!reel.started()) reel.from(0.f);
+        auto cell = div(context, mk(stage.ent(), 10 + col), box(60 + col * 34.f, 150, 30, 30).with_debug_name(std::string("reel_") + std::to_string(col))
+                                                              .with_custom_background({244, 240, 246, 255}).with_corner_radius(6 * s).with_clip_children());
+        std::string strip;
+        for (int k = 0; k < 40; ++k) strip += std::to_string(k % 10) + "\n";
+        div(context, mk(cell.ent(), 0), ComponentConfig{}.with_size({pixels(30 * s), pixels(cell_h * 40.f)}).with_absolute_position(0.f, -reel.value())
+                                            .with_label(strip).with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(ink)
+                                            .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                            .with_debug_name(std::string("reel_strip_") + std::to_string(col)));
+        in_flight |= reel.active();
+      }
+      label(stage.ent(), 3, "Each digit rolls up through three full turns of a clipped 0-9 strip before landing; columns start 90 ms apart, 1.4 s each.", 240, 150, 950, 18, true);
+      label(stage.ent(), 4, "value: " + std::to_string(counter_value), 240, 190, 400, 20, false, "counter_value");
+    } else if (slug == "popin") {
+      if (tab(stage.ent(), 1, "+1", 60, 84, 90, false, "popin_add")) ++popin_value;
+      if (tab(stage.ent(), 2, "+100", 160, 84, 90, false, "popin_hundred")) popin_value += 100;
+      if (tab(stage.ent(), 3, "x10", 260, 84, 90, false, "popin_tenfold")) popin_value = (popin_value * 10) % 1000000;
+      auto number = div(context, mk(stage.ent(), 4),
+                        box(60, 150, 600, 60).with_label(std::to_string(popin_value)).with_font("AtkinsonMockBold", pixels(48 * s)).with_custom_text_color(ink)
+                            .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                            .with_debug_name("popin_number")
+                            .with_unit_motion({.unit = TextUnit::Char, .from_y = 8.f * s, .from_opacity = 0.f, .duration = 0.5f, .stagger = 0.07f}));
+      in_flight |= text_units_active(number.ent());
+      label(stage.ent(), 5, "Only the digits that changed drop in from 8 px above; unchanged ones sit still. 500 ms each, 70 ms stagger among the changed.", 60, 240, 1100, 18, true);
+      label(stage.ent(), 6, "value: " + std::to_string(popin_value), 60, 280, 400, 20, false, "popin_value");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

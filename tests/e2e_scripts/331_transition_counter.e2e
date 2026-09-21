@@ -1,0 +1,22 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_cards
+click_ui ex_counter
+mouse_move 20 20
+wait 0.3
+expect_text "Spinning counter"
+expect_text "value: 0"
+click_ui counter_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+expect_text "value: 1234"
+wait 2.5
+expect_text "motion: settled"
+screenshot transition_counter_landed
+click_ui replay_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 2.5
+expect_text "motion: settled"

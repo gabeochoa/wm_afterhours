@@ -1,0 +1,21 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_status
+click_ui ex_shimmer
+mouse_move 20 20
+wait 0.3
+expect_text "Shimmer text"
+expect_text "playing: yes"
+expect_text "motion: in flight"
+expect_text "Generating your summary"
+screenshot transition_shimmer
+click_ui shimmer_btn
+mouse_move 20 20
+expect_text "playing: no"
+wait 0.5
+expect_text "motion: settled"
+click_ui shimmer_btn
+mouse_move 20 20
+expect_text "motion: in flight"
