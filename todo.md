@@ -33,9 +33,13 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 ## Afterhours-dependent work (deferred)
 
 - [ ] Flip the ui → animation dependency: animation leaf, ui leaf, opt-in `plugins/ui_motion.h` bridge that owns the trigger blocks (`.with(um::on_hover(...))`), the resolver and the component writes. ui needs a generic seam first (`ComponentConfig::with(T)` + `extensions_of<T>()`, a per-widget init-hook registry run after `apply_visuals`, a pre-build system slot the pre-update bridge runs); then move `ui/motion_config.h` out, drop the `motion` field / `on_*` setters / `AdvanceTracks` push from ui, port wm call sites, add a boundary check. Do it before any game bumps afterhours.
-- [ ] Expand animations with fade, blur, unblur, lift, fall, scale, dissolve, wipe, raise, curtain, sweep, shear, stretch, iris, spotlight, swing, typewriter, zoom, recede, unroll, blinds, slide, flip, emerge, tumble, drop and cascade. Support each applicable effect on a whole item, individual words (`word-*`) or individual characters (`char-*`), with stagger, interruption and reduced-motion behavior. Preserve grapheme clusters when animating characters.
-
-- [ ] Add shader backgrounds per component. Review component-local coordinates, clipping, configurable uniforms and animation time, batching, and a fallback for unsupported renderers.
+- [ ] Effect-list tiers. Tier 1 ships: fade, lift, fall, scale, slide, zoom, drop, shake, spin, pulse, typewriter and cascade as presets or `with_unit_motion` per grapheme/word with stagger, interruption and reduced motion. Tier 2 (blur/unblur, dissolve, wipe, curtain, sweep, shear, stretch, iris, spotlight, swing, recede, unroll, blinds, flip, emerge, tumble) needs a shader or quad path each; the Lab's dissolve, shimmer, bend and tilt show the shapes. Add one when a consumer asks.
+- [ ] Sokol/Metal backend for `effects::Effect` and `effects::BlurPass`; `with_shader` compiles there but the shader path is raylib-only. Verify from floatinghotel.
+- [ ] OKLab interpolation for colour tracks; `Track<ColorType>` lerps per channel in sRGB, which greys out saturated fades.
+- [ ] Full-GPU text motion: per-unit motion re-issues one draw per grapheme; a glyph-instanced path with per-instance transforms would keep long labels cheap.
+- [ ] Query the OS reduced-motion setting and seed `reduced_motion_enabled` from it on first run.
+- [ ] Subtree relayout for size tracks: a `with_size()` fed by a track re-lays out the whole root every frame; a dirty-subtree pass would scope it.
+- [x] Shader backgrounds per component: `with_shader` scopes one widget's draws in an `effects::Effect`; uniforms are set per frame from the app. Clipping and the sokol fallback are the items above.
 
 - [ ] Explore extracting charting into a separate library, vendored as a third-party plugin. Use it to demonstrate the public extension APIs, dependencies, registration and customization that an independent plugin author would use; keep the core small.
 
@@ -93,12 +97,12 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Review backend-dependent auto-text fallbacks and contrast-validator foreground precedence; see `docs/AFTERHOURS_GAPS.md`.
 
-- [ ] Review declarative animation elapsed-time clamping and same-property trigger composition in afterhours; see `docs/AFTERHOURS_GAPS.md`.
+- [x] Declarative animation elapsed-time clamping and same-property trigger composition: the motion rewrite resolves one target per property and springs in closed form.
 
 ### First-segment animation easing
 
-- [x] `AnimHandle::sequence()` applies the first segment's easing on fresh, replayed and looping tracks.
-  `animation_basic` uses the native sequence API.
+- [x] Chained steps apply the first segment's easing on fresh, replayed and looping tracks (`Track::to().then()`).
+  `animation_basic` uses the native chain API.
   See [the measured gap](docs/AFTERHOURS_GAPS.md#animation-sequences-ignore-the-first-segment-easing).
 
 ### Scroll state after changing overflow
@@ -129,7 +133,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [ ] Reproduce low-alpha backgrounds in the Sokol backend using floatinghotel. Raylib's alpha specimen does not reproduce that report.
 - [ ] Recheck native scrollbar-thumb dragging against the intended backend. Current WM pointer tests pass; do not treat the historical missing-feature claim as current evidence.
 - [ ] Distinguish real child overflow from percent-width-plus-margin idioms in the native warning tolerance.
-- [ ] Add scroll anchoring/preserve-position-on-prepend and native stagger/exit animation follow-ups.
+- [ ] Add scroll anchoring/preserve-position-on-prepend.
 - [ ] Review slider handle compression, crowded native tab sizing and character breaking for overlong words.
 - [ ] Clarify the native same-frame `mk()` ID-collision diagnostic; retain file, line, function and suggested fix.
 - [ ] Upstream shared E2E CLI configuration and command registration; app-owned baseline/screenshot destination flags stay in consumers. Missing parser registration must not silently deliver empty arguments.
