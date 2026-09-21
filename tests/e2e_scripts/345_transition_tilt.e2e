@@ -1,0 +1,24 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_tilt
+mouse_move 20 20
+wait 0.5
+expect_text "3D tilt"
+expect_text "tilting: no"
+expect_text "motion: settled"
+mouse_move 300 380
+expect_text "tilting: yes"
+expect_text "motion: in flight"
+wait_frames 1
+screenshot transition_tilt
+wait 1
+expect_text "motion: settled"
+mouse_move 20 20
+expect_text "tilting: no"
+expect_text "motion: in flight"
+wait 1.5
+expect_text "motion: settled"
+expect_text "rx: 0.0 ry: 0.0"

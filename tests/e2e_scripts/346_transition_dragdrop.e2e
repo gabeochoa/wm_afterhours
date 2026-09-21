@@ -1,0 +1,27 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_dragdrop
+mouse_move 20 20
+wait 0.5
+expect_text "Drag and drop"
+expect_text "drops: 0"
+expect_text "motion: settled"
+screenshot transition_dragdrop_idle
+drag_to 180 475 500 600
+mouse_move 20 20
+expect_text "misses: 1"
+expect_text "motion: in flight"
+screenshot transition_dragdrop_miss
+wait 2
+expect_text "motion: settled"
+drag_to 180 475 820 470
+mouse_move 20 20
+screenshot transition_dragdrop_landing
+expect_text "drops: 1"
+expect_text "motion: in flight"
+wait 3
+expect_text "phase: idle"
+expect_text "motion: settled"

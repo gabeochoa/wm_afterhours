@@ -30,7 +30,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}, {"tilt", "3D tilt"}, {"dragdrop", "Drag and drop"}}},
   };
 
   size_t group = 0;
@@ -98,13 +98,42 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool organic_playing = true;
   bool bend_open = false;
   int bend_toggles = 0;
+  float tilt_gx = 0.f;
+  float tilt_gy = 0.f;
+  bool dragging = false;
+  bool drag_reset = true;
+  int drops = 0;
+  int misses = 0;
+  int drop_phase = 0;
+  int respawns = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold };
+
+  void ensure_picture() {
+    if (bend_tex_loaded) return;
+    bend_tex_loaded = true;
+    bend_tex = raylib::LoadTexture(afterhours::files::get_resource_path("images", "marlo_kart/celebration.png").string().c_str());
+    raylib::SetTextureFilter(bend_tex, raylib::TEXTURE_FILTER_BILINEAR);
+  }
+
+  void puff(Vector2Type centre, float s) {
+    ++smoke_rings;
+    for (int i = 0; i < 30; ++i) {
+      auto &p = smoke.spawn();
+      const float angle = (float(i) / 30.f) * 6.2831853f;
+      const float speed = 30.f * s * (0.9f + afterhours::particles::hash01(i + smoke_rings * 17) * 0.3f);
+      p.pos = centre;
+      p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+      p.size = 12.f * s;
+      p.life = 1.5f;
+      p.color = {120, 120, 130, 255};
+    }
+  }
 
   void reset_examples() {
     checked = false;
@@ -164,6 +193,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     bend_open = false;
     bend_toggles = 0;
     afterhours::motion::anim(Key::BendP).from(0.f);
+    afterhours::motion::anim(Key::TiltRX).from(0.f);
+    afterhours::motion::anim(Key::TiltRY).from(0.f);
+    afterhours::motion::anim(Key::TiltGlare).from(0.f);
+    dragging = false;
+    drag_reset = true;
+    drops = 0;
+    misses = 0;
+    drop_phase = 0;
+    respawns = 0;
     for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
     afterhours::motion::anim(Key::ReasonOffset).from(0.f);
     afterhours::motion::anim(Key::ReasonHold).from(0.f);
@@ -1331,19 +1369,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     } else if (slug == "smoke") {
       namespace pt = afterhours::particles;
       if (tab(stage.ent(), 1, "Puff", 60, 84, 120, false, "smoke_btn")) {
-        ++smoke_rings;
         const RectangleType stage_r = stage.cmp().rect();
-        const Vector2Type centre{stage_r.x + 300.f * s, stage_r.y + 250.f * s};
-        for (int i = 0; i < 30; ++i) {
-          auto &p = smoke.spawn();
-          const float angle = (float(i) / 30.f) * 6.2831853f;
-          const float speed = 30.f * s * (0.9f + pt::hash01(i + smoke_rings * 17) * 0.3f);
-          p.pos = centre;
-          p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
-          p.size = 12.f * s;
-          p.life = 1.5f;
-          p.color = {120, 120, 130, 255};
-        }
+        puff({stage_r.x + 300.f * s, stage_r.y + 250.f * s}, s);
       }
       smoke.drag = 1.2f;
       smoke.update(context.dt);
@@ -1545,11 +1572,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 5, std::string("shader: ") + (shimmer_effect->ok() ? "ok" : "missing"), 320, 240, 400, 20, false, "organic_shader");
     } else if (slug == "bend") {
       if (!bend_effect) bend_effect.emplace(afterhours::effects::Effect::load("bend"));
-      if (!bend_tex_loaded) {
-        bend_tex_loaded = true;
-        bend_tex = raylib::LoadTexture(afterhours::files::get_resource_path("images", "marlo_kart/celebration.png").string().c_str());
-        raylib::SetTextureFilter(bend_tex, raylib::TEXTURE_FILTER_BILINEAR);
-      }
+      ensure_picture();
       auto &prog = motion::anim(Key::BendP);
       if (tab(stage.ent(), 1, bend_open ? "Close" : "Open", 60, 84, 120, false, "bend_btn")) {
         bend_open = !bend_open;
@@ -1572,6 +1595,146 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 4, std::string("open: ") + (bend_open ? "yes" : "no"), 320, 210, 400, 20, false, "bend_state");
       label(stage.ent(), 5, "toggles: " + std::to_string(bend_toggles), 320, 240, 400, 20, false, "bend_toggles");
       label(stage.ent(), 6, std::string("shader: ") + (bend_effect->ok() ? "ok" : "missing"), 320, 270, 400, 20, false, "bend_shader");
+    }
+    else if (slug == "tilt") {
+      const RectangleType stage_r = stage.cmp().rect();
+      const RectangleType card_r{stage_r.x + 60.f * s, stage_r.y + 140.f * s, 260.f * s, 170.f * s};
+      const auto &m = context.mouse.pos;
+      const bool over = m.x >= card_r.x && m.x <= card_r.x + card_r.width && m.y >= card_r.y && m.y <= card_r.y + card_r.height;
+      const float nx = over ? (m.x - card_r.x) / card_r.width - 0.5f : 0.f;
+      const float ny = over ? (m.y - card_r.y) / card_r.height - 0.5f : 0.f;
+      if (over) { tilt_gx = nx; tilt_gy = ny; }
+      auto &rx = motion::anim(Key::TiltRX);
+      auto &ry = motion::anim(Key::TiltRY);
+      auto &glare = motion::anim(Key::TiltGlare);
+      const motion::Timeline follow{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_out_cubic};
+      const motion::Timeline back{.keys = {{0.f, 0.f}, {1.f, 1.f}}, .curve = motion::curves::ease_out_cubic};
+      const auto steer = [&](motion::Track<float> &t, float want) {
+        if (!t.started()) t.from(0.f);
+        if (std::fabs(t.target() - want) > 0.05f) t.to(want, over ? follow : back);
+      };
+      steer(rx, -ny * 14.f);
+      steer(ry, nx * 14.f);
+      steer(glare, over ? 1.f : 0.f);
+      const float ax = rx.value_or(0.f) * 3.14159265f / 180.f, ay = ry.value_or(0.f) * 3.14159265f / 180.f;
+      const float g = glare.value_or(0.f), gx = tilt_gx, gy = tilt_gy;
+      div(context, mk(stage.ent(), 1), box(60, 140, 260, 170).with_debug_name("tilt_card").with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                            .with_on_draw_fg([ax, ay, g, gx, gy, s](RectangleType r) {
+                                              const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f, depth = 1000.f * s;
+                                              const auto project = [&](float px, float py) {
+                                                const float x = px - cx, y = py - cy;
+                                                const float y1 = y * std::cos(ax), z1 = -y * std::sin(ax);
+                                                const float x2 = x * std::cos(ay) + z1 * std::sin(ay), z2 = -x * std::sin(ay) + z1 * std::cos(ay);
+                                                const float k = depth / (depth - z2);
+                                                return Vector2Type{cx + x2 * k, cy + y1 * k};
+                                              };
+                                              const Vector2Type outer[4] = {project(r.x, r.y), project(r.x + r.width, r.y),
+                                                                            project(r.x + r.width, r.y + r.height), project(r.x, r.y + r.height)};
+                                              afterhours::draw_quad(outer, {60, 70, 110, 255});
+                                              const float in = 14.f * s;
+                                              const Vector2Type inner[4] = {project(r.x + in, r.y + in), project(r.x + r.width - in, r.y + in),
+                                                                            project(r.x + r.width - in, r.y + r.height - in), project(r.x + in, r.y + r.height - in)};
+                                              afterhours::draw_quad(inner, {84, 96, 140, 255});
+                                              if (g > 0.01f) {
+                                                const Vector2Type gp = project(r.x + (0.5f + gx) * r.width, r.y + (0.5f + gy) * r.height);
+                                                afterhours::draw_circle_v(gp, 50.f * s, {255, 255, 255, static_cast<unsigned char>(60.f * g)});
+                                              }
+                                            }));
+      in_flight |= rx.active() || ry.active() || glare.active();
+      label(stage.ent(), 2, "The corners rotate in 3D toward the pointer and project with 1000 px perspective; leaving eases flat over 1 s.", 340, 150, 860, 18, true);
+      label(stage.ent(), 3, std::string("tilting: ") + (over ? "yes" : "no"), 340, 200, 400, 20, false, "tilt_state");
+      char buf[64];
+      std::snprintf(buf, sizeof buf, "rx: %.1f ry: %.1f", rx.value_or(0.f), ry.value_or(0.f));
+      label(stage.ent(), 4, buf, 340, 230, 400, 20, false, "tilt_angles");
+    } else if (slug == "dragdrop") {
+      ensure_picture();
+      const RectangleType stage_r = stage.cmp().rect();
+      const Vector2Type home{80.f * s, 250.f * s};
+      const float pw = 120.f * s, ph = 90.f * s;
+      const RectangleType target_l{700.f * s, 230.f * s, 160.f * s, 120.f * s};
+      auto &dx = motion::anim(Key::DragX);
+      auto &dy = motion::anim(Key::DragY);
+      auto &tilt = motion::anim(Key::DragTilt);
+      auto &fade = motion::anim(Key::DropFade);
+      auto &hold = motion::anim(Key::DropHold);
+      if (drag_reset) {
+        drag_reset = false;
+        dx.from(home.x);
+        dy.from(home.y);
+        tilt.from(0.f);
+        fade.from(1.f);
+        hold.from(0.f);
+      }
+      auto target = div(context, mk(stage.ent(), 1), ComponentConfig{}.with_size({pixels(target_l.width), pixels(target_l.height)}).with_absolute_position(target_l.x, target_l.y)
+                                                         .with_custom_background({244, 240, 246, 255}).with_border({200, 195, 205, 255}, 2.f * s).with_corner_radius(14 * s)
+                                                         .with_label(drop_phase == 2 ? "Dropped" : "Drop here").with_font("AtkinsonMock", pixels(16 * s))
+                                                         .with_custom_text_color(muted).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("drop_target")
+                                                         .on_change(static_cast<size_t>(drops), {.scale = 0.97f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}}));
+      track_motion(target.ent());
+      if (drop_phase != 2) {
+        const raylib::Texture2D tex = bend_tex;
+        const float angle = tilt.value_or(0.f);
+        const unsigned char alpha = static_cast<unsigned char>(255.f * std::clamp(fade.value_or(1.f), 0.f, 1.f));
+        auto pic = div(context, mk(stage.ent(), 100 + respawns),
+                       ComponentConfig{}.with_size({pixels(pw), pixels(ph)}).with_absolute_position(dx.value(), dy.value())
+                           .with_custom_background(afterhours::colors::transparent()).with_debug_name("drag_picture")
+                           .on_appear({.scale = {0.6f, 1.f}, .opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad})
+                           .on_state(dragging, {.scale = 1.05f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.2f, 1.f}}})
+                           .with_on_draw_fg([tex, angle, alpha](RectangleType r) {
+                             afterhours::draw_texture_pro(tex, {0.f, 0.f, float(tex.width), float(tex.height)},
+                                                          {r.x + r.width / 2.f, r.y + r.height / 2.f, r.width, r.height}, {r.width / 2.f, r.height / 2.f}, angle,
+                                                          {255, 255, 255, alpha});
+                           }));
+        pic.ent().addComponentIfMissing<HasDragListener>([](afterhours::Entity &) {});
+        const bool down = drop_phase == 0 && pic.ent().get<HasDragListener>().down;
+        if (down) {
+          dragging = true;
+          dx.from(dx.value() + context.mouse.delta.x);
+          dy.from(dy.value() + context.mouse.delta.y);
+          const float vx = context.mouse.delta.x / std::max(context.dt, 1e-3f);
+          const float want = std::clamp(vx * 0.028f, -10.f, 10.f);
+          if (std::fabs(tilt.target() - want) > 0.5f) tilt.to(want, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}});
+        } else if (dragging) {
+          dragging = false;
+          tilt.to(0.f, motion::Spring::snappy());
+          const Vector2Type centre{dx.value() + pw / 2.f, dy.value() + ph / 2.f};
+          const bool inside = centre.x >= target_l.x && centre.x <= target_l.x + target_l.width && centre.y >= target_l.y && centre.y <= target_l.y + target_l.height;
+          if (inside) {
+            ++drops;
+            drop_phase = 1;
+            const Vector2Type puff_at{stage_r.x + target_l.x + target_l.width / 2.f, stage_r.y + target_l.y + target_l.height / 2.f};
+            fade.from(1.f).to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.45f, 1.f}}, .curve = motion::curves::ease_out_quad})
+                .on_complete([this, alive = std::weak_ptr<int>(alive), puff_at, s] { if (alive.expired()) return;
+                  drop_phase = 2;
+                  puff(puff_at, s);
+                  afterhours::motion::anim(Key::DropHold).from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {1.2f, 1.f}}})
+                      .on_complete([this, alive] { if (alive.expired()) return; drop_phase = 0; drag_reset = true; ++respawns; });
+                });
+          } else {
+            ++misses;
+            dx.to(home.x, motion::Spring::bouncy());
+            dy.to(home.y, motion::Spring::bouncy());
+          }
+        }
+        track_motion(pic.ent());
+      }
+      smoke.drag = 1.2f;
+      smoke.update(context.dt);
+      const auto snapshot = &smoke;
+      div(context, mk(stage.ent(), 3), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("drop_smoke")
+                                            .with_on_draw_fg([snapshot](RectangleType) {
+                                              snapshot->each([](const afterhours::particles::Particle &p) {
+                                                afterhours::Color c = p.color;
+                                                c.a = static_cast<unsigned char>(110.f * (1.f - p.progress()));
+                                                afterhours::draw_circle_v(p.pos, p.size * (1.f + 2.f * p.progress()), c);
+                                              });
+                                            }));
+      in_flight |= dx.active() || dy.active() || tilt.active() || fade.active() || hold.active() || smoke.count() > 0;
+      label(stage.ent(), 4, "Drag the picture: it lifts 5% and tilts with pointer speed. Drop on the target to fade in, squash it and puff smoke; miss and it springs home.", 60, 60, 1100, 18, true);
+      label(stage.ent(), 5, std::string("dragging: ") + (dragging ? "yes" : "no"), 300, 250, 300, 20, false, "drag_state");
+      label(stage.ent(), 6, "drops: " + std::to_string(drops), 300, 280, 300, 20, false, "drag_drops");
+      label(stage.ent(), 7, "misses: " + std::to_string(misses), 300, 310, 300, 20, false, "drag_misses");
+      label(stage.ent(), 8, std::string("phase: ") + (drop_phase == 0 ? "idle" : drop_phase == 1 ? "landing" : "held"), 300, 340, 300, 20, false, "drag_phase");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }
