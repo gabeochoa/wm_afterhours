@@ -30,7 +30,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}}},
   };
 
   size_t group = 0;
@@ -83,13 +83,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   int bursts = 0;
   bool like_burst_liked = false;
   int smoke_rings = 0;
+  std::optional<afterhours::effects::Effect> gradient_effect;
+  int gen_phase = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3 };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad };
 
   void reset_examples() {
     checked = false;
@@ -134,6 +136,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     bursts = 0;
     like_burst_liked = false;
     smoke_rings = 0;
+    gen_phase = 0;
+    afterhours::motion::anim(Key::GenLoad).from(0.f);
     for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
     afterhours::motion::anim(Key::ReasonOffset).from(0.f);
     afterhours::motion::anim(Key::ReasonHold).from(0.f);
@@ -1330,6 +1334,74 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 3, "A ring of thirty soft discs drifts outward, grows and fades over 1.5 s: the landing puff for drag-and-drop and the dissolve.", 200, 100, 950, 18, true);
       label(stage.ent(), 4, "rings: " + std::to_string(smoke_rings), 200, 140, 400, 20, false, "smoke_rings");
       label(stage.ent(), 5, "discs: " + std::to_string(smoke.count()), 200, 170, 400, 20, false, "smoke_count");
+    }
+    else if (slug == "pro_text" || slug == "get_pro") {
+      if (!gradient_effect) gradient_effect.emplace(afterhours::effects::Effect::load("gradient"));
+      const RectangleType stage_r = stage.cmp().rect();
+      gradient_effect->set("time", static_cast<float>(afterhours::graphics::get_time()));
+      const float fb_h = static_cast<float>(context.screen_height);
+      if (slug == "pro_text") {
+        const RectangleType text_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 700.f * s, 70.f * s};
+        gradient_effect->set("origin", Vector2Type{text_r.x, fb_h - text_r.y - text_r.height});
+        gradient_effect->set("extent", Vector2Type{text_r.width, text_r.height});
+        gradient_effect->set("radius", 0.f);
+        gradient_effect->set("softness", 0.f);
+        div(context, mk(stage.ent(), 1), box(60, 150, 700, 70).with_label("Unlock Pro features").with_font("AtkinsonMockBold", pixels(52 * s))
+                                              .with_custom_text_color(paper).with_alignment(TextAlignment::Left).with_background(Theme::Usage::None)
+                                              .with_ignore_pointer_events().with_debug_name("pro_text").with_shader(gradient_effect->shader));
+        in_flight = true;
+        label(stage.ent(), 2, "The label is drawn through gradient.fs: hue cycles every 4 s and the colour washes orbit every 5 s. The letters never move.", 60, 240, 1100, 18, true);
+      } else {
+        const RectangleType btn_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 200.f * s, 56.f * s};
+        gradient_effect->set("origin", Vector2Type{btn_r.x - 10.f * s, fb_h - btn_r.y - btn_r.height - 10.f * s});
+        gradient_effect->set("extent", Vector2Type{btn_r.width + 20.f * s, btn_r.height + 20.f * s});
+        gradient_effect->set("radius", 38.f * s);
+        gradient_effect->set("softness", 12.f * s);
+        div(context, mk(stage.ent(), 1), box(50, 140, 220, 76).with_debug_name("pro_glow").with_corner_radius(38 * s).with_custom_background(paper)
+                                              .with_ignore_pointer_events().with_shader(gradient_effect->shader));
+        button(context, mk(stage.ent(), 2), box(60, 150, 200, 56).with_label("Get Pro").with_font("AtkinsonMockBold", pixels(22 * s))
+                                                .with_custom_background({20, 20, 26, 255}).with_custom_text_color(paper).with_corner_radius(28 * s)
+                                                .with_debug_name("get_pro_btn").on_hover({.scale = 1.03f}));
+        in_flight = true;
+        label(stage.ent(), 3, "A gradient pill sits under the button; its shader fades the rim out, so the colour glows while the label stays fixed.", 300, 160, 900, 18, true);
+      }
+      label(stage.ent(), 4, std::string("shader: ") + (gradient_effect->ok() ? "ok" : "missing"), 60, 280, 400, 20, false, "gradient_state");
+    } else if (slug == "imagegen") {
+      auto &load = motion::anim(Key::GenLoad);
+      if (tab(stage.ent(), 1, gen_phase == 0 ? "Generate" : gen_phase == 1 ? "Reveal" : "Reset", 60, 84, 140, false, "gen_btn")) {
+        gen_phase = (gen_phase + 1) % 3;
+        if (gen_phase == 1) load.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {1.4f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop});
+        else load.from(0.f);
+      }
+      const bool loading = gen_phase == 1, revealed = gen_phase == 2;
+      auto frame = div(context, mk(stage.ent(), 2), box(60, 140, 142, 142).with_debug_name("gen_frame").with_corner_radius(10 * s)
+                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
+      const float pitch = 10.f * s;
+      for (int i = 0; i < 14 * 14; ++i) {
+        const int col = i % 14, row = i / 14;
+        const float phase = std::fmod(float(i * 37 % 100) / 100.f * 6.f, 1.4f);
+        ComponentConfig cfg = ComponentConfig{}.with_size({pixels(3.f * s), pixels(3.f * s)}).with_absolute_position(4 * s + col * pitch, 4 * s + row * pitch)
+                                  .with_custom_background({120, 120, 135, 255}).with_corner_radius(1.5f * s).with_ignore_pointer_events()
+                                  .with_debug_name(std::string("gen_dot_") + std::to_string(i));
+        if (loading)
+          cfg.on_appear({.scale = {1.f, 0.f}, .opacity = {1.f, 0.4f}},
+                        motion::Timeline{.keys = {{0.f, 0.f}, {phase, 0.f}, {phase + 0.7f, 1.f}, {1.4f + phase, 0.f}},
+                                         .repeat = motion::Timeline::Repeat::Loop, .curve = motion::curves::ease_in_out_quad});
+        cfg.on_state(revealed, {.opacity = 0.f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.65f, 1.f}}});
+        auto dot = div(context, mk(frame.ent(), i), cfg);
+        if (gen_phase != 1) {
+          dot.ent().removeComponentIfExists<HasMotionState>();
+        }
+      }
+      div(context, mk(frame.ent(), 500), ComponentConfig{}.with_size({pixels(142 * s), pixels(142 * s)}).with_absolute_position(0.f, 0.f)
+                                             .with_custom_background({80, 120, 220, 255}).with_corner_radius(10 * s).with_ignore_pointer_events()
+                                             .with_label("Image").with_font("AtkinsonMockBold", pixels(20 * s)).with_custom_text_color(paper)
+                                             .with_alignment(TextAlignment::Center).with_debug_name("gen_image")
+                                             .on_appear({.opacity = 0.f})
+                                             .on_state(revealed, {.opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.65f, 1.f}}}));
+      in_flight |= load.active();
+      label(stage.ent(), 3, "A static dot field pulses while generating, then cross-fades into the image over 650 ms. The button steps the phases.", 240, 150, 950, 18, true);
+      label(stage.ent(), 4, std::string("phase: ") + (gen_phase == 0 ? "idle" : gen_phase == 1 ? "generating" : "revealed"), 240, 200, 400, 20, false, "gen_state");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

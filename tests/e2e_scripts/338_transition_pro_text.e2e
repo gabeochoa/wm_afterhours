@@ -1,0 +1,12 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_pro_text
+mouse_move 20 20
+wait 0.5
+expect_text "Pro gradient text"
+expect_text "shader: ok"
+expect_text "Unlock Pro features"
+screenshot transition_pro_text

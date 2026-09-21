@@ -1,0 +1,25 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_imagegen
+mouse_move 20 20
+wait 0.5
+expect_text "Image placeholder"
+expect_text "phase: idle"
+click_ui gen_btn
+mouse_move 20 20
+expect_text "phase: generating"
+expect_text "motion: in flight"
+wait 1
+screenshot transition_imagegen_loading
+click_ui gen_btn
+mouse_move 20 20
+expect_text "phase: revealed"
+wait 1.5
+expect_text "motion: settled"
+screenshot transition_imagegen_revealed
+click_ui gen_btn
+mouse_move 20 20
+expect_text "phase: idle"
