@@ -30,7 +30,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}}},
   };
 
   size_t group = 0;
@@ -91,13 +91,20 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   int deletes = 0;
   bool goo_open = false;
   int goo_actions = 0;
+  std::optional<afterhours::effects::Effect> shimmer_effect;
+  std::optional<afterhours::effects::Effect> bend_effect;
+  raylib::Texture2D bend_tex{};
+  bool bend_tex_loaded = false;
+  bool organic_playing = true;
+  bool bend_open = false;
+  int bend_toggles = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP };
 
   void reset_examples() {
     checked = false;
@@ -152,6 +159,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     afterhours::motion::anim(Key::DissolveHold).from(0.f);
     for (int i = 0; i < 3; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::GooA0) + i)).from(0.f);
     afterhours::motion::anim(Key::GooBob).from(0.f);
+    organic_playing = true;
+    afterhours::motion::anim(Key::OrganicP).from(0.f);
+    bend_open = false;
+    bend_toggles = 0;
+    afterhours::motion::anim(Key::BendP).from(0.f);
     for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
     afterhours::motion::anim(Key::ReasonOffset).from(0.f);
     afterhours::motion::anim(Key::ReasonHold).from(0.f);
@@ -1509,6 +1521,57 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 6, "goo.fs thresholds a four-metaball field: the actions stretch out of the plus with liquid bridges, staggered 40 ms.", 320, 160, 880, 18, true);
       label(stage.ent(), 7, std::string("open: ") + (goo_open ? "yes" : "no"), 320, 210, 400, 20, false, "goo_state");
       label(stage.ent(), 8, "actions: " + std::to_string(goo_actions), 320, 240, 400, 20, false, "goo_actions");
+    }
+    else if (slug == "organic") {
+      if (!shimmer_effect) shimmer_effect.emplace(afterhours::effects::Effect::load("shimmer"));
+      auto &prog = motion::anim(Key::OrganicP);
+      if (!prog.started() || (organic_playing && !prog.active()))
+        prog.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop, .curve = motion::curves::ease_out_quad});
+      if (tab(stage.ent(), 1, organic_playing ? "Stop" : "Play", 60, 84, 120, false, "organic_btn")) {
+        organic_playing = !organic_playing;
+        if (!organic_playing) prog.from(prog.value());
+      }
+      const RectangleType stage_r = stage.cmp().rect();
+      const RectangleType sq{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 200.f * s, 200.f * s};
+      shimmer_effect->set("origin", Vector2Type{sq.x, static_cast<float>(context.screen_height) - sq.y - sq.height});
+      shimmer_effect->set("extent", Vector2Type{sq.width, sq.height});
+      shimmer_effect->set("progress", prog.value());
+      shimmer_effect->set("span", 0.26f);
+      div(context, mk(stage.ent(), 2), box(20, 110, 280, 280).with_debug_name("organic_square").with_custom_background(paper)
+                                            .with_ignore_pointer_events().with_shader(shimmer_effect->shader));
+      in_flight |= prog.active();
+      label(stage.ent(), 3, "shimmer.fs keeps the colour layers still and sweeps a noisy diagonal opening across them every 3 s.", 320, 160, 880, 18, true);
+      label(stage.ent(), 4, std::string("playing: ") + (organic_playing ? "yes" : "no"), 320, 210, 400, 20, false, "organic_playing");
+      label(stage.ent(), 5, std::string("shader: ") + (shimmer_effect->ok() ? "ok" : "missing"), 320, 240, 400, 20, false, "organic_shader");
+    } else if (slug == "bend") {
+      if (!bend_effect) bend_effect.emplace(afterhours::effects::Effect::load("bend"));
+      if (!bend_tex_loaded) {
+        bend_tex_loaded = true;
+        bend_tex = raylib::LoadTexture(afterhours::files::get_resource_path("images", "marlo_kart/celebration.png").string().c_str());
+        raylib::SetTextureFilter(bend_tex, raylib::TEXTURE_FILTER_BILINEAR);
+      }
+      auto &prog = motion::anim(Key::BendP);
+      if (tab(stage.ent(), 1, bend_open ? "Close" : "Open", 60, 84, 120, false, "bend_btn")) {
+        bend_open = !bend_open;
+        ++bend_toggles;
+        prog.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.35f, 1.f}}});
+      }
+      const float envelope = std::sin(3.14159265f * std::clamp(prog.value_or(0.f), 0.f, 1.f));
+      bend_effect->set("amount", envelope * (bend_open ? 1.f : -0.5f));
+      const raylib::Texture2D tex = bend_tex;
+      auto pic = div(context, mk(stage.ent(), 2), box(60, 150, 220, 160).with_debug_name("bend_image")
+                                                       .with_custom_background(afterhours::colors::transparent()).with_ignore_pointer_events()
+                                                       .with_shader(bend_effect->shader)
+                                                       .with_on_draw_fg([tex](RectangleType r) {
+                                                         afterhours::draw_texture_pro(tex, {0.f, 0.f, float(tex.width), float(tex.height)}, r, {0.f, 0.f}, 0.f, {255, 255, 255, 255});
+                                                       })
+                                                       .on_state(bend_open, {.scale = {0.3f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.45f, 1.f}}, .curve = motion::curves::ease_out_cubic}));
+      track_motion(pic.ent());
+      in_flight |= prog.active();
+      label(stage.ent(), 3, "Open scales the picture 0.3 to 1 over 450 ms while bend.fs bends its texture with a sin(pi p) envelope.", 320, 160, 880, 18, true);
+      label(stage.ent(), 4, std::string("open: ") + (bend_open ? "yes" : "no"), 320, 210, 400, 20, false, "bend_state");
+      label(stage.ent(), 5, "toggles: " + std::to_string(bend_toggles), 320, 240, 400, 20, false, "bend_toggles");
+      label(stage.ent(), 6, std::string("shader: ") + (bend_effect->ok() ? "ok" : "missing"), 320, 270, 400, 20, false, "bend_shader");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

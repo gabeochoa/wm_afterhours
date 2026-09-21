@@ -1,0 +1,18 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_organic
+mouse_move 20 20
+expect_text "Organic shimmer"
+expect_text "shader: ok"
+expect_text "playing: yes"
+expect_text "motion: in flight"
+wait_frames 3
+screenshot transition_organic
+click_ui organic_btn
+mouse_move 20 20
+expect_text "playing: no"
+wait 0.5
+expect_text "motion: settled"
