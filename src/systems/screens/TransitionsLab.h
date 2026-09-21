@@ -6,6 +6,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/effects.h>
 #include <afterhours/src/plugins/modal.h>
 #include <array>
 
@@ -28,7 +29,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}}},
   };
 
   size_t group = 0;
@@ -71,6 +72,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool shimmer_playing = true;
   int counter_value = 0;
   int popin_value = 1289;
+  std::optional<afterhours::effects::Effect> tint_effect;
+  int shader_reloads = 0;
+  float tint_strength = 1.f;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
@@ -1161,6 +1165,25 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       in_flight |= text_units_active(number.ent());
       label(stage.ent(), 5, "Only the digits that changed drop in from 8 px above; unchanged ones sit still. 500 ms each, 70 ms stagger among the changed.", 60, 240, 1100, 18, true);
       label(stage.ent(), 6, "value: " + std::to_string(popin_value), 60, 280, 400, 20, false, "popin_value");
+    }
+    else if (slug == "effect") {
+      if (!tint_effect) tint_effect.emplace(afterhours::effects::Effect::load("tint"));
+      if (tab(stage.ent(), 1, "Reload shaders", 60, 84, 180, false, "shader_reload_btn")) shader_reloads += afterhours::effects::reload_all();
+      if (tab(stage.ent(), 2, tint_strength > 0.5f ? "Tint: on" : "Tint: off", 260, 84, 140, false, "tint_toggle")) tint_strength = tint_strength > 0.5f ? 0.f : 1.f;
+      auto *fx = &*tint_effect;
+      const float strength = tint_strength;
+      div(context, mk(stage.ent(), 3), box(60, 150, 320, 180).with_debug_name("effect_canvas").with_corner_radius(12 * s)
+                                            .with_custom_background({244, 240, 246, 255}).with_ignore_pointer_events()
+                                            .with_on_draw_fg([fx, strength, s](RectangleType r) {
+                                              fx->set("tint", ColorType{80, 120, 220, static_cast<unsigned char>(255 * strength)});
+                                              afterhours::effects::Effect::Scope scope(*fx);
+                                              const float pad = 20.f * s;
+                                              afterhours::draw_rectangle({r.x + pad, r.y + pad, r.width - 2 * pad, r.height - 2 * pad}, {230, 150, 120, 255});
+                                              afterhours::draw_circle_v({r.x + r.width * 0.5f, r.y + r.height * 0.5f}, 40.f * s, {130, 200, 150, 255});
+                                            }));
+      label(stage.ent(), 4, "Everything drawn inside Effect::Scope goes through resources/shaders/tint.fs; the uniform is set per frame. Reload re-reads the file from disk.", 400, 160, 800, 18, true);
+      label(stage.ent(), 5, std::string("effect: ") + (tint_effect->ok() ? "ok" : "missing"), 400, 210, 400, 20, false, "effect_state");
+      label(stage.ent(), 6, "reloads: " + std::to_string(shader_reloads), 400, 240, 400, 20, false, "effect_reloads");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }
