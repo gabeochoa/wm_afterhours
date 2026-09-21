@@ -3,6 +3,18 @@
 Remaining library work and external checks follow.
 See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
 
+## Transitions Lab
+
+- [x] Address the [additional transition feedback](docs/transitions.md), including screenshots or renders to verify the effects.
+
+## UI element follow-ups from the lab review
+
+- [ ] `with_padding` on a label with no children does nothing (it warns); the lab wraps every padded text in a child. Decide whether label text should honour padding directly.
+- [ ] Should `ClosedBy::Any` (click outside dismisses) be the modal default instead of `CloseRequest`? The lab opts in per dialog.
+- [ ] A drawn chevron/icon primitive: the accordion and learn-more examples hand-draw theirs with `draw_line_ex` because glyph fonts render only ASCII.
+- [ ] Multiline label line height does not match the font pixel size, so anything that scrolls text by fixed rows (the counter reel) has to lay out one label per row.
+- [ ] Tab rows shrink label text to fit; long example titles squished at 140 px. A minimum font size or overflow rule for buttons would avoid that.
+
 ## Terminal consumer support
 
 - [x] Live, argument-aware completion callbacks with explicit refresh after app data changes. Puzzle needs level IDs after `reload_levels` and later-argument choices such as `juice bloom on`.

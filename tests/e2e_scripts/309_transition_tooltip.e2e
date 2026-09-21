@@ -22,7 +22,7 @@ expect_text "motion: in flight"
 wait 1
 expect_text "motion: settled"
 expect_text "Italicise the selection"
-expect_drawn_at rectangle_rounded x=240 y=272 w=220 h=36 tol=2
+expect_drawn_at rectangle_rounded x=190 y=272 w=220 h=36 tol=2
 screenshot transition_tooltip_italic
 mouse_move 20 20
 expect_text "motion: in flight"

@@ -3,17 +3,22 @@ resize 1280 720
 mouse_move 20 20
 wait 0.3
 click_ui group_effects
-click_ui ex_like_burst
+click_ui ex_stars
 mouse_move 20 20
 wait 0.5
+expect_text "Star rating"
+expect_text "rating: 0"
 expect_text "motion: settled"
-click_ui burst_heart
+click_ui star_3
 mouse_move 20 20
-expect_text "dots: 8"
-expect_text "liked: yes"
+expect_text "rating: 4"
+expect_text "sparks: 12"
 expect_text "motion: in flight"
 wait_frames 6
-screenshot 336_transition_like_burst
+screenshot 336_transition_stars
 wait 5
-expect_text "dots: 0"
+expect_text "sparks: 0"
 expect_text "motion: settled"
+click_ui star_0
+mouse_move 20 20
+expect_text "rating: 1"

@@ -16,7 +16,7 @@ expect_text "toast: shown"
 expect_text "toasts: 1"
 wait 1
 expect_text "motion: settled"
-expect_drawn_at rectangle_rounded x=100 y=540 w=360 h=56 tol=2 color=#282830
+expect_drawn_at rectangle_rounded x=100 y=480 w=360 h=56 tol=2 color=#ece8f0
 screenshot transition_toast_shown
 wait 3
 expect_text "toast: hidden"

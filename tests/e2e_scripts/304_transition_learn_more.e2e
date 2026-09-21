@@ -14,7 +14,7 @@ mouse_move 140 290
 expect_text "motion: in flight"
 expect_text "hover: yes"
 wait 1.5
-expect_text "shift: 2px  spread: 8deg"
+expect_text "shift: 10px  spread: 30deg"
 expect_text "motion: settled"
 screenshot transition_learn_more_hover
 mouse_move 20 20

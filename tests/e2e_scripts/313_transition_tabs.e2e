@@ -9,20 +9,20 @@ wait 0.6
 expect_text "Tabs sliding"
 expect_text "tab: 0"
 expect_text "motion: settled"
-expect_drawn_at rectangle_rounded x=106 y=270 w=110 h=32 tol=2 color=#ffffff
+expect_drawn_at rectangle_rounded x=106 y=270 w=110 h=32 tol=2 color=#34303e
 click_ui tab_1
 mouse_move 20 20
 expect_text "motion: in flight"
 expect_text "tab: 1"
 wait 1
 expect_text "motion: settled"
-expect_drawn_at rectangle_rounded x=222 y=270 w=80 h=32 tol=2 color=#ffffff
+expect_drawn_at rectangle_rounded x=222 y=270 w=80 h=32 tol=2 color=#34303e
 click_ui tab_2
 mouse_move 20 20
 expect_text "tab: 2"
 wait 1
 expect_text "motion: settled"
-expect_drawn_at rectangle_rounded x=308 y=270 w=90 h=32 tol=2 color=#ffffff
+expect_drawn_at rectangle_rounded x=308 y=270 w=90 h=32 tol=2 color=#34303e
 screenshot transition_tabs_plan
 click_ui reset_btn
 mouse_move 20 20

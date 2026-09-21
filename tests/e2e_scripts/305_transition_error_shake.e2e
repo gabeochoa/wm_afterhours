@@ -17,7 +17,7 @@ expect_text "error: shown"
 expect_text "submits: 1"
 wait 0.6
 expect_text "motion: settled"
-expect_drawn_at rectangle_rounded x=100 y=270 w=360 h=44 tol=2 color=#ffebee
+expect_drawn_at rectangle_rounded x=100 y=270 w=360 h=44 tol=2 color=#602c38
 screenshot transition_error_shake_shown
 wait 3.5
 expect_text "error: clear"

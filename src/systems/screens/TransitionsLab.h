@@ -2,6 +2,7 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../render_backend.h"
 #include "../../settings.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
@@ -30,7 +31,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}, {"tilt", "3D tilt"}, {"dragdrop", "Drag and drop"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"stars", "Star rating"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}, {"tilt", "3D tilt"}, {"dragdrop", "Drag and drop"}}},
   };
 
   size_t group = 0;
@@ -64,6 +65,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   bool spinner_done = false;
   int completions = 0;
   bool card_expanded = true;
+  std::vector<int> stack_order{0, 1, 2};
   bool stream_playing = false;
   int stream_runs = 0;
   bool thinking_playing = true;
@@ -81,7 +83,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   afterhours::particles::Emitter<64> burst;
   afterhours::particles::Emitter<64> smoke;
   int bursts = 0;
-  bool like_burst_liked = false;
+  int rating = 0;
+  int sparks = 0;
   int smoke_rings = 0;
   std::optional<afterhours::effects::Effect> gradient_effect;
   int gen_phase = 0;
@@ -126,12 +129,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 30; ++i) {
       auto &p = smoke.spawn();
       const float angle = (float(i) / 30.f) * 6.2831853f;
-      const float speed = 30.f * s * (0.9f + afterhours::particles::hash01(i + smoke_rings * 17) * 0.3f);
+      const float speed = 75.f * s * (0.9f + afterhours::particles::hash01(i + smoke_rings * 17) * 0.3f);
+      const float scale = 0.55f + afterhours::particles::hash01(i * 5 + smoke_rings) * 0.9f;
       p.pos = centre;
       p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
-      p.size = 12.f * s;
-      p.life = 1.5f;
-      p.color = {120, 120, 130, 255};
+      p.size = 12.f * s * scale;
+      p.life = 0.6f + scale * 0.9f;
+      p.color = {180, 176, 190, 255};
     }
   }
 
@@ -162,6 +166,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     spinner_done = false;
     completions = 0;
     card_expanded = true;
+    stack_order = {0, 1, 2};
     stream_playing = false;
     stream_runs = 0;
     thinking_playing = true;
@@ -176,7 +181,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     burst.clear();
     smoke.clear();
     bursts = 0;
-    like_burst_liked = false;
+    rating = 0;
+    sparks = 0;
     smoke_rings = 0;
     gen_phase = 0;
     afterhours::motion::anim(Key::GenLoad).from(0.f);
@@ -225,11 +231,26 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
     namespace motion = afterhours::motion;
-    context.theme = afterhours::ui::theme_presets::cozy_kraft();
+    static const Theme night = [] {
+      Theme t = Theme::create().with_palette({.background = {24, 22, 30, 255}, .surface = {52, 48, 62, 255}, .primary = {80, 120, 220, 255},
+                                              .secondary = {66, 60, 76, 255}, .accent = {255, 115, 105, 255}, .error = {255, 110, 120, 255},
+                                              .font = {236, 232, 240, 255}, .darkfont = {24, 22, 30, 255}, .font_muted = {160, 152, 170, 255}})
+                    .with_roundness(0.12f);
+      afterhours::ui::theme_presets::add_default_language_fonts(t);
+      return t;
+    }();
+    context.theme = night;
     context.scaling_mode = ScalingMode::Proportional;
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
-    const afterhours::Color ink{55, 50, 60, 255}, muted{99, 87, 105, 255}, coral{255, 115, 105, 255},
-        paper{255, 255, 255, 255}, accent{80, 120, 220, 255};
+    const bool direct = render_backend::draw_directly_to_window;
+    const float px = direct ? static_cast<float>(raylib::GetRenderHeight()) / std::max(1.f, context.screen_height) : 1.f;
+    const float fb_h = direct ? static_cast<float>(raylib::GetRenderHeight()) : context.screen_height;
+    const auto fb_origin = [&](RectangleType r) { return Vector2Type{r.x * px, fb_h - (r.y + r.height) * px}; };
+    const auto fb_extent = [&](RectangleType r) { return Vector2Type{r.width * px, r.height * px}; };
+    const auto fb_point = [&](float x, float y) { return Vector2Type{x * px, fb_h - y * px}; };
+    const afterhours::Color ink{236, 232, 240, 255}, muted{160, 152, 170, 255}, coral{255, 115, 105, 255},
+        paper{52, 48, 62, 255}, white{255, 255, 255, 255}, accent{80, 120, 220, 255}, chip{66, 60, 76, 255},
+        line{92, 84, 104, 255}, slate{104, 96, 118, 255};
     const auto box = [s](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
@@ -245,13 +266,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                          bool selected, const std::string &debug, float h = 40.f) {
       return button(context, mk(parent, id),
                     box(x, y, w, h).with_label(text).with_font("AtkinsonMock", pixels(h > 36.f ? 17 * s : 15 * s))
-                        .with_custom_background(selected ? coral : afterhours::Color{244, 240, 246, 255})
+                        .with_custom_background(selected ? coral : chip)
                         .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name(debug)
                         .on_hover({.scale = 1.03f}).on_press({.scale = 0.96f}));
     };
 
     div(context, mk(entity, 0), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_custom_background({255, 245, 235, 255}).with_corner_radius(0).with_debug_name("bg"));
+        .with_custom_background({24, 22, 30, 255}).with_corner_radius(0).with_debug_name("bg"));
     label(entity, 1, "Transitions Lab", 40, 24, 600, 30);
 
     for (size_t g = 0; g < groups.size(); ++g)
@@ -260,7 +281,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     const Group &current = groups[group];
     if (example[group] >= current.examples.size()) example[group] = 0;
     for (size_t e = 0; e < current.examples.size(); ++e)
-      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + (e % 8) * 148.f, 106 + (e / 8) * 36.f, 140,
+      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + (e % 7) * 170.f, 106 + (e / 7) * 36.f, 164,
               e == example[group], std::string("ex_") + current.examples[e].slug, 32.f))
         example[group] = e;
 
@@ -269,10 +290,10 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     bool reduced = Settings::get().get_reduced_motion_enabled();
     if (checkbox(context, mk(entity, 42), reduced,
                  box(320, 662, 260, 36).with_label("Reduced motion").with_font("AtkinsonMock", pixels(18 * s))
-                     .with_custom_text_color(ink).with_debug_name("reduced_motion")))
+                     .with_custom_background(chip).with_custom_text_color(ink).with_debug_name("reduced_motion")))
       Settings::get().set_reduced_motion_enabled(reduced);
 
-    auto stage = div(context, mk(entity, 50), box(40, 180, 1200, 460).with_custom_background(paper)
+    auto stage = div(context, mk(entity, 50), box(40, 180, 1200, 460).with_custom_background({36, 33, 44, 255})
                                                   .with_corner_radius(16 * s).with_debug_name("stage"));
     if (current.examples.empty()) {
       label(stage.ent(), 0, "No examples in this group yet.", 24, 24, 600, 22, true);
@@ -336,11 +357,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto trackr = button(context, mk(stage.ent(), 1),
                            box(60, 90, 56, 32).with_corner_radius(16 * s).with_debug_name("toggle_track")
                                .with_padding(Padding::all(pixels(0)))
-                               .with_custom_background({200, 195, 205, 255})
-                               .on_state(toggled, {.background = {afterhours::Color{200, 195, 205, 255}, accent}}, motion::Spring::smooth()));
+                               .with_custom_background(slate)
+                               .on_state(toggled, {.background = {slate, accent}}, motion::Spring::smooth()));
       div(context, mk(trackr.ent(), 0),
           ComponentConfig{}.with_size({pixels(26 * s), pixels(26 * s)}).with_absolute_position(3 * s, 3 * s)
-              .with_custom_background(paper).with_corner_radius(13 * s).with_debug_name("toggle_thumb")
+              .with_custom_background(white).with_corner_radius(13 * s).with_debug_name("toggle_thumb")
               .with_ignore_pointer_events()
               .on_state(toggled, {.translate_x = {0.f, travel}}, motion::Spring::bouncy()));
       if (trackr) toggled = !toggled;
@@ -382,7 +403,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       const motion::Timeline swap{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
       auto cell = button(context, mk(stage.ent(), 1),
                          box(60, 84, 64, 64).with_debug_name("icon_swap").with_padding(Padding::all(pixels(0)))
-                             .with_custom_background({244, 240, 246, 255}).with_corner_radius(12 * s));
+                             .with_custom_background(chip).with_corner_radius(12 * s));
       const auto glyph = [&](int id, const char *text, bool shown_when_b, const char *debug) {
         ComponentConfig cfg = ComponentConfig{}.with_size({pixels(64 * s), pixels(64 * s)}).with_absolute_position(0.f, 0.f)
                                   .with_label(text).with_font("AtkinsonMockBold", pixels(34 * s)).with_custom_text_color(ink)
@@ -414,8 +435,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                              .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(0)))
                              .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
                              .with_on_draw_fg([dx, deg, s, accent](RectangleType r) {
-                               const float tip_x = r.x + 138.f * s + dx * s, tip_y = r.y + r.height / 2.f;
+                               const float tip_x = r.x + 116.f * s + dx * s, tip_y = r.y + r.height / 2.f;
                                const float arm = 9.f * s;
+                               const float under_w = 100.f * s * std::clamp(dx / 10.f, 0.f, 1.f);
+                               if (under_w > 0.f)
+                                 afterhours::draw_line_ex({r.x, r.y + r.height - 4.f * s}, {r.x + under_w, r.y + r.height - 4.f * s}, 2.f * s, accent);
                                const float base = 3.14159265f / 4.f, open_by = deg * 3.14159265f / 180.f;
                                const float up = -(base + open_by / 2.f), down = base + open_by / 2.f;
                                afterhours::draw_line_ex({tip_x, tip_y}, {tip_x - arm * std::cos(up), tip_y + arm * std::sin(up)}, 2.f * s, accent);
@@ -425,23 +449,25 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       const motion::Spring ease{.response = 0.35f};
       if (!shift.started()) shift.from(0.f);
       if (!spread.started()) spread.from(0.f);
-      if (shift.target() != (hot ? 2.f : 0.f)) shift.to(hot ? 2.f : 0.f, ease);
-      if (spread.target() != (hot ? 8.f : 0.f)) spread.to(hot ? 8.f : 0.f, ease);
+      if (shift.target() != (hot ? 10.f : 0.f)) shift.to(hot ? 10.f : 0.f, ease);
+      if (spread.target() != (hot ? 30.f : 0.f)) spread.to(hot ? 30.f : 0.f, ease);
       in_flight |= shift.active() || spread.active();
-      label(stage.ent(), 2, "Hover the link. The chevron slides 2 px right and its arms open by 8 degrees.", 300, 100, 900, 18, true);
+      label(stage.ent(), 2, "Hover the link. The chevron slides 10 px right, its arms open by 30 degrees and an underline draws in beneath the text.", 300, 100, 900, 18, true);
       label(stage.ent(), 3, std::string("hover: ") + (hot ? "yes" : "no"), 60, 170, 400, 20, false, "learn_hover");
       label(stage.ent(), 4, "shift: " + std::to_string(int(std::lround(dx))) + "px  spread: " + std::to_string(int(std::lround(deg))) + "deg", 60, 200, 500, 20, false, "learn_values");
     } else if (slug == "error_shake") {
       auto &shake = motion::anim(Key::Shake);
       auto &hold = motion::anim(Key::ErrorHold);
       const float sx = shake.value();
-      const afterhours::Color pink{255, 235, 238, 255}, danger{220, 60, 70, 255};
-      div(context, mk(stage.ent(), 1),
-          box(60 + sx, 90, 360, 44).with_label("user@example").with_debug_name("error_field")
-              .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
-              .with_padding(Padding::all(pixels(10 * s))).with_corner_radius(8 * s).with_border(muted, 1.5f * s)
-              .with_custom_background(paper)
-              .on_state(error, {.background = {paper, pink}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}}));
+      const afterhours::Color pink{96, 44, 56, 255}, danger{255, 110, 120, 255};
+      auto field = div(context, mk(stage.ent(), 1),
+                       box(60 + sx, 90, 360, 44).with_debug_name("error_field").with_corner_radius(8 * s).with_border(muted, 1.5f * s)
+                           .with_custom_background(paper)
+                           .on_state(error, {.background = {paper, pink}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}}));
+      div(context, mk(field.ent(), 0), ComponentConfig{}.with_size({pixels(336 * s), pixels(44 * s)}).with_absolute_position(12 * s, 0.f)
+                                           .with_label("user@example").with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(ink)
+                                           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                           .with_debug_name("error_field_text"));
       div(context, mk(stage.ent(), 2),
           box(60, 140, 500, 26).with_label("Enter a valid email address.").with_debug_name("error_message")
               .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(danger).with_alignment(TextAlignment::Left)
@@ -488,7 +514,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 5, std::string("text: ") + (cleared ? "cleared" : "present"), 60, 190, 400, 20, false, "clear_state");
     } else if (slug == "text_swap") {
       static const char *states[] = {"Saved", "Saving changes", "Could not save"};
-      const motion::Timeline swap{.keys = {{0.f, 0.f}, {0.15f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
+      const motion::Timeline swap{.keys = {{0.f, 0.f}, {0.22f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
       const size_t stamp = static_cast<size_t>(swap_index);
       const int previous = (swap_index + 2) % 3;
       auto cell = div(context, mk(stage.ent(), 1), box(60, 90, 300, 36).with_debug_name("swap_cell").with_clip_children()
@@ -511,19 +537,19 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto child = UICollectionHolder::getEntityForID(child_id);
         if (child.valid()) track_motion(child.asE());
       }
-      label(stage.ent(), 3, "Next state lifts the old label 4 px as it fades; the new one rises in from 4 px below. 150 ms each, overlapping.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 3, "Next state lifts the old label 4 px as it fades; the new one rises in from 4 px below. 220 ms each, overlapping.", 60, 150, 1100, 18, true);
       label(stage.ent(), 4, "state: " + std::to_string(swap_index), 60, 190, 400, 20, false, "swap_state");
     }
     else if (slug == "menu") {
       if (tab(stage.ent(), 1, menu_open ? "Close menu" : "Open menu", 60, 84, 160, false, "menu_trigger")) menu_open = !menu_open;
       auto panel = div(context, mk(stage.ent(), 2),
                        box(60, 132, 220, 152).with_debug_name("menu_panel").with_corner_radius(12 * s)
-                           .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s)
+                           .with_custom_background(paper).with_border(line, 1.f * s)
                            .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_origin(0.f, 0.f)
                            .with_padding(Padding::all(pixels(8 * s)))
                            .with_flex_direction(FlexDirection::Column)
-                           .on_appear({.scale = 0.97f, .opacity = 0.f})
-                           .on_state(menu_open, {.scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
+                           .on_appear({.translate_y = -16.f * s, .scale = 0.97f, .opacity = 0.f})
+                           .on_state(menu_open, {.translate_y = {-16.f * s, 0.f}, .scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
                                      motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad}));
       static const char *items[] = {"Rename", "Duplicate", "Archive"};
       for (int i = 0; i < 3; ++i) {
@@ -532,7 +558,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                   .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(8 * s)))
                                   .with_custom_background(paper).with_corner_radius(6 * s)
                                   .with_debug_name(std::string("menu_item_") + std::to_string(i))
-                                  .on_hover({.background = afterhours::Color{244, 240, 246, 255}}, motion::Spring::snappy());
+                                  .on_hover({.background = chip}, motion::Spring::snappy());
         if (!menu_open) cfg.with_ignore_pointer_events().with_skip_tabbing(true);
         if (button(context, mk(panel.ent(), i), cfg) && menu_open) {
           menu_choice = items[i];
@@ -540,7 +566,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         }
       }
       track_motion(panel.ent());
-      label(stage.ent(), 3, "The popover scales from 0.97 at its top-left corner while fading in over 250 ms; closed it keeps no pointer or tab stop.", 320, 100, 900, 18, true);
+      label(stage.ent(), 3, "The popover slides 16 px down out of the button, scaling from 0.97 as it fades in, 250 ms; closed it keeps no pointer or tab stop.", 320, 100, 900, 18, true);
       label(stage.ent(), 4, std::string("menu: ") + (menu_open ? "open" : "closed"), 320, 140, 400, 20, false, "menu_state");
       label(stage.ent(), 5, "choice: " + menu_choice, 320, 170, 400, 20, false, "menu_choice");
     } else if (slug == "tooltip") {
@@ -553,13 +579,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       if (hovered >= 0) tooltip_trigger = hovered;
       auto &tx = motion::anim(Key::TooltipX);
-      const float want_x = 60.f + std::max(tooltip_trigger, 0) * 140.f;
+      const float want_x = 10.f + std::max(tooltip_trigger, 0) * 140.f;
       if (!tx.started()) tx.from(want_x);
       if (tx.target() != want_x) tx.to(want_x, motion::Timeline{.keys = {{0.f, 0.f}, {0.16f, 1.f}}, .curve = motion::curves::ease_out_quad});
       const bool shown = hovered >= 0;
       auto bubble = div(context, mk(stage.ent(), 5),
                         box(tx.value(), 92, 220, 36).with_debug_name("tooltip_bubble").with_corner_radius(8 * s)
-                            .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s)
+                            .with_custom_background(paper).with_border(line, 1.f * s)
                             .with_label(tooltip_trigger >= 0 ? tips[tooltip_trigger] : "").with_font("AtkinsonMock", pixels(15 * s))
                             .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
                             .with_soft_shadow(2 * s, 4 * s, 12 * s, {80, 60, 100, 30}).with_ignore_pointer_events()
@@ -576,6 +602,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (tab(stage.ent(), 1, "Open dialog", 60, 84, 160, false, "modal_open_btn")) modal_open = true;
       auto dialog = afterhours::modal(context, mk(stage.ent(), 2), modal_open,
                                       afterhours::ModalConfig{}.with_title("Fading dialog").with_size(h720(420), h720(200))
+                                          .with_closed_by(afterhours::ClosedBy::Any)
                                           .with_motion(motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad},
                                                        motion::Timeline{.keys = {{0.f, 0.f}, {0.15f, 1.f}}}));
       if (dialog) {
@@ -589,16 +616,16 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       const char *phase = m.phase == afterhours::modal::Modal::Phase::Hidden ? "hidden" : m.phase == afterhours::modal::Modal::Phase::Entering ? "entering"
                           : m.phase == afterhours::modal::Modal::Phase::Visible ? "visible" : "exiting";
       in_flight |= m.phase == afterhours::modal::Modal::Phase::Entering || m.phase == afterhours::modal::Modal::Phase::Exiting;
-      label(stage.ent(), 3, "Open 250 ms ease-out, close 150 ms. The surface motion only: the plugin owns backdrop, focus and input.", 260, 100, 950, 18, true);
+      label(stage.ent(), 3, "Open 250 ms ease-out, close 150 ms. Clicking the backdrop or pressing Escape dismisses it; the plugin owns backdrop, focus and input.", 260, 100, 950, 18, true);
       label(stage.ent(), 4, std::string("phase: ") + phase, 60, 170, 400, 20, false, "modal_phase");
     } else if (slug == "panel") {
       if (tab(stage.ent(), 1, panel_open ? "Hide panel" : "Show panel", 60, 84, 160, false, "panel_btn")) panel_open = !panel_open;
       auto frame = div(context, mk(stage.ent(), 2), box(60, 140, 320, 187).with_debug_name("panel_frame").with_corner_radius(12 * s)
-                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
+                                                         .with_custom_background(chip).with_clip_children());
       auto panel = div(context, mk(frame.ent(), 0),
                        ComponentConfig{}.with_size({pixels(320 * s), pixels(187 * s)}).with_absolute_position(0.f, 0.f)
                            .with_custom_background(accent).with_corner_radius(12 * s).with_debug_name("panel_body")
-                           .with_label("Panel").with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(paper)
+                           .with_label("Panel").with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(white)
                            .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
                            .on_appear({.translate_y = 93.5f * s, .opacity = 0.f})
                            .on_state(panel_open, {.translate_y = {93.5f * s, 0.f}, .opacity = {0.f, 1.f}},
@@ -609,17 +636,17 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     }
     else if (slug == "page") {
       auto frame = div(context, mk(stage.ent(), 1), box(60, 84, 420, 240).with_debug_name("page_frame").with_corner_radius(12 * s)
-                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
-      const motion::Timeline slide{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad};
+                                                         .with_custom_background(chip).with_clip_children());
+      const motion::Timeline slide{.keys = {{0.f, 0.f}, {0.32f, 1.f}}, .curve = motion::curves::ease_out_cubic};
       const auto page = [&](int id, const char *title, afterhours::Color bg, bool is_two, const char *debug) {
         ComponentConfig cfg = ComponentConfig{}.with_size({pixels(420 * s), pixels(240 * s)}).with_absolute_position(0.f, 0.f)
                                   .with_custom_background(bg).with_corner_radius(12 * s).with_label(title)
-                                  .with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(paper)
+                                  .with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(white)
                                   .with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name(debug);
         if (is_two)
-          cfg.on_appear({.translate_x = 8.f * s, .opacity = 0.f}).on_state(page_two, {.translate_x = {8.f * s, 0.f}, .opacity = {0.f, 1.f}}, slide);
+          cfg.on_appear({.translate_x = 420.f * s}).on_state(page_two, {.translate_x = {420.f * s, 0.f}}, slide);
         else
-          cfg.on_state(page_two, {.translate_x = {0.f, -8.f * s}, .opacity = {1.f, 0.f}}, slide);
+          cfg.on_state(page_two, {.translate_x = {0.f, -420.f * s}}, slide);
         return div(context, mk(frame.ent(), id), cfg);
       };
       page(0, "Page 1", accent, false, "page_one");
@@ -629,7 +656,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto child = UICollectionHolder::getEntityForID(child_id);
         if (child.valid()) track_motion(child.asE());
       }
-      label(stage.ent(), 3, "Two overlapping pages trade places: 8 px of travel and a cross-fade, 250 ms.", 500, 140, 700, 18, true);
+      label(stage.ent(), 3, "Forward pushes page 1 off to the left as page 2 slides in from the right, the full frame width in 320 ms; Back reverses it.", 500, 140, 700, 18, true);
       label(stage.ent(), 4, std::string("page: ") + (page_two ? "2" : "1"), 500, 180, 400, 20, false, "page_state");
     } else if (slug == "tabs") {
       static const char *names[] = {"Debug", "Ask", "Plan"};
@@ -637,7 +664,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       float xs[3]; float run = 0.f;
       for (int i = 0; i < 3; ++i) { xs[i] = run; run += widths[i] + 6.f; }
       auto bar = div(context, mk(stage.ent(), 1), box(60, 84, run + 6.f, 44).with_debug_name("tabs_bar").with_corner_radius(10 * s)
-                                                       .with_custom_background({241, 241, 241, 255}));
+                                                       .with_custom_background(chip));
       auto &px = motion::anim(Key::PillX);
       auto &pw = motion::anim(Key::PillW);
       const float want_x = (6.f + xs[tab_index]) * s, want_w = widths[tab_index] * s;
@@ -653,7 +680,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         if (button(context, mk(bar.ent(), 1 + i),
                    ComponentConfig{}.with_size({pixels(widths[i] * s), pixels(32 * s)}).with_absolute_position((6.f + xs[i]) * s, 6.f * s)
                        .with_label(names[i]).with_font("AtkinsonMock", pixels(17 * s))
-                       .with_custom_text_color(i == tab_index ? afterhours::Color{15, 15, 15, 255} : afterhours::Color{15, 15, 15, 200})
+                       .with_custom_text_color(i == tab_index ? ink : muted)
                        .with_alignment(TextAlignment::Center).with_padding(Padding::all(pixels(0)))
                        .with_custom_background(afterhours::colors::transparent()).with_corner_radius(8 * s)
                        .with_debug_name(std::string("tab_") + std::to_string(i))))
@@ -672,31 +699,39 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (h.target() != want) h.to(want, ease);
       auto column = div(context, mk(stage.ent(), 1), box(60, 84, 420, 300).with_debug_name("acc_column").with_flex_direction(FlexDirection::Column)
                                                           .with_background(Theme::Usage::None));
+      const float open_t = std::clamp(h.value() / content_h, 0.f, 1.f);
       auto header = button(context, mk(column.ent(), 0),
-                           ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)}).with_label("Shipping details")
-                               .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
-                               .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_padding(Padding::all(pixels(10 * s)))
-                               .with_debug_name("acc_header"));
-      div(context, mk(header.ent(), 0), ComponentConfig{}.with_size({pixels(24 * s), pixels(24 * s)}).with_absolute_position(386 * s, 10 * s)
-                                            .with_label("v").with_font("AtkinsonMockBold", pixels(18 * s)).with_custom_text_color(ink)
-                                            .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
-                                            .with_debug_name("acc_chevron").on_state(accordion_open, {.rotation = {0.f, 180.f}}, ease));
+                           ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)})
+                               .with_custom_background(chip).with_corner_radius(8 * s).with_padding(Padding::all(pixels(0)))
+                               .with_debug_name("acc_header")
+                               .with_on_draw_fg([open_t, s, ink](RectangleType r) {
+                                 const float cx = r.x + r.width - 24.f * s, cy = r.y + r.height / 2.f, arm = 6.f * s;
+                                 const float dir = 1.f - 2.f * open_t;
+                                 afterhours::draw_line_ex({cx - arm, cy - arm * 0.5f * dir}, {cx, cy + arm * 0.5f * dir}, 2.f * s, ink);
+                                 afterhours::draw_line_ex({cx, cy + arm * 0.5f * dir}, {cx + arm, cy - arm * 0.5f * dir}, 2.f * s, ink);
+                               }));
+      div(context, mk(header.ent(), 0), ComponentConfig{}.with_size({pixels(360 * s), pixels(44 * s)}).with_absolute_position(16 * s, 0.f)
+                                            .with_label("Shipping details").with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink)
+                                            .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                            .with_debug_name("acc_header_text"));
       if (header) accordion_open = !accordion_open;
       auto content = div(context, mk(column.ent(), 1), ComponentConfig{}.with_size({pixels(420 * s), pixels(h.value())}).with_clip_children()
                                                              .with_background(Theme::Usage::None).with_debug_name("acc_content")
                                                              .on_state(accordion_open, {.opacity = {0.f, 1.f}}, ease));
-      div(context, mk(content.ent(), 0), ComponentConfig{}.with_size({pixels(420 * s), pixels(content_h)}).with_absolute_position(0.f, 0.f)
+      div(context, mk(content.ent(), 0), ComponentConfig{}.with_size({pixels(388 * s), pixels(content_h)}).with_absolute_position(16 * s, 0.f)
                                              .with_label("Orders ship within two business days. Tracking arrives by email once the parcel leaves the warehouse.")
                                              .with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(muted).with_alignment(TextAlignment::Left)
-                                             .with_padding(Padding::all(pixels(10 * s))).with_text_overflow(TextOverflow::Wrap)
+                                             .with_text_overflow(TextOverflow::Wrap)
                                              .with_background(Theme::Usage::None).with_ignore_pointer_events());
-      div(context, mk(column.ent(), 2), ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)}).with_label("Returns")
-                                            .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
-                                            .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_padding(Padding::all(pixels(10 * s)))
-                                            .with_ignore_pointer_events().with_debug_name("acc_next"));
+      auto next = div(context, mk(column.ent(), 2), ComponentConfig{}.with_size({pixels(420 * s), pixels(44 * s)})
+                                                        .with_custom_background(chip).with_corner_radius(8 * s).with_padding(Padding::all(pixels(0)))
+                                                        .with_ignore_pointer_events().with_debug_name("acc_next"));
+      div(context, mk(next.ent(), 0), ComponentConfig{}.with_size({pixels(360 * s), pixels(44 * s)}).with_absolute_position(16 * s, 0.f)
+                                          .with_label("Returns").with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink)
+                                          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
       in_flight |= h.active();
       track_motion(content.ent());
-      label(stage.ent(), 3, "The content height is a track fed straight into with_size, so the row below reflows; the chevron flips 180 degrees. 250 ms.", 500, 100, 720, 18, true);
+      label(stage.ent(), 3, "The content height is a track fed into with_size, so the row below reflows; the chevron folds up. 250 ms.", 500, 100, 720, 18, true);
       label(stage.ent(), 4, std::string("accordion: ") + (accordion_open ? "open" : "closed"), 500, 150, 400, 20, false, "acc_state");
       label(stage.ent(), 5, "height: " + std::to_string(int(std::lround(h.value() / s))) + "px", 500, 180, 400, 20, false, "acc_height");
     } else if (slug == "morph") {
@@ -718,7 +753,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                 .with_clip_children().with_debug_name("morph_surface")
                                 .on_state(morph_open, {.corner_radius = {40.f * s, 20.f * s}}, grow));
       div(context, mk(surface.ent(), 0), ComponentConfig{}.with_size({pixels(40 * s), pixels(40 * s)}).with_absolute_position(0.f, 0.f)
-                                             .with_label("+").with_font("AtkinsonMockBold", pixels(24 * s)).with_custom_text_color(paper)
+                                             .with_label("+").with_font("AtkinsonMockBold", pixels(24 * s)).with_custom_text_color(white)
                                              .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
                                              .with_debug_name("morph_plus")
                                              .on_state(morph_open, {.translate_x = {0.f, -40.f * s}, .opacity = {1.f, 0.f}, .rotation = {0.f, 45.f}},
@@ -726,15 +761,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       static const char *rows[] = {"New file", "New folder", "Upload"};
       for (int i = 0; i < 3; ++i)
         div(context, mk(surface.ent(), 1 + i), ComponentConfig{}.with_size({pixels(160 * s), pixels(36 * s)}).with_absolute_position(12 * s, (16 + i * 44) * s)
-                                                   .with_label(rows[i]).with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(paper)
+                                                   .with_label(rows[i]).with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(white)
                                                    .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
                                                    .with_debug_name(std::string("morph_row_") + std::to_string(i))
-                                                   .on_appear({.translate_x = 40.f * s, .opacity = 0.f})
-                                                   .on_state(morph_open, {.translate_x = {40.f * s, 0.f}, .opacity = {0.f, 1.f}}, grow));
+                                                   .on_appear({.opacity = 0.f})
+                                                   .on_state(morph_open, {.opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.12f, 0.f}, {0.35f, 1.f}}}));
       if (surface) morph_open = !morph_open;
       in_flight |= w.active() || hh.active();
       track_motion(surface.ent());
-      label(stage.ent(), 3, "A 40 px round trigger grows to 183 x 172 pinned to its bottom-right corner; radius 40 to 20, plus slides out, rows slide in. 350 ms open, 250 ms close.", 60, 100, 1150, 18, true);
+      label(stage.ent(), 3, "A 40 px round trigger grows to 183 x 172 pinned to its bottom-right corner; radius 40 to 20, plus slides out, rows fade in after 120 ms. 350 ms open, 250 ms close.", 60, 100, 1150, 18, true);
       label(stage.ent(), 4, std::string("morph: ") + (morph_open ? "open" : "closed"), 500, 200, 400, 20, false, "morph_state");
       label(stage.ent(), 5, "size: " + std::to_string(int(std::lround(w.value() / s))) + " x " + std::to_string(int(std::lround(hh.value() / s))), 500, 230, 400, 20, false, "morph_size");
     }
@@ -746,14 +781,16 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {3.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; toast_shown = false; });
       }
       if (tab(stage.ent(), 2, "Dismiss", 232, 84, 120, false, "toast_dismiss")) toast_shown = false;
-      auto toast = div(context, mk(stage.ent(), 3), box(60, 360, 360, 56).with_debug_name("toast").with_corner_radius(12 * s)
-                                                         .with_custom_background({40, 40, 48, 255}).with_label("Saved to your library")
-                                                         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(paper)
-                                                         .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(16 * s)))
+      auto toast = div(context, mk(stage.ent(), 3), box(60, 300, 360, 56).with_debug_name("toast").with_corner_radius(12 * s)
+                                                         .with_custom_background({236, 232, 240, 255})
                                                          .with_soft_shadow(2 * s, 8 * s, 20 * s, {0, 0, 0, 40}).with_ignore_pointer_events()
                                                          .on_appear({.translate_y = 16.f * s, .scale = 0.97f, .opacity = 0.f})
                                                          .on_state(toast_shown, {.translate_y = {16.f * s, 0.f}, .scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
                                                                    motion::Timeline{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+      div(context, mk(toast.ent(), 0), ComponentConfig{}.with_size({pixels(328 * s), pixels(56 * s)}).with_absolute_position(16 * s, 0.f)
+                                           .with_label("Saved to your library").with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color({40, 40, 48, 255})
+                                           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                           .with_debug_name("toast_text"));
       track_motion(toast.ent());
       label(stage.ent(), 4, "The toast enters from 16 px below at scale 0.97 over 350 ms and leaves the same way; it dismisses itself after 3 s.", 60, 150, 1100, 18, true);
       label(stage.ent(), 5, std::string("toast: ") + (toast_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "toast_state");
@@ -761,16 +798,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     } else if (slug == "badge") {
       if (tab(stage.ent(), 1, badge_shown ? "Clear badge" : "Notify", 60, 84, 160, false, "badge_btn")) badge_shown = !badge_shown;
       auto bell = div(context, mk(stage.ent(), 2), box(300, 84, 48, 48).with_debug_name("badge_anchor").with_corner_radius(12 * s)
-                                                       .with_custom_background({244, 240, 246, 255}).with_label("@")
+                                                       .with_custom_background(chip).with_label("@")
                                                        .with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Center));
       auto wrap = div(context, mk(bell.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(36 * s, -6 * s)
-                                                      .with_background(Theme::Usage::None).with_debug_name("badge_wrap").with_ignore_pointer_events()
-                                                      .on_appear({.translate_x = -8.2f * s, .translate_y = 12.4f * s})
-                                                      .on_state(badge_shown, {.translate_x = {-8.2f * s, 0.f}, .translate_y = {12.4f * s, 0.f}},
-                                                                motion::Timeline{.keys = {{0.f, 0.f}, {0.26f, 1.f}}, .curve = motion::curves::ease_out_quad}));
+                                                      .with_background(Theme::Usage::None).with_debug_name("badge_wrap").with_ignore_pointer_events());
       div(context, mk(wrap.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(0.f, 0.f)
                                           .with_custom_background(coral).with_corner_radius(9 * s).with_debug_name("badge_dot").with_ignore_pointer_events()
-                                          .with_label("3").with_font("AtkinsonMockBold", pixels(11 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                          .with_label("3").with_font("AtkinsonMockBold", pixels(11 * s)).with_custom_text_color(white).with_alignment(TextAlignment::Center)
                                           .on_appear({.scale = 0.f, .opacity = 0.f})
                                           .on_state(badge_shown, {.scale = {0.f, 1.f}, .opacity = {0.f, 1.f}}, motion::Spring{.response = 0.5f, .bounce = 0.35f}));
       track_motion(wrap.ent());
@@ -778,7 +812,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto child = UICollectionHolder::getEntityForID(child_id);
         if (child.valid()) track_motion(child.asE());
       }
-      label(stage.ent(), 3, "The wrapper slides in diagonally (260 ms) while the dot pops from scale 0 on a 500 ms spring; clearing collapses it faster.", 60, 150, 1100, 18, true);
+      label(stage.ent(), 3, "The dot pops from scale 0 about its own centre on a 500 ms spring with overshoot; clearing collapses it the same way.", 60, 150, 1100, 18, true);
       label(stage.ent(), 4, std::string("badge: ") + (badge_shown ? "shown" : "hidden"), 60, 190, 400, 20, false, "badge_state");
     }
     else if (slug == "success") {
@@ -838,12 +872,12 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         load.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {1.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; skeleton_revealed = true; });
       }
       auto card = div(context, mk(stage.ent(), 2), box(60, 140, 360, 120).with_debug_name("skeleton_card").with_corner_radius(12 * s)
-                                                        .with_custom_background({244, 240, 246, 255}).with_padding(Padding::all(pixels(16 * s))));
+                                                        .with_custom_background(chip).with_padding(Padding::all(pixels(16 * s))));
       const motion::Timeline pulse{.keys = {{0.f, 0.f}, {0.5f, 1.f}}, .repeat = motion::Timeline::Repeat::PingPong, .curve = motion::curves::ease_in_out_quad};
       const motion::Timeline reveal{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_in_out_quad};
       const auto bar = [&](int id, float y, float w) {
         div(context, mk(card.ent(), id), ComponentConfig{}.with_size({pixels(w * s), pixels(16 * s)}).with_absolute_position(16 * s, y * s)
-                                             .with_custom_background({215, 208, 220, 255}).with_corner_radius(8 * s).with_ignore_pointer_events()
+                                             .with_custom_background(slate).with_corner_radius(8 * s).with_ignore_pointer_events()
                                              .with_debug_name(std::string("skeleton_bar_") + std::to_string(id))
                                              .on_appear({.opacity = {1.f, 0.5f}}, pulse)
                                              .on_state(skeleton_revealed, {.opacity = 0.f}, reveal));
@@ -853,7 +887,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       bar(2, 80, 180);
       div(context, mk(card.ent(), 3), ComponentConfig{}.with_size({pixels(328 * s), pixels(88 * s)}).with_absolute_position(16 * s, 16 * s)
                                           .with_label("Order #4821 shipped. Expected Thursday; tracking is in your inbox.")
-                                          .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                                          .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Center)
                                           .with_text_overflow(TextOverflow::Wrap).with_background(Theme::Usage::None).with_ignore_pointer_events()
                                           .with_debug_name("skeleton_content")
                                           .on_appear({.opacity = 0.f})
@@ -888,7 +922,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       const float a = angle.value(), p = check.value();
       const bool done = spinner_done;
-      const afterhours::Color green{52, 168, 96, 255}, ring{200, 195, 205, 255};
+      const afterhours::Color green{52, 168, 96, 255}, ring = slate;
       auto badge = div(context, mk(stage.ent(), 2),
                        box(300, 80, 48, 48).with_debug_name("spinner_badge").with_corner_radius(24 * s)
                            .with_custom_background(afterhours::colors::transparent()).with_ignore_pointer_events()
@@ -954,11 +988,14 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         const float want_alpha = b.leaving ? 0.f : (hovered ? 1.f : 1.f - 0.32f * d);
         auto row = div(context, mk(stack.ent(), 100 + b.id),
                        ComponentConfig{}.with_size({pixels(360 * s), pixels(banner_h)}).with_absolute_position(0.f, 220 * s - banner_h)
-                           .with_custom_background({40, 40, 48, 255}).with_corner_radius(12 * s).with_label(b.text)
-                           .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Left)
-                           .with_padding(Padding::all(pixels(16 * s))).with_render_layer(10 - d).with_ignore_pointer_events()
+                           .with_custom_background({236, 232, 240, 255}).with_corner_radius(12 * s)
+                           .with_render_layer(10 - d).with_ignore_pointer_events()
                            .with_debug_name(std::string("banner_") + std::to_string(b.id))
                            .on_appear({.translate_y = {80.f * s, 0.f}, .opacity = {0.f, 1.f}, .scale = {0.97f, 1.f}}, settle));
+        div(context, mk(row.ent(), 0), ComponentConfig{}.with_size({pixels(328 * s), pixels(banner_h)}).with_absolute_position(16 * s, 0.f)
+                                           .with_label(b.text).with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color({40, 40, 48, 255})
+                                           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                           .with_render_layer(10 - d));
         auto &tracks = row.ent().addComponentIfMissing<motion::HasTracks>();
         auto &ty = tracks.track<float>(100);
         auto &sc = tracks.track<float>(101);
@@ -975,7 +1012,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         row.ent().addComponentIfMissing<HasOpacity>().value *= al.value();
         track_motion(row.ent());
       }
-      label(stage.ent(), 3, "A new banner rises 80 px into the front; older ones step back 12 px, shrink 6 % and dim per depth. A fourth arrival dismisses the oldest. Hover the stack to spread it.", 440, 160, 780, 18, true);
+      label(stage.ent(), 3, "A new banner rises 80 px into the front; older ones step back, shrink and dim per depth. A fourth dismisses the oldest. Hover to spread.", 440, 160, 780, 18, true);
       label(stage.ent(), 4, "banners: " + std::to_string(visible), 440, 220, 400, 20, false, "banner_count");
       label(stage.ent(), 5, std::string("spread: ") + (hovered ? "yes" : "no"), 440, 250, 400, 20, false, "banner_spread");
     }
@@ -992,12 +1029,14 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (tab(stage.ent(), 1, card_expanded ? "Compact" : "Expand", 60, 84, 140, false, "card_btn")) card_expanded = !card_expanded;
       auto card = div(context, mk(stage.ent(), 2),
                       ComponentConfig{}.with_size({pixels(cw.value()), pixels(ch.value())}).with_absolute_position(60 * s, 140 * s)
-                          .with_custom_background(paper).with_border({220, 212, 224, 255}, 1.f * s).with_corner_radius(14 * s)
-                          .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_padding(Padding::all(pixels(14 * s)))
-                          .with_clip_children().with_debug_name("resize_card")
-                          .with_label("Only width and height animate; the text reflows inside the changing box.")
-                          .with_font("AtkinsonMock", pixels(15 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
-                          .with_text_overflow(TextOverflow::Wrap));
+                          .with_custom_background(paper).with_border(line, 1.f * s).with_corner_radius(14 * s)
+                          .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_padding(Padding::all(pixels(0)))
+                          .with_clip_children().with_debug_name("resize_card"));
+      div(context, mk(card.ent(), 0), ComponentConfig{}.with_size({pixels(cw.value() - 28.f * s), pixels(ch.value() - 28.f * s)}).with_absolute_position(14 * s, 14 * s)
+                                          .with_label("Only width and height animate; the text reflows inside the changing box.")
+                                          .with_font("AtkinsonMock", pixels(15 * s)).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+                                          .with_text_overflow(TextOverflow::Wrap).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                          .with_debug_name("resize_card_text"));
       in_flight |= cw.active() || ch.active();
       label(stage.ent(), 3, "The same container tweens between 260 x 180 and 160 x 100 over 300 ms.", 360, 150, 800, 18, true);
       label(stage.ent(), 4, "size: " + std::to_string(int(std::lround(cw.value() / s))) + " x " + std::to_string(int(std::lround(ch.value() / s))), 360, 190, 400, 20, false, "card_size");
@@ -1010,21 +1049,30 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       static const float base_x[] = {0.f, 14.f, 28.f}, base_rot[] = {-4.f, 0.f, 4.f};
       static const float fan_x[] = {-70.f, 0.f, 70.f}, fan_rot[] = {-12.f, 0.f, 12.f};
       const motion::Spring open{.response = 0.41f, .bounce = 0.5f}, close{.response = 0.36f, .bounce = 0.35f};
-      for (int i = 0; i < 3; ++i) {
+      int clicked = -1;
+      for (int rank = 0; rank < 3; ++rank) {
+        const int i = stack_order[rank];
         auto card = button(context, mk(zone.ent(), i),
                            ComponentConfig{}.with_size({pixels(150 * s), pixels(200 * s)}).with_absolute_position((130 + base_x[i]) * s, 30 * s)
                                .with_custom_background(tints[i]).with_corner_radius(14 * s).with_padding(Padding::all(pixels(0)))
+                               .with_render_layer(5 + rank)
                                .with_soft_shadow(2 * s, 8 * s, 18 * s, {40, 30, 60, 50}).with_debug_name(std::string("stack_card_") + std::to_string(i))
                                .with_label(std::string("Card ") + std::to_string(i + 1)).with_font("AtkinsonMock", pixels(18 * s))
-                               .with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                               .with_custom_text_color(white).with_alignment(TextAlignment::Center)
                                .on_appear({.rotation = base_rot[i], .opacity = i == 1 ? 1.f : 0.85f})
                                .on_state(fanned, {.translate_x = {0.f, (fan_x[i] - base_x[i] + 14.f) * s}, .rotation = {base_rot[i], fan_rot[i]}, .opacity = {i == 1 ? 1.f : 0.85f, 1.f}},
                                          fanned ? open : close)
                                .on_hover({.scale = 1.04f}, motion::Spring{.response = 0.61f}));
+        if (card) clicked = i;
         track_motion(card.ent());
       }
-      label(stage.ent(), 2, "Hover the stack: the three cards fan out on a spring with overshoot, back cards turn fully opaque, and the card under the pointer grows 4 %.", 60, 350, 1100, 18, true);
+      if (clicked >= 0) {
+        std::erase(stack_order, clicked);
+        stack_order.push_back(clicked);
+      }
+      label(stage.ent(), 2, "Hover the stack: the cards fan out on a spring with overshoot, back cards turn opaque, the hovered one grows 4 %. Click a card to bring it to the front.", 60, 350, 1100, 18, true);
       label(stage.ent(), 3, std::string("fan: ") + (fanned ? "open" : "closed"), 500, 100, 400, 20, false, "stack_state");
+      label(stage.ent(), 4, "front: " + std::to_string(stack_order.back() + 1), 500, 130, 400, 20, false, "stack_front");
     }
     else if (slug == "avatars") {
       static const afterhours::Color tints[] = {{120, 160, 230, 255}, {230, 150, 120, 255}, {130, 200, 150, 255}, {200, 150, 220, 255}, {230, 200, 110, 255}};
@@ -1034,9 +1082,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto av = button(context, mk(stage.ent(), 1 + i),
                          ComponentConfig{}.with_size({pixels(48 * s), pixels(48 * s)}).with_absolute_position((60 + i * 40) * s, 100 * s)
                              .with_custom_background(tints[i]).with_corner_radius(24 * s).with_padding(Padding::all(pixels(0)))
-                             .with_border(paper, 2.f * s).with_render_layer(5 + i).with_debug_name(std::string("avatar_") + std::to_string(i))
+                             .with_border(white, 2.f * s).with_render_layer(5 + i).with_debug_name(std::string("avatar_") + std::to_string(i))
                              .with_label(std::string(1, char('A' + i))).with_font("AtkinsonMockBold", pixels(18 * s))
-                             .with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                             .with_custom_text_color(white).with_alignment(TextAlignment::Center)
                              .on_hover({.scale = 1.05f}, motion::Spring{.response = 0.32f, .bounce = 0.6f}));
         ents[i] = &av.ent();
         if (context.was_hot(av.id())) active = i;
@@ -1081,7 +1129,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       static const int twinkle[16] = {7, 2, 11, 5, 14, 9, 0, 12, 3, 15, 6, 10, 13, 1, 8, 4};
       static const int orbit[8] = {1, 2, 7, 11, 14, 13, 8, 4};
       const float cycle = 1.2f;
-      const afterhours::Color base{217, 217, 217, 255}, on{133, 133, 143, 255};
+      const afterhours::Color base{70, 66, 80, 255}, on{200, 196, 210, 255};
       auto grid = div(context, mk(stage.ent(), 10), box(60, 150, 100, 100).with_debug_name("matrix").with_background(Theme::Usage::None));
       for (int i = 0; i < 16; ++i) {
         const int col = i % 4, row = i / 4;
@@ -1136,7 +1184,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       static const char *states[] = {"Thinking", "Reading the request", "Checking the sources", "Drafting a reply"};
       auto &hold = motion::anim(Key::ThinkHold);
       if (thinking_playing && !hold.active())
-        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {2.f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; thinking_index = (thinking_index + 1) % 4; });
+        hold.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {2.4f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return; thinking_index = (thinking_index + 1) % 4; });
       if (tab(stage.ent(), 1, thinking_playing ? "Pause" : "Play", 60, 84, 120, false, "thinking_btn")) {
         thinking_playing = !thinking_playing;
         if (!thinking_playing) hold.from(0.f);
@@ -1145,9 +1193,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                       box(60, 150, 500, 40).with_label(states[thinking_index]).with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color(muted)
                           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events()
                           .with_debug_name("thinking_text")
-                          .with_unit_motion({.unit = TextUnit::Word, .from_y = 8.f * s, .from_opacity = 0.f, .duration = 0.15f, .stagger = 0.05f}));
+                          .with_unit_motion({.unit = TextUnit::Word, .from_y = 8.f * s, .from_opacity = 0.f, .duration = 0.2f, .stagger = 0.07f}));
       in_flight |= text_units_active(line.ent());
-      label(stage.ent(), 3, "The status swaps every 2 s; the incoming words rise 8 px and fade in, 150 ms each with a 50 ms gap. Shimmer needs gradient text (M3).", 60, 220, 1100, 18, true);
+      label(stage.ent(), 3, "The status swaps every 2.4 s; the incoming words rise 8 px and fade in, 200 ms each with a 70 ms gap.", 60, 220, 1100, 18, true);
       label(stage.ent(), 4, "state: " + std::to_string(thinking_index), 60, 260, 400, 20, false, "thinking_state");
       label(stage.ent(), 5, std::string("playing: ") + (thinking_playing ? "yes" : "no"), 60, 290, 400, 20, false, "thinking_playing");
     }
@@ -1174,7 +1222,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         if (!reasoning_playing) hold.from(0.f);
       }
       auto viewport = div(context, mk(stage.ent(), 2), box(60, 140, 560, line_h * 4.f / s).with_debug_name("reasoning_viewport")
-                                                          .with_custom_background({244, 240, 246, 255}).with_corner_radius(8 * s).with_clip_children());
+                                                          .with_custom_background(chip).with_corner_radius(8 * s).with_clip_children());
       for (int i = 0; i < line_count * 2; ++i)
         div(context, mk(viewport.ent(), i), ComponentConfig{}.with_size({pixels(540 * s), pixels(line_h)})
                                                .with_absolute_position(10 * s, float(i) * line_h - offset.value())
@@ -1189,21 +1237,21 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto &sx = motion::anim(Key::ShimmerX);
       const float text_w = 320.f * s;
       if (!sx.started() || (shimmer_playing && !sx.active()))
-        sx.from(-80.f * s).to(text_w, motion::Timeline{.keys = {{0.f, 0.f}, {2.f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop});
+        sx.from(-48.f * s).to(text_w, motion::Timeline{.keys = {{0.f, 0.f}, {1.1f, 1.f}}, .repeat = motion::Timeline::Repeat::Loop});
       if (tab(stage.ent(), 1, shimmer_playing ? "Stop" : "Play", 60, 84, 120, false, "shimmer_btn")) {
         shimmer_playing = !shimmer_playing;
         if (!shimmer_playing) sx.from(sx.value());
       }
       auto base = div(context, mk(stage.ent(), 2), box(60, 150, text_w / s, 40).with_label("Generating your summary").with_font("AtkinsonMockBold", pixels(26 * s))
-                                                       .with_custom_text_color({124, 124, 124, 255}).with_alignment(TextAlignment::Left)
+                                                       .with_custom_text_color({120, 116, 130, 255}).with_alignment(TextAlignment::Left)
                                                        .with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("shimmer_base"));
-      auto window = div(context, mk(base.ent(), 0), ComponentConfig{}.with_size({pixels(80 * s), pixels(40 * s)}).with_absolute_position(sx.value(), 0.f)
+      auto window = div(context, mk(base.ent(), 0), ComponentConfig{}.with_size({pixels(48 * s), pixels(40 * s)}).with_absolute_position(sx.value(), 0.f)
                                                         .with_background(Theme::Usage::None).with_clip_children().with_ignore_pointer_events().with_debug_name("shimmer_window"));
       div(context, mk(window.ent(), 0), ComponentConfig{}.with_size({pixels(text_w), pixels(40 * s)}).with_absolute_position(-sx.value(), 0.f)
-                                            .with_label("Generating your summary").with_font("AtkinsonMockBold", pixels(26 * s)).with_custom_text_color({13, 13, 13, 255})
+                                            .with_label("Generating your summary").with_font("AtkinsonMockBold", pixels(26 * s)).with_custom_text_color({245, 245, 250, 255})
                                             .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("shimmer_highlight"));
       in_flight |= sx.active();
-      label(stage.ent(), 3, "A narrow highlight window sweeps across a stationary label every 2 s: the same text in the highlight colour, clipped to the window and offset back so it stays aligned.", 60, 220, 1100, 18, true);
+      label(stage.ent(), 3, "A 48 px highlight window sweeps across a stationary label every 1.1 s: the same text in the highlight colour, clipped to the window and offset back so it stays aligned.", 60, 220, 1100, 18, true);
       label(stage.ent(), 4, std::string("playing: ") + (shimmer_playing ? "yes" : "no"), 60, 260, 400, 20, false, "shimmer_playing");
     }
     else if (slug == "counter") {
@@ -1225,13 +1273,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto &reel = motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + col));
         if (!reel.started()) reel.from(0.f);
         auto cell = div(context, mk(stage.ent(), 10 + col), box(60 + col * 34.f, 150, 30, 30).with_debug_name(std::string("reel_") + std::to_string(col))
-                                                              .with_custom_background({244, 240, 246, 255}).with_corner_radius(6 * s).with_clip_children());
-        std::string strip;
-        for (int k = 0; k < 40; ++k) strip += std::to_string(k % 10) + "\n";
-        div(context, mk(cell.ent(), 0), ComponentConfig{}.with_size({pixels(30 * s), pixels(cell_h * 40.f)}).with_absolute_position(0.f, -reel.value())
-                                            .with_label(strip).with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(ink)
-                                            .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
-                                            .with_debug_name(std::string("reel_strip_") + std::to_string(col)));
+                                                              .with_custom_background(chip).with_corner_radius(6 * s).with_clip_children());
+        const int first = std::max(0, int(std::floor(reel.value() / cell_h)) - 1);
+        for (int k = first; k < std::min(40, first + 4); ++k)
+          div(context, mk(cell.ent(), k), ComponentConfig{}.with_size({pixels(30 * s), pixels(cell_h)}).with_absolute_position(0.f, float(k) * cell_h - reel.value())
+                                              .with_label(std::to_string(k % 10)).with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(ink)
+                                              .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                              .with_debug_name(std::string("reel_digit_") + std::to_string(col) + "_" + std::to_string(k % 10)));
         in_flight |= reel.active();
       }
       label(stage.ent(), 3, "Each digit rolls up through three full turns of a clipped 0-9 strip before landing; columns start 90 ms apart, 1.4 s each.", 240, 150, 950, 18, true);
@@ -1256,7 +1304,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto *fx = &*tint_effect;
       const float strength = tint_strength;
       div(context, mk(stage.ent(), 3), box(60, 150, 320, 180).with_debug_name("effect_canvas").with_corner_radius(12 * s)
-                                            .with_custom_background({244, 240, 246, 255}).with_ignore_pointer_events()
+                                            .with_custom_background(chip).with_ignore_pointer_events()
                                             .with_on_draw_fg([fx, strength, s](RectangleType r) {
                                               fx->set("tint", ColorType{80, 120, 220, static_cast<unsigned char>(255 * strength)});
                                               afterhours::effects::Effect::Scope scope(*fx);
@@ -1272,7 +1320,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (tab(stage.ent(), 1, blurred ? "Sharpen" : "Blur", 60, 84, 140, false, "blur_btn")) blurred = !blurred;
       auto card = div(context, mk(stage.ent(), 2), box(60, 150, 360, 160).with_debug_name("blur_card").with_corner_radius(12 * s)
                                                         .with_custom_background({230, 150, 120, 255}).with_label("Frosted over 400 ms")
-                                                        .with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                                        .with_font("AtkinsonMockBold", pixels(22 * s)).with_custom_text_color(white).with_alignment(TextAlignment::Center)
                                                         .with_ignore_pointer_events()
                                                         .on_state(blurred, {.blur = {0.f, 6.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.4f, 1.f}}, .curve = motion::curves::ease_out_quad}));
       track_motion(card.ent());
@@ -1288,7 +1336,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       const float floor_y = stage_r.y + 400.f * s;
       confetti.gravity = {0.f, 1300.f * s};
       confetti.floor_y = floor_y;
-      confetti.restitution = 0.6f;
+      confetti.restitution = 0.f;
+      confetti.drag = 1.5f;
       if (tab(stage.ent(), 1, "Animate", 60, 84, 140, false, "confetti_btn") || (replay_stamp != seen_replay && (seen_replay = replay_stamp, true))) {
         ++bursts;
         confetti.clear();
@@ -1298,9 +1347,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
           const float r0 = pt::hash01(i + bursts * 1000), r1 = pt::hash01(i * 7 + 3 + bursts), r2 = pt::hash01(i * 13 + 5 + bursts);
           p.pos = {stage_r.x + (200.f + r0 * 800.f) * s, stage_r.y + (-40.f - r1 * 200.f) * s};
           p.vel = {(r2 - 0.5f) * 160.f * s, 0.f};
-          p.size = (4.f + r1 * 3.f) * s;
+          p.size = (6.f + r1 * 4.f) * s;
           p.spin = (r0 - 0.5f) * 720.f;
-          p.life = 3.5f + r2;
+          p.life = 3.8f + r2 * 0.8f;
+          const float mound = std::exp(-std::pow((r0 - 0.5f) / 0.28f, 2.f));
+          p.rest_offset = (2.f + 22.f * mound * r2 + 6.f * r1) * s;
           p.color = palette[i % 5];
         }
       }
@@ -1309,51 +1360,69 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(stage.ent(), 2), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("confetti_stage")
                                             .with_on_draw_fg([snapshot](RectangleType) {
                                               snapshot->each([](const pt::Particle &p) {
-                                                const float fade = p.progress() > 0.8f ? 1.f - (p.progress() - 0.8f) / 0.2f : 1.f;
+                                                const float fade = p.progress() > 0.75f ? 1.f - (p.progress() - 0.75f) / 0.25f : 1.f;
                                                 afterhours::Color c = p.color;
                                                 c.a = static_cast<unsigned char>(255.f * fade);
                                                 afterhours::draw_rectangle_rounded_rotated({p.pos.x - p.size / 2.f, p.pos.y - p.size / 2.f, p.size, p.size * 0.6f}, 0.f, 0, c, std::bitset<4>().reset(), p.rotation);
                                               });
                                             }));
       in_flight |= confetti.count() > 0;
-      label(stage.ent(), 3, "120 rectangles fall under gravity, tumble, bounce on the floor and fade out. Pooled emitter, 512 cap.", 220, 100, 950, 18, true);
+      label(stage.ent(), 3, "120 rectangles fall under gravity and air drag, tumble, land without bouncing and lie in a pile before fading. Pooled emitter, 512 cap.", 220, 100, 950, 18, true);
       label(stage.ent(), 4, "particles: " + std::to_string(confetti.count()), 220, 140, 400, 20, false, "confetti_count");
       label(stage.ent(), 5, "bursts: " + std::to_string(bursts), 220, 170, 400, 20, false, "confetti_bursts");
-    } else if (slug == "like_burst") {
+    } else if (slug == "stars") {
       namespace pt = afterhours::particles;
-      const afterhours::Color red{244, 0, 81, 255}, grey{170, 165, 175, 255};
-      auto heart = button(context, mk(stage.ent(), 1),
-                          box(80, 100, 64, 64).with_debug_name("burst_heart").with_padding(Padding::all(pixels(0)))
-                              .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
-                              .on_change(static_cast<size_t>(bursts), {.scale = {0.82f, 1.f}}, motion::Spring{.response = 0.35f, .bounce = 0.6f})
-                              .with_on_draw_fg([liked = like_burst_liked, red, grey](RectangleType r) {
-                                const afterhours::Color c = liked ? red : grey;
-                                const float w = r.width, h = r.height;
-                                afterhours::draw_circle_v({r.x + 0.3f * w, r.y + 0.36f * h}, 0.22f * w, c);
-                                afterhours::draw_circle_v({r.x + 0.7f * w, r.y + 0.36f * h}, 0.22f * w, c);
-                                afterhours::draw_triangle({r.x + 0.5f * w, r.y + 0.92f * h}, {r.x + 0.92f * w, r.y + 0.44f * h}, {r.x + 0.08f * w, r.y + 0.44f * h}, c);
-                              }));
-      if (heart) {
-        like_burst_liked = !like_burst_liked;
-        if (like_burst_liked) {
-          ++bursts;
-          const RectangleType hr = heart.cmp().rect();
-          for (int i = 0; i < 8; ++i) {
-            auto &p = burst.spawn();
-            const float angle = (float(i) / 8.f) * 6.2831853f + (pt::hash01(i + bursts * 31) - 0.5f) * 0.56f;
-            const float travel = 20.f * s * (0.68f + pt::hash01(i * 3 + bursts) * 0.5f);
-            p.pos = {hr.x + hr.width / 2.f, hr.y + hr.height / 2.f};
-            p.vel = {std::cos(angle) * travel / 0.3f, std::sin(angle) * travel / 0.3f};
-            p.size = 2.5f * s * (0.8f + pt::hash01(i + 9) * 0.6f);
-            p.life = 0.6f;
-            p.color = red;
-          }
+      const afterhours::Color gold{255, 196, 60, 255}, hollow{104, 96, 118, 255};
+      const auto star = [](RectangleType r, afterhours::Color c) {
+        const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f, outer = r.width * 0.46f, inner = outer * 0.42f;
+        Vector2Type pts[10];
+        for (int k = 0; k < 10; ++k) {
+          const float a = -3.14159265f / 2.f + k * 3.14159265f / 5.f, rad = (k % 2 == 0) ? outer : inner;
+          pts[k] = {cx + std::cos(a) * rad, cy + std::sin(a) * rad};
+        }
+        for (int k = 0; k < 10; ++k) afterhours::draw_triangle({cx, cy}, pts[(k + 1) % 10], pts[k], c);
+      };
+      int clicked = -1;
+      for (int i = 0; i < 5; ++i) {
+        const bool filled = i < rating;
+        auto st = button(context, mk(stage.ent(), 1 + i),
+                         box(60 + i * 56.f, 96, 48, 48).with_debug_name("star_" + std::to_string(i)).with_padding(Padding::all(pixels(0)))
+                             .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
+                             .on_hover({.scale = 1.12f}, motion::Spring::snappy())
+                             .with_on_draw_fg([star, filled, gold, hollow](RectangleType r) { star(r, filled ? gold : hollow); }));
+        auto &pop = st.ent().addComponentIfMissing<motion::HasTracks>().track<float>(100);
+        if (!pop.started()) pop.from(1.f);
+        if (st) clicked = i;
+        st.ent().addComponentIfMissing<HasUIModifiers>().scale *= pop.value();
+        track_motion(st.ent());
+      }
+      if (clicked >= 0) {
+        rating = clicked + 1;
+        for (int i = 0; i <= clicked; ++i) {
+          auto child = UICollectionHolder::getEntityForID(stage.cmp().children[i + 1]);
+          if (!child.valid()) continue;
+          auto &pop = child.asE().get<motion::HasTracks>().track<float>(100);
+          pop.from(1.f).to(1.35f, motion::Timeline{.keys = {{0.f, 0.f}, {0.12f, 1.f}}, .curve = motion::curves::ease_out_quad})
+              .then(1.f, motion::Spring{.response = 0.35f, .bounce = 0.55f}).delay(0.05f * i);
+        }
+        const RectangleType stage_r = stage.cmp().rect();
+        const Vector2Type c{stage_r.x + (84.f + clicked * 56.f) * s, stage_r.y + 120.f * s};
+        for (int i = 0; i < 12; ++i) {
+          auto &p = burst.spawn();
+          ++sparks;
+          const float angle = (float(i) / 12.f) * 6.2831853f + (pt::hash01(i + sparks * 31) - 0.5f) * 0.4f;
+          const float travel = 26.f * s * (0.7f + pt::hash01(i * 3 + sparks) * 0.6f);
+          p.pos = c;
+          p.vel = {std::cos(angle) * travel / 0.3f, std::sin(angle) * travel / 0.3f};
+          p.size = 3.f * s * (0.7f + pt::hash01(i + 9) * 0.6f);
+          p.life = 0.55f;
+          p.color = gold;
         }
       }
       burst.drag = 6.f;
       burst.update(context.dt);
       const auto snapshot = &burst;
-      div(context, mk(stage.ent(), 2), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("burst_stage")
+      div(context, mk(stage.ent(), 6), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("star_sparks")
                                             .with_on_draw_fg([snapshot](RectangleType) {
                                               snapshot->each([](const pt::Particle &p) {
                                                 afterhours::Color c = p.color;
@@ -1362,10 +1431,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                               });
                                             }));
       in_flight |= burst.count() > 0;
-      track_motion(heart.ent());
-      label(stage.ent(), 3, "Liking compresses the heart to 0.82, springs back, and throws eight dots outward with drag; unliking does neither.", 200, 110, 950, 18, true);
-      label(stage.ent(), 4, std::string("liked: ") + (like_burst_liked ? "yes" : "no"), 200, 150, 400, 20, false, "burst_state");
-      label(stage.ent(), 5, "dots: " + std::to_string(burst.count()), 200, 180, 400, 20, false, "burst_count");
+      label(stage.ent(), 10, "Click a star: every star up to it fills gold and pops 35 % larger in turn, 50 ms apart, while twelve sparks fly from the one you hit.", 60, 170, 1100, 18, true);
+      label(stage.ent(), 11, "rating: " + std::to_string(rating), 60, 210, 400, 20, false, "star_rating");
+      label(stage.ent(), 12, "sparks: " + std::to_string(burst.count()), 60, 240, 400, 20, false, "star_sparks");
     } else if (slug == "smoke") {
       namespace pt = afterhours::particles;
       if (tab(stage.ent(), 1, "Puff", 60, 84, 120, false, "smoke_btn")) {
@@ -1379,12 +1447,12 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                             .with_on_draw_fg([snapshot](RectangleType) {
                                               snapshot->each([](const pt::Particle &p) {
                                                 afterhours::Color c = p.color;
-                                                c.a = static_cast<unsigned char>(110.f * (1.f - p.progress()));
+                                                c.a = static_cast<unsigned char>(70.f * (1.f - p.progress()));
                                                 afterhours::draw_circle_v(p.pos, p.size * (1.f + 2.f * p.progress()), c);
                                               });
                                             }));
       in_flight |= smoke.count() > 0;
-      label(stage.ent(), 3, "A ring of thirty soft discs drifts outward, grows and fades over 1.5 s: the landing puff for drag-and-drop and the dissolve.", 200, 100, 950, 18, true);
+      label(stage.ent(), 3, "A ring of thirty soft discs drifts outward and grows; the smallest discs live shortest, so they fade first and the big ones linger to 1.5 s.", 200, 100, 950, 18, true);
       label(stage.ent(), 4, "rings: " + std::to_string(smoke_rings), 200, 140, 400, 20, false, "smoke_rings");
       label(stage.ent(), 5, "discs: " + std::to_string(smoke.count()), 200, 170, 400, 20, false, "smoke_count");
     }
@@ -1392,28 +1460,27 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (!gradient_effect) gradient_effect.emplace(afterhours::effects::Effect::load("gradient"));
       const RectangleType stage_r = stage.cmp().rect();
       gradient_effect->set("time", static_cast<float>(afterhours::graphics::get_time()));
-      const float fb_h = static_cast<float>(context.screen_height);
       if (slug == "pro_text") {
         const RectangleType text_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 700.f * s, 70.f * s};
-        gradient_effect->set("origin", Vector2Type{text_r.x, fb_h - text_r.y - text_r.height});
-        gradient_effect->set("extent", Vector2Type{text_r.width, text_r.height});
+        gradient_effect->set("origin", fb_origin(text_r));
+        gradient_effect->set("extent", fb_extent(text_r));
         gradient_effect->set("radius", 0.f);
         gradient_effect->set("softness", 0.f);
         div(context, mk(stage.ent(), 1), box(60, 150, 700, 70).with_label("Unlock Pro features").with_font("AtkinsonMockBold", pixels(52 * s))
-                                              .with_custom_text_color(paper).with_alignment(TextAlignment::Left).with_background(Theme::Usage::None)
+                                              .with_custom_text_color(white).with_alignment(TextAlignment::Left).with_background(Theme::Usage::None)
                                               .with_ignore_pointer_events().with_debug_name("pro_text").with_shader(gradient_effect->shader));
         in_flight = true;
         label(stage.ent(), 2, "The label is drawn through gradient.fs: hue cycles every 4 s and the colour washes orbit every 5 s. The letters never move.", 60, 240, 1100, 18, true);
       } else {
-        const RectangleType btn_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 200.f * s, 56.f * s};
-        gradient_effect->set("origin", Vector2Type{btn_r.x - 10.f * s, fb_h - btn_r.y - btn_r.height - 10.f * s});
-        gradient_effect->set("extent", Vector2Type{btn_r.width + 20.f * s, btn_r.height + 20.f * s});
-        gradient_effect->set("radius", 38.f * s);
-        gradient_effect->set("softness", 12.f * s);
-        div(context, mk(stage.ent(), 1), box(50, 140, 220, 76).with_debug_name("pro_glow").with_corner_radius(38 * s).with_custom_background(paper)
+        const RectangleType glow_r{stage_r.x + 50.f * s, stage_r.y + 140.f * s, 220.f * s, 76.f * s};
+        gradient_effect->set("origin", fb_origin(glow_r));
+        gradient_effect->set("extent", fb_extent(glow_r));
+        gradient_effect->set("radius", 38.f * s * px);
+        gradient_effect->set("softness", 12.f * s * px);
+        div(context, mk(stage.ent(), 1), box(50, 140, 220, 76).with_debug_name("pro_glow").with_corner_radius(38 * s).with_custom_background(white)
                                               .with_ignore_pointer_events().with_shader(gradient_effect->shader));
         button(context, mk(stage.ent(), 2), box(60, 150, 200, 56).with_label("Get Pro").with_font("AtkinsonMockBold", pixels(22 * s))
-                                                .with_custom_background({20, 20, 26, 255}).with_custom_text_color(paper).with_corner_radius(28 * s)
+                                                .with_custom_background({20, 20, 26, 255}).with_custom_text_color(white).with_corner_radius(28 * s)
                                                 .with_debug_name("get_pro_btn").on_hover({.scale = 1.03f}));
         in_flight = true;
         label(stage.ent(), 3, "A gradient pill sits under the button; its shader fades the rim out, so the colour glows while the label stays fixed.", 300, 160, 900, 18, true);
@@ -1428,32 +1495,41 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       const bool loading = gen_phase == 1, revealed = gen_phase == 2;
       auto frame = div(context, mk(stage.ent(), 2), box(60, 140, 142, 142).with_debug_name("gen_frame").with_corner_radius(10 * s)
-                                                         .with_custom_background({244, 240, 246, 255}).with_clip_children());
+                                                         .with_custom_background(chip).with_clip_children());
       const float pitch = 10.f * s;
       for (int i = 0; i < 14 * 14; ++i) {
         const int col = i % 14, row = i / 14;
         const float phase = std::fmod(float(i * 37 % 100) / 100.f * 6.f, 1.4f);
+        const afterhours::Color grey{120, 120, 135, 255};
+        const float fx = (col - 9.5f) / 2.6f, fy = (row - 3.5f) / 2.6f;
+        afterhours::Color pixel = row >= 10 ? afterhours::Color{70, 150, 90, 255}
+                                            : afterhours::Color{static_cast<unsigned char>(60 + row * 6), static_cast<unsigned char>(110 + row * 6),
+                                                                static_cast<unsigned char>(200 + row * 3), 255};
+        if (fx * fx + fy * fy < 1.f) pixel = {255, 210, 120, 255};
+        const float order = afterhours::particles::hash01(i * 13 + 7) * 0.5f;
         ComponentConfig cfg = ComponentConfig{}.with_size({pixels(3.f * s), pixels(3.f * s)}).with_absolute_position(4 * s + col * pitch, 4 * s + row * pitch)
-                                  .with_custom_background({120, 120, 135, 255}).with_corner_radius(1.5f * s).with_ignore_pointer_events()
+                                  .with_custom_background(grey).with_corner_radius(1.5f * s).with_ignore_pointer_events()
                                   .with_debug_name(std::string("gen_dot_") + std::to_string(i));
         if (loading)
           cfg.on_appear({.scale = {1.f, 0.f}, .opacity = {1.f, 0.4f}},
                         motion::Timeline{.keys = {{0.f, 0.f}, {phase, 0.f}, {phase + 0.7f, 1.f}, {1.4f + phase, 0.f}},
                                          .repeat = motion::Timeline::Repeat::Loop, .curve = motion::curves::ease_in_out_quad});
-        cfg.on_state(revealed, {.opacity = 0.f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.65f, 1.f}}});
+        cfg.on_state(revealed, {.scale = {1.f, 3.4f}, .opacity = 1.f, .corner_radius = {1.5f * s, 0.f}, .background = {grey, pixel}},
+                     motion::Timeline{.keys = {{0.f, 0.f}, {order, 0.f}, {order + 0.25f, 1.f}}, .curve = motion::curves::ease_out_quad});
         auto dot = div(context, mk(frame.ent(), i), cfg);
+        track_motion(dot.ent());
         if (gen_phase != 1) {
           dot.ent().removeComponentIfExists<HasMotionState>();
         }
       }
       div(context, mk(frame.ent(), 500), ComponentConfig{}.with_size({pixels(142 * s), pixels(142 * s)}).with_absolute_position(0.f, 0.f)
-                                             .with_custom_background({80, 120, 220, 255}).with_corner_radius(10 * s).with_ignore_pointer_events()
-                                             .with_label("Image").with_font("AtkinsonMockBold", pixels(20 * s)).with_custom_text_color(paper)
+                                             .with_background(Theme::Usage::None).with_ignore_pointer_events()
+                                             .with_label("Image").with_font("AtkinsonMockBold", pixels(20 * s)).with_custom_text_color(white)
                                              .with_alignment(TextAlignment::Center).with_debug_name("gen_image")
                                              .on_appear({.opacity = 0.f})
-                                             .on_state(revealed, {.opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.65f, 1.f}}}));
+                                             .on_state(revealed, {.opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.6f, 0.f}, {0.9f, 1.f}}}));
       in_flight |= load.active();
-      label(stage.ent(), 3, "A static dot field pulses while generating, then cross-fades into the image over 650 ms. The button steps the phases.", 240, 150, 950, 18, true);
+      label(stage.ent(), 3, "The dot field pulses while generating; on reveal each dot grows into its pixel of the picture in a random order over 750 ms.", 240, 150, 950, 18, true);
       label(stage.ent(), 4, std::string("phase: ") + (gen_phase == 0 ? "idle" : gen_phase == 1 ? "generating" : "revealed"), 240, 200, 400, 20, false, "gen_state");
     }
     else if (slug == "dissolve") {
@@ -1462,7 +1538,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto &hold = motion::anim(Key::DissolveHold);
       if (tab(stage.ent(), 1, "Delete", 60, 84, 140, false, "delete_btn") && del_phase == 0) {
         del_phase = 1;
-        prog.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.55f, 1.f}}, .curve = motion::curves::ease_out_quad})
+        prog.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.7f, 1.f}}})
             .on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
               del_phase = 2;
               afterhours::motion::anim(Key::DissolveHold).from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.8f, 1.f}}})
@@ -1471,29 +1547,28 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       const RectangleType stage_r = stage.cmp().rect();
       const RectangleType card_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 120.f * s, 120.f * s};
-      dissolve_effect->set("origin", Vector2Type{card_r.x, static_cast<float>(context.screen_height) - card_r.y - card_r.height});
-      dissolve_effect->set("extent", Vector2Type{card_r.width, card_r.height});
+      dissolve_effect->set("origin", fb_origin(card_r));
+      dissolve_effect->set("extent", fb_extent(card_r));
       dissolve_effect->set("progress", prog.value());
       if (del_phase != 2) {
         ComponentConfig cfg = box(60, 150, 120, 120).with_debug_name("dissolve_card").with_corner_radius(14 * s)
                                   .with_custom_background({80, 120, 220, 255}).with_label("Photo").with_font("AtkinsonMockBold", pixels(18 * s))
-                                  .with_custom_text_color(paper).with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+                                  .with_custom_text_color(white).with_alignment(TextAlignment::Center).with_ignore_pointer_events()
                                   .on_appear({.scale = {0.8f, 1.f}, .opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad})
-                                  .on_state(del_phase == 1, {.translate_y = 40.f * s, .rotation = 3.f, .opacity = 0.f, .blur = 8.f},
+                                  .on_state(del_phase == 1, {.translate_y = -18.f * s, .scale = 1.04f},
                                             motion::Timeline{.keys = {{0.f, 0.f}, {0.55f, 1.f}}, .curve = motion::curves::ease_out_quad});
         if (del_phase == 1) cfg.with_shader(dissolve_effect->shader);
         auto card = div(context, mk(stage.ent(), 100 + deletes), cfg);
         track_motion(card.ent());
       }
       in_flight |= prog.active() || hold.active();
-      label(stage.ent(), 3, "Delete erodes the card through dissolve.fs while it drifts, tilts, blurs and fades over 550 ms; a fresh card pops in 800 ms later.", 220, 160, 980, 18, true);
+      label(stage.ent(), 3, "Delete burns the card away bottom-up through drifting noise in dissolve.fs over 700 ms; a fresh card pops in 800 ms later.", 220, 160, 980, 18, true);
       label(stage.ent(), 4, std::string("phase: ") + (del_phase == 0 ? "idle" : del_phase == 1 ? "dissolving" : "gone"), 220, 210, 400, 20, false, "dissolve_state");
       label(stage.ent(), 5, "deletes: " + std::to_string(deletes), 220, 240, 400, 20, false, "dissolve_count");
       label(stage.ent(), 6, std::string("shader: ") + (dissolve_effect->ok() ? "ok" : "missing"), 220, 270, 400, 20, false, "dissolve_shader");
     } else if (slug == "gooey") {
       if (!goo_effect) goo_effect.emplace(afterhours::effects::Effect::load("goo"));
       const RectangleType stage_r = stage.cmp().rect();
-      const float fb_h = static_cast<float>(context.screen_height);
       const Vector2Type hub{160.f, 300.f};
       const float hub_r = 28.f, act_r = 20.f, reach = 90.f;
       const Vector2Type dirs[3] = {{-0.707f, -0.707f}, {0.f, -1.f}, {0.707f, -0.707f}};
@@ -1523,15 +1598,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       const char *cn[4] = {"c0", "c1", "c2", "c3"}, *rn[4] = {"r0", "r1", "r2", "r3"};
       for (int i = 0; i < 4; ++i) {
-        goo_effect->set(cn[i], Vector2Type{stage_r.x + centers[i].x * s, fb_h - stage_r.y - centers[i].y * s});
-        goo_effect->set(rn[i], radii[i] * s);
+        goo_effect->set(cn[i], fb_point(stage_r.x + centers[i].x * s, stage_r.y + centers[i].y * s));
+        goo_effect->set(rn[i], radii[i] * s * px);
       }
       div(context, mk(stage.ent(), 1), box(20, 150, 280, 220).with_debug_name("goo_field").with_custom_background(coral)
                                             .with_ignore_pointer_events().with_shader(goo_effect->shader));
       for (int i = 0; i < 3; ++i) {
         ComponentConfig cfg = box(centers[i + 1].x - act_r, centers[i + 1].y - act_r, act_r * 2, act_r * 2)
                                   .with_custom_background(afterhours::colors::transparent()).with_label(std::to_string(i + 1))
-                                  .with_font("AtkinsonMockBold", pixels(16 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                  .with_font("AtkinsonMockBold", pixels(16 * s)).with_custom_text_color(white).with_alignment(TextAlignment::Center)
                                   .with_corner_radius(act_r * s).with_opacity(std::clamp((t[i] - 0.4f) / 0.6f, 0.f, 1.f))
                                   .with_debug_name("goo_action_" + std::to_string(i + 1));
         if (t[i] < 0.5f) cfg.with_ignore_pointer_events();
@@ -1541,7 +1616,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         }
       }
       if (button(context, mk(stage.ent(), 5), box(hub.x - hub_r, hub_y - hub_r, hub_r * 2, hub_r * 2).with_custom_background(afterhours::colors::transparent())
-                                                   .with_label("+").with_font("AtkinsonMockBold", pixels(28 * s)).with_custom_text_color(paper)
+                                                   .with_label("+").with_font("AtkinsonMockBold", pixels(28 * s)).with_custom_text_color(white)
                                                    .with_alignment(TextAlignment::Center).with_corner_radius(hub_r * s).with_debug_name("goo_plus")
                                                    .on_state(goo_open, {.rotation = 45.f}, motion::Spring::snappy()).on_hover({.scale = 1.05f})))
         set_open(!goo_open);
@@ -1559,15 +1634,15 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         if (!organic_playing) prog.from(prog.value());
       }
       const RectangleType stage_r = stage.cmp().rect();
-      const RectangleType sq{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 200.f * s, 200.f * s};
-      shimmer_effect->set("origin", Vector2Type{sq.x, static_cast<float>(context.screen_height) - sq.y - sq.height});
-      shimmer_effect->set("extent", Vector2Type{sq.width, sq.height});
+      const RectangleType sq{stage_r.x + 50.f * s, stage_r.y + 160.f * s, 200.f * s, 200.f * s};
+      shimmer_effect->set("origin", fb_origin(sq));
+      shimmer_effect->set("extent", fb_extent(sq));
       shimmer_effect->set("progress", prog.value());
       shimmer_effect->set("span", 0.26f);
-      div(context, mk(stage.ent(), 2), box(20, 110, 280, 280).with_debug_name("organic_square").with_custom_background(paper)
+      div(context, mk(stage.ent(), 2), box(20, 130, 260, 260).with_debug_name("organic_square").with_custom_background(white)
                                             .with_ignore_pointer_events().with_shader(shimmer_effect->shader));
       in_flight |= prog.active();
-      label(stage.ent(), 3, "shimmer.fs keeps the colour layers still and sweeps a noisy diagonal opening across them every 3 s.", 320, 160, 880, 18, true);
+      label(stage.ent(), 3, "shimmer.fs swirls three pastel layers slowly and sweeps a soft noisy highlight across the tile every 3 s.", 320, 160, 880, 18, true);
       label(stage.ent(), 4, std::string("playing: ") + (organic_playing ? "yes" : "no"), 320, 210, 400, 20, false, "organic_playing");
       label(stage.ent(), 5, std::string("shader: ") + (shimmer_effect->ok() ? "ok" : "missing"), 320, 240, 400, 20, false, "organic_shader");
     } else if (slug == "bend") {
@@ -1613,14 +1688,14 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         if (!t.started()) t.from(0.f);
         if (std::fabs(t.target() - want) > 0.05f) t.to(want, over ? follow : back);
       };
-      steer(rx, -ny * 14.f);
-      steer(ry, nx * 14.f);
+      steer(rx, -ny * 28.f);
+      steer(ry, nx * 28.f);
       steer(glare, over ? 1.f : 0.f);
       const float ax = rx.value_or(0.f) * 3.14159265f / 180.f, ay = ry.value_or(0.f) * 3.14159265f / 180.f;
       const float g = glare.value_or(0.f), gx = tilt_gx, gy = tilt_gy;
       div(context, mk(stage.ent(), 1), box(60, 140, 260, 170).with_debug_name("tilt_card").with_background(Theme::Usage::None).with_ignore_pointer_events()
                                             .with_on_draw_fg([ax, ay, g, gx, gy, s](RectangleType r) {
-                                              const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f, depth = 1000.f * s;
+                                              const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f, depth = 650.f * s;
                                               const auto project = [&](float px, float py) {
                                                 const float x = px - cx, y = py - cy;
                                                 const float y1 = y * std::cos(ax), z1 = -y * std::sin(ax);
@@ -1641,7 +1716,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                               }
                                             }));
       in_flight |= rx.active() || ry.active() || glare.active();
-      label(stage.ent(), 2, "The corners rotate in 3D toward the pointer and project with 1000 px perspective; leaving eases flat over 1 s.", 340, 150, 860, 18, true);
+      label(stage.ent(), 2, "The card rotates up to 28 degrees toward the pointer and projects with 650 px perspective; leaving eases flat over 1 s.", 340, 150, 860, 18, true);
       label(stage.ent(), 3, std::string("tilting: ") + (over ? "yes" : "no"), 340, 200, 400, 20, false, "tilt_state");
       char buf[64];
       std::snprintf(buf, sizeof buf, "rx: %.1f ry: %.1f", rx.value_or(0.f), ry.value_or(0.f));
@@ -1666,7 +1741,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         hold.from(0.f);
       }
       auto target = div(context, mk(stage.ent(), 1), ComponentConfig{}.with_size({pixels(target_l.width), pixels(target_l.height)}).with_absolute_position(target_l.x, target_l.y)
-                                                         .with_custom_background({244, 240, 246, 255}).with_border({200, 195, 205, 255}, 2.f * s).with_corner_radius(14 * s)
+                                                         .with_custom_background(chip).with_border(slate, 2.f * s).with_corner_radius(14 * s)
                                                          .with_label(drop_phase == 2 ? "Dropped" : "Drop here").with_font("AtkinsonMock", pixels(16 * s))
                                                          .with_custom_text_color(muted).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("drop_target")
                                                          .on_change(static_cast<size_t>(drops), {.scale = 0.97f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}}));
@@ -1677,9 +1752,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         const unsigned char alpha = static_cast<unsigned char>(255.f * std::clamp(fade.value_or(1.f), 0.f, 1.f));
         auto pic = div(context, mk(stage.ent(), 100 + respawns),
                        ComponentConfig{}.with_size({pixels(pw), pixels(ph)}).with_absolute_position(dx.value(), dy.value())
-                           .with_custom_background(afterhours::colors::transparent()).with_debug_name("drag_picture")
+                           .with_custom_background(afterhours::colors::transparent()).with_debug_name("drag_picture").with_skip_tabbing(true)
                            .on_appear({.scale = {0.6f, 1.f}, .opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad})
-                           .on_state(dragging, {.scale = 1.05f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.2f, 1.f}}})
+                           .on_state(dragging, {.scale = 1.05f}, motion::Spring{.response = 0.25f, .bounce = 0.35f})
                            .with_on_draw_fg([tex, angle, alpha](RectangleType r) {
                              afterhours::draw_texture_pro(tex, {0.f, 0.f, float(tex.width), float(tex.height)},
                                                           {r.x + r.width / 2.f, r.y + r.height / 2.f, r.width, r.height}, {r.width / 2.f, r.height / 2.f}, angle,
@@ -1702,12 +1777,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
           if (inside) {
             ++drops;
             drop_phase = 1;
-            const Vector2Type puff_at{stage_r.x + target_l.x + target_l.width / 2.f, stage_r.y + target_l.y + target_l.height / 2.f};
-            fade.from(1.f).to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.45f, 1.f}}, .curve = motion::curves::ease_out_quad})
-                .on_complete([this, alive = std::weak_ptr<int>(alive), puff_at, s] { if (alive.expired()) return;
+            const motion::Timeline slide{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_cubic};
+            dx.to(target_l.x + (target_l.width - pw) / 2.f, slide).delay(0.2f);
+            dy.to(target_l.y + (target_l.height - ph) / 2.f, slide).delay(0.2f);
+            fade.from(1.f).to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.75f, 0.f}, {1.15f, 1.f}}, .curve = motion::curves::ease_out_quad})
+                .on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
                   drop_phase = 2;
-                  puff(puff_at, s);
-                  afterhours::motion::anim(Key::DropHold).from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {1.2f, 1.f}}})
+                  afterhours::motion::anim(Key::DropHold).from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.9f, 1.f}}})
                       .on_complete([this, alive] { if (alive.expired()) return; drop_phase = 0; drag_reset = true; ++respawns; });
                 });
           } else {
@@ -1718,19 +1794,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         }
         track_motion(pic.ent());
       }
-      smoke.drag = 1.2f;
-      smoke.update(context.dt);
-      const auto snapshot = &smoke;
-      div(context, mk(stage.ent(), 3), box(0, 0, 1200, 460).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name("drop_smoke")
-                                            .with_on_draw_fg([snapshot](RectangleType) {
-                                              snapshot->each([](const afterhours::particles::Particle &p) {
-                                                afterhours::Color c = p.color;
-                                                c.a = static_cast<unsigned char>(110.f * (1.f - p.progress()));
-                                                afterhours::draw_circle_v(p.pos, p.size * (1.f + 2.f * p.progress()), c);
-                                              });
-                                            }));
-      in_flight |= dx.active() || dy.active() || tilt.active() || fade.active() || hold.active() || smoke.count() > 0;
-      label(stage.ent(), 4, "Drag the picture: it lifts 5% and tilts with pointer speed. Drop on the target to fade in, squash it and puff smoke; miss and it springs home.", 60, 60, 1100, 18, true);
+      in_flight |= dx.active() || dy.active() || tilt.active() || fade.active() || hold.active();
+      label(stage.ent(), 4, "Drag the picture: it lifts 5 % and tilts with pointer speed. Drop it on the target: it plops down, slides into the slot, then fades; a miss springs it home.", 60, 60, 1100, 18, true);
       label(stage.ent(), 5, std::string("dragging: ") + (dragging ? "yes" : "no"), 300, 250, 300, 20, false, "drag_state");
       label(stage.ent(), 6, "drops: " + std::to_string(drops), 300, 280, 300, 20, false, "drag_drops");
       label(stage.ent(), 7, "misses: " + std::to_string(misses), 300, 310, 300, 20, false, "drag_misses");
