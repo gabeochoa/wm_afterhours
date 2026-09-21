@@ -12,9 +12,14 @@ struct ApplyBlurPass : afterhours::System<> {
   void once(float) override {
     auto &requests = afterhours::ui::blur_requests();
     if (requests.empty()) return;
-    if (render_backend::draw_directly_to_window) { requests.clear(); return; }
     if (!pass) pass.emplace();
-    for (const auto &r : requests) pass->apply(mainRT, r.rect, r.radius);
+    if (render_backend::draw_directly_to_window) {
+      const Vector2Type screen_px{static_cast<float>(raylib::GetRenderWidth()), static_cast<float>(raylib::GetRenderHeight())};
+      const float scale = screen_px.x / static_cast<float>(std::max(1, raylib::GetScreenWidth()));
+      for (const auto &r : requests) pass->apply_screen(r.rect, r.radius, scale, screen_px);
+    } else {
+      for (const auto &r : requests) pass->apply(mainRT, r.rect, r.radius);
+    }
     requests.clear();
   }
 };

@@ -9,6 +9,7 @@ backward::SignalHandling sh;
 #include "game.h"
 #include "headless_screenshots.h"
 #include "preload.h"
+#include "render_backend.h"
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include <afterhours/src/graphics.h>
@@ -127,6 +128,8 @@ int main(int argc, char *argv[]) {
                  "window (for CI)\n";
     std::cout << "  --quiet                      Minimal stdout during E2E "
                  "(pass/fail summary only)\n";
+    std::cout << "  --direct-window              Windowed E2E draws straight "
+                 "to the window like --screen does\n";
     std::cout << "  --time-scale <float>         Time multiplier for headless "
                  "mode (default: 1.0, e.g., 10.0 = 10x faster)\n";
     std::cout << "  --capture-interval <int>     Auto-capture screenshot every "
@@ -350,6 +353,7 @@ int main(int argc, char *argv[]) {
     } else {
       // Normal windowed mode
       Preload::get().init("UI Tester - E2E Mode").make_singleton();
+      render_backend::draw_directly_to_window = cmdl["--direct-window"];
     }
     Settings::get().refresh_settings();
 
