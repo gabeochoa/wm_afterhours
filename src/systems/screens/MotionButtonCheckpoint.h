@@ -13,6 +13,7 @@ using namespace afterhours::ui::imm;
 struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
   int clicks = 0;
   int child_clicks = 0;
+  int scaled_clicks = 0;
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
     namespace motion = afterhours::motion;
@@ -59,6 +60,15 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("child_btn")))
       ++child_clicks;
 
+    auto scaled = div(context, mk(entity, 13),
+                      box(880, 600, 320, 56).with_custom_background({220, 232, 225, 255}).with_corner_radius(8 * s)
+                          .with_debug_name("scaled_slab").on_state(true, {.scale = 1.25f}, motion::Spring::smooth()));
+    if (button(context, mk(scaled.ent(), 0),
+               ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
+                   .with_label("Scaled").with_custom_background({170, 210, 190, 255}).with_font("AtkinsonMock", pixels(18 * s))
+                   .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("scaled_child_btn")))
+      ++scaled_clicks;
+
     float scale = 1.f, ty = 0.f, opacity = 1.f;
     bool in_flight = false;
     afterhours::Entity &be = btn.ent();
@@ -84,6 +94,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
     label(26, std::string("focus: ") + (context.has_focus(be.id) ? "yes" : "no"), 500, 532, 400, 30, 22);
     label(27, "clicks: " + std::to_string(clicks), 500, 568, 400, 30, 22);
     label(28, "child clicks: " + std::to_string(child_clicks), 500, 640, 400, 30, 22);
+    label(29, "scaled clicks: " + std::to_string(scaled_clicks), 500, 676, 400, 30, 22);
     bool reduced = Settings::get().get_reduced_motion_enabled();
     if (checkbox(context, mk(entity, 13), reduced,
                  box(880, 460, 320, 36).with_label("Reduced motion").with_font("AtkinsonMock", pixels(20 * s))

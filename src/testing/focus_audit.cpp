@@ -32,11 +32,9 @@ RectangleType rotated_bounds(RectangleType rect, float degrees) {
 Json describe(Entity &entity, UIContext<InputAction> &context) {
   const auto &cmp = entity.get<UIComponent>();
   auto rect = cmp.rect();
-  const auto scroll = afterhours::ui::detail::accumulated_scroll_offset(entity);
-  rect.x -= scroll.x;
-  rect.y -= scroll.y;
   if (entity.has<HasUIModifiers>())
     rect = entity.get<HasUIModifiers>().apply_modifier(rect);
+  rect = afterhours::ui::detail::apply_ancestor_transform(entity, rect);
   const auto [clips, clip] =
       afterhours::ui::detail::compute_intersected_clip_rect(entity);
   Json data = {{"id", entity.id},
@@ -52,7 +50,7 @@ Json describe(Entity &entity, UIContext<InputAction> &context) {
                {"draggable", entity.has<HasDragListener>()},
                {"cluster", entity.has<FocusClusterRoot>()},
                {"tray", entity.has<HasTray>()},
-               {"scroll", {scroll.x, scroll.y}},
+               {"scroll", {rect.x - cmp.rect().x, rect.y - cmp.rect().y}},
                {"clip", clips && !entity.has<HasScrollView>() ? rect_json(clip)
                                                               : Json(nullptr)},
                {"font", cmp.font_name},
@@ -160,9 +158,7 @@ nlohmann::json snapshot(bool include_elements) {
     if (context->visual_focus_id != entity.id)
       continue;
     data["visual"] = describe(entity, *context);
-    auto ring = afterhours::ui::detail::focus_ring_for(
-        *context, entity, cmp,
-        afterhours::ui::detail::accumulated_scroll_offset(entity));
+    auto ring = afterhours::ui::detail::focus_ring_for(*context, entity, cmp);
     if (!ring)
       continue;
     const float rotation = entity.has<HasUIModifiers>()

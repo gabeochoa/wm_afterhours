@@ -104,6 +104,16 @@ mouse_move 100 100
 wait 0.3
 expect_text "child clicks: 1"
 
+expect_drawn_at rectangle_rounded x=850 y=603 w=150 h=50 tol=2
+click 855 628
+mouse_move 100 100
+wait 0.3
+expect_text "scaled clicks: 1"
+click 1005 628
+mouse_move 100 100
+wait 0.3
+expect_text "scaled clicks: 1"
+
 toggle_checkbox reduced_motion
 mouse_move 100 100
 wait 0.3
