@@ -30,7 +30,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"navigation", "Navigation and overlays", {{"menu", "Menu dropdown"}, {"tooltip", "Tooltip"}, {"modal", "Modal open/close"}, {"panel", "Panel reveal"}, {"page", "Page side-by-side"}, {"tabs", "Tabs sliding"}, {"accordion", "Accordion"}, {"morph", "Dropdown menu morph"}}},
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
-      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}}},
+      {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"like_burst", "Like burst"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}}},
   };
 
   size_t group = 0;
@@ -85,13 +85,19 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   int smoke_rings = 0;
   std::optional<afterhours::effects::Effect> gradient_effect;
   int gen_phase = 0;
+  std::optional<afterhours::effects::Effect> dissolve_effect;
+  std::optional<afterhours::effects::Effect> goo_effect;
+  int del_phase = 0;
+  int deletes = 0;
+  bool goo_open = false;
+  int goo_actions = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
   struct Banner { int id; std::string text; bool leaving = false; };
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob };
 
   void reset_examples() {
     checked = false;
@@ -138,6 +144,14 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     smoke_rings = 0;
     gen_phase = 0;
     afterhours::motion::anim(Key::GenLoad).from(0.f);
+    del_phase = 0;
+    deletes = 0;
+    goo_open = false;
+    goo_actions = 0;
+    afterhours::motion::anim(Key::DissolveP).from(0.f);
+    afterhours::motion::anim(Key::DissolveHold).from(0.f);
+    for (int i = 0; i < 3; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::GooA0) + i)).from(0.f);
+    afterhours::motion::anim(Key::GooBob).from(0.f);
     for (int i = 0; i < 4; ++i) afterhours::motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + i)).from(0.f);
     afterhours::motion::anim(Key::ReasonOffset).from(0.f);
     afterhours::motion::anim(Key::ReasonHold).from(0.f);
@@ -1402,6 +1416,99 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       in_flight |= load.active();
       label(stage.ent(), 3, "A static dot field pulses while generating, then cross-fades into the image over 650 ms. The button steps the phases.", 240, 150, 950, 18, true);
       label(stage.ent(), 4, std::string("phase: ") + (gen_phase == 0 ? "idle" : gen_phase == 1 ? "generating" : "revealed"), 240, 200, 400, 20, false, "gen_state");
+    }
+    else if (slug == "dissolve") {
+      if (!dissolve_effect) dissolve_effect.emplace(afterhours::effects::Effect::load("dissolve"));
+      auto &prog = motion::anim(Key::DissolveP);
+      auto &hold = motion::anim(Key::DissolveHold);
+      if (tab(stage.ent(), 1, "Delete", 60, 84, 140, false, "delete_btn") && del_phase == 0) {
+        del_phase = 1;
+        prog.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.55f, 1.f}}, .curve = motion::curves::ease_out_quad})
+            .on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
+              del_phase = 2;
+              afterhours::motion::anim(Key::DissolveHold).from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.8f, 1.f}}})
+                  .on_complete([this, alive] { if (alive.expired()) return; del_phase = 0; ++deletes; });
+            });
+      }
+      const RectangleType stage_r = stage.cmp().rect();
+      const RectangleType card_r{stage_r.x + 60.f * s, stage_r.y + 150.f * s, 120.f * s, 120.f * s};
+      dissolve_effect->set("origin", Vector2Type{card_r.x, static_cast<float>(context.screen_height) - card_r.y - card_r.height});
+      dissolve_effect->set("extent", Vector2Type{card_r.width, card_r.height});
+      dissolve_effect->set("progress", prog.value());
+      if (del_phase != 2) {
+        ComponentConfig cfg = box(60, 150, 120, 120).with_debug_name("dissolve_card").with_corner_radius(14 * s)
+                                  .with_custom_background({80, 120, 220, 255}).with_label("Photo").with_font("AtkinsonMockBold", pixels(18 * s))
+                                  .with_custom_text_color(paper).with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+                                  .on_appear({.scale = {0.8f, 1.f}, .opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad})
+                                  .on_state(del_phase == 1, {.translate_y = 40.f * s, .rotation = 3.f, .opacity = 0.f, .blur = 8.f},
+                                            motion::Timeline{.keys = {{0.f, 0.f}, {0.55f, 1.f}}, .curve = motion::curves::ease_out_quad});
+        if (del_phase == 1) cfg.with_shader(dissolve_effect->shader);
+        auto card = div(context, mk(stage.ent(), 100 + deletes), cfg);
+        track_motion(card.ent());
+      }
+      in_flight |= prog.active() || hold.active();
+      label(stage.ent(), 3, "Delete erodes the card through dissolve.fs while it drifts, tilts, blurs and fades over 550 ms; a fresh card pops in 800 ms later.", 220, 160, 980, 18, true);
+      label(stage.ent(), 4, std::string("phase: ") + (del_phase == 0 ? "idle" : del_phase == 1 ? "dissolving" : "gone"), 220, 210, 400, 20, false, "dissolve_state");
+      label(stage.ent(), 5, "deletes: " + std::to_string(deletes), 220, 240, 400, 20, false, "dissolve_count");
+      label(stage.ent(), 6, std::string("shader: ") + (dissolve_effect->ok() ? "ok" : "missing"), 220, 270, 400, 20, false, "dissolve_shader");
+    } else if (slug == "gooey") {
+      if (!goo_effect) goo_effect.emplace(afterhours::effects::Effect::load("goo"));
+      const RectangleType stage_r = stage.cmp().rect();
+      const float fb_h = static_cast<float>(context.screen_height);
+      const Vector2Type hub{160.f, 300.f};
+      const float hub_r = 28.f, act_r = 20.f, reach = 90.f;
+      const Vector2Type dirs[3] = {{-0.707f, -0.707f}, {0.f, -1.f}, {0.707f, -0.707f}};
+      auto &bob = motion::anim(Key::GooBob);
+      const auto set_open = [&](bool open) {
+        goo_open = open;
+        for (int i = 0; i < 3; ++i) {
+          auto &t = motion::anim(static_cast<Key>(static_cast<size_t>(Key::GooA0) + i));
+          if (open) t.to(1.f, motion::Spring::bouncy()).delay(0.04f * i);
+          else t.to(0.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_cubic});
+        }
+        if (!open) bob.from(0.f).to(5.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.35f, 1.f}, {0.7f, 0.f}}, .curve = motion::curves::ease_in_out_quad});
+      };
+      float t[3];
+      for (int i = 0; i < 3; ++i) {
+        auto &tr = motion::anim(static_cast<Key>(static_cast<size_t>(Key::GooA0) + i));
+        t[i] = tr.value_or(0.f);
+        in_flight |= tr.active();
+      }
+      in_flight |= bob.active();
+      const float hub_y = hub.y + bob.value_or(0.f);
+      Vector2Type centers[4] = {{hub.x, hub_y}, {}, {}, {}};
+      float radii[4] = {hub_r, 0.f, 0.f, 0.f};
+      for (int i = 0; i < 3; ++i) {
+        centers[i + 1] = {hub.x + dirs[i].x * reach * t[i], hub.y + dirs[i].y * reach * t[i]};
+        radii[i + 1] = act_r * (0.35f + 0.65f * std::clamp(t[i], 0.f, 1.f));
+      }
+      const char *cn[4] = {"c0", "c1", "c2", "c3"}, *rn[4] = {"r0", "r1", "r2", "r3"};
+      for (int i = 0; i < 4; ++i) {
+        goo_effect->set(cn[i], Vector2Type{stage_r.x + centers[i].x * s, fb_h - stage_r.y - centers[i].y * s});
+        goo_effect->set(rn[i], radii[i] * s);
+      }
+      div(context, mk(stage.ent(), 1), box(20, 150, 280, 220).with_debug_name("goo_field").with_custom_background(coral)
+                                            .with_ignore_pointer_events().with_shader(goo_effect->shader));
+      for (int i = 0; i < 3; ++i) {
+        ComponentConfig cfg = box(centers[i + 1].x - act_r, centers[i + 1].y - act_r, act_r * 2, act_r * 2)
+                                  .with_custom_background(afterhours::colors::transparent()).with_label(std::to_string(i + 1))
+                                  .with_font("AtkinsonMockBold", pixels(16 * s)).with_custom_text_color(paper).with_alignment(TextAlignment::Center)
+                                  .with_corner_radius(act_r * s).with_opacity(std::clamp((t[i] - 0.4f) / 0.6f, 0.f, 1.f))
+                                  .with_debug_name("goo_action_" + std::to_string(i + 1));
+        if (t[i] < 0.5f) cfg.with_ignore_pointer_events();
+        if (button(context, mk(stage.ent(), 2 + i), cfg) && t[i] >= 0.5f) {
+          ++goo_actions;
+          set_open(false);
+        }
+      }
+      if (button(context, mk(stage.ent(), 5), box(hub.x - hub_r, hub_y - hub_r, hub_r * 2, hub_r * 2).with_custom_background(afterhours::colors::transparent())
+                                                   .with_label("+").with_font("AtkinsonMockBold", pixels(28 * s)).with_custom_text_color(paper)
+                                                   .with_alignment(TextAlignment::Center).with_corner_radius(hub_r * s).with_debug_name("goo_plus")
+                                                   .on_state(goo_open, {.rotation = 45.f}, motion::Spring::snappy()).on_hover({.scale = 1.05f})))
+        set_open(!goo_open);
+      label(stage.ent(), 6, "goo.fs thresholds a four-metaball field: the actions stretch out of the plus with liquid bridges, staggered 40 ms.", 320, 160, 880, 18, true);
+      label(stage.ent(), 7, std::string("open: ") + (goo_open ? "yes" : "no"), 320, 210, 400, 20, false, "goo_state");
+      label(stage.ent(), 8, "actions: " + std::to_string(goo_actions), 320, 240, 400, 20, false, "goo_actions");
     }
     label(stage.ent(), 9, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 60, 400, 400, 20, false, "motion_state");
   }

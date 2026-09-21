@@ -1,0 +1,22 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effects
+click_ui ex_dissolve
+mouse_move 20 20
+wait 0.5
+expect_text "Smoky dissolve"
+expect_text "shader: ok"
+expect_text "phase: idle"
+expect_text "motion: settled"
+click_ui delete_btn
+mouse_move 20 20
+screenshot transition_dissolve_mid
+expect_text "motion: in flight"
+expect_text "phase: dissolving"
+wait 2
+expect_text "phase: idle"
+expect_text "deletes: 1"
+expect_text "motion: settled"
+screenshot transition_dissolve_respawned
