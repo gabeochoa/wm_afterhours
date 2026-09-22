@@ -85,6 +85,12 @@ text-stroke baselines were refreshed after review. This did not certify Metal te
 | Menus, popups and decorative frames looked inconsistent | Local choices overused accent fills, nested outlines and mismatched radii. Library availability did not establish good defaults for each composition. | Simplify those screen styles while preserving the separate Dialog examples the user accepted. |
 | Localized inline key prompts were missing | Treating an icon as fixed before/after a sentence assumes English word order. | Demonstrate translation-owned key placeholders with measured wrapping atoms in English and Korean. This demo does not claim general bidi, Unicode line-breaking or a reusable rich-text API. |
 
+## Transitions Lab second review
+
+The September 21, 2026 feedback is complete in `transitions_lab` (commit `1e1c2a14`). Confetti settles into a pile, the duplicate like burst was replaced, smoke rings fade smallest first, Get Pro shows its gradient, the image placeholder fades in pixel by pixel, the smoky dissolve dissolves, the gooey plus menu and organic shimmer render, 3D tilt increased, and drag and drop plops down, slides into place and fades out. Captures at each animation stage were inspected against the requested behavior.
+
+Get Pro, gooey and organic shimmer were blank only under `make run`. That path draws straight to the window, where `gl_FragCoord` is in retina pixels and the shader regions were in logical pixels, and blur requests were dropped. Both paths now match.
+
 ## Default-theme follow-through
 
 Native modal/toast font inheritance, text insets in both renderers, tooltip measurement,

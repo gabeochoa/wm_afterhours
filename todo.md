@@ -3,10 +3,6 @@
 Remaining library work and external checks follow.
 See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
 
-## Transitions Lab
-
-- [x] Address the [additional transition feedback](docs/transitions.md), including screenshots or renders to verify the effects.
-
 ## UI element follow-ups from the lab review
 
 - [ ] `with_padding` on a label with no children does nothing (it warns); the lab wraps every padded text in a child. Decide whether label text should honour padding directly.
