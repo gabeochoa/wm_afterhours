@@ -13,6 +13,7 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 - [ ] Should `ClosedBy::Any` (click outside dismisses) be the modal default instead of `CloseRequest`? The lab opts in per dialog.
 - [ ] A drawn chevron/icon primitive: the accordion and learn-more examples hand-draw theirs with `draw_line_ex` because glyph fonts render only ASCII.
 - [ ] Multiline label line height does not match the font pixel size, so anything that scrolls text by fixed rows (the counter reel) has to lay out one label per row.
+- [ ] Banner stacking: hovering spreads the stack, but a long stack should scroll so every open banner can be reached.
 - [ ] Tab rows shrink label text to fit; long example titles squished at 140 px. A minimum font size or overflow rule for buttons would avoid that.
 
 ## Terminal consumer support
