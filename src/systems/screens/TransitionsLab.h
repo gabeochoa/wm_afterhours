@@ -84,6 +84,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   afterhours::particles::Emitter<64> smoke;
   int bursts = 0;
   int rating_halves = 0;
+  int preview_halves = 0;
   int sparks = 0;
   int smoke_rings = 0;
   std::optional<afterhours::effects::Effect> gradient_effect;
@@ -115,7 +116,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, StarPreview, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold };
 
   void ensure_picture() {
     if (bend_tex_loaded) return;
@@ -182,6 +183,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     smoke.clear();
     bursts = 0;
     rating_halves = 0;
+    preview_halves = 0;
+    afterhours::motion::anim(Key::StarPreview).from(0.f);
     sparks = 0;
     smoke_rings = 0;
     gen_phase = 0;
@@ -564,13 +567,17 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                            .on_state(menu_open, {.translate_y = {-16.f * s, 0.f}, .scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}},
                                      motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad}));
       static const char *items[] = {"Rename", "Duplicate", "Archive"};
+      const RectangleType panel_r = panel.cmp().rect();
       for (int i = 0; i < 3; ++i) {
+        const RectangleType item_r{panel_r.x + 8 * s, panel_r.y + (8 + i * 40) * s, 204 * s, 40 * s};
+        const bool item_hot = menu_open && context.mouse.pos.x >= item_r.x && context.mouse.pos.x <= item_r.x + item_r.width &&
+                              context.mouse.pos.y >= item_r.y && context.mouse.pos.y <= item_r.y + item_r.height;
         ComponentConfig cfg = ComponentConfig{}.with_size({pixels(204 * s), pixels(40 * s)}).with_label(items[i])
                                   .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
                                   .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(8 * s)))
                                   .with_custom_background(afterhours::colors::transparent()).with_corner_radius(6 * s)
                                   .with_debug_name(std::string("menu_item_") + std::to_string(i))
-                                  .on_hover({.background = chip}, motion::Spring::snappy());
+                                  .on_state(item_hot, {.background = {afterhours::colors::transparent(), chip}}, motion::Spring::snappy());
         if (!menu_open) cfg.with_ignore_pointer_events().with_skip_tabbing(true);
         if (button(context, mk(panel.ent(), i), cfg) && menu_open) {
           menu_choice = items[i];
@@ -591,7 +598,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       }
       if (hovered >= 0) tooltip_trigger = hovered;
       auto &tx = motion::anim(Key::TooltipX);
-      const float want_x = std::clamp(10.f + std::max(tooltip_trigger, 0) * 140.f, 60.f, 180.f);
+      const float want_x = std::clamp(10.f + std::max(tooltip_trigger, 0) * 140.f, 60.f, 240.f);
       if (!tx.started()) tx.from(want_x);
       if (tx.target() != want_x) tx.to(want_x, motion::Timeline{.keys = {{0.f, 0.f}, {0.16f, 1.f}}, .curve = motion::curves::ease_out_quad});
       const bool shown = hovered >= 0;
@@ -1395,26 +1402,40 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         for (int k = 0; k < 10; ++k) afterhours::draw_triangle({cx, cy}, pts[(k + 1) % 10], pts[k], c);
       };
       int hover_halves = 0;
-      for (int i = 0; i < 5; ++i) {
-        const RectangleType sr{stage.cmp().rect().x + (60.f + i * 56.f) * s, stage.cmp().rect().y + 96.f * s, 48.f * s, 48.f * s};
+      {
+        const RectangleType row{stage.cmp().rect().x + 56.f * s, stage.cmp().rect().y + 84.f * s, 280.f * s, 72.f * s};
         const auto &m = context.mouse.pos;
-        if (m.x >= sr.x && m.x <= sr.x + sr.width && m.y >= sr.y && m.y <= sr.y + sr.height)
-          hover_halves = i * 2 + (m.x < sr.x + sr.width / 2.f ? 1 : 2);
+        if (m.x >= row.x && m.x <= row.x + row.width && m.y >= row.y && m.y <= row.y + row.height)
+          hover_halves = std::clamp(int((m.x - row.x) / (28.f * s)) + 1, 1, 10);
       }
-      const int shown_halves = hover_halves > 0 ? hover_halves : rating_halves;
-      const afterhours::Color fill = hover_halves > 0 ? preview : gold;
+      auto &preview_fade = motion::anim(Key::StarPreview);
+      if (!preview_fade.started()) preview_fade.from(0.f);
+      if (hover_halves > 0) preview_halves = hover_halves;
+      const float want_fade = hover_halves > 0 ? 1.f : 0.f;
+      if (preview_fade.target() != want_fade)
+        preview_fade.to(want_fade, motion::Timeline{.keys = {{0.f, 0.f}, {hover_halves > 0 ? 0.08f : 0.3f, 1.f}}, .curve = motion::curves::ease_out_quad});
+      const float fade = preview_fade.value();
+      in_flight |= preview_fade.active();
+      const auto half_star = [star](RectangleType r, int halves, afterhours::Color c) {
+        if (halves == 2) { star(r, c); return; }
+        if (halves != 1) return;
+        afterhours::begin_scissor_mode(int(r.x), int(r.y), int(r.width / 2.f), int(r.height));
+        star(r, c);
+        afterhours::end_scissor_mode();
+      };
       int clicked = -1;
       for (int i = 0; i < 5; ++i) {
-        const int halves = std::clamp(shown_halves - i * 2, 0, 2);
+        const int set_halves = std::clamp(rating_halves - i * 2, 0, 2);
+        const int shown_halves = std::clamp(preview_halves - i * 2, 0, 2);
+        afterhours::Color pale = preview;
+        pale.a = static_cast<unsigned char>(255.f * fade);
         auto st = button(context, mk(stage.ent(), 1 + i),
                          box(60 + i * 56.f, 96, 48, 48).with_debug_name("star_" + std::to_string(i)).with_padding(Padding::all(pixels(0)))
                              .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0).with_skip_tabbing(true)
-                             .with_on_draw_fg([star, halves, fill, hollow](RectangleType r) {
-                               star(r, halves == 2 ? fill : hollow);
-                               if (halves != 1) return;
-                               afterhours::begin_scissor_mode(int(r.x), int(r.y), int(r.width / 2.f), int(r.height));
-                               star(r, fill);
-                               afterhours::end_scissor_mode();
+                             .with_on_draw_fg([star, half_star, set_halves, shown_halves, pale, gold, hollow](RectangleType r) {
+                               star(r, hollow);
+                               half_star(r, set_halves, gold);
+                               if (pale.a > 0) half_star(r, shown_halves, pale);
                              }));
         auto &pop = st.ent().addComponentIfMissing<motion::HasTracks>().track<float>(100);
         if (!pop.started()) pop.from(1.f);
@@ -1458,7 +1479,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                             }));
       in_flight |= burst.count() > 0;
       const auto halves_text = [](int h) { return std::to_string(h / 2) + (h % 2 ? ".5" : ""); };
-      label(stage.ent(), 10, "Hover previews the fill in pale gold, left half of a star for a half; click to set. The set stars pop 35 % larger in turn and sparks fly from the one you hit.", 60, 170, 1100, 18, true);
+      label(stage.ent(), 10, "Hover the row for a pale-gold preview that fades out when you leave; a star's left half gives a half. Click to set: stars pop in turn and sparks fly.", 60, 170, 1100, 18, true);
       label(stage.ent(), 11, "rating: " + halves_text(rating_halves), 60, 210, 400, 20, false, "star_rating");
       label(stage.ent(), 12, "sparks: " + std::to_string(burst.count()), 60, 240, 400, 20, false, "star_sparks");
       label(stage.ent(), 13, "preview: " + halves_text(hover_halves), 60, 270, 400, 20, false, "star_preview");

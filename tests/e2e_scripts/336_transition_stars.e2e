@@ -23,6 +23,7 @@ click_ui star_0
 mouse_move 20 20
 expect_text "rating: 1"
 mouse_move 108 300
+wait 0.2
 expect_text "preview: 0.5"
 click 108 300
 mouse_move 20 20
