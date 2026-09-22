@@ -33,6 +33,7 @@
 #include <afterhours/src/plugins/clipboard.h>
 
 #include <afterhours/src/plugins/animation.h>
+#include <afterhours/src/plugins/ui_motion.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 #include <afterhours/src/plugins/modal.h>
@@ -152,6 +153,7 @@ void game() {
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
     afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
 
     auto test_system = std::make_unique<TestSystem>();
     test_system_ptr = test_system.get();
@@ -237,6 +239,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
     afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
 
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
 
@@ -453,6 +456,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
     afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
   }
 
   {
@@ -702,6 +706,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
     afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
 

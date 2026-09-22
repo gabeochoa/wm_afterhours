@@ -6,6 +6,10 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui_motion.h>
+namespace um = afterhours::ui_motion;
+using afterhours::ui_motion::HasMotionState;
+using afterhours::ui_motion::MotionProperty;
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -39,21 +43,21 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                       box(440, 300, 400, 80).with_label("Hover, press, focus me")
                           .with_custom_background(coral).with_font("AtkinsonMock", pixels(24 * s))
                           .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("motion_btn")
-                          .on_appear({.translate_y = {24.f * s, 0.f}, .opacity = {0.f, 1.f}}, motion::Spring::gentle(), 0.1f)
-                          .on_focus({.scale = 1.03f})
-                          .on_hover({.scale = 1.05f, .translate_y = -4.f * s})
-                          .on_press({.scale = 0.92f}));
+                          .with(um::on_appear({.translate_y = {24.f * s, 0.f}, .opacity = {0.f, 1.f}}, motion::Spring::gentle(), 0.1f))
+                          .with(um::on_focus({.scale = 1.03f}))
+                          .with(um::on_hover({.scale = 1.05f, .translate_y = -4.f * s}))
+                          .with(um::on_press({.scale = 0.92f})));
     if (btn) ++clicks;
     button(context, mk(entity, 11),
            box(880, 300, 200, 80).with_label("Corner pinned")
                .with_custom_background({100, 180, 200, 255}).with_font("AtkinsonMock", pixels(20 * s))
                .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("origin_btn")
                .with_origin(0.f, 0.f)
-               .on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}}));
+               .with(um::on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}})));
 
     auto slab = div(context, mk(entity, 12),
                     box(80, 640, 320, 56).with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
-                        .with_debug_name("slab").on_appear({.translate_x = 200.f * s}, motion::Spring::smooth()));
+                        .with_debug_name("slab").with(um::on_appear({.translate_x = 200.f * s}, motion::Spring::smooth())));
     if (button(context, mk(slab.ent(), 0),
                ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
                    .with_label("Child").with_custom_background({200, 170, 220, 255}).with_font("AtkinsonMock", pixels(18 * s))
@@ -62,7 +66,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
 
     auto scaled = div(context, mk(entity, 13),
                       box(880, 600, 320, 56).with_custom_background({220, 232, 225, 255}).with_corner_radius(8 * s)
-                          .with_debug_name("scaled_slab").on_state(true, {.scale = 1.25f}, motion::Spring::smooth()));
+                          .with_debug_name("scaled_slab").with(um::on_state(true, {.scale = 1.25f}, motion::Spring::smooth())));
     if (button(context, mk(scaled.ent(), 0),
                ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
                    .with_label("Scaled").with_custom_background({170, 210, 190, 255}).with_font("AtkinsonMock", pixels(18 * s))

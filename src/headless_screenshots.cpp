@@ -27,6 +27,7 @@
 #include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/modal.h>
+#include <afterhours/src/plugins/ui_motion.h>
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/ui/entity_management.h>
 #include <afterhours/src/plugins/ui/ui_collection.h>
@@ -220,6 +221,7 @@ create_screen_systems(const std::string &screen_name) {
   afterhours::toast::register_layout_systems<InputAction>(systems);
   afterhours::modal::register_update_systems<InputAction>(systems);
   afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
 
   afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
@@ -764,6 +766,7 @@ int run_all_tests_headless() {
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
     afterhours::motion::register_update_systems(systems);
+    afterhours::ui_motion::register_bridge<afterhours::ui::UIContext<InputAction>>();
 
     // TestSystem drives the coroutine
     auto test_system = std::make_unique<TestSystem>();

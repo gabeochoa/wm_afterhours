@@ -39,14 +39,16 @@ Extra per-entity tracks that a widget's own code drives should use keys ≥ 100;
 
 ## Widgets: trigger blocks
 
+Trigger blocks live in the opt-in `ui_motion` bridge (`plugins/ui_motion.h`, alias `um`); `ui` stays a leaf and apps call `ui_motion::register_bridge<UIContext<InputAction>>()` once at setup.
+
 ```cpp
 ComponentConfig{}
-  .on_appear({.translate_y = {24.f, 0.f}, .opacity = {0.f, 1.f}}, Spring::gentle(), /*delay*/ 0.1f)
-  .on_hover({.scale = 1.05f, .translate_y = -4.f})
-  .on_press({.scale = 0.92f})
-  .on_focus({.scale = 1.03f})
-  .on_state(is_open, {.scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}}, Timeline{...})
-  .on_change(stamp, {.scale = {1.2f, 1.f}}, Spring::bouncy())
+  .with(um::on_appear({.translate_y = {24.f, 0.f}, .opacity = {0.f, 1.f}}, Spring::gentle(), /*delay*/ 0.1f))
+  .with(um::on_hover({.scale = 1.05f, .translate_y = -4.f}))
+  .with(um::on_press({.scale = 0.92f}))
+  .with(um::on_focus({.scale = 1.03f}))
+  .with(um::on_state(is_open, {.scale = {0.97f, 1.f}, .opacity = {0.f, 1.f}}, Timeline{...}))
+  .with(um::on_change(stamp, {.scale = {1.2f, 1.f}}, Spring::bouncy()))
 ```
 
 Properties: `scale`, `translate_x`, `translate_y`, `rotation`, `opacity`, `corner_radius`, `blur` (px of region blur, capped at 8), `background` (a `ColorType`; replaces the fill and opts out of the theme hover fill). A single value means "target"; `{from, to}` supplies the other end for `on_appear`, `on_state` (false → `from`) and `on_change`.
