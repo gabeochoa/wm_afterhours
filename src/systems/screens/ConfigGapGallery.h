@@ -159,9 +159,9 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       auto p = panel(second.ent(), 0, "draw_bg / draw_fg", "cg_panel_draw");
       label(p.ent(), 1, "Background fill", 18, 43, 155, 24, 18);
       label(p.ent(), 2, "Foreground stroke", 183, 43, 166, 24, 18);
-      const float phase = std::round(marquee * s);
-      const float dash = std::max(1.f, std::round(10 * s));
-      const float gap = std::max(1.f, std::round(7 * s));
+      const float phase = marquee * s;
+      const float dash = 10 * s;
+      const float gap = 7 * s;
       div(context, mk(p.ent(), 3), box(20, 77, 328, 106).with_label("selection")
           .with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color({210, 220, 240, 255})
           .with_alignment(TextAlignment::Center)
@@ -173,7 +173,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
                 {r.x + inset, r.y + inset}};
             afterhours::polyline::draw_dashed(path, 2 * s, cyan, dash, gap, -phase);
           }).with_debug_name("cg_marquee"));
-      label(p.ent(), 4, fmt::format("Dash {:.0f} / gap {:.0f} screen px / stroke {:.1f}", dash, gap, 2 * s),
+      label(p.ent(), 4, fmt::format("Dash {:.1f} / gap {:.1f} screen px / stroke {:.1f}", dash, gap, 2 * s),
             18, 193, 332, 25, 17);
       if (action(p.ent(), 5, animate_marquee ? "Pause marquee" : "Resume marquee", 20, 230, 328, 38, "cg_pause"))
         animate_marquee = !animate_marquee;

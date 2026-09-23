@@ -91,9 +91,9 @@ Outside press/Escape, opener restoration and disabled keyboard traversal are fix
 
 Native inputs select all on keyboard focus. Generic `with_select_on_focus(true)` synthesizes a click and clears that selection. Pointer focus observed a frame later can also look like keyboard focus after just-pressed state clears. WM removes the generic flag. Retain focus origin across frames; test click-away/back typing and keyboard selection.
 
-### Dashed polylines can stop advancing at fractional boundaries
+### Dashed polylines can stop advancing at fractional boundaries (fixed)
 
-At 1024×768, dash 8/gap 5.6 produces period 13.6000004; at travelled=68 a 1.9073486e-6 run cannot change the float accumulator. `polyline.h:92/96` loops forever. WM quantizes dash/gap/phase. Guarantee progress at pattern/segment boundaries; the workaround completed 18,796 isolated combinations.
+At 1024x768, dash 8/gap 5.6 produced a 1.9073486e-6 run at travelled 68 that could not change either float accumulator. `polyline::draw_dashed` now snaps to the pattern boundary when a run moves neither accumulator, so progress is guaranteed; WM no longer quantizes dash/gap/phase. Regression coverage in `polyline_test` plus a 540-combination marquee fuzz.
 
 ### Dropdowns have no visible-row limit or scrolling configuration
 
