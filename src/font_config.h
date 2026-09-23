@@ -133,11 +133,13 @@ inline const std::vector<FontDef> &get_all_fonts() {
       {"NotoSansKRInline", "NotoSansMonoCJKkr-Bold.otf", true,
        get_inline_prompt_codepoints, 96, {"localized_input_prompts"}},
       {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true,
-       get_korean_codepoints, 32, {"language_demo", "forms", "sync_scroll_lab"}},
+       get_korean_codepoints, 32,
+       {"language_demo", "forms", "sync_scroll_lab", "curved_text_lab"}},
       {"NotoSansJP", "NotoSansMonoCJKjp-Bold.otf", true,
        get_language_japanese_codepoints, 96, {"language_demo"}},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
-       get_japanese_codepoints, 32, {"forms", "mini_motorways_settings"}},
+       get_japanese_codepoints, 32,
+       {"forms", "mini_motorways_settings", "curved_text_lab"}},
   };
   return fonts;
 }

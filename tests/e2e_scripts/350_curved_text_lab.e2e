@@ -5,11 +5,11 @@ expect_text "Curved text: grapheme-aware arc layout"
 expect_text "Arc size: 190"
 expect_text "at rest"
 set_slider curved_arc_size 0.2
-expect_text "Arc size: 144"
+expect_text "Arc size: 132"
 click_ui curved_language
 wait 0.2
 click_ui dropdown_opt_1
-expect_text "Arc size: 144"
+expect_text "Arc size: 132"
 click_ui curved_direction
 click_ui curved_spin
 wait 1

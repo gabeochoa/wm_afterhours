@@ -18,20 +18,17 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
   struct Language {
     const char *name;
     const char *headline;
+    const char *font_name;
+    float font_scale;
   };
-  static constexpr std::array<Language, 7> languages{{
-      {"English", "CURVED TEXT ON AN ARC"},
-      {"Español", "TEXTO CURVO EN UN ARCO"},
-      {"Français", "TEXTE COURBÉ EN ARC"},
-      {"Deutsch", "GEBOGENER TEXT IM BOGEN"},
-      {"Italiano", "TESTO CURVO SU UN ARCO"},
-      {"Português", "TEXTO CURVO EM UM ARCO"},
-      {"日本語", "弧に沿った曲線テキスト"},
+  static constexpr std::array<Language, 2> languages{{
+      {"Japanese", "弧に沿った曲線テキスト", "Sazanami", 0.92f},
+      {"Korean", "아크 위의 곡선 텍스트", "NotoSansKR", 0.95f},
   }};
-  static constexpr float arc_size_min = 130.f;
-  static constexpr float arc_size_max = 200.f;
+  static constexpr float arc_size_min = 110.f;
+  static constexpr float arc_size_max = 220.f;
 
-  float arc_size_t = 0.857f;
+  float arc_size_t = 0.727f;
   size_t language = 0;
   float spin_deg = 0.f;
   bool clockwise = true;
@@ -41,7 +38,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
   float radius() const { return arc_size_min + arc_size_t * (arc_size_max - arc_size_min); }
 
   void reset() {
-    arc_size_t = 0.857f;
+    arc_size_t = 0.727f;
     language = 0;
     spin_deg = 0.f;
     clockwise = true;
@@ -94,9 +91,9 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     auto *fonts = afterhours::EntityHelper::get_singleton_cmp<FontManager>();
     if (!fonts)
       return;
-    const auto arc_font = fonts->get_font("AtkinsonMockBold");
+    const auto arc_font = fonts->get_font(languages[language].font_name);
     const std::string headline = languages[language].headline;
-    const float headline_size = 34.f * s;
+    const float headline_size = 34.f * languages[language].font_scale * s;
     const bool cw = clockwise;
     const float r = radius() * s;
     float headline_width = 0.f;
@@ -112,7 +109,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     const float span_deg = headline_width / r * RAD2DEG;
     const float start = -90.f - (cw ? span_deg : -span_deg) / 2.f + spin_deg;
     div(context, mk(root.ent(), id++),
-        box(60, 130, 760, 430).with_background(Theme::Usage::None).with_ignore_pointer_events()
+        box(60, 150, 760, 410).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_stage")
             .with_on_draw_fg([headline, arc_font, headline_size, r, start, cw, accent,
                               ink](RectangleType rect) {
@@ -142,23 +139,24 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
                       graphemes, spans.size(), graphemes.size()),
           60, 576, 900, 16, true, "curved_grapheme_count");
     const float grapheme_size = 24.f * s;
+    const auto demo_font = fonts->get_font("AtkinsonMockBold");
     div(context, mk(root.ent(), id++),
         box(860, 492, 360, 150).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_grapheme_stage")
-            .with_on_draw_fg([graphemes, arc_font, grapheme_size, accent](RectangleType rect) {
+            .with_on_draw_fg([graphemes, demo_font, grapheme_size, accent](RectangleType rect) {
               const float cx = rect.x + rect.width / 2.f, cy = rect.y + rect.height / 2.f;
               const auto glyphs = layout_text_on_arc(
                   graphemes, cx, cy,
                   ArcText{.radius = rect.height * 0.44f, .start_angle_deg = -160.f, .clockwise = true},
-                  [arc_font, grapheme_size](std::string_view sv) {
-                    return afterhours::measure_text(arc_font, std::string(sv).c_str(), grapheme_size, 1.f).x;
+                  [demo_font, grapheme_size](std::string_view sv) {
+                    return afterhours::measure_text(demo_font, std::string(sv).c_str(), grapheme_size, 1.f).x;
                   });
               for (const CurvedGlyph &g : glyphs) {
                 const std::string ch = graphemes.substr(g.span.begin, g.span.size());
                 if (ch == " ")
                   continue;
-                const auto size = afterhours::measure_text(arc_font, ch.c_str(), grapheme_size, 1.f);
-                afterhours::draw_text_ex(arc_font, ch.c_str(),
+                const auto size = afterhours::measure_text(demo_font, ch.c_str(), grapheme_size, 1.f);
+                afterhours::draw_text_ex(demo_font, ch.c_str(),
                              {g.center_x - size.x / 2.f, g.center_y - size.y / 2.f},
                              grapheme_size, 1.f, accent, g.rotation_deg, g.center_x, g.center_y);
               }
