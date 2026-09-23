@@ -1,0 +1,19 @@
+goto_screen colour_track_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Colour tracks: OKLab"
+expect_text "Red to blue"
+expect_text "140, 83, 162"
+expect_text "208, 168, 0"
+expect_text "99, 99, 99"
+wait 0.5
+screenshot colour_track_lab_mid
+click_ui spring_btn
+mouse_move 20 20
+wait 1.5
+expect_text "Spring: blue"
+click_ui replay_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 2.5
+expect_text "Spring: blue"
