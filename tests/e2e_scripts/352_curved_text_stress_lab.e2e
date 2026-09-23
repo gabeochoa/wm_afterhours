@@ -1,0 +1,16 @@
+goto_screen curved_text_stress_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Curved text stress: where do the milliseconds go?"
+expect_text "running"
+set_slider curved_stress_strings 1.0
+wait 2
+expect_text "strings 24"
+click_ui curved_stress_spin
+click_ui curved_stress_layout
+click_ui curved_stress_widths
+click_ui curved_stress_pause
+expect_text "paused"
+click_ui curved_stress_reset
+expect_text "running"
+screenshot curved_text_stress_lab

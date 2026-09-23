@@ -1,0 +1,18 @@
+goto_screen animation_stress_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Animation stress: every new animation type, at scale"
+expect_text "OKLab colour"
+expect_text "Text units"
+expect_text "Effect quads"
+expect_text "ui_motion springs"
+expect_text "running"
+set_slider anim_stress_items 1.0
+wait 2
+expect_text "items/row 32"
+click_ui anim_stress_reduced
+click_ui anim_stress_pause
+expect_text "paused"
+click_ui anim_stress_pause
+click_ui anim_stress_restart
+screenshot animation_stress_lab
