@@ -8,7 +8,7 @@ Everything lives in `afterhours::motion` (`vendor/afterhours/src/plugins/animati
 
 **Timeline** — keys plus a repeat mode plus one optional curve. Output is dimensionless progress that the track lerps between its start and target, so `{{0,0},{0.08,1},{0.16,-1},{0.22,.667},{0.28,0}}` with target 6 is a ±6 px shake. `Repeat::Once | Loop | PingPong`. Curves: `curves::ease_in_quad`, `ease_out_quad`, `ease_in_out_quad`, `ease_out_cubic`. A timed ease is `Timeline{.keys = {{0,0},{0.25f,1}}, .curve = curves::ease_out_quad}`.
 
-**Track<T>** — one value over springs and timelines; `T` is `float`, `Vector2Type`, `RectangleType` or `ColorType` (per-component, colours in sRGB).
+**Track<T>** — one value over springs and timelines; `T` is `float`, `Vector2Type`, `RectangleType` or `ColorType` (colour tracks run in OKLab, alpha stays linear, values clamp to the sRGB gamut on return).
 
 ```cpp
 tr.from(v)                       // set value, clear everything
