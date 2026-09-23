@@ -21,24 +21,24 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     const char *font_name;
     float font_scale;
   };
-  static constexpr std::array<Language, 2> languages{{
+  static constexpr std::array<Language, 2> LANGUAGES{{
       {"Japanese", "弧に沿った曲線テキスト", "Sazanami", 0.92f},
       {"Korean", "아크 위의 곡선 텍스트", "NotoSansKR", 0.95f},
   }};
-  static constexpr float arc_size_min = 110.f;
-  static constexpr float arc_size_max = 220.f;
+  static constexpr float ARC_SIZE_MIN = 110.f;
+  static constexpr float ARC_SIZE_MAX = 220.f;
 
-  float arc_size_t = 0.727f;
+  float arcSlider = 0.727f;
   size_t language = 0;
   float spin_deg = 0.f;
   bool clockwise = true;
   bool spin = false;
   float flat_rotation = -8.f;
 
-  float radius() const { return arc_size_min + arc_size_t * (arc_size_max - arc_size_min); }
+  float radius() const { return ARC_SIZE_MIN + arcSlider * (ARC_SIZE_MAX - ARC_SIZE_MIN); }
 
   void reset() {
-    arc_size_t = 0.727f;
+    arcSlider = 0.727f;
     language = 0;
     spin_deg = 0.f;
     clockwise = true;
@@ -91,9 +91,9 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     auto *fonts = afterhours::EntityHelper::get_singleton_cmp<FontManager>();
     if (!fonts)
       return;
-    const auto arc_font = fonts->get_font(languages[language].font_name);
-    const std::string headline = languages[language].headline;
-    const float headline_size = 34.f * languages[language].font_scale * s;
+    const auto arc_font = fonts->get_font(LANGUAGES[language].font_name);
+    const std::string headline = LANGUAGES[language].headline;
+    const float headline_size = 34.f * LANGUAGES[language].font_scale * s;
     const bool cw = clockwise;
     const float r = radius() * s;
     float headline_width = 0.f;
@@ -169,7 +169,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
 
     {
       std::vector<std::string> language_names;
-      for (const Language &l : languages)
+      for (const Language &l : LANGUAGES)
         language_names.emplace_back(l.name);
       dropdown(context, mk(root.ent(), id++), language_names, language,
                box(880, 240, 320, 44).with_font("AtkinsonMock", pixels(19 * s))
@@ -179,7 +179,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("curved_language"));
     }
     label(fmt::format("Arc size: {:.0f}", radius()), 880, 300, 320, 16, true);
-    slider(context, mk(root.ent(), id++), arc_size_t,
+    slider(context, mk(root.ent(), id++), arcSlider,
            box(880, 328, 320, 32).with_debug_name("curved_arc_size"));
     if (control(clockwise ? "Direction: clockwise" : "Direction: counter", 880, 376, 240,
                 "curved_direction"))
