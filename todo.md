@@ -152,7 +152,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [ ] Consider folding sync-scroll collection into the native scroll pass, preserving invisible/no-overflow participants. No measured performance need yet.
 - [ ] Consider `RefComponent<T>` and `RefComponents<T>` aliases matching `RefEntity` for collect-then-apply systems.
 - [ ] Review persistent chrome theme inheritance, deferred screen replacement during iteration, empty `gen_first_enforce` access, and native toggle label width calculation. WM workarounds remain in place.
-- [ ] Review native rotation/curved text and grapheme-aware placement. WM's new typography composition demonstrates whole-word layout and optional motion only.
+- [x] Review native rotation/curved text and grapheme-aware placement. Native whole-label rotation and grapheme splitting already existed; afterhours 1188f1f adds layout_text_on_arc plus per-unit TextUnits rotation, demonstrated by CurvedTextLab (WM).
 
 ### Other project ownership
 

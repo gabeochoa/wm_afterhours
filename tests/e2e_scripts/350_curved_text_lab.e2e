@@ -1,0 +1,16 @@
+goto_screen curved_text_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Curved text: grapheme-aware arc layout"
+expect_text "at rest"
+click_ui curved_direction
+expect_text "at rest"
+click_ui curved_spin
+wait 1
+expect_text "spinning"
+click_ui curved_spin
+click_ui curved_rotate
+click_ui curved_radius
+click_ui curved_reset
+expect_text "at rest"
+screenshot curved_text_lab
