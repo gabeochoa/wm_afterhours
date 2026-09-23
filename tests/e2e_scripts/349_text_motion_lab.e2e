@@ -1,0 +1,25 @@
+goto_screen text_motion_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Text motion: per-unit batching"
+expect_text "Char rise"
+expect_text "Char slide"
+expect_text "Char scale"
+expect_text "Word rise"
+expect_text "Word fade"
+expect_text "Word scale"
+expect_text "Word reverse"
+expect_text "Char centre-out"
+expect_text "Word random"
+wait 3
+expect_text "settled"
+screenshot text_motion_lab_settled
+click_ui reset_0
+mouse_move 20 20
+expect_text "in flight"
+wait 3
+click_ui reset_all_btn
+mouse_move 20 20
+expect_text "in flight"
+wait 3
+expect_text "settled"
