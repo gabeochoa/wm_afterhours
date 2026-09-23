@@ -6,21 +6,43 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/curved_text.h>
+#include <array>
 #include <cmath>
 #include <string>
+#include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
-  float radius = 190.f;
+  struct Language {
+    const char *name;
+    const char *headline;
+  };
+  static constexpr std::array<Language, 7> languages{{
+      {"English", "CURVED TEXT ON AN ARC"},
+      {"Español", "TEXTO CURVO EN UN ARCO"},
+      {"Français", "TEXTE COURBÉ EN ARC"},
+      {"Deutsch", "GEBOGENER TEXT IM BOGEN"},
+      {"Italiano", "TESTO CURVO SU UN ARCO"},
+      {"Português", "TEXTO CURVO EM UM ARCO"},
+      {"日本語", "弧に沿った曲線テキスト"},
+  }};
+  static constexpr float arc_size_min = 130.f;
+  static constexpr float arc_size_max = 200.f;
+
+  float arc_size_t = 0.857f;
+  size_t language = 0;
   float spin_deg = 0.f;
   bool clockwise = true;
   bool spin = false;
   float flat_rotation = -8.f;
 
+  float radius() const { return arc_size_min + arc_size_t * (arc_size_max - arc_size_min); }
+
   void reset() {
-    radius = 190.f;
+    arc_size_t = 0.857f;
+    language = 0;
     spin_deg = 0.f;
     clockwise = true;
     spin = false;
@@ -73,15 +95,21 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     if (!fonts)
       return;
     const auto arc_font = fonts->get_font("AtkinsonMockBold");
-    const std::string headline = "CURVED TEXT ON AN ARC";
+    const std::string headline = languages[language].headline;
     const float headline_size = 34.f * s;
     const bool cw = clockwise;
-    const float r = radius * s;
+    const float r = radius() * s;
     float headline_width = 0.f;
-    for (char ch : headline)
-      headline_width += afterhours::measure_text(arc_font, std::string(1, ch).c_str(),
-                                                 headline_size, 1.f).x;
-    const float span_deg = headline_width / r * 57.29577951308232f;
+    {
+      std::vector<UnitSpan> hw;
+      split_graphemes(headline, hw);
+      for (const UnitSpan &sp : hw)
+        headline_width += afterhours::measure_text(
+                              arc_font, headline.substr(sp.begin, sp.size()).c_str(),
+                              headline_size, 1.f)
+                              .x;
+    }
+    const float span_deg = headline_width / r * RAD2DEG;
     const float start = -90.f - (cw ? span_deg : -span_deg) / 2.f + spin_deg;
     div(context, mk(root.ent(), id++),
         box(60, 130, 760, 430).with_background(Theme::Usage::None).with_ignore_pointer_events()
@@ -115,7 +143,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
           60, 576, 900, 16, true, "curved_grapheme_count");
     const float grapheme_size = 24.f * s;
     div(context, mk(root.ent(), id++),
-        box(860, 392, 360, 200).with_background(Theme::Usage::None).with_ignore_pointer_events()
+        box(860, 492, 360, 150).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_grapheme_stage")
             .with_on_draw_fg([graphemes, arc_font, grapheme_size, accent](RectangleType rect) {
               const float cx = rect.x + rect.width / 2.f, cy = rect.y + rect.height / 2.f;
@@ -141,12 +169,24 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     label(fmt::format("rotation {:.0f} deg via HasUIModifiers", flat_rotation), 880, 190, 360,
           15, true);
 
-    if (control(fmt::format("Radius: {:.0f}", radius), 880, 240, 240, "curved_radius"))
-      radius = radius >= 240.f ? 140.f : radius + 50.f;
-    if (control(clockwise ? "Direction: clockwise" : "Direction: counter", 880, 296, 240,
+    {
+      std::vector<std::string> language_names;
+      for (const Language &l : languages)
+        language_names.emplace_back(l.name);
+      dropdown(context, mk(root.ent(), id++), language_names, language,
+               box(880, 240, 320, 44).with_font("AtkinsonMock", pixels(19 * s))
+                   .with_corner_radius(8 * s)
+                   .with_custom_background(afterhours::Color{44, 54, 74, 255})
+                   .with_custom_text_color(ink).with_render_layer(10)
+                   .with_debug_name("curved_language"));
+    }
+    label(fmt::format("Arc size: {:.0f}", radius()), 880, 300, 320, 16, true);
+    slider(context, mk(root.ent(), id++), arc_size_t,
+           box(880, 328, 320, 32).with_debug_name("curved_arc_size"));
+    if (control(clockwise ? "Direction: clockwise" : "Direction: counter", 880, 376, 240,
                 "curved_direction"))
       clockwise = !clockwise;
-    if (control(spin ? "Spin: on" : "Spin: off", 880, 352, 240, "curved_spin"))
+    if (control(spin ? "Spin: on" : "Spin: off", 880, 432, 240, "curved_spin"))
       spin = !spin;
     if (control("Rotate straight label", 60, 624, 280, "curved_rotate"))
       flat_rotation = flat_rotation <= -24.f ? 16.f : flat_rotation - 8.f;
