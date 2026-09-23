@@ -8,6 +8,7 @@
 
 #include "rl.h"
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/reduced_motion.h>
 #include <afterhours/src/plugins/sound_system.h>
 
 using namespace afterhours;
@@ -186,6 +187,8 @@ bool Settings::load_save_file(int width, int height) {
       for (auto place : settings_places)
         buffer << place << ", \n";
       log_warn("{}", buffer.str());
+      data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
+      refresh_settings();
       return false;
     }
 
@@ -200,8 +203,11 @@ bool Settings::load_save_file(int width, int height) {
 
   try {
     const auto settingsJSON = nlohmann::json::parse(ifs, nullptr, true, true);
+    const bool stored_reduced_motion = settingsJSON.contains("reduced_motion_enabled");
 
     (*this->data) = settingsJSON;
+    if (!stored_reduced_motion)
+      data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
     this->data->loaded_from = settings_places[file_loc];
     refresh_settings();
     return true;

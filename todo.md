@@ -46,7 +46,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [ ] Sokol/Metal backend for `effects::Effect` and `effects::BlurPass`; `with_shader` compiles there but the shader path is raylib-only. Verify from floatinghotel.
 - [x] OKLab interpolation for colour tracks; `Track<ColorType>` lerps per channel in sRGB, which greys out saturated fades.
 - [x] Full-GPU text motion: per-unit motion re-issues one draw per grapheme; a glyph-instanced path with per-instance transforms would keep long labels cheap.
-- [ ] Query the OS reduced-motion setting and seed `reduced_motion_enabled` from it on first run.
+- [x] Query the OS reduced-motion setting and seed `reduced_motion_enabled` from it on first run.
 - [ ] Subtree relayout for size tracks: a `with_size()` fed by a track re-lays out the whole root every frame; a dirty-subtree pass would scope it.
 - [x] Shader backgrounds per component: `with_shader` scopes one widget's draws in an `effects::Effect`; uniforms are set per frame from the app. Clipping and the sokol fallback are the items above.
 
