@@ -69,6 +69,7 @@ Each frame the active triggers collapse into one target per property — press >
 
 ## Effects
 
+- **`presets::effect_presets`** lists 17 effects beyond the basic set (blur, unblur, dissolve, wipe, curtain, sweep, shear, stretch, iris, spotlight, swing, recede, unroll, blinds, flip, emerge, tumble). `effect_timeline`, `effect_blur_radius` and `effect_quad` drive one progress value through `effect_presets.fs` shader modes, region blur and `draw_quad` corners; the Transitions Lab `Effect presets` group shows each one.
 - **`with_shader(effect.shader)`** wraps one widget's draws (fill, border, label) in a shader scope; the batched renderer emits `ShaderStart`/`ShaderEnd` around its commands. `effects::Effect::load("name")` reads `resources/shaders/name.fs`; `set(uniform, float|Vector2Type|ColorType)` each frame, `Effect::Scope` for custom draws, `effects::reload_all()` re-reads from disk. Shaders that need widget space take `origin`/`extent` uniforms in framebuffer coordinates (y up) and work from `gl_FragCoord`, since solid shapes carry no useful texcoords.
 - **`with_blur(px)` / the `blur` property** queue a region blur; wm's `ApplyBlurPass` runs `effects::BlurPass` over `mainRT` after the UI render. It blurs everything in the rect, so a glow under a button is a shader with a soft rim (see `gradient.fs`), not a blur.
 - **`particles::Emitter<N>`** is a fixed pool with gravity, drag, floor and restitution; draw it from `with_on_draw_fg`.

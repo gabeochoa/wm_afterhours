@@ -1,0 +1,32 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_effect_presets
+click_ui ex_wipe
+mouse_move 20 20
+wait 0.2
+expect_text "Wipe"
+expect_text "effect: wipe"
+expect_text "shader: ok"
+expect_text "motion: in flight"
+wait 1.5
+expect_text "progress: 100%"
+expect_text "motion: settled"
+screenshot effect_preset_wipe
+click_ui ex_flip
+mouse_move 20 20
+expect_text "effect: flip"
+click_ui replay_btn
+mouse_move 20 20
+expect_text "motion: in flight"
+wait 1.5
+expect_text "progress: 100%"
+screenshot effect_preset_flip
+click_ui ex_emerge
+mouse_move 20 20
+expect_text "effect: emerge"
+click_ui ex_blur
+mouse_move 20 20
+expect_text "effect: blur"
+expect_text "shader: n/a"

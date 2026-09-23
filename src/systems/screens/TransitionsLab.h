@@ -7,6 +7,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/animation_presets.h>
 #include <afterhours/src/plugins/ui_motion.h>
 namespace um = afterhours::ui_motion;
 using afterhours::ui_motion::HasMotionState;
@@ -36,10 +37,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       {"status", "Status and loading", {{"toast", "Toast open/close"}, {"badge", "Notification badge"}, {"success", "Success check"}, {"skeleton", "Skeleton loader"}, {"spinner", "Spinner to check"}, {"banners", "Banner stacking"}, {"streaming", "Streaming text"}, {"thinking", "Thinking states"}, {"reasoning", "Reasoning stream"}, {"shimmer", "Shimmer text"}}},
       {"cards", "Cards and text", {{"card_resize", "Card resize"}, {"card_stack", "Card stack hover"}, {"avatars", "Avatar group hover"}, {"texts_reveal", "Texts reveal"}, {"matrix", "Matrix dot loader"}, {"counter", "Spinning counter"}, {"popin", "Number pop-in"}}},
       {"effects", "Visual effects", {{"effect", "Shader effect"}, {"blur", "Blur"}, {"confetti", "Confetti burst"}, {"stars", "Star rating"}, {"smoke", "Smoke ring"}, {"pro_text", "Pro gradient text"}, {"get_pro", "Get Pro button"}, {"imagegen", "Image placeholder"}, {"dissolve", "Smoky dissolve"}, {"gooey", "Gooey plus menu"}, {"organic", "Organic shimmer"}, {"bend", "Image bend"}, {"tilt", "3D tilt"}, {"dragdrop", "Drag and drop"}}},
+      {"effect_presets", "Effect presets", {{"blur", "Blur"}, {"unblur", "Unblur"}, {"dissolve", "Dissolve"}, {"wipe", "Wipe"}, {"curtain", "Curtain"}, {"sweep", "Sweep"}, {"iris", "Iris"}, {"spotlight", "Spotlight"}, {"blinds", "Blinds"}, {"unroll", "Unroll"}, {"shear", "Shear"}, {"stretch", "Stretch"}, {"flip", "Flip"}, {"tumble", "Tumble"}, {"swing", "Swing"}, {"recede", "Recede"}, {"emerge", "Emerge"}}},
   };
 
   size_t group = 0;
-  std::array<size_t, 5> example{};
+  std::array<size_t, 6> example{};
+  std::optional<afterhours::effects::Effect> effect_shader;
+  std::string fx_slug;
   size_t replay_stamp = 0;
   size_t seen_replay = 0;
 
@@ -120,7 +124,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   std::vector<Banner> banners;
   int next_banner = 0;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, StarPreview, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, StarPreview, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold, EffectPresetP };
 
   void ensure_picture() {
     if (bend_tex_loaded) return;
@@ -209,6 +213,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     afterhours::motion::anim(Key::TiltRX).from(0.f);
     afterhours::motion::anim(Key::TiltRY).from(0.f);
     afterhours::motion::anim(Key::TiltGlare).from(0.f);
+    afterhours::motion::anim(Key::EffectPresetP).from(0.f);
     dragging = false;
     drag_reset = true;
     drops = 0;
@@ -283,12 +288,13 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     label(entity, 1, "Transitions Lab", 40, 24, 600, 30);
 
     for (size_t g = 0; g < groups.size(); ++g)
-      if (tab(entity, 10 + int(g), groups[g].title, 40 + g * 240.f, 60, 228, g == group, std::string("group_") + groups[g].slug))
+      if (tab(entity, 10 + int(g), groups[g].title, 40 + g * 200.f, 60, 188, g == group, std::string("group_") + groups[g].slug))
         group = g;
     const Group &current = groups[group];
     if (example[group] >= current.examples.size()) example[group] = 0;
+    const float ex_pitch = current.examples.size() > 14 ? 28.f : 36.f;
     for (size_t e = 0; e < current.examples.size(); ++e)
-      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + (e % 7) * 170.f, 106 + (e / 7) * 36.f, 164,
+      if (tab(entity, 20 + int(e), current.examples[e].title, 40 + (e % 7) * 170.f, 104 + (e / 7) * ex_pitch, 164,
               e == example[group], std::string("ex_") + current.examples[e].slug, 32.f))
         example[group] = e;
 
@@ -329,7 +335,48 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       for (auto &[k, tr] : t.colors) in_flight |= tr.active();
     };
 
-    if (slug == "checkbox") {
+    if (current.slug == std::string("effect_presets")) {
+      const afterhours::presets::EffectPreset *fx = &afterhours::presets::effect_presets[example[group]];
+      auto &prog = motion::anim(Key::EffectPresetP);
+      if (!prog.started() || seen_replay != replay_stamp || fx_slug != slug) {
+        seen_replay = replay_stamp;
+        fx_slug = slug;
+        prog.from(0.f).to(1.f, afterhours::presets::effect_timeline(0.9f));
+      }
+      const float p = prog.value_or(0.f);
+      in_flight |= prog.active();
+      const RectangleType card{100.f * s, 120.f * s, 300.f * s, 190.f * s};
+      if (fx && fx->shader != afterhours::presets::EffectShader::None) {
+        if (!effect_shader) effect_shader.emplace(afterhours::effects::Effect::load("effect_presets"));
+        effect_shader->set("origin", fb_origin(card));
+        effect_shader->set("extent", fb_extent(card));
+        effect_shader->set("progress", p);
+        effect_shader->set("mode", static_cast<float>(fx->shader));
+        auto cfg = box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(14 * s)
+                       .with_debug_name("fx_card").with_ignore_pointer_events();
+        if (effect_shader->ok()) cfg.with_shader(effect_shader->shader);
+        div(context, mk(stage.ent(), 1), cfg);
+      } else if (fx && (fx->id == afterhours::presets::EffectId::Blur || fx->id == afterhours::presets::EffectId::Unblur)) {
+        div(context, mk(stage.ent(), 1), box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(14 * s)
+                                             .with_blur(afterhours::presets::effect_blur_radius(*fx, p))
+                                             .with_debug_name("fx_card").with_ignore_pointer_events());
+      } else if (fx) {
+        const afterhours::presets::EffectQuad q = afterhours::presets::effect_quad(*fx, card, p);
+        const unsigned char alpha = static_cast<unsigned char>(255.f * q.opacity);
+        div(context, mk(stage.ent(), 1), box(100, 120, 300, 190).with_background(Theme::Usage::None)
+                                             .with_debug_name("fx_card").with_ignore_pointer_events()
+                                             .with_on_draw_fg([q, alpha](RectangleType) {
+                                               afterhours::draw_quad(q.corners, {80, 120, 220, alpha});
+                                             }));
+      }
+      label(stage.ent(), 2, "One progress track (0.9 s) drives every effect preset: shaders take mode and progress, blur takes a radius, shear/stretch/flip/tumble/swing/recede/emerge take quad corners from presets::effect_quad.", 460, 130, 700, 18, true);
+      label(stage.ent(), 3, std::string("effect: ") + slug, 460, 180, 400, 20, false, "fx_effect");
+      char pbuf[32];
+      std::snprintf(pbuf, sizeof pbuf, "progress: %d%%", static_cast<int>(std::lround(p * 100.f)));
+      label(stage.ent(), 4, pbuf, 460, 210, 400, 20, false, "fx_progress");
+      label(stage.ent(), 5, std::string("shader: ") + (fx && fx->shader != afterhours::presets::EffectShader::None && effect_shader && effect_shader->ok() ? "ok" : "n/a"), 460, 240, 400, 20, false, "fx_shader");
+      label(stage.ent(), 6, std::string("motion: ") + (in_flight ? "in flight" : "settled"), 460, 270, 400, 20, false, "fx_motion");
+    } else if (slug == "checkbox") {
       auto &draw = motion::anim(Key::CheckDraw);
       const float p = draw.value();
       auto boxr = button(context, mk(stage.ent(), 1),
