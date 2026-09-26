@@ -10,7 +10,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 2  | Tooltip config (font/pad/gap)   | WM, wordproc| DONE   |
 | 3  | Public contrast-ratio helper    | cg (+WM)    | DONE*  |
 | 4  | Focus ring family               | hanabi, wp  | DONE   |
-| 5  | Small imm components            | cg, kart    | S      |
+| 5  | Small imm components            | cg, kart    | DONE   |
 | 6  | Validation-log throttle         | cg, hanabi  | XS     |
 | 7  | Pointer parity (click/wheel)    | wp, hanabi  | M      |
 | 8  | text_area parity                | hanabi (+fh)| M      |
