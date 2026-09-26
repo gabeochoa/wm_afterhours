@@ -11,7 +11,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 3  | Public contrast-ratio helper    | cg (+WM)    | DONE*  |
 | 4  | Focus ring family               | hanabi, wp  | DONE   |
 | 5  | Small imm components            | cg, kart    | DONE   |
-| 6  | Validation-log throttle         | cg, hanabi  | XS     |
+| 6  | Validation-log throttle         | cg, hanabi  | DONE   |
 | 7  | Pointer parity (click/wheel)    | wp, hanabi  | M      |
 | 8  | text_area parity                | hanabi (+fh)| M      |
 | 9  | Prepared text + label inset     | WM, hanabi  | L      |

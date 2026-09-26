@@ -245,7 +245,7 @@ Demand 1 (single project, ordered easy → hard):
 - [ ] EXT:settings: default settings-path override from code (cartographer); JSON comment-preserving writes — see REJECT? G6.
 - [x] EXT:color: public contrast-ratio helper for custom widgets (cartographer; validator computes it internally — expose, don't duplicate). Stale: `colors::contrast_ratio` in `src/plugins/color.h` has been public since 2026-01 and is the same function the validator calls. Pinned by `color_contrast_test` (includes color.h alone; 21:1, symmetry, #767676 = 4.54).
 - [ ] EXT:os: OS appearance (dark-mode) query next to `os::reduced_motion_enabled` (hanabi #1/#16); window-focus/frontmost query (#28a, S/M — accept only the query, not the platform family G1).
-- [ ] EXT:ui validation: throttle/disable toggle for per-frame validation logs (cartographer); wrong layout corrected silently but warned forever (hanabi #53).
+- [x] EXT:ui validation: throttle/disable toggle for per-frame validation logs (cartographer); wrong layout corrected silently but warned forever (hanabi #53). Done: the validation-side dedup already existed (`report_violation` warn_once per element+category, `validate_config` once per distinct message); the remaining per-frame spam was autolayout's `Layout wrap` and `Layout overflow`, now both `warn_once` keyed on (child, parent, reason). Test: `autolayout_test` 370/370 (three frames of one violation = one line each).
 
 ### Unit F — NEW-PLUGIN candidates (explicit go-ahead required each)
 
