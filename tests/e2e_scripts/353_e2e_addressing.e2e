@@ -1,0 +1,10 @@
+goto_screen curved_text_lab
+resize 1280 720
+mouse_move 20 20
+expect_text "Curved text: grapheme-aware arc layout"
+assert_ui curved_title text="Curved text: grapheme-aware arc layout"
+assert_ui curved_reset bg=#006962
+assert_ui_text "at rest" in=curved_root text="at rest"
+expect_no_ui no_such_widget
+expect_no_text "definitely not on this screen"
+screenshot e2e_addressing
