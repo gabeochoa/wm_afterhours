@@ -7,7 +7,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 |----|----------------------------------|-------------|--------|
 | 1  | E2E addressing + command packs  | hanabi, cg, | DONE   |
 |    |                                  | wordproc    |        |
-| 2  | Tooltip config (font/pad/gap)   | WM, wordproc| S      |
+| 2  | Tooltip config (font/pad/gap)   | WM, wordproc| DONE   |
 | 3  | Public contrast-ratio helper    | cg (+WM)    | XS     |
 | 4  | Focus ring family               | hanabi, wp  | M      |
 | 5  | Small imm components            | cg, kart    | S      |

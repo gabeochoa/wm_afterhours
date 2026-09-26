@@ -58,7 +58,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load. The serializer is `vendor/afterhours/src/plugins/ui/theme_io.h`; this needs a library change.
 
-- [ ] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md.
+- [x] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md. Done: `with_tooltip_font_size` / `with_tooltip_padding` / `with_tooltip_gap` on ComponentConfig, carried through HasTooltip and TooltipState into RenderTooltip; TooltipLab has a sizes row.
 
 - [ ] Correct native pagination numbered/Previous indices and icon-row container config inheritance; see docs/AFTERHOURS_GAPS.md.
 

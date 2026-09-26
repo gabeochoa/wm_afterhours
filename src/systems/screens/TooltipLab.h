@@ -80,6 +80,38 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(theme.font_muted).with_ignore_pointer_events());
     }
     text(40, "Active case: " + active, 644, 0, 580, 44, 21, "ttl_active");
+    text(69, "Sizes: same words, caller font / padding / gap", 730, 374, 520, 30, 20);
+    struct SizeSpot {
+      const char *label;
+      const char *caption;
+      float font, pad, gap;
+      bool custom;
+    };
+    static const SizeSpot size_spots[] = {
+        {"Small tip", "font 12 / pad 4 / gap 2", 12, 4, 2, true},
+        {"Default tip", "library defaults", 0, 0, 0, false},
+        {"Large tip", "font 30 / pad 18 / gap 14", 30, 18, 14, true},
+    };
+    for (int i = 0; i < 3; ++i) {
+      const auto &spot = size_spots[i];
+      auto config = ComponentConfig{}
+          .with_label(spot.label).with_720p_size(170, 40)
+          .with_absolute_position((640 + static_cast<float>(i) * 190) * scale, 418 * scale)
+          .with_font("AtkinsonMock", pixels(19 * scale)).with_background(Theme::Usage::Primary)
+          .with_corner_radius(6 * scale)
+          .with_tooltip("Same words, different tooltip", .2f)
+          .with_debug_name("ttl_size_" + std::to_string(i));
+      if (spot.custom)
+        config.with_tooltip_font_size(pixels(spot.font * scale))
+            .with_tooltip_padding(spot.pad)
+            .with_tooltip_gap(spot.gap);
+      button(context, mk(root.ent(), 70 + i), config);
+      div(context, mk(root.ent(), 80 + i), ComponentConfig{}
+          .with_size({pixels(190 * scale), pixels(27 * scale)})
+          .with_absolute_position((640 + static_cast<float>(i) * 190) * scale, 463 * scale)
+          .with_label(spot.caption).with_font("AtkinsonMock", pixels(16 * scale))
+          .with_custom_text_color(theme.font_muted).with_ignore_pointer_events());
+    }
     div(context, mk(root.ent(), 41), at(16, 257, 420, 328)
         .with_custom_background(theme.surface).with_corner_radius(8 * scale));
     text(42, "Expected placement", 32, 269, 388, 30, 22);

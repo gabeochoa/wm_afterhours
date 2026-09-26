@@ -153,7 +153,7 @@ Numbered page i+1 is used as a zero-based index; Previous subtracts twice. `icon
 
 ### Tooltip presentation is hardcoded
 
-Font inheritance and accurate measured wrapping/placement were fixed in the default-theme pass. Caller control of font size, padding and trigger gap remains open. Border-only guides also need recognized renderability without transparent HasColor.
+Font inheritance and accurate measured wrapping/placement were fixed in the default-theme pass. Caller control of font size, padding and trigger gap is done: `with_tooltip_font_size`, `with_tooltip_padding` and `with_tooltip_gap` on ComponentConfig feed HasTooltip/TooltipState and RenderTooltip (defaults unchanged: styling font, 8 padding, 4 gap). Border-only guides also need recognized renderability without transparent HasColor.
 
 ### Cross-axis Stretch does not participate in native sizing
 
