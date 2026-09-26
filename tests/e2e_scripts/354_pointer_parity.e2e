@@ -1,0 +1,55 @@
+# Pointer parity: every button's press/release edges and both wheel axes
+# reach code that polls input directly (the PointerParityLab screen).
+goto_screen pointer_parity_lab
+resize 1280 720
+wait 0.5
+
+# Idle: nothing pressed, nothing counted, wheel at zero, no pad down.
+assert_ui_text "Left presses: 0   releases: 0" text="Left presses: 0   releases: 0"
+assert_ui_text "Right presses: 0   releases: 0" text="Right presses: 0   releases: 0"
+assert_ui_text "Middle presses: 0   releases: 0" text="Middle presses: 0   releases: 0"
+expect_no_text "DOWN"
+assert_ui_text "accumulated:  x 0.000000   y 0.000000" text="accumulated:  x 0.000000   y 0.000000"
+
+# Left click on the left pad.
+click 150 180
+wait 0.3
+assert_ui_text "Left presses: 1   releases: 1" text="Left presses: 1   releases: 1"
+assert_ui_text "Right presses: 0   releases: 0" text="Right presses: 0   releases: 0"
+assert_ui_text "Middle presses: 0   releases: 0" text="Middle presses: 0   releases: 0"
+expect_no_text "DOWN"
+
+# Right click on the right pad: the press edge that did not exist before.
+right_click 430 180
+wait 0.3
+assert_ui_text "Right presses: 1   releases: 1" text="Right presses: 1   releases: 1"
+assert_ui_text "Left presses: 1   releases: 1" text="Left presses: 1   releases: 1"
+assert_ui_text "Middle presses: 0   releases: 0" text="Middle presses: 0   releases: 0"
+expect_no_text "DOWN"
+
+# Middle click on the middle pad.
+middle_click 710 180
+wait 0.3
+assert_ui_text "Middle presses: 1   releases: 1" text="Middle presses: 1   releases: 1"
+expect_no_text "DOWN"
+
+# Horizontal wheel only.
+scroll_wheel 2.5 0
+wait 0.3
+assert_ui_text "last delta:  x 2.500000   y 0.000000" text="last delta:  x 2.500000   y 0.000000"
+assert_ui_text "accumulated:  x 2.500000   y 0.000000" text="accumulated:  x 2.500000   y 0.000000"
+
+# Vertical wheel only: totals accumulate per axis independently.
+scroll_wheel 0 -3
+wait 0.3
+assert_ui_text "last delta:  x 0.000000   y -3.000000" text="last delta:  x 0.000000   y -3.000000"
+assert_ui_text "accumulated:  x 2.500000   y -3.000000" text="accumulated:  x 2.500000   y -3.000000"
+
+# A second left click increments only the left counter.
+click 150 180
+wait 0.3
+assert_ui_text "Left presses: 2   releases: 2" text="Left presses: 2   releases: 2"
+assert_ui_text "Right presses: 1   releases: 1" text="Right presses: 1   releases: 1"
+assert_ui_text "Middle presses: 1   releases: 1" text="Middle presses: 1   releases: 1"
+
+screenshot pointer_parity

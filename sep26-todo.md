@@ -12,7 +12,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 4  | Focus ring family               | hanabi, wp  | DONE   |
 | 5  | Small imm components            | cg, kart    | DONE   |
 | 6  | Validation-log throttle         | cg, hanabi  | DONE   |
-| 7  | Pointer parity (click/wheel)    | wp, hanabi  | M      |
+| 7  | Pointer parity (click/wheel)    | wp, hanabi  | DONE*  |
 | 8  | text_area parity                | hanabi (+fh)| M      |
 | 9  | Prepared text + label inset     | WM, hanabi  | L      |
 | 10 | Virtual list variable heights   | hanabi, WM  | L      |
@@ -34,6 +34,10 @@ cg = cartographer, wp = wordproc, fh = floatinghotel.
 
 * #3 was already public (`colors::contrast_ratio` in color.h);
   closed by pinning it with `color_contrast_test`, no new code.
+* #7 covers polling parity only. Still open: hanabi #405
+  (trackpad vs wheel-detent distinction/smoothing — needs a
+  platform delta kind the backends do not expose) and #406
+  (hanabi ruled it app-side).
 
 Notes:
 - #19 is single-project but holds the intake's only CRITs
