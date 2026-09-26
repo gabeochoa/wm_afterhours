@@ -1,0 +1,22 @@
+# Prepared-text family: wrap memo per size, styled-run columns, glyph
+# coverage query (hanabi #48), per-label inset.
+goto_screen text_cache_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Text cache lab"
+
+# The coverage query's verdicts against the real Atkinson face: it has no
+# Arrows or Misc-Symbols coverage, so these draw nothing and must say so.
+expect_text "U+21B5"
+expect_text "missing"
+expect_text "U+2605"
+expect_text "U+00E9"
+expect_text "covered"
+
+# Both wrap boxes and the styled code row are on screen.
+expect_text "alpha beta gamma delta epsilon"
+expect_text "min(base * 2 ** attempt, 30000)"
+expect_text "inset 24"
+
+screenshot text_cache_lab

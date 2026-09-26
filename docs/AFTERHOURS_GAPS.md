@@ -215,6 +215,12 @@ Fixed: native checkbox marks now use drawn strokes in both renderers. A V glyph 
 
 Autolayout uses widget.font_name and spacing 1; rendering resolves weight and `1 + letter_spacing`. The assumption of a shared descriptor was wrong. Resolve actual family variant, size, spacing and wrapping once; test Dim::Text and styled/wrapped bounds against drawing. Source-confirmed; native regression still needed.
 
+### Glyph coverage answers were placeholders, and the wrap memo key was too small
+
+Fixed: raylib's `font_has_glyph` trusted the glyph array, but `LoadFontData` inserts an entry for every requested codepoint, pointing absent ones at glyph 0's blank, so `↵`/`↑`/`✓` in Atkinson reported covered while drawing nothing, and `warn_on_missing_glyphs` stayed silent for them. Both backends now record the face's cmap at load (`src/font_coverage.h`) and the query answers from it (raylib: cmap ∩ loaded set; sokol: cmap, since fontstash loads the whole face). `FontManager::has_glyph` / `missing_codepoints` expose it. Found building TextCacheLab, whose coverage panel printed "covered" next to blank glyphs.
+
+Fixed: `wrap_memo::key_for` keyed only on runs + width, so the same styled text at another font size, face or spacing was served the first wrap's line breaks; neither memo's clear was ever called, so a font reload kept stale measurements indefinitely. The key now covers face/size/spacing, entries die with `measure_memo`'s generation, and `FontManager::load_font` on an existing name invalidates both memos and the shared `TextMeasureCache`. Styled runs also take their x offsets from the joined line's measurement (`detail::text_run_offsets`) instead of summing per-run widths, which drifted a spacing at every colour boundary (hanabi #62). Tests: `text_memo_test`, `font_atlas_measure_test`; demo: TextCacheLab (WM E2E 356). Still open from this family: the full `PreparedText` redesign in docs/architecture.md, text-landing geometry (hanabi #51) and self-reported laid-out size (#286/#68).
+
 ### Atlases alone do not reduce submitted draws in the measured screens
 
 Cozy Cafe stayed at 66 draws/68 binds and Images at 59/61 after packing. Sharing a texture does not merge commands separated by render state. Attribute texture/scissor/shader/layer boundaries before coalescing; preserve painter order. Counts are driver measurements, not proof of a broken atlas API. See [performance](performance.md).

@@ -14,7 +14,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 6  | Validation-log throttle         | cg, hanabi  | DONE   |
 | 7  | Pointer parity (click/wheel)    | wp, hanabi  | DONE*  |
 | 8  | text_area parity                | hanabi (+fh)| DONE   |
-| 9  | Prepared text + label inset     | WM, hanabi  | L      |
+| 9  | Prepared text + label inset     | WM, hanabi  | DONE   |
 | 10 | Virtual list variable heights   | hanabi, WM  | L      |
 | 11 | kart VERIFYs (3)                | kart        | XS-S   |
 | 12 | Margin/Padding ctors, set. path | cg          | XS     |
@@ -38,6 +38,10 @@ cg = cartographer, wp = wordproc, fh = floatinghotel.
   (trackpad vs wheel-detent distinction/smoothing — needs a
   platform delta kind the backends do not expose) and #406
   (hanabi ruled it app-side).
+* #9 covers the cache correctness, the #48 coverage query and
+  #62 styled-run placement. Still open: the full PreparedText
+  redesign (docs/architecture.md), #51 text-landing geometry
+  and #286/#68 self-reported laid-out size.
 
 Notes:
 - #19 is single-project but holds the intake's only CRITs
