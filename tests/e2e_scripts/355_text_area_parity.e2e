@@ -1,0 +1,23 @@
+# text_area parity: placeholder, focus via the returned wrapper, and a
+# multi-line expectation written with a \n escape (hanabi #258/#259).
+goto_screen text_area_lab
+resize 1280 720
+wait 0.5
+
+# The empty composer shows its placeholder.
+expect_text "Write a reply..."
+
+# Focusing the wrapper the widget returned focuses the field.
+focus_ui composer
+wait 0.2
+type "hello"
+wait 0.2
+key SHIFT+ENTER
+wait 0.2
+type "world"
+wait 0.3
+
+# The expectation itself needs the escape: the script format is line-based.
+expect_input_text composer "hello\nworld"
+
+screenshot text_area_parity

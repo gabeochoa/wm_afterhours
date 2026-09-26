@@ -73,7 +73,7 @@ Hover and click definitions share one property track and `triggered` bit; an ina
 
 ### Text-area scrolling, focus targets and scaled auto-grow padding
 
-Idle wheel scrolling is fixed; unchanged rebuilds no longer reveal the caret. Still open: returned wrapper is not the focus target; auto-grow adds fixed 8px despite scaled padding; `text_area.h` reads line-height `.value` without resolving Size. At 1080p five 30px rows get 158px instead of 162px. Provide supported focus targeting and resolve all units, including Adaptive zoom. Floatinghotel uses pixel line heights as a workaround.
+Idle wheel scrolling is fixed; unchanged rebuilds no longer reveal the caret. The rest closed with the text_area parity pass: focusing the returned wrapper focuses the field (parent-focus acceptance, verified by E2E 355 using `focus_ui` on the wrapper); auto-grow now resolves both the line height and the h720 vertical padding at the current resolution (five 30px rows at 1080p get their 162px). Floatinghotel's pixel-line-height workaround is no longer needed.
 
 ### Bracket decorations add padding to an already padded rectangle
 
