@@ -243,7 +243,7 @@ Demand 1 (single project, ordered easy → hard):
 ### Unit E — EXT:settings / EXT:color / EXT:animation / EXT:os
 
 - [ ] EXT:settings: default settings-path override from code (cartographer); JSON comment-preserving writes — see REJECT? G6.
-- [ ] EXT:color: public contrast-ratio helper for custom widgets (cartographer; validator computes it internally — expose, don't duplicate).
+- [x] EXT:color: public contrast-ratio helper for custom widgets (cartographer; validator computes it internally — expose, don't duplicate). Stale: `colors::contrast_ratio` in `src/plugins/color.h` has been public since 2026-01 and is the same function the validator calls. Pinned by `color_contrast_test` (includes color.h alone; 21:1, symmetry, #767676 = 4.54).
 - [ ] EXT:os: OS appearance (dark-mode) query next to `os::reduced_motion_enabled` (hanabi #1/#16); window-focus/frontmost query (#28a, S/M — accept only the query, not the platform family G1).
 - [ ] EXT:ui validation: throttle/disable toggle for per-frame validation logs (cartographer); wrong layout corrected silently but warned forever (hanabi #53).
 

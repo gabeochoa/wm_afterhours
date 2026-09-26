@@ -8,7 +8,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 1  | E2E addressing + command packs  | hanabi, cg, | DONE   |
 |    |                                  | wordproc    |        |
 | 2  | Tooltip config (font/pad/gap)   | WM, wordproc| DONE   |
-| 3  | Public contrast-ratio helper    | cg (+WM)    | XS     |
+| 3  | Public contrast-ratio helper    | cg (+WM)    | DONE*  |
 | 4  | Focus ring family               | hanabi, wp  | M      |
 | 5  | Small imm components            | cg, kart    | S      |
 | 6  | Validation-log throttle         | cg, hanabi  | XS     |
@@ -31,6 +31,9 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 23 | Two view trees in one window    | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
+
+* #3 was already public (`colors::contrast_ratio` in color.h);
+  closed by pinning it with `color_contrast_test`, no new code.
 
 Notes:
 - #19 is single-project but holds the intake's only CRITs
