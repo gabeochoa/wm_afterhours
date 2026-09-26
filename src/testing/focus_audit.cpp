@@ -158,7 +158,7 @@ nlohmann::json snapshot(bool include_elements) {
     if (context->visual_focus_id != entity.id)
       continue;
     data["visual"] = describe(entity, *context);
-    auto ring = afterhours::ui::detail::focus_ring_for(*context, entity, cmp);
+    auto ring = afterhours::ui::focus_ring_for(*context, entity, cmp);
     if (!ring)
       continue;
     const float rotation = entity.has<HasUIModifiers>()
