@@ -155,6 +155,10 @@ Numbered page i+1 is used as a zero-based index; Previous subtracts twice. `icon
 
 Font inheritance and accurate measured wrapping/placement were fixed in the default-theme pass. Caller control of font size, padding and trigger gap is done: `with_tooltip_font_size`, `with_tooltip_padding` and `with_tooltip_gap` on ComponentConfig feed HasTooltip/TooltipState and RenderTooltip (defaults unchanged: styling font, 8 padding, 4 gap). Border-only guides also need recognized renderability without transparent HasColor.
 
+### A div's own label ignores the container alignment properties
+
+`align_items`/`justify_content` position a div's *children*; its own label is not a child, so `div(...).with_label(...).with_align_items(Center).with_justify_content(Center)` still draws the label at the box's left edge (vertically at its top), with no warning. The only lever is `with_alignment` (text alignment) plus padding/inset, which is undiscoverable from the container API authors naturally reach for. Found building SmallComponentsLab: pane labels sat flush against a divider line and value-pill text crowded the pill's left edge until both switched to text alignment. Either make the flex alignment properties apply to a leaf label, or have helpers that render a label (value_pill now centres its text by default) absorb the difference. Related: the per-label inset work in the hanabi #85 family.
+
 ### Cross-axis Stretch does not participate in native sizing
 
 `AlignItems::Stretch` acts only like FlexStart in positioning. `children()` explicitly requests content size; `expand()` fills independently. Define unspecified cross-axis sizing and apply it during size calculation; do not relabel content sizing as CSS auto.
