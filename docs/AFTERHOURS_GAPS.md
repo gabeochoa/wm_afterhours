@@ -25,21 +25,69 @@ direction, so RTL buttons hugged the right edge and clipped (`Confirm`,
 `Post`, `Home`). Library footgun, not a demo preference: only the Div
 default flips now. Test: `rtl_button_labels_stay_centred`.
 
-Open (library): glyphs fragment and fade at sub-1.0 UI scale. Clean at
-scale 1.0 and 1.25; at 0.9 small text starts to break up, at 0.7 lines
-are sliced, at 0.5 some labels are barely fragments. Not pseudo-related
-and not lab-specific — the buttons screen at 900×600 shows the same.
-Suspect the raylib atlas path (fonts rasterize at 96, drawn far below
-that); needs a backend repro outside the lab before any fix.
+Fixed (library): glyphs fragmented and faded at sub-1.0 UI scale. Clean
+at scale 1.0 and 1.25; at 0.9 small text broke up, at 0.5 some labels
+were barely fragments — on every screen, not just the lab. Cause: the
+raylib font loaders set `TEXTURE_FILTER_BILINEAR` and never generated
+mipmaps, so a glyph rasterized at 96px and drawn at 10px was a ~10x
+downscale sampled from four texels, and thin strokes fell between
+them. `prepare_font_texture` (backends/raylib/font_helper.h) now
+generates mipmaps and selects trilinear filtering (bilinear fallback
+when mipmaps fail) at all three load sites. Verified by recapture:
+the lab at 640×360 and the buttons screen at 900×600 are fully
+legible; the buttons screen's apparent line overlaps were the same
+fragmentation.
 
-Open (library): no per-label opt-out from the pseudo transform. Field
-values are exempt, but once user data becomes a label it transforms: a
-posted composer message doubles/reverses, avatar initials (`GO` -> `GO
-GO`, overflowing the circle) and the notification badge (`3` -> `3 3`)
-transform too. Real pseudo-localization only stresses localizable copy;
-a `with_pseudo_locale_exempt()`-style flag (or reusing the unit-motion
-exemption) is the missing piece. Demo-side until then: initials and
-counts are data, not copy.
+Fixed (library): doubled pseudo-locale text was not supported, only
+spilled. `TextOverflow::Clip` is documented as "text is clipped at
+container boundary" and is the default, but neither renderer scissored
+a label to its own box -- only ancestor scroll/clip rects were
+honoured. A doubled label therefore drew straight over its neighbours:
+nav labels ran across the top bar, the profile name spilled out of its
+button, initials spilled out of their circle, sidebar rows ran under
+the feed, and a counts label was cut by the scroll container instead
+of its own box. Both renderers now scissor a label's draw to its box,
+intersected with the ancestor clip and with that clip restored
+afterwards (rotated labels exempt: an axis-aligned scissor would cut
+their corners). Follow-up from a second screenshot: the clip sliced
+wrapped lines mid-glyph at the box's bottom edge, so wrapped/multiline
+draws (both renderers, plain and styled runs) now drop a line that
+does not fully fit instead of drawing it, and the lab's single-line
+controls and labels use `TextOverflow::Ellipsis`, so truncation reads
+as `Confirm Con...` rather than a sliced glyph. An earlier pass
+instead exempted the lab's data labels from the transform; that was
+reverted by request -- everything doubles, and is supported. Tests:
+`label_clip_test` (own-box scissor, ancestor restore, line-drop),
+E2E 358 (posting in DoubleWords mode asserts the new post doubles
+like every other label).
+
+Also added (library, unused by the lab): a per-label opt-out,
+`ComponentConfig::with_pseudo_locale_exempt()`, skipping the
+transform, the span transform and RTL mirroring for one component
+(same treatment as the unit-motion exemption, including the config
+merge). Test: `exempt_labels_skip_the_transform_and_mirroring`.
+
+Fixed (library): RTL mirroring now swaps layout order, not just
+text. Flow rows reversed and padding swapped, but an absolutely
+positioned element kept its LTR anchor, so whole columns never moved
+-- real RTL interfaces (the user's Facebook-in-Arabic screenshots)
+mirror the page: nav column and sponsored column trade sides.
+Autolayout now anchors an absolute child from the other side of its
+parent's content box when the child participates in mirroring
+(`UIComponent::rtl_mirrored`, set in apply_layout from the same
+predicate as the padding swap; exempt components keep their anchor).
+Per-level mirroring composes into an exact whole-window mirror --
+verified by pixel measurement (frame 32..1259 -> 20..1247) and in the
+lab: nav sidebar stands on the right, requests/contacts on the left,
+composer Post button on the left, profile cluster on the left. One
+demo fix fell out: the brand label pinned `TextAlignment::Left`, so
+its text sat at the mirrored box's left edge under the search field;
+unpinned, it flips with the box. Test:
+`rtl_mirroring_moves_absolute_children_to_the_other_side`.
+
+Fixed (demo): the doubled `Request confirmed` status wrapped to two
+lines and crowded the next request row. It now uses
+`TextOverflow::Ellipsis`, so it stays on its line at any length.
 
 By design, not bugs: fixed-size buttons and rows clip or spill doubled
 copy (that is the stress working), right-sidebar avatars and the

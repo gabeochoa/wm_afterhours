@@ -22,6 +22,16 @@ expect_text "Maya Chen Maya Chen"
 expect_text "wants in. We finally"
 expect_text "Friend requests Friend requests"
 
+# Posting in the fake language works too: the new post doubles like
+# every other label and lands at the top of the feed.
+click_ui pl_composer
+wait 0.2
+type "Shipping the garden photos tonight"
+wait 0.3
+click_ui pl_post
+wait 0.4
+expect_text "Shipping the garden photos tonight Shipping the garden photos tonight"
+
 click_ui pl_rtl
 wait 0.4
 expect_text "Chen Maya"

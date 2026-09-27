@@ -90,7 +90,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
       return button(context, mk(parent, id), abs(x, y, w, h).with_label(label)
           .with_font("AtkinsonMock", pixels(17 * scale)).with_custom_background(bg)
           .with_custom_text_color(fg).with_corner_radius(6 * scale)
-          .with_debug_name(debug));
+          .with_text_overflow(TextOverflow::Ellipsis).with_debug_name(debug));
     };
 
     // No image assets in the lab: people and pictures are shapes,
@@ -126,7 +126,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(0, 0).with_label(initials(name))
           .with_font("AtkinsonMockBold", pixels(size * 0.4f * scale))
           .with_custom_text_color(afterhours::Color{16, 21, 31, 255})
-          .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+          .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Ellipsis)
+          .with_ignore_pointer_events());
     };
     auto avatar_flow = [&](afterhours::Entity &parent, int id, float size,
                            const std::string &name) {
@@ -139,7 +140,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(0, 0).with_label(initials(name))
           .with_font("AtkinsonMockBold", pixels(size * 0.4f * scale))
           .with_custom_text_color(afterhours::Color{16, 21, 31, 255})
-          .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+          .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Ellipsis)
+          .with_ignore_pointer_events());
     };
     auto btn_flow = [&](int id, const std::string &label, float w, float h,
                         afterhours::Color bg, afterhours::Color fg,
@@ -148,7 +150,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_size({pixels(w * scale), pixels(h * scale)}).with_label(label)
           .with_font("AtkinsonMock", pixels(17 * scale)).with_custom_background(bg)
           .with_custom_text_color(fg).with_corner_radius(6 * scale)
-          .with_debug_name(debug));
+          .with_text_overflow(TextOverflow::Ellipsis).with_debug_name(debug));
     };
 
     text(0, "Pseudo-locale lab", 16, 0, 500, 36, 26, ink, true);
@@ -159,7 +161,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
               .with_font("AtkinsonMock", pixels(16 * scale))
               .with_custom_background(active ? brand : panel_hi)
               .with_custom_text_color(active ? afterhours::Color{10, 16, 28, 255} : ink)
-              .with_corner_radius(6 * scale).with_debug_name(debug)))
+              .with_corner_radius(6 * scale).with_text_overflow(TextOverflow::Ellipsis)
+              .with_debug_name(debug)))
         mode = want;
     };
     mode_btn(2, "Off", 16, PseudoLocale::None, "pl_off");
@@ -178,7 +181,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background(panel).with_corner_radius(10 * scale));
     div(context, mk(root.ent(), 12), abs(40, 104, 170, 32).with_label("friendface")
           .with_font("AtkinsonMockBold", pixels(24 * scale)).with_custom_text_color(brand)
-          .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
+          .with_text_overflow(TextOverflow::Ellipsis)
+          .with_ignore_pointer_events());
     auto search = text_input(context, mk(bar.ent(), 13), search_text,
         ComponentConfig{}.with_size({pixels(230 * scale), pixels(36 * scale)})
             .with_absolute_position(180 * scale, 9 * scale)
@@ -198,7 +202,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         .with_corner_radius(10 * scale).with_label("3")
         .with_font("AtkinsonMock", pixels(12 * scale))
         .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-        .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+        .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Ellipsis)
+        .with_ignore_pointer_events());
     btn(20, "Gabe", 1176, 9, 44, 36, brand, afterhours::Color{10, 16, 28, 255},
         "pl_profile", bar.ent());
 
@@ -213,14 +218,14 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_font(bold ? "AtkinsonMockBold" : "AtkinsonMock", pixels(17 * scale))
           .with_custom_text_color(color)
           .with_padding(Padding{.left = pixels(12 * scale)})
-          .with_corner_radius(6 * scale));
+          .with_corner_radius(6 * scale).with_text_overflow(TextOverflow::Ellipsis));
     };
     avatar(s, 61, 2, 3, 32, "Gabe Ochoa");
     div(context, mk(s, 62), ComponentConfig{}
         .with_size({pixels(180 * scale), pixels(26 * scale)})
         .with_absolute_position(44 * scale, 6 * scale).with_label("Gabe Ochoa")
         .with_font("AtkinsonMockBold", pixels(17 * scale)).with_custom_text_color(ink)
-        .with_ignore_pointer_events());
+        .with_text_overflow(TextOverflow::Ellipsis).with_ignore_pointer_events());
     const char *items[] = {"Friends", "Memories", "Saved items", "Groups",
                            "Watch later", "Feeds", "Events", "Birthdays"};
     for (int i = 0; i < 8; i++)
@@ -243,7 +248,12 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
       text(q.id + 100, q.name, 1000, ry, 220, 24, 16, ink, true);
       text(q.id + 200, q.mutual, 1000, ry + 24, 220, 22, 14, muted);
       if (confirmed.count(q.id)) {
-        text(q.id + 300, "Request confirmed", 1000, ry + 46, 220, 24, 14, green);
+        div(context, mk(root.ent(), q.id + 300), abs(1000, ry + 46, 220, 24)
+            .with_label("Request confirmed")
+            .with_font("AtkinsonMock", pixels(14 * scale))
+            .with_custom_text_color(green)
+            .with_text_overflow(TextOverflow::Ellipsis)
+            .with_ignore_pointer_events());
       } else {
         if (btn(q.id + 1, "Confirm", 52, ry + 46 - 162, 100, 28, brand,
                 afterhours::Color{10, 16, 28, 255},
@@ -271,7 +281,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_size({pixels(240 * scale), pixels(26 * scale)})
           .with_label(contacts[i])
           .with_font("AtkinsonMock", pixels(16 * scale)).with_custom_text_color(ink)
-          .with_ignore_pointer_events());
+          .with_text_overflow(TextOverflow::Ellipsis).with_ignore_pointer_events());
     }
     auto sponsored = div(context, mk(r, 96), abs(0, 476, 280, 52)
         .with_custom_background(panel).with_corner_radius(8 * scale));
@@ -321,7 +331,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background(afterhours::Color{12, 17, 26, 190})
           .with_label(story_names[i])
           .with_font("AtkinsonMock", pixels(14 * scale)).with_custom_text_color(ink)
-          .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+          .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Ellipsis)
+          .with_ignore_pointer_events());
     }
     auto composer = div(context, mk(fd, 70), ComponentConfig{}
         .with_size({pixels(600 * scale), pixels(108 * scale)})
@@ -350,7 +361,8 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         .with_absolute_position(16 * scale, 66 * scale)
         .with_label("Live video      Photo or video      Feeling or activity")
         .with_font("AtkinsonMock", pixels(15 * scale)).with_custom_text_color(muted)
-        .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+        .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Ellipsis)
+        .with_ignore_pointer_events());
 
     int pid = 200;
     for (const auto &post : feed()) {
@@ -390,13 +402,14 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_size({pixels(200 * scale), pixels(22 * scale)})
           .with_label(fmt::format("{} likes", post.likes + (is_liked ? 1 : 0)))
           .with_font("AtkinsonMock", pixels(14 * scale)).with_custom_text_color(muted)
-          .with_ignore_pointer_events());
+          .with_text_overflow(TextOverflow::Ellipsis).with_ignore_pointer_events());
       spacer(context, mk(counts.ent(), 1));
       div(context, mk(counts.ent(), 2), ComponentConfig{}
           .with_size({pixels(260 * scale), pixels(22 * scale)})
           .with_label(fmt::format("{} comments \u00b7 {} shares", post.comments, post.shares))
           .with_font("AtkinsonMock", pixels(14 * scale)).with_custom_text_color(muted)
-          .with_alignment(TextAlignment::Right).with_ignore_pointer_events());
+          .with_alignment(TextAlignment::Right).with_text_overflow(TextOverflow::Ellipsis)
+          .with_ignore_pointer_events());
       const float bar_y = 88.f + text_h;
       auto bar = hstack(context, mk(c, pid + 6), ComponentConfig{}
           .with_size({pixels(572 * scale), pixels(36 * scale)})

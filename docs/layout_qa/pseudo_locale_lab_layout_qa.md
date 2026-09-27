@@ -9,16 +9,18 @@ control captures: buttons screen at 900×600, lab at 1152×648, 1024×576, 640×
 
 ### 1. Glyphs fragment and fade at sub-1.0 UI scale
 **Type:** overflow (rendering)
-**Severity:** CRITICAL
+**Severity:** CRITICAL — fixed after this audit (see docs/AFTERHOURS_GAPS.md)
 **Screenshot:** plqa_lab_640.png, plqa_lab_1024.png, plqa_buttons_900.png
 **Detail:** At scale 1.0 and 1.25 text is clean. At 0.9 small text (14px and
 under) starts to break up; at ~0.7 sidebar rows and post bodies are sliced
 mid-glyph; at 0.5 some labels are faint fragments (`Friends`, `Memories`
 barely render). Reproduces on the unrelated buttons screen at 900×600, so it
 is a global font-rendering issue, not this screen and not pseudo-locale.
-**Suggested fix:** Library/backend investigation — fonts rasterize at 96px
-(`src/font_config.h`) and are drawn far below that via the raylib atlas path.
-Recorded in docs/AFTERHOURS_GAPS.md; not fixed in this pass.
+**Root cause (found in the fix pass):** the raylib font loaders set bilinear
+filtering and never generated mipmaps, so the 96px atlas downscaled ~10x
+from four texels per pixel. Fixed with mipmaps + trilinear filtering in
+vendor `backends/raylib/font_helper.h`; recaptures at 640×360 and 900×600
+are fully legible.
 
 ### 2. RTL button labels hugged the right edge and clipped
 **Type:** overflow
@@ -32,15 +34,21 @@ should flip. Fixed in vendor `component_init.h` (`overwrite_defaults`),
 test `rtl_button_labels_stay_centred`; after-fix capture shows all button
 labels centred in RTL.
 
-### 3. User data transforms once it becomes a label
+### 3. Doubled labels spill out of their boxes
 **Type:** overlap / overflow
-**Severity:** MEDIUM
+**Severity:** MEDIUM — fixed after this audit (own-box label clipping)
 **Screenshot:** plqa_double_posted.png, plqa_double_1280.png
-**Detail:** A posted composer message renders doubled/reversed like UI copy.
-Avatar initials double (`GO GO`, `MC M…`) and spill out of their circles;
-the alerts badge `3` becomes `3 3`. There is no per-label opt-out from the
-pseudo transform (field values are exempt; labels are not). Library gap,
-recorded in docs/AFTERHOURS_GAPS.md.
+**Detail:** Doubled labels spilled out of their boxes over neighbours: nav
+labels ran across the top bar, initials spilled out of their circles,
+sidebar rows ran under the feed, the badge `3 3` overflowed its circle.
+Root cause was library-level: `TextOverflow::Clip` ("clipped at container
+boundary", the default) was never applied to a label's own box -- only
+ancestor clips were honoured. Fixed in both renderers: a label's draw is
+scissored to its box, intersected with the ancestor clip, which is
+restored afterwards (rotated labels exempt). Recaptures show every
+doubled label truncating at its own bounds. An exemption-based pass was
+tried and reverted by request: everything still doubles -- it is
+supported now. Test: vendor `label_clip_test`.
 
 ### 4. "Your shortcuts" heading indented 12px from its rows
 **Type:** bounds (alignment)
@@ -53,12 +61,13 @@ recapture shows one left edge.
 
 ### 5. Doubled "Request confirmed" wraps into the next request row's space
 **Type:** overlap
-**Severity:** LOW
+**Severity:** LOW — fixed after this audit (status now uses Ellipsis)
 **Screenshot:** plqa_double_posted.png
 **Detail:** The status line is a fixed 220×24 box at a fixed y; doubled it
 wraps to two lines and its second line sits ~2px (estimated) above the next
 request's avatar. Demo-level: the row pitch (76) has no room for a two-line
-status. Left as visible stress; fixing means taller request rows in the demo.
+status. Fixed after this audit: the status uses `TextOverflow::Ellipsis`
+and stays on one line (`Request confirmed Request confirm…`).
 
 ## By design (checked, not issues)
 
