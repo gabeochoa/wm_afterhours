@@ -16,7 +16,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 8  | text_area parity                | hanabi (+fh)| DONE   |
 | 9  | Prepared text + label inset     | WM, hanabi  | DONE   |
 | 10 | Virtual list variable heights   | hanabi, WM  | DONE   |
-| 11 | kart VERIFYs (3)                | kart        | XS-S   |
+| 11 | kart VERIFYs (3) — DONE 2026-09-27: #1 measurement collapse already fixed; `load_font_for_string` gained the missing headless atlas fallback (window-gated). #2 confirmed: both translates resolved against screen height — fixed per-axis, runtime assertion in `ancestor_transform_test`. #3 reproduced: toggle button height (label + theme padding) overflowed the checkbox row's height intent — toggle pinned to the intent, warning gone                | kart        | XS-S   |
 | 12 | Margin/Padding ctors, set. path | cg          | XS     |
 | 13 | OS appearance query             | hanabi      | S      |
 | 14 | Rendering-nits batch (14)       | hanabi      | S      |
