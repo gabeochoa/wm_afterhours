@@ -2,53 +2,42 @@
 
 Demand = distinct projects asking. Sorted by demand, easiest
 first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
+Items 1–12 of the original ranking (E2E addressing, tooltip config,
+contrast helper, focus ring family, small imm components, validation
+throttle, pointer parity, text_area parity, prepared text, virtual
+list, kart VERIFYs, Margin/Padding ctors + settings-path override)
+are done; their records live in todo.md.
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | E2E addressing + command packs  | hanabi, cg, | DONE   |
-|    |                                  | wordproc    |        |
-| 2  | Tooltip config (font/pad/gap)   | WM, wordproc| DONE   |
-| 3  | Public contrast-ratio helper    | cg (+WM)    | DONE*  |
-| 4  | Focus ring family               | hanabi, wp  | DONE   |
-| 5  | Small imm components            | cg, kart    | DONE   |
-| 6  | Validation-log throttle         | cg, hanabi  | DONE   |
-| 7  | Pointer parity (click/wheel)    | wp, hanabi  | DONE*  |
-| 8  | text_area parity                | hanabi (+fh)| DONE   |
-| 9  | Prepared text + label inset     | WM, hanabi  | DONE   |
-| 10 | Virtual list variable heights   | hanabi, WM  | DONE   |
-| 11 | kart VERIFYs (3) — DONE 2026-09-27: #1 measurement collapse already fixed; `load_font_for_string` gained the missing headless atlas fallback (window-gated). #2 confirmed: both translates resolved against screen height — fixed per-axis, runtime assertion in `ancestor_transform_test`. #3 reproduced: toggle button height (label + theme padding) overflowed the checkbox row's height intent — toggle pinned to the intent, warning gone                | kart        | XS-S   |
-| 12 | Margin/Padding ctors, set. path | cg          | XS     |
-| 13 | OS appearance query             | hanabi      | S      |
-| 14 | Rendering-nits batch (14)       | hanabi      | S      |
-| 15 | #374 sokol resize abort         | hanabi      | M      |
-| 16 | #375 focus border top edge      | hanabi      | M      |
-| 17 | Widget-lifetime remainder       | hanabi      | M      |
-| 18 | Text-editing action surface     | hanabi      | M      |
-| 19 | Frame/host-loop family          | hanabi      | L      |
-| 20 | context_menu plugin             | wordproc    | M/L    |
-| 21 | Colour input                    | hanabi      | L      |
-| 22 | accessibility plugin            | hanabi      | L      |
-| 23 | Two view trees in one window    | hanabi      | XL     |
+| 1  | OS appearance query              | hanabi      | S      |
+| 2  | Rendering-nits batch (14)        | hanabi      | S      |
+| 3  | #374 sokol resize abort          | hanabi      | M      |
+| 4  | #375 focus border top edge       | hanabi      | M      |
+| 5  | Widget-lifetime remainder        | hanabi      | M      |
+| 6  | Text-editing action surface      | hanabi      | M      |
+| 7  | Frame/host-loop family           | hanabi      | L      |
+| 8  | context_menu plugin              | wordproc    | M/L    |
+| 9  | Colour input                     | hanabi      | L      |
+| 10 | accessibility plugin             | hanabi      | L      |
+| 11 | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 
-* #3 was already public (`colors::contrast_ratio` in color.h);
-  closed by pinning it with `color_contrast_test`, no new code.
-* #7 covers polling parity only. Still open: hanabi #405
+Still open from closed items:
+* Pointer parity covered polling parity only. hanabi #405
   (trackpad vs wheel-detent distinction/smoothing — needs a
   platform delta kind the backends do not expose) and #406
   (hanabi ruled it app-side).
-* #9 covers the cache correctness, the #48 coverage query and
-  #62 styled-run placement. Still open: the full PreparedText
-  redesign (docs/architecture.md), #51 text-landing geometry
-  and #286/#68 self-reported laid-out size.
+* Prepared text covered the cache correctness, the #48 coverage
+  query and #62 styled-run placement. Still open: the full
+  PreparedText redesign (docs/architecture.md), #51 text-landing
+  geometry and #286/#68 self-reported laid-out size.
 
 Notes:
-- #19 is single-project but holds the intake's only CRITs
+- #7 is single-project but holds the intake's only CRITs
   (#542 request-frame, #546 frame-wake); severity would put
-  it at #3.
-- #9 has the largest raw volume (~28 hanabi headings plus
-  WM line 57); weighted by headings it would be #1.
+  it at #3 of the original ranking.
 - REJECT? list (todo.md Unit G) is not in this ranking:
   G1 OS-integration family, G2 table component, G3 rich-text
   subsystem, G4 app E2E verbs, G5 negative results, G6
