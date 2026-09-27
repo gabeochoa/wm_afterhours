@@ -56,6 +56,12 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/architecture.md) before implementation.
 
+- [x] Pseudo-localization for layout stress: `UIStylingDefaults::set_pseudo_locale(PseudoLocale::DoubleWords | RtlWords | None)` rebuilds every label (and tooltip, and styled spans) in the fake language where labels are built, so measurement and wrapping stress with it; RTL also flips unpinned label alignment to the right. Field values are user data and are not transformed; per-unit-motion labels are exempt (their spans index the original string). Tests: `pseudo_locale_test` 33/33; demo: PseudoLocaleLab (WM E2E 358). RTL also mirrors layout: horizontal padding and margin swap sides in `apply_layout`, and row containers place flow children in reverse (`UIComponent::flex_row_reversed`), so a label sits on the other side of its button. Not mirrored: absolute positions (a mirrored absolute layout is a different feature; rows and flow are the RTL contract).
+
+- [ ] Cmd+F find for tools: a library find affordance (shortcut opens a find field, next/previous match navigation) that a tool can attach to its searchable surface instead of every consumer wiring Cmd+F, focus and match cycling itself. Scope to pin down with the requesting tool: which surfaces are searchable (label text, list rows, document text) and who owns the find field's chrome.
+
+- [ ] `hidden=until-found` semantics for folds: content inside a collapsed fold stays searchable, and a find match inside it expands the fold to reveal the match (the HTML `hidden=until-found` + `beforematch` behaviour). Needs the fold/collapsible components to report their hidden text to the find search above and an expand-on-match path that does not fight the user's manual fold state afterwards.
+
 - [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load. The serializer is `vendor/afterhours/src/plugins/ui/theme_io.h`; this needs a library change.
 
 - [x] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md. Done: `with_tooltip_font_size` / `with_tooltip_padding` / `with_tooltip_gap` on ComponentConfig, carried through HasTooltip and TooltipState into RenderTooltip; TooltipLab has a sizes row.

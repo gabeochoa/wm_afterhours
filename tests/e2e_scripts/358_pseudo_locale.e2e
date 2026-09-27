@@ -1,0 +1,36 @@
+# Pseudo-localization over a fake social app: every label rebuilds in
+# the chosen fake language, and the app still works in each.
+goto_screen pseudo_locale_lab
+resize 1280 720
+wait 0.5
+
+expect_text "friendface"
+expect_text "Maya Chen"
+expect_text "community garden"
+expect_text "Friend requests"
+expect_text "Contacts"
+
+# Likes work in the shipping language.
+click_ui pl_like_1
+wait 0.3
+expect_text "Liked"
+expect_text "49 likes"
+
+click_ui pl_double
+wait 0.4
+expect_text "Maya Chen Maya Chen"
+expect_text "wants in. We finally"
+expect_text "Friend requests Friend requests"
+
+click_ui pl_rtl
+wait 0.4
+expect_text "Chen Maya"
+expect_text "in. wants block"
+expect_text "requests Friend"
+
+click_ui pl_off
+wait 0.4
+expect_text "Maya Chen"
+expect_text "Friend requests"
+
+screenshot pseudo_locale_lab
