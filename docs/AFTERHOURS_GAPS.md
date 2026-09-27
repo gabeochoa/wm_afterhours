@@ -221,6 +221,12 @@ Fixed: raylib's `font_has_glyph` trusted the glyph array, but `LoadFontData` ins
 
 Fixed: `wrap_memo::key_for` keyed only on runs + width, so the same styled text at another font size, face or spacing was served the first wrap's line breaks; neither memo's clear was ever called, so a font reload kept stale measurements indefinitely. The key now covers face/size/spacing, entries die with `measure_memo`'s generation, and `FontManager::load_font` on an existing name invalidates both memos and the shared `TextMeasureCache`. Styled runs also take their x offsets from the joined line's measurement (`detail::text_run_offsets`) instead of summing per-run widths, which drifted a spacing at every colour boundary (hanabi #62). Tests: `text_memo_test`, `font_atlas_measure_test`; demo: TextCacheLab (WM E2E 356). Still open from this family: the full `PreparedText` redesign in docs/architecture.md, text-landing geometry (hanabi #51) and self-reported laid-out size (#286/#68).
 
+### Virtual list re-measured every row, and an unbuilt frame reset scroll offsets
+
+Fixed: the measured `virtual_list` summed every row's height on every build, and `height_of` is the expensive call (it wraps text). Heights and their prefix now live on the list entity (`HasVirtualListIndex`); `height_of` is asked once per row until `invalidate_virtual_rows` marks a range, and `prepend_virtual_rows` holds the viewport on the same row when older content arrives above it. `HasScrollView` also gained `scroll_to_bottom` / `scroll_to_top` (plus the left/right pair), which move offset, target and last_eased in one call.
+
+Fixed (hanabi #163): `MeasureScrollViews` measured every scroll view every frame, including ones whose screen was not built that frame. Children are cleared for all widgets each frame, so the unbuilt view measured as empty and the clamp reset its offset to the top. The measure now skips a view that has no children and a prior measurement. Tradeoff, recorded: a view emptied while visible keeps its offset until it has children again. Tests: `virtual_list_test`, `scroll_anchor_test`; demo: VirtualListHeightsLab (WM E2E 357).
+
 ### Atlases alone do not reduce submitted draws in the measured screens
 
 Cozy Cafe stayed at 66 draws/68 binds and Images at 59/61 after packing. Sharing a texture does not merge commands separated by render state. Attribute texture/scissor/shader/layer boundaries before coalescing; preserve painter order. Counts are driver measurements, not proof of a broken atlas API. See [performance](performance.md).

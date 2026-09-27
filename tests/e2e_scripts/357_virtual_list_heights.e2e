@@ -1,0 +1,22 @@
+# Variable-height virtual list: retained index measures once, prepend
+# holds the viewport, scroll_to_end is one call.
+goto_screen virtual_list_heights_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Virtual list / variable heights"
+expect_text "300 rows"
+# After the first builds the index is warm: a settled frame measures none.
+expect_text "measured 0 rows last frame"
+
+# Prepending grows the list and the count follows in the same build.
+click_ui vlh_prepend
+wait 0.4
+expect_text "320 rows"
+
+# End is one call: offset, target and eased position land together.
+click_ui vlh_end
+wait 0.4
+expect_text "msg 1299"
+
+screenshot virtual_list_heights

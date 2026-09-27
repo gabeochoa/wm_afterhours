@@ -15,7 +15,7 @@ first within a tier. Full detail: todo.md "Gap intake 2026-09-23".
 | 7  | Pointer parity (click/wheel)    | wp, hanabi  | DONE*  |
 | 8  | text_area parity                | hanabi (+fh)| DONE   |
 | 9  | Prepared text + label inset     | WM, hanabi  | DONE   |
-| 10 | Virtual list variable heights   | hanabi, WM  | L      |
+| 10 | Virtual list variable heights   | hanabi, WM  | DONE   |
 | 11 | kart VERIFYs (3)                | kart        | XS-S   |
 | 12 | Margin/Padding ctors, set. path | cg          | XS     |
 | 13 | OS appearance query             | hanabi      | S      |
