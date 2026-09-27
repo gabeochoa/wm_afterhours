@@ -225,7 +225,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
                            "Watch later", "Feeds", "Events", "Birthdays"};
     for (int i = 0; i < 8; i++)
       side_row(23 + i, 46.f + i * 42.f, items[i]);
-    text(31, "Your shortcuts", 44, 552, 220, 26, 15, muted, true);
+    text(31, "Your shortcuts", 32, 552, 220, 26, 15, muted, true);
     side_row(32, 422, "Weekend Hikers");
     side_row(33, 464, "Analog Photography");
 

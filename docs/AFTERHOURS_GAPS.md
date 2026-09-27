@@ -13,6 +13,40 @@ Scrollbars now draw after their layer's content, before higher layers, respectin
 
 Try **Tools → scrollbar_layer_repro → Open dialog**: the bar stays behind the dialog, background scrolling is blocked, and scrolling resumes after closing.
 
+## Pseudo-locale screenshot audit, 2026-09-27
+
+Screenshot pass over PseudoLocaleLab (Off / DoubleWords / RtlWords ×
+1280×720, 900×600, 1600×900, scrolled feed, composer post + confirm).
+Full report: [layout_qa/pseudo_locale_lab_layout_qa.md](layout_qa/pseudo_locale_lab_layout_qa.md).
+
+Fixed: the RtlWords default alignment flipped every unpinned label to
+Right, including buttons — a centred control label is centred in any
+direction, so RTL buttons hugged the right edge and clipped (`Confirm`,
+`Post`, `Home`). Library footgun, not a demo preference: only the Div
+default flips now. Test: `rtl_button_labels_stay_centred`.
+
+Open (library): glyphs fragment and fade at sub-1.0 UI scale. Clean at
+scale 1.0 and 1.25; at 0.9 small text starts to break up, at 0.7 lines
+are sliced, at 0.5 some labels are barely fragments. Not pseudo-related
+and not lab-specific — the buttons screen at 900×600 shows the same.
+Suspect the raylib atlas path (fonts rasterize at 96, drawn far below
+that); needs a backend repro outside the lab before any fix.
+
+Open (library): no per-label opt-out from the pseudo transform. Field
+values are exempt, but once user data becomes a label it transforms: a
+posted composer message doubles/reverses, avatar initials (`GO` -> `GO
+GO`, overflowing the circle) and the notification badge (`3` -> `3 3`)
+transform too. Real pseudo-localization only stresses localizable copy;
+a `with_pseudo_locale_exempt()`-style flag (or reusing the unit-motion
+exemption) is the missing piece. Demo-side until then: initials and
+counts are data, not copy.
+
+By design, not bugs: fixed-size buttons and rows clip or spill doubled
+copy (that is the stress working), right-sidebar avatars and the
+Confirm/Delete pair keep their absolute positions in RTL (absolutes are
+not mirrored; flow rows are), and the search/composer placeholders stay
+untransformed (field text is exempt).
+
 ## Consumer gap refresh, 2026-09-13
 
 Compared with afterhours `d90db15`; source review only. UP-13/14/15/16 later landed.
