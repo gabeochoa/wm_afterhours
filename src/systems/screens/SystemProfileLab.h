@@ -107,7 +107,12 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     for (const auto child_id : controls.get<UIComponent>().children) {
       auto &control = UICollectionHolder::getEntityForIDEnforce(child_id);
       const size_t index = control_index++;
-      if (index >= control_x.size()) continue;
+      if (index >= control_x.size()) {
+        // Controls beyond the curated slots (e.g. Clear selection) stay in
+        // flow and land on top of the first slot, so hide them instead.
+        control.get<UIComponent>().should_hide = true;
+        continue;
+      }
       place(control, control_x[index], 0, control_w[index], 44);
       style_text(control, 20, ink);
       control.get<HasLabel>().text_x_offset = 0;
