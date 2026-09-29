@@ -10,20 +10,28 @@ OS appearance query,
 rendering-nits batch, #374 sokol
 resize abort, #375 focus border top edge)
 are done; their records live in todo.md.
+The widget-lifetime parent cleanup is also
+done (creation-time parent->children link,
+subtree retired in one sweep); its remainders
+are listed below.
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | Widget-lifetime remainder        | hanabi      | M      |
-| 2  | Text-editing action surface      | hanabi      | M      |
-| 3  | Frame/host-loop family           | hanabi      | L      |
-| 4  | context_menu plugin              | wordproc    | M/L    |
-| 5  | Colour input                     | hanabi      | L      |
-| 6  | accessibility plugin             | hanabi      | L      |
-| 7  | Two view trees in one window     | hanabi      | XL     |
+| 1  | Text-editing action surface      | hanabi      | M      |
+| 2  | Frame/host-loop family           | hanabi      | L      |
+| 3  | context_menu plugin              | wordproc    | M/L    |
+| 4  | Colour input                     | hanabi      | L      |
+| 5  | accessibility plugin             | hanabi      | L      |
+| 6  | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 
 Still open from closed items:
+* Widget lifetime: exit animations still have
+  nothing to animate (no motion-aware hold on
+  the retirement sweep), and the #171 family's
+  consumer-visibility half (#146, #160, #162,
+  #163, #525 specifics) is untouched.
 * Pointer parity covered polling parity only. hanabi #405
   (trackpad vs wheel-detent distinction/smoothing — needs a
   platform delta kind the backends do not expose) and #406
