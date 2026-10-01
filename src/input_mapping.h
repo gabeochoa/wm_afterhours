@@ -33,6 +33,8 @@ enum class InputAction {
   TextWordRight,
   TextDeleteWordBack,
   TextDeleteWordForward,
+  TextDeleteLineBack,
+  TextDeleteLineForward,
   TextUndo,
   TextRedo,
   ToggleProfiler,
@@ -117,12 +119,17 @@ inline auto get_mapping() {
       raylib::KEY_DELETE,
   };
 
+  // Full type, not the KC alias: the alias is declared below with the
+  // chord-based mappings.
+  using KeyChord = afterhours::input::KeyChord;
   mapping[to_int(InputAction::TextHome)] = {
       raylib::KEY_HOME,
+      KeyChord{raylib::KEY_LEFT, KeyChord::MOD_SUPER},
   };
 
   mapping[to_int(InputAction::TextEnd)] = {
       raylib::KEY_END,
+      KeyChord{raylib::KEY_RIGHT, KeyChord::MOD_SUPER},
   };
 
   using KC = afterhours::input::KeyChord;
@@ -167,6 +174,15 @@ inline auto get_mapping() {
   mapping[to_int(InputAction::TextDeleteWordForward)] = {
       KC{raylib::KEY_DELETE, KC::MOD_CTRL},
       KC{raylib::KEY_DELETE, KC::MOD_ALT},
+  };
+
+  // Line-level deletion (macOS conventions: Cmd+Backspace, Ctrl+K)
+  mapping[to_int(InputAction::TextDeleteLineBack)] = {
+      KC{raylib::KEY_BACKSPACE, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextDeleteLineForward)] = {
+      KC{raylib::KEY_K, KC::MOD_CTRL},
   };
 
   // Undo/Redo

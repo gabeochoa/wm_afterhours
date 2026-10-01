@@ -1,0 +1,66 @@
+# Text line-level editing (hanabi #257/#264)
+# Cmd+Backspace deletes to the start of the line, Ctrl+K to the end of it.
+# The library default keymap binds the same chords per platform; WM's own
+# mapping carries them too, which is what this exercises.
+
+goto_screen text_input
+wait 0.5
+
+# --- single-line field ---
+focus_element Username_input
+wait 0.2
+type "hello world"
+wait 0.3
+
+# Caret after "hello wor"; Cmd+Backspace leaves only "rld"
+key LEFT
+key LEFT
+key LEFT
+wait 0.2
+key SUPER+BACKSPACE
+wait 0.3
+expect_text "Username: rld"
+
+# Ctrl+K from the start of the line clears the rest
+key SUPER+LEFT
+wait 0.2
+key CTRL+K
+wait 0.3
+expect_no_text "rld"
+
+# Ctrl+K from the middle deletes only the tail
+type "hello world"
+wait 0.3
+key LEFT
+key LEFT
+key LEFT
+wait 0.2
+key CTRL+K
+wait 0.3
+expect_text "Username: hello wo"
+
+# --- text area (AIM chat composer) stops at the source line ---
+goto_screen aim_chat
+wait 0.5
+
+focus_element message_input
+wait 0.3
+type "one"
+wait 0.2
+key SHIFT+ENTER
+wait 0.2
+type "two three"
+wait 0.3
+
+# Caret after "two t"; Cmd+Backspace must leave line 1 and "three" intact
+key LEFT
+key LEFT
+key LEFT
+key LEFT
+wait 0.2
+key SUPER+BACKSPACE
+wait 0.3
+key ENTER
+wait 0.5
+expect_text "one"
+expect_text "hree"

@@ -13,16 +13,17 @@ are done; their records live in todo.md.
 The widget-lifetime parent cleanup is also
 done (creation-time parent->children link,
 subtree retired in one sweep); its remainders
-are listed below.
+are listed below. The text-editing action
+surface is done too (line deletion, platform-
+correct default keymap, EditCommand responder).
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | Text-editing action surface      | hanabi      | M      |
-| 2  | Frame/host-loop family           | hanabi      | L      |
-| 3  | context_menu plugin              | wordproc    | M/L    |
-| 4  | Colour input                     | hanabi      | L      |
-| 5  | accessibility plugin             | hanabi      | L      |
-| 6  | Two view trees in one window     | hanabi      | XL     |
+| 1  | Frame/host-loop family           | hanabi      | L      |
+| 2  | context_menu plugin              | wordproc    | M/L    |
+| 3  | Colour input                     | hanabi      | L      |
+| 4  | accessibility plugin             | hanabi      | L      |
+| 5  | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 
