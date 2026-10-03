@@ -27,6 +27,15 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
   // Just inside the first row, so the menu reads as having come from it.
   Vector2Type mid_at{};
   Vector2Type corner_at{};
+  bool view_open = false;
+  bool recent_open = false;
+  Vector2Type view_at{};
+  Vector2Type recent_at{};
+  bool word_wrap = true;
+  bool line_numbers = false;
+  int sort_mode = 1;
+  static constexpr std::array<const char *, 3> sort_names{"Name", "Modified",
+                                                          "Size"};
   size_t target_file = 0;
   std::array<bool, 6> staged{false, true, false, false, true, false};
   std::string status = "Right-click any file row";
@@ -51,6 +60,48 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
         MenuItem{"Copy path", "Cmd+C", false, false},
         MenuItem{"Discard changes", "", false, true}, // disabled
     };
+  }
+
+  std::vector<MenuItem> view_items() const {
+    return {MenuItem::check("Word wrap", word_wrap),
+            MenuItem::check("Line numbers", line_numbers),
+            MenuItem::sep(),
+            MenuItem::radio("Sort by name", sort_mode == 0),
+            MenuItem::radio("Sort by modified", sort_mode == 1),
+            MenuItem::radio("Sort by size", sort_mode == 2),
+            MenuItem::sep(),
+            MenuItem{"Reset view", "", false, false}};
+  }
+
+  std::vector<MenuItem> recent_items() const {
+    std::vector<MenuItem> items;
+    for (int i = 1; i <= 30; i++)
+      items.push_back(
+          MenuItem{"Recent file " + std::to_string(i), "", false, false});
+    return items;
+  }
+
+  void apply_view(int picked) {
+    if (picked == 0) {
+      word_wrap = !word_wrap;
+      status = word_wrap ? "Word wrap on" : "Word wrap off";
+    } else if (picked == 1) {
+      line_numbers = !line_numbers;
+      status = line_numbers ? "Line numbers on" : "Line numbers off";
+    } else if (picked >= 3 && picked <= 5) {
+      sort_mode = picked - 3;
+      status = "Sort: " + std::string(sort_names[sort_mode]);
+    } else if (picked == 7) {
+      word_wrap = true;
+      line_numbers = false;
+      sort_mode = 1;
+      status = "View reset";
+    }
+  }
+
+  void apply_recent(int picked) {
+    if (picked >= 0)
+      status = "Opened recent file " + std::to_string(picked + 1);
   }
 
   void apply_action(int picked) {
@@ -87,6 +138,8 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     const float left = (context.screen_width / s - 1144.f) / 2.f;
     bool reopen_mid = false;
     bool reopen_corner = false;
+    bool reopen_view = false;
+    bool reopen_recent = false;
     if (context.mouse.just_pressed) {
       const auto outside = [&](Vector2Type at) {
         const auto placed = overlay::place({at.x, at.y, 0, 0}, 340 * s, 242 * s,
@@ -209,6 +262,27 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       mid_open = false;
       status = "corner menu opened";
     }
+    auto view_btn = button(context, mk(root.ent(), id++), control(644, 540, 230, 44,
+        "View options", "cm_view"));
+    if (view_btn) {
+      view_at = context.mouse.pos;
+      view_open = true;
+      reopen_view = true;
+      recent_open = false;
+      mid_open = false;
+      corner_open = false;
+    }
+    auto recent_btn = button(context, mk(root.ent(), id++), control(890, 540, 230, 44,
+        "Recent files", "cm_recent"));
+    if (recent_btn) {
+      recent_at = context.mouse.pos;
+      recent_open = true;
+      reopen_recent = true;
+      view_open = false;
+      mid_open = false;
+      corner_open = false;
+    }
+
     label(status, 20, 646, 730, 28, 20, white, "cm_status");
     label("Target: " + std::string(files[target_file]) + " / " + file_state(target_file),
           20, 679, 730, 25, 18, muted, "cm_target_status");
@@ -235,16 +309,6 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           if (!child.valid() || !child.asE().has<HasLabel>()) continue;
           auto &row = child.asE();
           auto &text = row.get<HasLabel>();
-          const bool shortcut = row.has<UIComponentDebug>() &&
-                                row.get<UIComponentDebug>().name_value == "menu_shortcut";
-          if (shortcut) {
-            row.removeComponentIfExists<afterhours::HasColor>();
-            text.is_disabled = false;
-            text.set_explicit_text_color({207, 219, 238, 255});
-            row.get<UIComponent>().desired[Axis::X].value -= 7 * s;
-            row.addComponentIfMissing<IgnorePointerEvents>();
-            continue;
-          }
           text.text_x_offset = 12 * s;
           if (!text.is_disabled) continue;
           text.set_explicit_text_color({165, 177, 193, 255});
@@ -275,6 +339,34 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       }
       return picked;
     };
+    const auto render_plain = [&](const std::vector<MenuItem> &menu_items,
+                                  Vector2Type at, bool &open, bool reopened,
+                                  const std::string &name) {
+      auto pair = mk(root.ent(), id++);
+      auto &holder = deref(pair).first;
+      if (reopened && holder.has<HasMenuState>())
+        holder.get<HasMenuState>().was_open_last_frame = false;
+      const int picked = context_menu(
+          context, pair, menu_items, at, open,
+          ComponentConfig(menu_config).with_debug_name(name));
+      if (holder.has<UIComponent>() && open) {
+        for (const auto list_id : holder.get<UIComponent>().children) {
+          auto list = UICollectionHolder::getEntityForID(list_id);
+          if (!list.valid() || !list.asE().has<UIComponent>())
+            continue;
+          for (const auto child_id : list.asE().get<UIComponent>().children) {
+            auto child = UICollectionHolder::getEntityForID(child_id);
+            if (child.valid() && child.asE().has<HasLabel>())
+              child.asE().get<HasLabel>().text_x_offset = 12 * s;
+          }
+        }
+      }
+      return picked;
+    };
+    apply_view(render_plain(view_items(), view_at, view_open, reopen_view,
+                            "cm_view_menu"));
+    apply_recent(render_plain(recent_items(), recent_at, recent_open,
+                              reopen_recent, "cm_recent_menu"));
     apply_action(render_menu(mid_at, mid_open, reopen_mid, "cm_mid"));
     // Near the bottom so there is no room below: the menu has to flip up,
     // which is the whole reason placement is shared with popover.

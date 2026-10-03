@@ -313,6 +313,12 @@ Fixed (hanabi #163): `MeasureScrollViews` measured every scroll view every frame
 
 Cozy Cafe stayed at 66 draws/68 binds and Images at 59/61 after packing. Sharing a texture does not merge commands separated by render state. Attribute texture/scissor/shader/layer boundaries before coalescing; preserve painter order. Counts are driver measurements, not proof of a broken atlas API. See [performance](performance.md).
 
+### Menu rows had no checked or radio state, and long menus ran off screen
+
+Fixed: `MenuItem` gained `mark` (`MenuMark::Check` / `Radio`) plus `checked`, with `MenuItem::check` / `MenuItem::radio` factories; fields append after the existing four, so aggregate initializers keep compiling. A menu with any marked item reserves a mark column (`text_inset` on every row, labels left-aligned), and checked items draw a native check or dot in it. State stays caller-owned: choosing an item returns its index as before, and the next frame's items carry the new `checked` values. Long menus now bound their panel height to the roomier side of the anchor and scroll the rest (`Overflow::Scroll` on the tray, the same shape as the dropdown tray; focus reveal follows keyboard selection). Row accessories (shortcut, mark, disabled fill) became children of the row so the scroll measurement, which sums the list's own children, stops double-counting them; the disabled fill is the row's background draw. Tests: `menu_test` (marks, mark column, bounded scroll); demo: ContextMenuLab view/recent menus (WM E2E 361). Wordproc can migrate its popup bodies to `menu_list` once it bumps.
+
+Still open: menu labels draw flush at the row edge (button padding positions children, not the label), so the tray focus ring strokes over the first glyph of a focused row. ContextMenuLab compensates with a post-hoc `text_x_offset` on its rows; a library fix (labels honoring the row's resolved left padding when left-aligned) would move every existing menu's labels and needs its own decision.
+
 ### Rounded parent corners do not clip children to the curve
 
 `HasClipChildren` uses rectangular scissors; parent radius changes fill only. Optional rounded masks need explicit nested/backend semantics. Keep rectangular clipping fast. This is a deferred capability, separate from partial outlines and scroll-decoration clipping.

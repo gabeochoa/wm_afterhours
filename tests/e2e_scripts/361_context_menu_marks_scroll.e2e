@@ -1,0 +1,41 @@
+# Checked/radio menu items, and a 30-item menu that bounds its height
+# to the room on screen and scrolls the rest.
+goto_screen context_menu_lab
+resize 1280 720
+wait 0.5
+expect_text "Context menus"
+
+# Dismiss the menu the screen opens by default.
+click 900 300
+wait 0.3
+
+click_ui cm_view
+wait 0.3
+expect_text "Word wrap"
+expect_text "Sort by size"
+screenshot context_menu_view_marks
+click_ui menu_item_0
+wait 0.3
+expect_text "Word wrap off"
+
+click_ui cm_view
+wait 0.3
+click_ui menu_item_5
+wait 0.3
+expect_text "Sort: Size"
+
+click_ui cm_recent
+wait 0.3
+expect_text "Recent file 1"
+expect_no_text "Recent file 30"
+screenshot context_menu_recent_top
+
+# Up wraps the tray selection to the last row; the scroll view reveals it.
+key UP
+wait 0.3
+expect_text "Recent file 30"
+key ENTER
+wait 0.3
+expect_text "Opened recent file 30"
+
+screenshot context_menu_marks

@@ -256,7 +256,7 @@ Demand 1 (single project, ordered easy → hard):
 
 ### Unit F — NEW-PLUGIN candidates (explicit go-ahead required each)
 
-- [ ] NEW-PLUGIN? `context_menu`: generic context-menu primitive over modal/overlay (wordproc #15; hanabi #287 drag-candidate thresholds partially). Right-click input itself is Unit D.
+- [x] NEW-PLUGIN? `context_menu`: not a plugin. The primitive already shipped as `imm::context_menu` over the shared menu list (`ui/menu.h`), with ContextMenuLab and wordproc adoption; this line was stale. Closed 2026-10-03 as VERIFY, plus the two remainders wordproc named before migrating its popup bodies: checked/radio `MenuItem` state and bounded scrolling for long menus. Tests: `menu_test`; demo: ContextMenuLab (WM E2E 361, on top of 94/182). Hanabi #287 drag-candidate thresholds stay with the drag items, not menus.
 - [ ] NEW-PLUGIN? `accessibility`: role/name/value semantics annotations + query (hanabi #112 family: #458). Weakest candidate — desktop-app consumers only.
 
 ### Unit G — REJECT? (proposed not-library; awaiting approval)

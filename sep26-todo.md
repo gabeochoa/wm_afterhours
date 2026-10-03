@@ -19,13 +19,16 @@ correct default keymap, EditCommand responder).
 The frame/host-loop CRITs are done too
 (request-frame, frame-wake, Metal target_fps);
 the rest of that family is listed below.
+context_menu closed as VERIFY (the primitive
+already shipped and wordproc had adopted it),
+plus its two named remainders, checked/radio
+items and bounded long-menu scrolling.
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | context_menu plugin              | wordproc    | M/L    |
-| 2  | Colour input                     | hanabi      | L      |
-| 3  | accessibility plugin             | hanabi      | L      |
-| 4  | Two view trees in one window     | hanabi      | XL     |
+| 1  | Colour input                     | hanabi      | L      |
+| 2  | accessibility plugin             | hanabi      | L      |
+| 3  | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 
