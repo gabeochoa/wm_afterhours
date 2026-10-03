@@ -16,18 +16,27 @@ subtree retired in one sweep); its remainders
 are listed below. The text-editing action
 surface is done too (line deletion, platform-
 correct default keymap, EditCommand responder).
+The frame/host-loop CRITs are done too
+(request-frame, frame-wake, Metal target_fps);
+the rest of that family is listed below.
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | Frame/host-loop family           | hanabi      | L      |
-| 2  | context_menu plugin              | wordproc    | M/L    |
-| 3  | Colour input                     | hanabi      | L      |
-| 4  | accessibility plugin             | hanabi      | L      |
-| 5  | Two view trees in one window     | hanabi      | XL     |
+| 1  | context_menu plugin              | wordproc    | M/L    |
+| 2  | Colour input                     | hanabi      | L      |
+| 3  | accessibility plugin             | hanabi      | L      |
+| 4  | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 
 Still open from closed items:
+* Frame/host loop beyond the CRITs: #543 frame
+  phases, #544 input-activity snapshot, #545
+  window exposure events, #547 timer deadlines,
+  #548 dt-is-callback-time, #549 headless
+  cadence harness, #580/#581/#587/#589 and the
+  allocation/GPU accounting members (todo.md
+  loose-items line).
 * Widget lifetime: exit animations still have
   nothing to animate (no motion-aware hold on
   the retirement sweep), and the #171 family's
@@ -47,9 +56,6 @@ Still open from closed items:
   geometry and #286/#68 self-reported laid-out size.
 
 Notes:
-- #3 is single-project but holds the intake's only CRITs
-  (#542 request-frame, #546 frame-wake); severity would put
-  it at #3 of the original ranking.
 - REJECT? list (todo.md Unit G) is not in this ranking:
   G1 OS-integration family, G2 table component, G3 rich-text
   subsystem, G4 app E2E verbs, G5 negative results, G6

@@ -1,0 +1,35 @@
+# Host loop: on-demand frames run when requested; a worker finishing
+# async work requests the frame that paints its result.
+goto_screen host_loop_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Host loop lab"
+expect_text "mode continuous"
+
+click_ui hl_mode
+wait 0.3
+click_ui hl_reset
+wait 0.3
+expect_text "mode on-demand"
+expect_text "requests 0"
+expect_text "granted frames 0"
+
+click_ui hl_request
+wait 0.4
+expect_text "requests 1"
+expect_text "granted frames 1"
+
+click_ui hl_async
+wait 0.2
+expect_text "async pending 1"
+wait 2
+expect_text "async pending 0"
+expect_text "async done 1"
+expect_text "requests 2"
+
+click_ui hl_mode
+wait 0.3
+expect_text "mode continuous"
+
+screenshot host_loop_lab
