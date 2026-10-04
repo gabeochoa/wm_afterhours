@@ -1,0 +1,42 @@
+# Colour input C: the swatch expands inline into H/S/V/A sliders and a hex
+# field. Hex edits and slider moves both write through to the token the
+# preview panel reads back.
+goto_screen color_swatch_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Color swatches"
+expect_text "Accent #3C659C"
+expect_text "Find highlight #FFD54F"
+
+# Accent starts open, so its channel readouts are already up.
+expect_text "214"
+expect_text "62%"
+
+# Type a new hex value; the token and the preview follow.
+focus_element color_hex_field
+wait 0.2
+select_all
+type "FF0000"
+wait 0.3
+expect_text "Accent #FF0000"
+
+# Move the V slider to 50%: pure red at half value is #800000, and the
+# readouts track the slider instead of the hex text.
+set_slider color_channel_v 0.5
+wait 0.3
+expect_text "50%"
+expect_text "Accent #800000"
+
+# Close the field; the channel rows go away.
+click_ui cs_c_accent
+wait 0.3
+expect_no_text "50%"
+
+# Open find highlight instead (the page keeps only one field open).
+click_ui cs_c_highlight
+wait 0.3
+expect_text "69%"
+expect_text "Find highlight #FFD54F"
+
+screenshot color_swatch_c

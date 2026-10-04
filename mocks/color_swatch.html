@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>color_swatch - design options</title>
+<!--
+  Static design mock for the proposed imm::color_swatch widget.
+  Nothing on this page is wired up. It exists to compare picker shapes
+  before any C++ is written. Numbers shown (HSV positions, contrast
+  ratios) are computed from the colors on the page.
+
+  Use case being designed for: a theme editor editing named tokens,
+  starting with the decorative pair (accent, find highlight).
+  Reference: hanabi gap #58.
+-->
+<style>
+  :root {
+    color-scheme: dark;
+    --bench: #101318;
+    --panel: #171c26;
+    --raised: #1e2431;
+    --popover: #232b3a;
+    --line: #2b3242;
+    --ink: #e8edf5;
+    --ink-dim: #a5b1c1;
+    --ink-faint: #78839a;
+    --focus: #a5c9f8;
+    --accent: #3c659c;
+    --radius-panel: 10px;
+    --radius-control: 6px;
+    --radius-chip: 5px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bench);
+    color: var(--ink);
+    font: 13px/1.5 system-ui, -apple-system, sans-serif;
+    padding: 28px 32px 48px;
+  }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  header { max-width: 1180px; margin: 0 auto 24px; }
+  header h1 { font-size: 20px; font-weight: 650; letter-spacing: -0.2px; margin: 0 0 6px; }
+  header p { margin: 0; color: var(--ink-dim); max-width: 72ch; }
+  header p + p { margin-top: 4px; }
+
+  .grid {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+  .variant { display: flex; flex-direction: column; gap: 12px; }
+  .variant h2 { font-size: 14px; font-weight: 650; margin: 0; }
+  .variant h2 .tag {
+    color: var(--ink-faint); font-weight: 500; margin-left: 8px; font-size: 12px;
+  }
+  .notes { color: var(--ink-dim); font-size: 12.5px; }
+  .notes p { margin: 0 0 6px; }
+  .notes .k { color: var(--ink-faint); }
+
+  .pane {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-panel);
+    padding: 16px;
+  }
+  .pane .pane-title {
+    font-size: 12px; font-weight: 650; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-dim); margin: 0 0 12px;
+  }
+
+  .row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--radius-control);
+  }
+  .row + .row { margin-top: 2px; }
+  .row.hover { background: #293142; }
+  .row .label { flex: 1; }
+  .row .label small { display: block; color: var(--ink-faint); font-size: 11.5px; }
+
+  .swatch {
+    width: 44px; height: 28px; flex: none;
+    border-radius: var(--radius-chip);
+    border: 1px solid #00000055;
+    box-shadow: inset 0 0 0 1px #ffffff22;
+    position: relative; overflow: hidden;
+  }
+  .swatch.checker::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(45deg, #394152 25%, transparent 25%, transparent 75%, #394152 75%),
+      linear-gradient(45deg, #394152 25%, #222836 25%, #222836 75%, #394152 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+  }
+  .swatch .fill { position: absolute; inset: 0; }
+  .swatch-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--raised); border: 1px solid var(--line);
+    border-radius: var(--radius-control); padding: 5px 8px 5px 5px;
+  }
+  .swatch-btn.focused { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .swatch-btn .hex { font-size: 12px; color: var(--ink); }
+  .swatch-btn.disabled { opacity: 0.45; }
+
+  .popover {
+    background: var(--popover);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-panel);
+    padding: 12px; margin: 10px 10px 4px;
+  }
+  .sv {
+    position: relative; height: 132px; border-radius: var(--radius-control);
+    background:
+      linear-gradient(to top, #000000, transparent),
+      linear-gradient(to right, #ffffff, transparent),
+      hsl(214, 100%, 50%);
+    border: 1px solid #00000055;
+  }
+  .sv .handle {
+    position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid #fff; box-shadow: 0 0 0 1px #00000088;
+    transform: translate(-50%, -50%);
+  }
+  .strip {
+    position: relative; height: 12px; border-radius: 6px; margin-top: 10px;
+    border: 1px solid #00000055;
+  }
+  .strip.hue {
+    background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  }
+  .strip.alpha { overflow: hidden; }
+  .strip.alpha::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(45deg, #394152 25%, transparent 25%, transparent 75%, #394152 75%),
+      linear-gradient(45deg, #394152 25%, #222836 25%, #222836 75%, #394152 75%);
+    background-size: 10px 10px; background-position: 0 0, 5px 5px;
+  }
+  .strip.alpha .fill {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent, var(--accent));
+  }
+  .strip .handle {
+    position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%;
+    background: #fff; border: 1px solid #00000088;
+    transform: translate(-50%, -50%);
+  }
+
+  .fields { display: flex; gap: 8px; margin-top: 12px; }
+  .field {
+    flex: 1; background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius-control); padding: 6px 8px;
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .field .k { color: var(--ink-faint); font-size: 11px; }
+  .field .v { font-size: 12.5px; }
+  .field.narrow { flex: 0 0 76px; }
+
+  .compare { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .compare .before-after {
+    display: flex; width: 88px; height: 28px; flex: none;
+    border-radius: var(--radius-chip); overflow: hidden;
+    border: 1px solid #00000055;
+  }
+  .compare .before-after i { flex: 1; }
+  .compare .cap { color: var(--ink-faint); font-size: 11.5px; }
+
+  .presets {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
+  }
+  .presets i {
+    display: block; height: 26px; border-radius: var(--radius-chip);
+    border: 1px solid #00000055; box-shadow: inset 0 0 0 1px #ffffff22;
+  }
+  .presets i.selected { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .divider { height: 1px; background: var(--line); margin: 12px 0; }
+
+  .slider-row { display: flex; align-items: center; gap: 10px; padding: 5px 10px; }
+  .slider-row .k { width: 14px; color: var(--ink-faint); font-size: 12px; }
+  .track {
+    flex: 1; height: 6px; border-radius: 3px; position: relative;
+    background: #2b3242;
+  }
+  .track .fill { position: absolute; inset: 0 auto 0 0; border-radius: 3px; }
+  .track .thumb {
+    position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%;
+    background: #e8edf5; border: 1px solid #00000088;
+    transform: translate(-50%, -50%);
+  }
+  .slider-row .v { width: 34px; text-align: right; font-size: 12px; color: var(--ink-dim); }
+
+  .strip-row {
+    max-width: 1180px; margin: 28px auto 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .strip-row { grid-template-columns: 1fr; } }
+  .strip-row h3 {
+    font-size: 12px; font-weight: 650; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-dim); margin: 0 0 10px;
+  }
+  .states { display: flex; gap: 10px; flex-wrap: wrap; }
+  .state { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .state span { color: var(--ink-faint); font-size: 11.5px; }
+
+  .preview-card {
+    border-radius: var(--radius-control); padding: 10px 12px;
+    border: 1px solid var(--line);
+  }
+  .preview-card + .preview-card { margin-top: 8px; }
+  .preview-card .h { font-weight: 650; font-size: 13px; }
+  .preview-card .b { font-size: 12.5px; }
+  .ratio { color: var(--ink-dim); font-size: 12px; margin-top: 6px; }
+  .ratio.bad { color: #f2a65a; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>color_swatch - picker shape options</h1>
+  <p>Static mock. Nothing here is wired up. The setting being designed for is a theme editor with named tokens, starting with the decorative pair: accent and find highlight.</p>
+  <p>Handles and contrast numbers are computed from the colors on the page, accent <span class="mono">#3C659C</span> unless noted.</p>
+</header>
+
+<div class="grid">
+
+  <section class="variant">
+    <h2>A: popover editor <span class="tag">gap #58 minimal fix</span></h2>
+    <div class="pane">
+      <p class="pane-title">Theme</p>
+      <div class="row hover">
+        <div class="label">Accent<small>Buttons, links, selection</small></div>
+        <div class="swatch-btn focused">
+          <span class="swatch"><span class="fill" style="background:#3c659c"></span></span>
+          <span class="hex mono">#3C659C</span>
+        </div>
+      </div>
+      <div class="popover">
+        <div class="sv"><span class="handle" style="left:62%; top:39%"></span></div>
+        <div class="strip hue"><span class="handle" style="left:60%"></span></div>
+        <div class="strip alpha"><span class="fill"></span><span class="handle" style="left:100%"></span></div>
+        <div class="fields">
+          <div class="field"><span class="k">#</span><span class="v mono">3C659C</span></div>
+          <div class="field narrow"><span class="k">A</span><span class="v mono">100%</span></div>
+        </div>
+        <div class="compare">
+          <span class="before-after"><i style="background:#2e4d76"></i><i style="background:#3c659c"></i></span>
+          <span class="cap">Before / after. Changes write through immediately.</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Find highlight<small>Search matches</small></div>
+        <div class="swatch-btn">
+          <span class="swatch"><span class="fill" style="background:#ffd54f"></span></span>
+          <span class="hex mono">#FFD54F</span>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <p><span class="k">Footprint:</span> one 44px row per token until opened. Popover is about 270 x 300px.</p>
+      <p><span class="k">Input paths:</span> drag in the square, drag hue, type hex, arrow keys while the square has focus.</p>
+      <p><span class="k">Risk:</span> any RGB value is reachable. Needs the guard rail below if text tokens ever become editable.</p>
+    </div>
+  </section>
+
+  <section class="variant">
+    <h2>B: preset grid <span class="tag">safe choices first</span></h2>
+    <div class="pane">
+      <p class="pane-title">Theme</p>
+      <div class="row hover">
+        <div class="label">Accent<small>Buttons, links, selection</small></div>
+        <div class="swatch-btn focused">
+          <span class="swatch"><span class="fill" style="background:#3c659c"></span></span>
+          <span class="hex mono">#3C659C</span>
+        </div>
+      </div>
+      <div class="popover">
+        <div class="presets">
+          <i style="background:#3c659c" class="selected"></i><i style="background:#2e7d6b"></i><i style="background:#4c9141"></i><i style="background:#b8860b"></i><i style="background:#c25e3a"></i><i style="background:#b03a48"></i><i style="background:#9b4d8f"></i><i style="background:#5e4fa3"></i>
+          <i style="background:#2f5d8a"></i><i style="background:#256b5e"></i><i style="background:#3e7031"></i><i style="background:#8a6914"></i><i style="background:#96422a"></i><i style="background:#8a2f3a"></i><i style="background:#773a6d"></i><i style="background:#463a7d"></i>
+          <i style="background:#6b7d94"></i><i style="background:#5f7267"></i><i style="background:#767a4a"></i><i style="background:#8a7a52"></i><i style="background:#84635a"></i><i style="background:#7a5a64"></i><i style="background:#655a78"></i><i style="background:#4a4f5e"></i>
+        </div>
+        <div class="divider"></div>
+        <div class="fields">
+          <div class="field"><span class="k">Custom #</span><span class="v mono">3C659C</span></div>
+        </div>
+        <div class="compare">
+          <span class="cap">Presets are checked on dark and light themes before they ship. Custom hex stays available below them.</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Find highlight<small>Search matches</small></div>
+        <div class="swatch-btn">
+          <span class="swatch"><span class="fill" style="background:#ffd54f"></span></span>
+          <span class="hex mono">#FFD54F</span>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <p><span class="k">Footprint:</span> same row. Popover is shorter, about 270 x 190px, and most picks are one click.</p>
+      <p><span class="k">Input paths:</span> click a preset, or type hex. No dragging surface exists.</p>
+      <p><span class="k">Risk:</span> preset list becomes a library decision. Someone has to own adding colors, and apps will ask for their brand color.</p>
+    </div>
+  </section>
+
+  <section class="variant">
+    <h2>C: inline editor <span class="tag">no popover</span></h2>
+    <div class="pane">
+      <p class="pane-title">Theme</p>
+      <div class="row hover">
+        <div class="label">Accent<small>Buttons, links, selection</small></div>
+        <div class="swatch-btn focused">
+          <span class="swatch"><span class="fill" style="background:#3c659c"></span></span>
+          <span class="hex mono">#3C659C</span>
+        </div>
+      </div>
+      <div class="slider-row"><span class="k">H</span><span class="track"><span class="fill" style="width:60%; background:#3c659c"></span><span class="thumb" style="left:60%"></span></span><span class="v mono">214</span></div>
+      <div class="slider-row"><span class="k">S</span><span class="track"><span class="fill" style="width:62%; background:#3c659c"></span><span class="thumb" style="left:62%"></span></span><span class="v mono">62%</span></div>
+      <div class="slider-row"><span class="k">V</span><span class="track"><span class="fill" style="width:61%; background:#3c659c"></span><span class="thumb" style="left:61%"></span></span><span class="v mono">61%</span></div>
+      <div class="slider-row"><span class="k">A</span><span class="track"><span class="fill" style="width:100%; background:#3c659c"></span><span class="thumb" style="left:100%"></span></span><span class="v mono">100%</span></div>
+      <div class="fields" style="padding:0 10px">
+        <div class="field"><span class="k">#</span><span class="v mono">3C659C</span></div>
+      </div>
+      <div class="row">
+        <div class="label">Find highlight<small>Search matches</small></div>
+        <div class="swatch-btn">
+          <span class="swatch"><span class="fill" style="background:#ffd54f"></span></span>
+          <span class="hex mono">#FFD54F</span>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <p><span class="k">Footprint:</span> the list grows by 4 rows plus a hex field while editing. Everything below moves.</p>
+      <p><span class="k">Input paths:</span> sliders reuse today&apos;s widget. No 2D drag surface to build or make keyboard accessible.</p>
+      <p><span class="k">Risk:</span> with eleven tokens this is the 33-slider wall hanabi rejected, unless only one row can be open at a time.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="strip-row">
+  <section class="pane">
+    <h3>Swatch states</h3>
+    <div class="states">
+      <div class="state"><span class="swatch-btn"><span class="swatch"><span class="fill" style="background:#3c659c"></span></span><span class="hex mono">#3C659C</span></span><span>Default</span></div>
+      <div class="state"><span class="swatch-btn" style="background:#293142"><span class="swatch"><span class="fill" style="background:#3c659c"></span></span><span class="hex mono">#3C659C</span></span><span>Hover</span></div>
+      <div class="state"><span class="swatch-btn focused"><span class="swatch"><span class="fill" style="background:#3c659c"></span></span><span class="hex mono">#3C659C</span></span><span>Focus</span></div>
+      <div class="state"><span class="swatch-btn disabled"><span class="swatch"><span class="fill" style="background:#3c659c"></span></span><span class="hex mono">#3C659C</span></span><span>Disabled</span></div>
+    </div>
+  </section>
+
+  <section class="pane">
+    <h3>Alpha</h3>
+    <div class="states">
+      <div class="state"><span class="swatch checker"><span class="fill" style="background:#3c659c"></span></span><span>100%</span></div>
+      <div class="state"><span class="swatch checker"><span class="fill" style="background:#3c659c99"></span></span><span>60%</span></div>
+      <div class="state"><span class="swatch checker"><span class="fill" style="background:#3c659c4d"></span></span><span>30%</span></div>
+      <div class="state"><span class="swatch checker"></span><span>0%</span></div>
+    </div>
+  </section>
+
+  <section class="pane">
+    <h3>Guard rail if text tokens open up</h3>
+    <div class="preview-card" style="background:#3c659c">
+      <div class="h" style="color:#e8edf5">Selection</div>
+      <div class="b" style="color:#e8edf5">Text on the accent color.</div>
+    </div>
+    <p class="ratio">Text on accent: 5.1:1. Accent on panel: 2.6:1, decorative only.</p>
+    <div class="preview-card" style="background:#1e2431">
+      <div class="h" style="color:#2b2b30">Body text</div>
+      <div class="b" style="color:#2b2b30">A text token set to #2B2B30 on the dark panel.</div>
+    </div>
+    <p class="ratio bad">Text on panel: 1.1:1. This is the blank window hanabi wants the picker to prevent, or at least flag before applying.</p>
+  </section>
+</div>
+
+</body>
+</html>
