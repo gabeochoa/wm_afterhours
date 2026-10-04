@@ -1,0 +1,58 @@
+# Colour input B: the swatch opens a preset palette with a custom hex
+# field below it. Hovering a preset previews it on the anchor without
+# saving; clicking publishes the pick to the token the preview reads
+# back. Hex edits write through too.
+goto_screen color_swatch_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Color swatches"
+expect_text "B - preset grid"
+expect_text "Accent #3C659C"
+expect_text "Find highlight #FFD54F"
+
+# Open the palette. Opening B also closes the inline editor (the page
+# keeps one field open), which leaves B's hex field the only one on
+# screen.
+click_ui cs_b_accent
+wait 0.3
+
+# Hover the teal preset (its centre at 531,303 in this layout). The
+# anchor previews the candidate, but the saved token the preview strip
+# reads back is unchanged: only a click publishes.
+mouse_move 531 303
+wait 0.3
+assert_ui cs_b_accent text=#2E7D6B
+expect_text "Accent #3C659C"
+screenshot color_swatch_b_hover
+click_ui color_preset_1
+wait 0.3
+expect_text "Accent #2E7D6B"
+expect_no_ui color_preset_1
+
+# Reopen and type a custom hex instead. Click into the field rather than
+# focus_element: that helper matches by name without requiring the field
+# to be rendered, so it can land on the inline editor's retired field
+# outside the palette, which dismisses the popover before typing starts.
+click_ui cs_b_accent
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "102030"
+wait 0.3
+expect_text "Accent #102030"
+
+# The anchor toggles the still-open palette closed.
+click_ui cs_b_accent
+wait 0.3
+expect_no_ui color_preset_0
+
+# The same palette edits the second token. Capture it before the pick.
+click_ui cs_b_highlight
+wait 0.3
+screenshot color_swatch_b
+click_ui color_preset_23
+wait 0.3
+expect_text "Find highlight #4A4F5E"
+expect_no_ui color_preset_23
