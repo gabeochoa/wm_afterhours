@@ -121,11 +121,12 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   int respawns = 0;
   bool texts_shown = false;
   int matrix_pattern = 0;
-  struct Banner { int id; std::string text; bool leaving = false; };
+  struct Banner { int id; std::string text; };
   std::vector<Banner> banners;
   int next_banner = 0;
+  float banner_scroll = 0.f;
 
-  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, BannerLeave, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, StarPreview, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold, EffectPresetP };
+  enum struct Key : size_t { CheckDraw, LikeFill, LearnShift, LearnSpread, Shake, ErrorHold, TooltipX, PillX, PillW, AccHeight, MorphW, MorphH, ToastHold, SuccessDraw, SkeletonLoad, SpinAngle, SpinCheck, SpinHold, CardW, CardH, StreamCount, ThinkHold, ReasonOffset, ReasonHold, ShimmerX, Reel0, Reel1, Reel2, Reel3, StarPreview, GenLoad, DissolveP, DissolveHold, GooA0, GooA1, GooA2, GooBob, OrganicP, BendP, TiltRX, TiltRY, TiltGlare, DragX, DragY, DragTilt, DropFade, DropHold, EffectPresetP };
 
   void ensure_picture() {
     if (bend_tex_loaded) return;
@@ -230,9 +231,9 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     matrix_pattern = 0;
     banners.clear();
     next_banner = 0;
+    banner_scroll = 0.f;
     afterhours::motion::anim(Key::SpinCheck).from(0.f);
     afterhours::motion::anim(Key::SpinHold).from(0.f);
-    afterhours::motion::anim(Key::BannerLeave).from(0.f);
     afterhours::motion::anim(Key::ToastHold).from(0.f);
     afterhours::motion::anim(Key::SuccessDraw).from(0.f);
     afterhours::motion::anim(Key::SkeletonLoad).from(0.f);
@@ -1035,34 +1036,37 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       label(stage.ent(), 4, std::string("state: ") + (spinner_done ? "done" : "spinning"), 60, 200, 400, 20, false, "spinner_state");
       label(stage.ent(), 5, "completions: " + std::to_string(completions), 60, 230, 400, 20, false, "spinner_count");
     } else if (slug == "banners") {
-      auto &leave = motion::anim(Key::BannerLeave);
       if (tab(stage.ent(), 1, "Add banner", 60, 84, 160, false, "banner_add")) {
         banners.insert(banners.begin(), Banner{next_banner, "Update " + std::to_string(next_banner + 1) + " is ready"});
         ++next_banner;
-        int depth = 0;
-        for (auto &b : banners) {
-          if (b.leaving) continue;
-          if (depth >= 3) b.leaving = true;
-          ++depth;
-        }
-        leave.from(0.f).to(1.f, motion::Timeline{.keys = {{0.f, 0.f}, {0.31f, 1.f}}}).on_complete([this, alive = std::weak_ptr<int>(alive)] { if (alive.expired()) return;
-          std::erase_if(banners, [](const Banner &b) { return b.leaving; });
-        });
+        banner_scroll = 0.f;
       }
-      auto stack = div(context, mk(stage.ent(), 2), box(60, 150, 360, 220).with_debug_name("banner_stack").with_background(Theme::Usage::None));
+      auto stack = div(context, mk(stage.ent(), 2), box(60, 150, 360, 220).with_debug_name("banner_stack").with_background(Theme::Usage::None).with_clip_children());
       const RectangleType stack_rect = stack.cmp().rect();
       const bool hovered = context.mouse.pos.x >= stack_rect.x && context.mouse.pos.x <= stack_rect.x + stack_rect.width &&
                            context.mouse.pos.y >= stack_rect.y && context.mouse.pos.y <= stack_rect.y + stack_rect.height;
       const float banner_h = 56.f * s;
+      const float pitch = banner_h + 8.f * s;
+      // The spread stack is anchored at the bottom (newest); scrolling shifts
+      // it down until the oldest banner reaches the top of the stack area.
+      const float scroll_max = banners.empty() ? 0.f
+          : std::max(0.f, static_cast<float>(banners.size() - 1) * pitch - (220.f * s - banner_h));
+      if (hovered) {
+        const float wheel = afterhours::input::get_mouse_wheel_move_v().y;
+        if (wheel != 0.f)
+          banner_scroll = std::clamp(banner_scroll + wheel * 20.f * s, 0.f, scroll_max);
+      }
+      banner_scroll = std::clamp(banner_scroll, 0.f, scroll_max);
       const motion::Timeline settle{.keys = {{0.f, 0.f}, {0.35f, 1.f}}, .curve = motion::curves::ease_out_quad};
       int depth = 0;
-      int visible = 0;
       for (auto &b : banners) {
-        const int d = b.leaving ? 3 : depth;
-        if (!b.leaving) { ++depth; ++visible; }
-        const float want_y = hovered ? -(banner_h + 8.f * s) * d : -12.f * s * d;
-        const float want_scale = hovered ? 1.f : 1.f - 0.06f * d;
-        const float want_alpha = b.leaving ? 0.f : (hovered ? 1.f : 1.f - 0.32f * d);
+        const int d = depth++;
+        // Collapsed, only the front few read as a stack; deeper banners wait
+        // behind them at the deepest collapsed transform.
+        const int cd = std::min(d, 3);
+        const float want_y = hovered ? -pitch * d + banner_scroll : -12.f * s * cd;
+        const float want_scale = hovered ? 1.f : 1.f - 0.06f * cd;
+        const float want_alpha = hovered ? 1.f : 1.f - 0.32f * cd;
         auto row = div(context, mk(stack.ent(), 100 + b.id),
                        ComponentConfig{}.with_size({pixels(360 * s), pixels(banner_h)}).with_absolute_position(0.f, 220 * s - banner_h)
                            .with_custom_background({236, 232, 240, 255}).with_corner_radius(12 * s)
@@ -1082,16 +1086,17 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         if (!al.started()) al.from(want_alpha);
         if (ty.target() != want_y) ty.to(want_y, settle);
         if (sc.target() != want_scale) sc.to(want_scale, settle);
-        if (al.target() != want_alpha) al.to(want_alpha, b.leaving ? motion::Mode{motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}}} : motion::Mode{settle});
+        if (al.target() != want_alpha) al.to(want_alpha, settle);
         auto &mods = row.ent().addComponentIfMissing<HasUIModifiers>();
         mods.translate_y += ty.value();
         mods.scale *= sc.value();
         row.ent().addComponentIfMissing<HasOpacity>().value *= al.value();
         track_motion(row.ent());
       }
-      label(stage.ent(), 3, "A new banner rises 80 px into the front; older ones step back, shrink and dim per depth. A fourth dismisses the oldest. Hover to spread.", 440, 160, 780, 18, true);
-      label(stage.ent(), 4, "banners: " + std::to_string(visible), 440, 220, 400, 20, false, "banner_count");
+      label(stage.ent(), 3, "A new banner rises into the front; older step back and dim. Hover to spread, scroll for the oldest.", 440, 160, 780, 18, true);
+      label(stage.ent(), 4, "banners: " + std::to_string(banners.size()), 440, 220, 400, 20, false, "banner_count");
       label(stage.ent(), 5, std::string("spread: ") + (hovered ? "yes" : "no"), 440, 250, 400, 20, false, "banner_spread");
+      label(stage.ent(), 6, "scroll: " + std::to_string(static_cast<int>(std::lround(banner_scroll / s))), 440, 280, 400, 20, false, "banner_scroll");
     }
     else if (slug == "card_resize") {
       auto &cw = motion::anim(Key::CardW);

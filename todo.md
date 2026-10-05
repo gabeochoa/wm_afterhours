@@ -9,7 +9,7 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 - [x] Should `ClosedBy::Any` (click outside dismisses) be the modal default instead of `CloseRequest`? No: `CloseRequest` stays the default; light dismiss is explicit with `with_closed_by(ClosedBy::Any)`. Pinned by `default_modal_is_not_light_dismissed_by_backdrop`.
 - [x] A drawn chevron/icon primitive: `polyline::chevron_points`, `chevron_points_in_rect` and `draw_chevron` cover tip, direction and bounds forms; TransitionsLab accordion/learn-more use them. Tests: `polyline_test`; WM E2E 304/314.
 - [x] Multiline label line height does not match the font pixel size, so anything that scrolls text by fixed rows (the counter reel) has to lay out one label per row. `with_line_height` now pins a label's row height: layout, `measure_config`, and both renderers stack wrapped, hard-broken and styled lines at that height, so one label can hold fixed rows. Unset, the face's measured line height is used. Tests: `multiline_text_test`; WM E2E 228 (MultiLineTextLab sample 5).
-- [ ] Banner stacking: hovering spreads the stack, but a long stack should scroll so every open banner can be reached.
+- [x] Banner stacking: hovering spreads the stack, but a long stack should scroll so every open banner can be reached. Banners are no longer auto-dismissed past three; the spread stack is clipped to its area and the wheel scrolls it (clamped so the oldest stops at the top), with a scroll readout. Tests: WM E2E 321.
 - [ ] Tab rows shrink label text to fit; long example titles squished at 140 px. A minimum font size or overflow rule for buttons would avoid that.
 
 ## Terminal consumer support

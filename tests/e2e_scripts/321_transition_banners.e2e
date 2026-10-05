@@ -19,24 +19,40 @@ wait 1
 click_ui banner_add
 mouse_move 20 20
 wait 1
-expect_text "banners: 3"
-expect_text "motion: settled"
-expect_text "Update 3 is ready"
-screenshot transition_banners_three
 click_ui banner_add
 mouse_move 20 20
-expect_text "motion: in flight"
-wait 1.5
-expect_text "banners: 3"
+wait 1
+click_ui banner_add
+mouse_move 20 20
+wait 1
+click_ui banner_add
+mouse_move 20 20
+wait 1
+expect_text "banners: 6"
 expect_text "motion: settled"
-expect_text "Update 4 is ready"
-expect_no_text "Update 1 is ready"
+expect_text "Update 6 is ready"
+expect_text "scroll: 0"
+screenshot transition_banners_stack
 mouse_move 240 400
 expect_text "spread: yes"
 expect_text "motion: in flight"
 wait 1
 expect_text "motion: settled"
+expect_no_text "Update 1 is ready"
+expect_text "Update 6 is ready"
 screenshot transition_banners_spread
+scroll_wheel 0 10
+wait 1
+expect_text "motion: settled"
+expect_text "Update 1 is ready"
+expect_no_text "Update 6 is ready"
+expect_text "scroll: 156"
+screenshot transition_banners_scrolled
+scroll_wheel 0 -10
+wait 1
+expect_text "motion: settled"
+expect_text "Update 6 is ready"
+expect_text "scroll: 0"
 mouse_move 20 20
 expect_text "spread: no"
 wait 1
