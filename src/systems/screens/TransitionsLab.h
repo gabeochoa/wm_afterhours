@@ -15,6 +15,7 @@ using afterhours::ui_motion::MotionProperty;
 #include <afterhours/src/plugins/effects.h>
 #include <afterhours/src/plugins/particles.h>
 #include <afterhours/src/plugins/modal.h>
+#include <afterhours/src/polyline.h>
 #include <array>
 
 using namespace afterhours::ui;
@@ -507,9 +508,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                if (under_w > 0.f)
                                  afterhours::draw_line_ex({r.x, r.y + r.height - 4.f * s}, {r.x + under_w, r.y + r.height - 4.f * s}, 2.f * s, accent);
                                const float base = 3.14159265f / 4.f, open_by = deg * 3.14159265f / 180.f;
-                               const float up = -(base + open_by / 2.f), down = base + open_by / 2.f;
-                               afterhours::draw_line_ex({tip_x, tip_y}, {tip_x - arm * std::cos(up), tip_y + arm * std::sin(up)}, 2.f * s, accent);
-                               afterhours::draw_line_ex({tip_x, tip_y}, {tip_x - arm * std::cos(down), tip_y + arm * std::sin(down)}, 2.f * s, accent);
+                               afterhours::polyline::draw_chevron({tip_x, tip_y}, arm, 0.f,
+                                                                  base + open_by / 2.f, 2.f * s, accent);
                              }));
       const bool hot = context.was_hot(link.id());
       const motion::Spring ease{.response = 0.35f};
@@ -776,9 +776,16 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                .with_debug_name("acc_header")
                                .with_on_draw_fg([open_t, s, ink](RectangleType r) {
                                  const float cx = r.x + r.width - 24.f * s, cy = r.y + r.height / 2.f, arm = 6.f * s;
-                                 const float dir = 1.f - 2.f * open_t;
-                                 afterhours::draw_line_ex({cx - arm, cy - arm * 0.5f * dir}, {cx, cy + arm * 0.5f * dir}, 2.f * s, ink);
-                                 afterhours::draw_line_ex({cx, cy + arm * 0.5f * dir}, {cx + arm, cy - arm * 0.5f * dir}, 2.f * s, ink);
+                                 const RectangleType bounds{cx - arm, cy - arm * 0.5f, arm * 2.f, arm};
+                                 const auto closed = afterhours::polyline::chevron_points_in_rect(
+                                     bounds, afterhours::polyline::ChevronDirection::Down);
+                                 const auto open = afterhours::polyline::chevron_points_in_rect(
+                                     bounds, afterhours::polyline::ChevronDirection::Up);
+                                 const auto points = afterhours::polyline::ChevronPoints{
+                                     afterhours::polyline::lerp(closed.first, open.first, open_t),
+                                     afterhours::polyline::lerp(closed.tip, open.tip, open_t),
+                                     afterhours::polyline::lerp(closed.second, open.second, open_t)};
+                                 afterhours::polyline::draw_chevron(points, 2.f * s, ink);
                                }));
       div(context, mk(header.ent(), 0), ComponentConfig{}.with_size({pixels(360 * s), pixels(44 * s)}).with_absolute_position(16 * s, 0.f)
                                             .with_label("Shipping details").with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink)
