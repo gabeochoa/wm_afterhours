@@ -295,7 +295,7 @@ Fixed: native checkbox marks now use drawn strokes in both renderers. A V glyph 
 
 ### Text measurement and rendering use different font inputs
 
-Autolayout uses widget.font_name and spacing 1; rendering resolves weight and `1 + letter_spacing`. The assumption of a shared descriptor was wrong. Resolve actual family variant, size, spacing and wrapping once; test Dim::Text and styled/wrapped bounds against drawing. Source-confirmed; native regression still needed.
+Autolayout uses widget.font_name and spacing 1; rendering resolves weight and `1 + letter_spacing`. The assumption of a shared descriptor was wrong. Resolve actual family variant, size, spacing and wrapping once; test Dim::Text and styled/wrapped bounds against drawing. Source-confirmed; native regression still needed. One measured instance (2026-10-04, TabContainerShowcase at 720p): a tab frozen at its `Dim::Text` floor is 220px wide; its drawn label spans 216px with 2px gaps, where the floor charges 5px of text inset per side. Autolayout measured that label at 210px or less. Ellipsized narrow tabs draw with 0-1px gaps at the tab edge. Every tab still ends inside its bar.
 
 ### Glyph coverage answers were placeholders, and the wrap memo key was too small
 

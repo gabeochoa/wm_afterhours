@@ -13,9 +13,12 @@ using namespace afterhours::ui::imm;
 
 struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
+  size_t wide_tab = 0;
+  size_t narrow_tab = 0;
   bool open = true;
   bool copied = false;
-  std::array<std::string_view, 3> tab_labels = {"Profile", "Audio", "Display"};
+  std::array<std::string_view, 4> tab_labels = {"Profile", "Audio", "Display",
+                                                "Long labels"};
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -68,7 +71,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       tab.get<HasLabel>().font_name = font;
       ++tab_index;
     }
-    const std::array<const char *, 3> titles{"Profile details", "Audio sample", "Display sample"};
+    const std::array<const char *, 4> titles{"Profile details", "Audio sample", "Display sample", "Long label sample"};
     label(12, 24, 219, 720, 42, titles[active_tab], 31, ink, "tc_title");
     label(13, 24, 265, 1096, 31, active_tab == 0 ? "Example profile / read-only fixture data" : "Read-only fixture values / this demo does not change device settings", 20, muted);
     const auto row = [&](int id, float y, const std::string &name, const std::string &value) {
@@ -124,6 +127,29 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         label(90 + static_cast<int>(i), x, y + 68, 152, 28,
               fmt::format("#{:02X}{:02X}{:02X}", swatches[i].r, swatches[i].g, swatches[i].b), 22, ink);
       }
+    }
+    if (active_tab == 3) {
+      // What a tab does with a label wider than its share. Wide bar: the
+      // long tab freezes at its label width and the short tabs re-split
+      // what is left. Narrow bar: the labels together are wider than the
+      // bar, so tabs compress inside it and labels ellipsize at full glyph
+      // size instead of shrinking or spilling past the edge.
+      label(110, 24, 312, 700, 34, "Wide bar: long tab takes its label width", 22, muted);
+      const std::array<std::string_view, 4> wide_labels{
+          "Overview", "Notification badge settings", "Audio", "Display"};
+      tab_container(context, mk(root.ent(), 111), wide_labels, wide_tab,
+          box(24, 352, 700, 48).with_font("AtkinsonMock", pixels(20 * scale))
+              .with_no_wrap().with_debug_name("tc_wide_tabs"));
+      label(112, 24, 424, 700, 34, "Narrow bar: tabs compress, labels ellipsize", 22, muted);
+      const std::array<std::string_view, 4> narrow_labels{
+          "Notification badge", "Dropdown menu morph", "Avatar group hover",
+          "Skeleton loader"};
+      tab_container(context, mk(root.ent(), 113), narrow_labels, narrow_tab,
+          box(24, 464, 520, 48).with_font("AtkinsonMock", pixels(20 * scale))
+              .with_no_wrap().with_debug_name("tc_narrow_tabs"));
+      label(114, 24, 536, 1096, 31,
+            "Selected: " + std::string(narrow_labels[narrow_tab]), 20, ink,
+            "tc_narrow_selected");
     }
     div(context, mk(root.ent(), 100), box(24, 609, 1096, 1).with_custom_background({203, 214, 226, 255}));
     label(101, 24, 633, 840, 33, "Read-only example / No pending changes", 21, muted);

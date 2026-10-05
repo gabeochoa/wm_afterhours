@@ -56,6 +56,17 @@ click_ui tab_0
 wait 0.3
 expect_text "Profile details"
 expect_text "Email copied"
+click_ui tab_3
+wait 0.3
+expect_text "Long label sample"
+expect_text "Wide bar: long tab takes its label width"
+expect_text "Narrow bar: tabs compress, labels ellipsize"
+expect_text "Notification badge settings"
+expect_text "Selected: Notification badge"
+assert_ui tc_wide_tabs w=700 h=48
+assert_ui tc_narrow_tabs w=520 h=48
+assert_within_parents
+screenshot tab_long_labels_design
 resize 1920 1080
 wait 0.3
 assert_ui root w=1920 h=1080
