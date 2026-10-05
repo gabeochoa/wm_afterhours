@@ -3,8 +3,12 @@
 #include <afterhours/src/plugins/animation.h>
 
 #include <algorithm>
+#include <cstdlib>
 #include <memory>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <system_error>
+#include <vector>
 
 #include "rl.h"
 #include <afterhours/src/plugins/files.h>
@@ -46,7 +50,11 @@ struct S_Data {
   bool reduced_motion_enabled = false;
 
   std::filesystem::path loaded_from;
+  std::filesystem::path save_to;
+  bool save_blocked = false;
 };
+
+constexpr const char *kSettingsProject = "wm_afterhours";
 
 void to_json(nlohmann::json &j,
              const afterhours::window_manager::Resolution &resolution) {
@@ -63,6 +71,8 @@ void from_json(const nlohmann::json &j,
 }
 
 void to_json(nlohmann::json &j, const S_Data &data) {
+  j["project"] = kSettingsProject;
+
   nlohmann::json rez_j;
   to_json(rez_j, data.resolution);
   j["resolution"] = rez_j;
@@ -95,6 +105,51 @@ void from_json(const nlohmann::json &j, S_Data &data) {
     data.reduced_motion_enabled = j.at("reduced_motion_enabled");
   }
 }
+
+namespace {
+// Empty when unset. Tests and controlled run dirs set this to isolate
+// settings from both the launch directory and the executable.
+std::filesystem::path settings_path_override() {
+  const char *override_path = std::getenv("WM_SETTINGS_PATH");
+  return (override_path == nullptr || override_path[0] == '\0')
+             ? std::filesystem::path{}
+             : std::filesystem::path(override_path);
+}
+
+void add_settings_candidate(std::vector<std::filesystem::path> &places,
+                            const std::filesystem::path &place) {
+  if (place.empty())
+    return;
+  const auto normalized = place.lexically_normal();
+  if (std::find(places.begin(), places.end(), normalized) == places.end())
+    places.push_back(normalized);
+}
+
+std::vector<std::filesystem::path> settings_places() {
+  const auto override_path = settings_path_override();
+  if (!override_path.empty())
+    return {override_path};
+
+  std::vector<std::filesystem::path> places;
+  // A settings.json in the launch directory is only a candidate, never a
+  // commitment: load uses it when its project marker matches, or for legacy
+  // unmarked files only when the full WM schema parses. That preserves
+  // repo-root and copied-run-dir launches, while another app's same-named
+  // file is skipped in favour of the executable's own settings.
+  add_settings_candidate(places,
+                         std::filesystem::current_path() / "settings.json");
+  const auto exe_dir = files::get_executable_dir();
+  if (!exe_dir.empty()) {
+    add_settings_candidate(places, exe_dir / "settings.json");
+    if (exe_dir.has_parent_path())
+      add_settings_candidate(places,
+                             exe_dir.parent_path() / "settings.json");
+  }
+  if (files::get_provider() != nullptr)
+    add_settings_candidate(places, files::get_save_path() / "settings.json");
+  return places;
+}
+} // namespace
 
 Settings::Settings() { data = new S_Data(); }
 Settings::~Settings() { delete data; }
@@ -169,71 +224,101 @@ void Settings::toggle_post_processing() {
 }
 
 bool Settings::load_save_file(int width, int height) {
-  this->data->resolution.width = width;
-  this->data->resolution.height = height;
+  data->resolution.width = width;
+  data->resolution.height = height;
+  data->loaded_from.clear();
+  data->save_to.clear();
+  data->save_blocked = false;
 
-  std::vector<std::filesystem::path> settings_places = {
-      std::filesystem::current_path() / "settings.json"};
-  if (files::get_provider() != nullptr) {
-    settings_places.push_back(files::get_save_path() / "settings.json");
-  }
+  const auto places = settings_places();
+  bool saw_unusable_settings = false;
 
-  size_t file_loc = 0;
-  std::ifstream ifs;
-  while (true) {
-    if (file_loc >= settings_places.size()) {
-      std::stringstream buffer;
-      buffer << "Failed to find settings file (Read): \n";
-      for (auto place : settings_places)
-        buffer << place << ", \n";
-      log_warn("{}", buffer.str());
-      data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
+  for (const auto &place : places) {
+    std::ifstream ifs(place);
+    if (!ifs.is_open())
+      continue;
+    try {
+      const auto settingsJSON = nlohmann::json::parse(ifs, nullptr, true, true);
+      if (settingsJSON.contains("project")) {
+        const auto &project = settingsJSON.at("project");
+        if (!project.is_string() ||
+            project.get<std::string>() != kSettingsProject) {
+          saw_unusable_settings = true;
+          log_warn("Settings::load_save_file: skipping {} because it belongs "
+                   "to a different project",
+                   place);
+          continue;
+        }
+      }
+      const bool stored_reduced_motion =
+          settingsJSON.contains("reduced_motion_enabled");
+      S_Data parsed;
+      parsed = settingsJSON;
+      *data = parsed;
+      if (!stored_reduced_motion)
+        data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
+      data->loaded_from = place;
+      data->save_to = place;
+      log_info("opened file {}", place);
       refresh_settings();
-      return false;
+      return true;
+    } catch (const std::exception &e) {
+      saw_unusable_settings = true;
+      log_warn("Settings::load_save_file: skipping {} because it is not WM "
+               "settings: {}",
+               place, e.what());
     }
+  }
 
-    ifs = std::ifstream(settings_places[file_loc]);
-    if (ifs.is_open()) {
-      log_info("opened file {}", settings_places[file_loc]);
-      break;
+  std::stringstream buffer;
+  buffer << "Failed to find usable settings file (Read): \n";
+  for (const auto &place : places)
+    buffer << place << ", \n";
+  log_warn("{}", buffer.str());
+  data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
+  if (saw_unusable_settings) {
+    // Never let the launch-directory write fallback replace a foreign or
+    // corrupt settings.json that was just refused. Save to the first
+    // app-owned candidate that does not exist yet; if every candidate
+    // already exists but is unusable, run unsaved instead of overwriting it.
+    for (size_t i = 1; i < places.size(); ++i) {
+      std::error_code ec;
+      if (!std::filesystem::exists(places[i], ec)) {
+        data->save_to = places[i];
+        break;
+      }
     }
-    file_loc++;
+    data->save_blocked = data->save_to.empty();
   }
-  data->loaded_from = settings_places[file_loc];
-
-  try {
-    const auto settingsJSON = nlohmann::json::parse(ifs, nullptr, true, true);
-    const bool stored_reduced_motion = settingsJSON.contains("reduced_motion_enabled");
-
-    (*this->data) = settingsJSON;
-    if (!stored_reduced_motion)
-      data->reduced_motion_enabled = afterhours::os::reduced_motion_enabled();
-    this->data->loaded_from = settings_places[file_loc];
-    refresh_settings();
-    return true;
-
-  } catch (const std::exception &e) {
-    log_error("Settings::load_save_file: {} formatted improperly. {}",
-              data->loaded_from, e.what());
-    return false;
-  }
+  refresh_settings();
+  return false;
 }
 
 bool Settings::write_save_file() {
-  // If no settings file was loaded, use default path
-  std::string save_path = data->loaded_from;
-  if (save_path.empty()) {
-    save_path = "settings.json";
+  if (data->save_blocked) {
+    log_warn("Settings::write_save_file: not saving because every settings "
+             "candidate already exists but is unusable");
+    return false;
   }
+
+  std::filesystem::path save_path = data->save_to;
+  if (save_path.empty())
+    save_path = settings_path_override();
+  if (save_path.empty())
+    save_path = data->loaded_from;
+  if (save_path.empty())
+    save_path = "settings.json";
 
   try {
     const nlohmann::json settingsJSON = *data;
     const auto content = settingsJSON.dump(4);
-    if (!files::write_string_atomic(save_path, content)) {
+    if (!files::write_string_atomic(save_path.string(), content)) {
       log_warn("Settings::write_save_file: failed to save {}", save_path);
       return false;
     }
     data->loaded_from = save_path;
+    data->save_to = save_path;
+    data->save_blocked = false;
     log_info("Saved settings to {}", data->loaded_from);
     return true;
   } catch (const std::exception &error) {
