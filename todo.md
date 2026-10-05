@@ -6,7 +6,7 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 ## UI element follow-ups from the lab review
 
 - [x] `with_padding` on a label with no children does nothing (it warns); leaf text spacing is `with_text_inset`/`Theme::text_inset`, while padding remains container spacing. Covered by `label_inset_test` and the ranked text-inset item below.
-- [ ] Should `ClosedBy::Any` (click outside dismisses) be the modal default instead of `CloseRequest`? The lab opts in per dialog.
+- [x] Should `ClosedBy::Any` (click outside dismisses) be the modal default instead of `CloseRequest`? No: `CloseRequest` stays the default; light dismiss is explicit with `with_closed_by(ClosedBy::Any)`. Pinned by `default_modal_is_not_light_dismissed_by_backdrop`.
 - [ ] A drawn chevron/icon primitive: the accordion and learn-more examples hand-draw theirs with `draw_line_ex` because glyph fonts render only ASCII.
 - [ ] Multiline label line height does not match the font pixel size, so anything that scrolls text by fixed rows (the counter reel) has to lay out one label per row.
 - [ ] Banner stacking: hovering spreads the stack, but a long stack should scroll so every open banner can be reached.
