@@ -23,12 +23,14 @@ context_menu closed as VERIFY (the primitive
 already shipped and wordproc had adopted it),
 plus its two named remainders, checked/radio
 items and bounded long-menu scrolling.
+Colour input is done too (three swatch shapes
+in ui/color_swatch.h; WM colour swatch lab,
+E2E 362-364).
 
 | #  | Item                             | Want        | Effort |
 |----|----------------------------------|-------------|--------|
-| 1  | Colour input                     | hanabi      | L      |
-| 2  | accessibility plugin             | hanabi      | L      |
-| 3  | Two view trees in one window     | hanabi      | XL     |
+| 1  | accessibility plugin             | hanabi      | L      |
+| 2  | Two view trees in one window     | hanabi      | XL     |
 
 cg = cartographer, wp = wordproc, fh = floatinghotel.
 

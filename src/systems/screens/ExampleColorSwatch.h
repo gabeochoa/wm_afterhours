@@ -15,10 +15,9 @@ using namespace afterhours::ui::imm;
 // (hanabi #58, mock in mocks/color_swatch.html), side by side in one
 // card so the shapes compare directly. C expands channel sliders
 // inline and writes through. B opens presets in a popover, previews
-// the hovered preset without saving, and publishes on click. A's
-// column holds its anchor only until the SV-square editor lands as
-// its own commit. Every live variant edits the same accent and
-// find-highlight values.
+// the hovered preset without saving, and publishes on click. A opens
+// an SV-square editor in a popover and writes through. Every variant
+// edits the same accent and find-highlight values.
 struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color accent{60, 101, 156, 255};
   afterhours::Color highlight{255, 213, 79, 255};
@@ -34,6 +33,9 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
   bool accent_b_open = false;
   bool highlight_b_open = false;
   bool border_b_open = false;
+  bool accent_a_open = false;
+  bool highlight_a_open = false;
+  bool border_a_open = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -80,7 +82,7 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events().with_debug_name(name));
     };
     text("Color swatches", 48, 16, 700, 46, 36, white, "cs_title", true);
-    text("One value, three picker shapes. C writes through as you drag; "
+    text("One value, three picker shapes. C and A write through; "
          "B previews on hover and publishes on click.",
          48, 64, 1100, 28, 20, muted, "cs_subtitle");
 
@@ -139,6 +141,8 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
     const bool was_highlight_open = highlight_open;
     const bool was_accent_b_open = accent_b_open;
     const bool was_highlight_b_open = highlight_b_open;
+    const bool was_accent_a_open = accent_a_open;
+    const bool was_highlight_a_open = highlight_a_open;
     flow_label(body_c.ent(), 2, "Accent", 24, 19, white);
     color_swatch_inline(context, mk(body_c.ent(), 3), accent, accent_open,
                         swatch_cfg("cs_c_accent"));
@@ -171,25 +175,23 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
                          afterhours::ui::default_color_presets(),
                          swatch_cfg("cs_b_border").with_disabled(true));
 
-    // ---- A: popover editor, anchor only until its own commit ----
+    // ---- A: popover editor ----
     auto body_a = column(840, {46, 34, 60, 255}, "cs_a_panel");
     flow_label(body_a.ent(), 0, "A - popover editor", 30, 24, white,
                "cs_a_title", true);
     flow_label(body_a.ent(), 1,
-               "A saturation/value square with hue and alpha strips in "
-               "a popover. Lands next as its own commit; only the "
-               "anchor is here.",
-               66, 17, muted);
-    flow_label(body_a.ent(), 2, "Accent", 24, 19, muted);
-    color_swatch_button(context, mk(body_a.ent(), 3), accent,
-                        swatch_cfg("cs_a_accent").with_disabled(true));
-    flow_label(body_a.ent(), 4, "Find highlight", 24, 19, muted);
-    color_swatch_button(context, mk(body_a.ent(), 5), highlight,
-                        swatch_cfg("cs_a_highlight").with_disabled(true));
-    flow_label(body_a.ent(), 6,
-               "It will edit these same values, so all three columns "
-               "stay in step.",
+               "Drag the square or strips, use arrow keys, or type a "
+               "hex. Edits write through.",
                44, 17, muted);
+    flow_label(body_a.ent(), 2, "Accent", 24, 19, white);
+    color_swatch_editor(context, mk(body_a.ent(), 3), accent, accent_a_open,
+                        swatch_cfg("cs_a_accent"));
+    flow_label(body_a.ent(), 4, "Find highlight", 24, 19, white);
+    color_swatch_editor(context, mk(body_a.ent(), 5), highlight,
+                        highlight_a_open, swatch_cfg("cs_a_highlight"));
+    flow_label(body_a.ent(), 6, "Border (locked)", 24, 19, muted);
+    color_swatch_editor(context, mk(body_a.ent(), 7), border, border_a_open,
+                        swatch_cfg("cs_a_border").with_disabled(true));
 
     // The mock's mitigation for the slider wall and duplicate hex fields:
     // opening one field closes every other field. Each widget only toggles
@@ -198,18 +200,38 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
       highlight_open = false;
       accent_b_open = false;
       highlight_b_open = false;
+      accent_a_open = false;
+      highlight_a_open = false;
     } else if (highlight_open && !was_highlight_open) {
       accent_open = false;
       accent_b_open = false;
       highlight_b_open = false;
+      accent_a_open = false;
+      highlight_a_open = false;
     } else if (accent_b_open && !was_accent_b_open) {
       accent_open = false;
       highlight_open = false;
       highlight_b_open = false;
+      accent_a_open = false;
+      highlight_a_open = false;
     } else if (highlight_b_open && !was_highlight_b_open) {
       accent_open = false;
       highlight_open = false;
       accent_b_open = false;
+      accent_a_open = false;
+      highlight_a_open = false;
+    } else if (accent_a_open && !was_accent_a_open) {
+      accent_open = false;
+      highlight_open = false;
+      accent_b_open = false;
+      highlight_b_open = false;
+      highlight_a_open = false;
+    } else if (highlight_a_open && !was_highlight_a_open) {
+      accent_open = false;
+      highlight_open = false;
+      accent_b_open = false;
+      highlight_b_open = false;
+      accent_a_open = false;
     }
 
     // ---- live values, so a reader (and the E2E) can see write-through ----

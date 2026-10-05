@@ -1,0 +1,101 @@
+# Colour input A: the swatch opens an SV-square editor with hue and
+# alpha strips, a hex field, and before/after chips. Drags, keys and
+# hex edits write through to the token the preview strip reads back.
+goto_screen color_swatch_lab
+resize 1280 720
+wait 0.5
+
+expect_text "Color swatches"
+expect_text "A - popover editor"
+expect_text "Accent #3C659C"
+expect_text "Find highlight #FFD54F"
+
+# Open the editor. Opening A also closes the inline editor (the page
+# keeps one field open), leaving A's hex field the only one on screen.
+click_ui cs_a_accent
+wait 0.3
+expect_text "Before/after"
+expect_text "A 100%"
+screenshot color_swatch_a
+
+# Drag inside the square (868,290 276x133 in this layout). The exact
+# centre colour depends on the pixel, so assert the token moved and
+# the panel stayed open, then reset through the hex field.
+mouse_down 1038 341
+wait 0.2
+mouse_move 1006 356
+wait 0.2
+mouse_up
+wait 0.3
+expect_no_text "Accent #3C659C"
+assert_ui color_sv_square x=868 y=290 w=276 h=133
+
+# Click into the field rather than focus_element, for the same reason
+# as E2E 363: name matching without a rendered element can land on a
+# retired field outside the popover and dismiss it.
+click_ui color_hex_field
+wait 0.2
+select_all
+type "3C659C"
+wait 0.3
+expect_text "Accent #3C659C"
+
+# Drag hue to the left edge: hue 0 keeps S and V, so the accent's
+# 60/156 channel spread moves onto red.
+mouse_down 1032 436
+wait 0.2
+mouse_move 868 436
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Accent #9C3C3C"
+
+# Right-arrow on the focused hue strip steps hue. A held key repeats,
+# so assert the token moved, then reset to a known colour for the
+# exact alpha check below. (The vendor test pins the one-step maths.)
+focus_ui color_hue_strip
+wait 0.2
+key RIGHT
+wait 0.3
+expect_no_text "Accent #9C3C3C"
+click_ui color_hex_field
+wait 0.2
+select_all
+type "9C3C3C"
+wait 0.3
+expect_text "Accent #9C3C3C"
+
+# Drag alpha to the strip centre. Start inside the right edge: the
+# exact edge pixel is outside the strip's hit rect.
+mouse_down 1140 452
+wait 0.2
+mouse_move 1006 452
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "A 50%"
+expect_text "Accent #9C3C3C80"
+
+# Up on the focused square raises value; repeats make the exact step
+# count timing-dependent, so assert the token moved.
+focus_ui color_sv_square
+wait 0.2
+key UP
+wait 0.3
+expect_no_text "Accent #9C3C3C80"
+
+# The anchor toggles the still-open editor closed.
+click_ui cs_a_accent
+wait 0.3
+expect_no_ui color_sv_square
+
+# The same editor edits the second token.
+click_ui cs_a_highlight
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "102030"
+wait 0.3
+expect_text "Find highlight #102030"
+screenshot color_swatch_a_highlight
