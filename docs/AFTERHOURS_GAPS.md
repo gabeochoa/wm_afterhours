@@ -323,9 +323,9 @@ Still open: menu labels draw flush at the row edge (button padding positions chi
 
 `HasClipChildren` uses rectangular scissors; parent radius changes fill only. Optional rounded masks need explicit nested/backend semantics. Keep rectangular clipping fast. This is a deferred capability, separate from partial outlines and scroll-decoration clipping.
 
-### Hot keeps tracking the pointer during a drag
+### Hot keeps tracking the pointer during a drag: fixed
 
-Noted while dragging a channel slider in the colour swatch editor (2026-10-04). `hot_id` names the element under the mouse and `active_id` the one being interacted with, but `active_if_mouse_inside` (context.h) assigns hot from the pointer position with no check against active. So once a drag starts, the pointer crossing other widgets keeps moving their hover styling while the dragged widget is still the active one; hover should stay locked on the widget that started the interaction until release. Pinning hot to active is one line, but `is_mouse_click` also requires `is_hot(id)` on release, so a pin decides whether releasing outside the widget still counts as its click. Make that call deliberately, then test drag-off-slider hover, release-outside clicks, and keyboard focus rings. Source-confirmed today; confirm the visible behaviour interactively before implementing, per this file's rule. The swatch editor takes no workaround.
+Noted while dragging a channel slider in the colour swatch editor (2026-10-04). `ResolveHitTarget` now keeps `hot_id` on the already active element while the left button is down, and the legacy `active_if_mouse_inside` helper follows the same rule. Crossing other widgets during a press or drag no longer moves hover styling or pointer-focus follow to them. The release frame is not locked because `left_down` is false there, so release-mode clicks still use the real pointer position: releasing outside cancels, and releasing back inside completes. Coverage: `hit_priority_test` held-press and release-position cases; WM E2E 362/364 plus menu, slider, scrollbar, drag-drop and tab-focus scripts pass.
 
 ## Other consumer requests
 
