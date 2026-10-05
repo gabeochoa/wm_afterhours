@@ -6,6 +6,8 @@ expect_text "Same text, different sizing modes"
 expect_text "Auto-fit result:"
 expect_text "Fixed font size: 18.0px"
 expect_text "Monospaced companion"
+expect_text "5 / Styled runs / 28px rows"
+assert_ui ml_styled_break w=280 h=96
 assert_ui ml_hard_autofit x=48 y=192 w=280 h=96
 assert_ui ml_hard_pinned x=360 y=192 w=280 h=96
 assert_ui ml_wrap_fixed w=280 h=110

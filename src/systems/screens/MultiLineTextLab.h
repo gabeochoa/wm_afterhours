@@ -97,11 +97,13 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
       auto sized = sample(23, wrapped, 360, 364, 280, 0, "ml_wrap_selfsizing", true, true, true, box);
       label(14, metrics(fixed), 48, 478, 300, 18);
       label(15, "Dim::Text / " + metrics(sized), 360, 478, 330, 18);
-      label(16, "5 / Styled runs / explicit breaks", 48, 530, 310);
+      label(16, "5 / Styled runs / 28px rows", 48, 530, 310);
       label(17, "6 / Two breaks / one blank line", 360, 530, 324);
       div(context, mk(entity, 24), at(48, 564, 280, 96)
           .with_styled_label({TextSpan{"- removed line\n", {230, 90, 90, 255}},
               TextSpan{"+ added line\n", {90, 210, 120, 255}}, TextSpan{"  context line", muted}})
+          .with_font("AtkinsonMock", pixels(FS * s)).with_font_size(FS * s)
+          .with_line_height(pixels(28 * s))
           .with_alignment(TextAlignment::Left).with_custom_background(box).with_debug_name("ml_styled_break"));
       sample(25, "above the gap\n\nbelow the gap", 360, 564, 280, 96, "ml_blank_line", false, true, false, box);
       label(30, "Same text, different sizing modes", 704, 158, 528, 23);
