@@ -152,3 +152,9 @@ wait 0.5
 goto_screen vstack_showcase
 wait 0.5
 screenshot done
+goto_screen small_components_lab
+wait 0.5
+goto_screen focus_ring_lab
+wait 0.5
+goto_screen validation_throttle_lab
+wait 0.5
