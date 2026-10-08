@@ -12,6 +12,10 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 - [x] Banner stacking: hovering spreads the stack, but a long stack should scroll so every open banner can be reached. Banners are no longer auto-dismissed past three; the spread stack is clipped to its area and the wheel scrolls it (clamped so the oldest stops at the top), with a scroll readout. Tests: WM E2E 321.
 - [x] Tab rows shrink label text to fit; long example titles squished at 140 px. A minimum font size or overflow rule for buttons would avoid that. The expand split now honours label-width floors by redistributing (a long tab freezes at its label width, siblings re-split the rest). When the labels together exceed the bar, content floors are soft: tabs compress inside the bar and labels ellipsize at unchanged font size. Pixel minima still always win. Tests: autolayout `expand_min_width_redistributes_instead_of_overflowing`, tab_container narrow/inside-bar, downstream `narrow_tab_bar_ellipsizes_instead_of_overflowing`; WM E2E 253 (Long labels tab).
 
+## Theme builder
+
+- [ ] Better theme builder (idea from Zed's Theme Builder, Feb 12 2026): a WM lab screen where the full theme token set is edited beside a live replica preview of typical WM screens, so every change shows its effect immediately. Pieces, in build order: token table by category driving live theme application; click an element in the preview to jump to the token that colours it (inspector); links so a token can follow another (surfaces share a base, icons follow text) instead of copying hex values; undo/redo over edits; export the result as a theme file and import one back. Build on the shipped colour swatch variants (C/B/A) rather than a new colour picker.
+
 ## Terminal consumer support
 
 - [x] Live, argument-aware completion callbacks with explicit refresh after app data changes. Puzzle needs level IDs after `reload_levels` and later-argument choices such as `juice bloom on`.
