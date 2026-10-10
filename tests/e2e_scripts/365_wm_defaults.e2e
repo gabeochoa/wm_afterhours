@@ -1,0 +1,22 @@
+# WM defaults (wm_defaults.h) ride on every preset theme: release-activation
+# clicks, an outset focus ring, and text-area rows at 1.45x the font size.
+# The readouts print the live theme values, so these fail if the defaults
+# stop being applied.
+
+goto_screen wm_defaults_lab
+wait 0.5
+
+expect_text "click Release"
+expect_text "ring 2.0 / -3"
+expect_text "text-area ratio 1.45"
+expect_text "area line height: 29.0px at 20.0px font (ratio 1.45)"
+
+click_ui wmd_release_btn
+wait 0.2
+expect_text "WM default (Release): 1"
+
+click_ui wmd_press_btn
+wait 0.2
+expect_text "Explicit Press opt-in: 1"
+
+screenshot wm_defaults

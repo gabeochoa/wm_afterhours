@@ -57,7 +57,7 @@ struct FocusRingLab : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(19 * scale)).with_background(Theme::Usage::Primary)
           .with_corner_radius(6 * scale).with_debug_name("frl_btn_" + std::to_string(i)));
     }
-    text(20, "Per-widget ring offset (theme default is 4, an inset)", 40, 226, 700, 30, 20);
+    text(20, "Per-widget ring offset (WM theme default is -3, an outset; the library ships +4)", 40, 226, 900, 30, 20);
     struct OffsetSpot {
       const char *label;
       const char *caption;
@@ -66,7 +66,7 @@ struct FocusRingLab : ScreenSystem<UIContext<InputAction>> {
     };
     static const OffsetSpot offset_spots[] = {
         {"Outset", "offset -6: ring outside the box", -6.f, true},
-        {"Default", "theme offset 4", 0.f, false},
+        {"Default", "WM theme offset -3", 0.f, false},
         {"Deep inset", "offset 12: ring well inside", 12.f, true},
     };
     for (int i = 0; i < 3; ++i) {

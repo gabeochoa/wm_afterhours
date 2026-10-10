@@ -251,6 +251,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                               .font = {236, 232, 240, 255}, .darkfont = {24, 22, 30, 255}, .font_muted = {160, 152, 170, 255}})
                     .with_roundness(0.12f);
       afterhours::ui::theme_presets::add_default_language_fonts(t);
+      apply_wm_defaults(t);
       return t;
     }();
     context.theme = night;
@@ -281,7 +282,8 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       return button(context, mk(parent, id),
                     box(x, y, w, h).with_label(text).with_font("AtkinsonMock", pixels(h > 36.f ? 17 * s : 15 * s))
                         .with_custom_background(selected ? coral : chip)
-                        .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name(debug)
+                        .with_custom_text_color(ink).with_corner_radius(8 * s)
+                        .with_click_activation(ClickActivationMode::Press).with_debug_name(debug)
                         .with(um::on_hover({.scale = 1.03f})).with(um::on_press({.scale = 0.96f})));
     };
 
@@ -1495,6 +1497,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto st = button(context, mk(stage.ent(), 1 + i),
                          box(60 + i * 56.f, 96, 48, 48).with_debug_name("star_" + std::to_string(i)).with_padding(Padding::all(pixels(0)))
                              .with_custom_background(afterhours::colors::transparent()).with_corner_radius(0).with_skip_tabbing(true)
+                             .with_click_activation(ClickActivationMode::Press)
                              .with_on_draw_fg([star, half_star, set_halves, shown_halves, pale, gold, hollow](RectangleType r) {
                                star(r, hollow);
                                half_star(r, set_halves, gold);

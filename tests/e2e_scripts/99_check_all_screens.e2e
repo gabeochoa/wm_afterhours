@@ -158,3 +158,5 @@ goto_screen focus_ring_lab
 wait 0.5
 goto_screen validation_throttle_lab
 wait 0.5
+goto_screen wm_defaults_lab
+wait 0.5

@@ -3,6 +3,8 @@
 #include <afterhours/src/plugins/translation.h>
 #include <afterhours/src/plugins/ui/theme.h>
 
+#include "wm_defaults.h"
+
 namespace afterhours {
 namespace ui {
 
@@ -52,6 +54,7 @@ inline Theme cozy_kraft() {
                 })
                 .with_roundness(0.12f);
   add_default_language_fonts(t);
+  apply_wm_defaults(t);
   return t;
 }
 
@@ -74,6 +77,7 @@ inline Theme neon_dark() {
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
+  apply_wm_defaults(t);
   return t;
 }
 
@@ -92,6 +96,7 @@ inline Theme ocean_navy() {
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
+  apply_wm_defaults(t);
   return t;
 }
 
@@ -110,6 +115,7 @@ inline Theme midnight() {
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
+  apply_wm_defaults(t);
   return t;
 }
 
@@ -129,12 +135,15 @@ inline Theme sage_natural() {
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
+  apply_wm_defaults(t);
   return t;
 }
 
 // Apply a theme preset globally
 inline void apply(const Theme &theme) {
-  imm::ThemeDefaults::get().set_theme(theme);
+  Theme t = theme;
+  apply_wm_defaults(t);
+  imm::ThemeDefaults::get().set_theme(t);
 }
 
 // Convenience functions to apply specific presets

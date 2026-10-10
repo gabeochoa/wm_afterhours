@@ -17,6 +17,7 @@
 
 #include "input_mapping.h"
 #include "settings.h"
+#include "wm_defaults.h"
 #include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/color.h>
 #include <afterhours/src/plugins/files.h>
@@ -128,6 +129,9 @@ void apply_ui_styling_defaults() {
   // Hear about text too small to read; the library still clamps it for now.
   ui::imm::ThemeDefaults::get().theme.min_font_size_warn_720p = 16.f;
   ui::imm::ThemeDefaults::get().app_default.min_font_size_warn_720p = 16.f;
+
+  apply_wm_defaults(ui::imm::ThemeDefaults::get().theme);
+  apply_wm_defaults(ui::imm::ThemeDefaults::get().app_default);
 
   ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
 }
