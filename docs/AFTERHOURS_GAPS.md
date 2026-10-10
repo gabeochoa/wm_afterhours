@@ -327,6 +327,22 @@ Still open: menu labels draw flush at the row edge (button padding positions chi
 
 Noted while dragging a channel slider in the colour swatch editor (2026-10-04). `ResolveHitTarget` now keeps `hot_id` on the already active element while the left button is down, and the legacy `active_if_mouse_inside` helper follows the same rule. Crossing other widgets during a press or drag no longer moves hover styling or pointer-focus follow to them. The release frame is not locked because `left_down` is false there, so release-mode clicks still use the real pointer position: releasing outside cancels, and releasing back inside completes. Coverage: `hit_priority_test` held-press and release-position cases; WM E2E 362/364 plus menu, slider, scrollbar, drag-drop and tab-focus scripts pass.
 
+## Tetr input gaps, 2026-10-10
+
+Found while bumping tetr-afterhours to `65d5292`. Consumer paths are in `tetr-afterhours/src/`.
+
+### No per-action query keyed by the game's enum
+
+The input collector exposes only `inputs()`, `inputs_pressed()` and `inputs_pressed_repeat()` as vectors of `ActionDone` with an `int` action, and the mapping is `std::map<int, ValidInputs>`. Every consumer writes the same scan: tetr's `held_actions()` in `systems.h`, plus `to_int`/`from_int` casts in `main.cpp`. Wanted: `input::is_held(Action)` / `is_pressed(Action)` templated on the consumer's enum, and a mapping keyed by that enum. Check: tetr deletes `held_actions()`, `to_int` and `from_int` with no behaviour change, and a held action on any gamepad counts as held.
+
+### Hold-to-repeat needs a delay and a rate, on every device
+
+`inputs_pressed_repeat` follows OS key repeat (about 500 ms before the first repeat), and gamepad buttons never repeat. Tetr therefore gates Move, Rotate and Drop with its own `RepeatGate` timers, which add a second problem: a fresh press can wait up to one period before it acts. Same root as the slider-repeat entry above. Wanted: a per-action repeat with a caller-set initial delay and rate (Tetris DAS/ARR) that fires on the press frame, paced by elapsed time, and covers keys, buttons and axes. Check: tetr's three `RepeatGate`s go away, the press frame moves the piece, and a hold repeats at the configured rate at 60 and 200 fps.
+
+### `distance_sq` is missing on the raylib path
+
+`developer.h` defines `afterhours::distance_sq` only for its fallback `MyVec2`, so raylib consumers keep their own copy (tetr `main.cpp`). Wanted: the same helper for `Vector2Type` under `AFTER_HOURS_USE_RAYLIB`. Check: tetr deletes its copy and still builds.
+
 ## Other consumer requests
 
 - Wordproc needs access-key underlines on individual characters.
