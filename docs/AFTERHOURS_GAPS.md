@@ -343,6 +343,162 @@ The input collector exposes only `inputs()`, `inputs_pressed()` and `inputs_pres
 
 `developer.h` defines `afterhours::distance_sq` only for its fallback `MyVec2`, so raylib consumers keep their own copy (tetr `main.cpp`). Wanted: the same helper for `Vector2Type` under `AFTER_HOURS_USE_RAYLIB`. Check: tetr deletes its copy and still builds.
 
+## Audit triage: obvious defects, 2026-10-10
+
+Deduped from the six 2026-10-06 `todo-*.md` audits (animation-vocabulary, apple-design, break-ui, find-animation-opportunities, improve-animations, review-animations; 1,179 raw items). Only defects verified against current code (`65d5292`) with a local fix are filed here. Items that change a default, add API, or retune taste are held pending decision and are deliberately not filed. Paths are relative to `vendor/afterhours/src/` unless noted. Five WM-local defects went to `todo.md` instead.
+
+### Masked password fields leak plaintext and corrupt the caret
+
+`plugins/ui/text_input/component.h:582,590` allows Copy/Cut in `with_mask_char` fields (same in utils paths), and `:511-516` stores the masked string's codepoint index as a real byte offset, so clicking in `contraseña` lands inside `ñ` and the next keystroke writes invalid UTF-8. Wanted: refuse Copy/Cut while masked; convert codepoint index to byte offset in masked mode. Check: Cmd+C/X in a masked field leaves the clipboard unchanged; clicking after a masked multibyte char then typing produces valid UTF-8 with the char inserted at that codepoint.
+
+### Stale caller indices read out of bounds across immediate containers
+
+Shrinking the option/tab/label set (or a saved setting from a bigger monitor) indexes unchecked: `navigation_bar` (`plugins/ui/imm_containers.h:306`, `set_current_index` at `plugins/ui/components.h:220` never clamps), `dropdown` (`imm_containers.h:114`, seeded unclamped `:45`), `tab_container` (no clamp at entry, unclamped index returned at `imm_containers.h:436`), `radio_group` (`plugins/ui/imm_controls.h:469`), `grid` (`plugins/ui/grid.h:157` when `col >= col_widths.size()`), saved resolution (`plugins/window_manager.h:393`). Wanted: clamp at entry/use in each, `log_error` on mismatch (grid: fall back to `expand()`; resolution: fall back to `current_index()`). Check: build each with N=3, select last, rebuild with N=1 — no OOB/ASan hit, selection clamps to 0, returned index is in range.
+
+### Empty containers divide by zero
+
+`button_group` with no labels divides by `labels.size()` (`plugins/ui/imm_controls.h:129,137`); stepper index helpers do `% total` / `total-1` with `total==0` (`plugins/ui/imm_primitives.h:32-38`, SIGFPE / SIZE_MAX). Wanted: early-return/return 0 when empty. Check: empty `button_group` and `total==0` stepper next/prev run without crash and return 0/no-op.
+
+### Text measurement memo: UB on bad sizes, hash-only hits return wrong sizes
+
+`src/measure_memo.h:65` casts `size*64.f` to `uint64_t` (UB for negative/NaN font sizes from bad scale math), and lookup returns on hash alone (`:73`), so a collision serves another string's measured size. Adjacent to the fixed wrap-memo entry, which covers keys/generations, not this. Wanted: guard `!(size > 0)`, verify the stored text (or a second hash) on hit. Check: measuring at size NaN/-1 returns 0 without UB; two engineered colliding strings each measure to their own width.
+
+### Arena exhaustion emits a text command with a null string
+
+`plugins/ui/render_primitives.h:440` may get `nullptr` from `create_array_uninitialized`, yet the command is still emitted with `text = text_copy` (`:458`) and drawing calls strlen on null. Wanted: skip the command and `log_error` when allocation fails. Check: exhaust the arena with a 50KB label — no null deref, an error is logged once.
+
+### Progress bars cast NaN to int (UB)
+
+`plugins/ui/imm_value.h:396` clamp passes NaN through, then `:403` does `int(normalized*100)` (circular path `:520` same). Wanted: non-finite input draws 0 and labels "—". Check: `progress(0.f/0.f)` renders empty with no UB under UBSan.
+
+### `tree_view` calls empty config callbacks mid-frame
+
+`plugins/ui/tree_view.h:59-60` invokes `get_id`/`get_label` unchecked; a default `TreeViewConfig` throws `bad_function_call`. Wanted: assert/`log_error` at entry and bail. Check: `tree_view` with an empty config logs once and does not throw.
+
+### Translation lookup throws on translator typos and missing English
+
+`plugins/translation.h:100` lets `fmt::vformat` escape on a malformed format/missing param, and `:137` does `translations.at(Language::English)` which throws when the map has no English. Wanted: catch, `log_error` with the key, return the raw string / empty fallback. Check: `"{count} item{s"` and a no-English map render the raw text and log, no exception escapes UI build.
+
+### Text-unit splitting overruns truncated UTF-8
+
+`plugins/ui/text_units.h:31` does `i += len` unclamped, so a string ending in a truncated sequence (e.g. output of the ellipsis bug below) indexes past the end in later `substr` calls. Wanted: `i = std::min(i + len, s.size())`. Check: splitting `"\xC3"` / a half-emoji yields one replacement unit, no OOB under ASan.
+
+### Paste silently joins lines (newline/tab dropped)
+
+`plugins/ui/text_input/component.h:604` filters `cp >= 32`, so pasting `Line one\nLine two` gives `Line oneLine two` (file paths likewise mangled), while the shared path (`utils.h:~610`) keeps tabs — the two paths disagree. Wanted: map `\n`/`\r\n`/`\t` to one space on the single-line path, one code path only. Check: pasting the two-line string into a text input yields `Line one Line two`.
+
+### External text replacement moves the caret and poisons undo every frame
+
+Host-side per-frame normalization (uppercase/digits-only) hits `plugins/ui/text_input/component.h:117-122` (via the per-frame init_state callback), resetting caret=end each keystroke, leaving a stale selection anchor, and undo restores replaced text. Wanted: on external replace, clamp caret, clear selection, clear undo. Check: typing mid-string with an uppercasing host keeps the caret after the typed char; undo does not resurrect pre-replacement text.
+
+### Theme files bypass the Builder clamps (nan/0/5 accepted)
+
+`plugins/ui/theme_io.h:242` assigns parsed floats directly (`stof` accepts nan/inf at `:132`), so `ui_scale = 0`, `disabled_opacity = 5`, `roundness = nan` load verbatim. Wanted: reject non-finite values and apply the per-field Builder clamps on load. Check: loading that theme yields clamped finite values (scale > 0, opacity ≤ 1) and logs the rejected fields.
+
+### Layout inspector queries the wrong collection (never finds UI)
+
+`plugins/ui/layout_inspector.h:69` runs a default `EntityQuery` but UI entities live in `UICollectionHolder`, so every pick reports "Component not found"; `:94` also reads nonexistent `context->screen_bounds`. Wanted: look up via `getEntityForID`, use `screen_width`/`screen_height`. Check: picking any visible widget in the inspector shows that component.
+
+### Slider reports the wrong value four ways
+
+(1) Enter/Space on a focused slider jumps it to the mouse: `HandleDrags` fires the drag callback on `WidgetPress` (`plugins/ui/systems.h:1243-1248`) and the slider callback reads mouse position (`plugins/ui/imm_value.h:200-201`) — delete the keyboard branch (arrows already work via `HasLeftRightListener`). (2) Grabbing jumps: value maps `(mx-rx)/w` (`:201`) but the 25%-wide handle is drawn at `v*0.75w` (`:219-220`) — store a grab offset and map over `w - handle_w` (handle redesign stays a separate decision). (3) A 0-width track divides to NaN which clamp passes through (`:168`), permanently NaN; an unclamped/NaN `owned_value` (`:161`, ctor `components.h:124`) draws the handle past the track — early-out on `width <= 0`, `isfinite`-guard, clamp on init/read. (4) Percent label truncates (`:45,48,67`: 0.29 → "28%") — use `std::lround`. Check: keyboard Enter leaves the value unchanged; grabbing the handle's left edge doesn't move the value; 0-width then restored slider and `owned_value=1.5/NaN` recover to a finite in-range value; 0.29 labels "29%".
+
+### Modal backdrops are drawn twice
+
+`ModalBackdropRenderSystem` (`plugins/modal.h:983-997`, registered `:1066`) draws a full-alpha rect per stacked modal on top of the presence-faded backdrop div (`:449`), so dimming doubles/compounds and ignores presence fade. Wanted: delete the render system, keep the div. Check: two stacked modals dim the background exactly once at the configured alpha; mid-exit the backdrop fades with presence.
+
+### Drag start blanks the item for a frame and centres the overlay on the cursor
+
+`plugins/ui/systems.h:1868,1900,1907`: drag starts on `just_pressed`, the source hides the same frame and the overlay appears next frame, so a plain click blanks the card; the overlay is placed at `mouse - w/2` (`:1708,1731-1732`) ignoring the grab point. Wanted: arm on press, start on the existing `press_moved`, create the overlay the same frame at `mouse - grab_offset`. Check: click-without-move never blanks the item; grabbing a card's corner keeps that corner under the cursor.
+
+### Fast virtual-list glides blank the current viewport
+
+`plugins/ui/imm_virtual_list.h:234-240`: when the eased span exceeds ~3 viewports the emitted window drops the rows at the current offset, so a fast glide shows an empty viewport. Wanted: always include the window containing the current offset within the same `max_span` bound. Check: glide `scroll_to_bottom` on a 1000-row list — every frame renders the rows intersecting the viewport (no empty frame).
+
+### Ellipsis truncation cuts inside codepoints and emoji clusters
+
+Both ellipsis paths binary-search bytes: immediate `plugins/ui/rendering.h:1024,1036` and the batched copy `:2542` (`display_text :2554`), so narrow labels show a stray `?`/half-emoji before `...`. Wanted: one shared grapheme-safe `ellipsize(...)` snapping to codepoint (preferably grapheme, via `text_units.h`) boundaries, called from both paths. Check: `Wiśniewska-Kowalczyk`, `王秀英の設定`, `👩🏽‍💻 Priya` in a narrow Ellipsis label never split a codepoint/cluster in either renderer.
+
+### Translation glyph loading drops all 4-byte UTF-8 (emoji, CJK Ext-B)
+
+The hand decoder at `plugins/translation.h:288-298` handles only 1–3-byte sequences; a 4-byte lead just advances, so those glyphs never load. Wanted: decode with `GetCodepointNext`. Check: a translation containing an emoji renders the emoji (glyph present), where today it is blank/missing.
+
+### `text_area` ignores editable/readonly/disabled state
+
+Enter inserts a newline with no editable check, undo snapshot, or selection replacement (`plugins/ui/text_input/text_area.h:584` via `utils.h:340`), and the init callback (`text_area.h:121-137`) never copies `config.text_readonly`/`disabled` into state (text_input does, `component.h:127`), so `with_readonly(true)` areas stay editable. Wanted: copy both flags after init; guard + snapshot + `delete_selection` before `insert_newline` (sweep the other edit ops the same way). Check: readonly/disabled text_area rejects Enter and typing; Enter with a selection in an editable area replaces it and is one undo step.
+
+### Toast fade is computed, never rendered — and ignores instant mode
+
+`plugins/toast.h:315-317` writes opacity only if `HasOpacity` already exists, but `schedule()` never adds it, so the lifetime fade silently never draws; the hand-rolled alpha/slide at `:308-310` also has no `is_instant` check anywhere in the file. Wanted: `addComponentIfMissing<HasOpacity>` when applying the fade; snap alpha/slide when instant. Check: a toast visibly fades in its last stretch with no caller-added `HasOpacity`; under instant mode it appears/disappears with no slide.
+
+### Instant-mode `to()` shows the from-value for one frame
+
+`plugins/animation/track.h:130-139,261-269` with the instant landing in `advance()` (`:196-205`): `begin` keeps `start_pos=pos`, so the first rendered frame after an instant `to()` shows the old pose, then lands next tick. Wanted: land immediately in `begin`/`to` when instant. Check: with instant on, `track.to(5)` sampled before any `advance` already returns 5.
+
+### Single-value `on_change` targets the new pose for one frame, then falls back to rest
+
+`plugins/ui_motion.h:243-258,324-325`: a single-value change rule ends back at rest, making the builder a one-frame no-op (known victim: drop-target `on_change{{.scale=0.97f}}`). Wanted: pulse semantics locally in resolve/apply — `to(p.to).then(rest, release)`. Check: a single-value `on_change` visibly reaches its target and returns over the release mode instead of snapping back next frame.
+
+### Text-unit changes restart from the enter pose mid-flight
+
+`plugins/ui/text_unit_motion.h:109-112` always calls `from()`, so a unit changed while still animating snaps to `from_y`/opacity 0 and blinks. Wanted: `to()` from the current value when the unit's track is active; `from()` only for genuinely new units. Check: two rapid text changes 50ms apart keep opacity continuous (no frame at 0 for already-visible units).
+
+### `with_reset` change rules restart their track on every fire
+
+`plugins/ui_motion.h:170-171,248-249,320-321` applies `tr.from(reset_to)` unconditionally, so rapid re-triggers restart from the reset pose instead of continuing. Wanted: apply `reset_to` only when the track is inactive; single-fire behaviour unchanged. Check: firing the same change twice mid-flight does not teleport the value to the reset pose on the second fire.
+
+### Built-in motion presets return `MotionRule` and are silently dropped
+
+`fade_up/fade_in/pop_in/hover_lift/press_squash/slide_in` (`plugins/animation_presets/basic_presets.h:12-40`) return `MotionRule`; `with(T)` (`plugins/ui/component_config.h:664`) stores it as an extension, but `motion_rules()` (`plugins/ui_motion.h:388-392`) only collects `MotionExt`, so `.with(presets::fade_up())` never animates (zero `presets::` callers in WM src today). Wanted: presets return `MotionExt` (or `motion_rules` collects `MotionRule`) — one place, no default change. Check: `.with(presets::fade_up())` on a fresh widget animates y/opacity over its duration; headless test asserts the track is active frame 1.
+
+### `with_letter_spacing(0)` is a no-op
+
+The config merge treats 0 as unset (`plugins/ui/component_config.h:108,1239-1240`, `!= 0.f`), so an explicit zero tracking can never override an inherited one (9 WM call sites currently do nothing). Wanted: `optional<float>`, merge on `has_value`; non-zero behaviour unchanged. Check: child with `with_letter_spacing(0)` under a spaced parent measures/draws with zero extra tracking.
+
+### Sokol backend ignores letter spacing entirely
+
+Measure (`backends/sokol/font_helper.h:71`, memo key hardcodes `1.f` at `:84`) and draw (`backends/sokol/drawing_helpers.h:35`) take spacing as an unnamed parameter, so `with_letter_spacing(4)` is a silent no-op on Metal and layout differs from raylib. Wanted: `fonsSetSpacing` in both, spacing in the memo key. Check: the same label measures and draws wider with spacing 4 than 0 under sokol, matching raylib within a pixel.
+
+### Rotation ignores the configured transform origin
+
+Scale honours `mods.origin` (`plugins/ui/components.h:322`, set by `with_origin`, `component_config.h:659`) but both rotation paths (`plugins/ui/rendering.h:1704-1706,2570-2571`) pivot on the centre. Wanted: rotate about `mods.origin` in both paths; default 0.5/0.5 unchanged. Check: `with_origin(0,0)` + 90° rotation pivots on the top-left corner in both renderers (pixel test).
+
+### `delay()` before any `to()`/`then()` silently does nothing
+
+`plugins/animation/track.h:152-160`: with an empty chain+queue and inactive track, `delay()` falls through with no effect and no diagnostic. Wanted: `log_error` in that branch only. Check: `track.delay(1)` on a fresh track logs an error; `to(...).delay(...)` behaviour is byte-identical.
+
+### Per-unit text motion is silently skipped for wrapped text
+
+`plugins/ui/rendering.h:2683`: `per_unit = !wrapped && ...` falls back to a plain draw with no diagnostic when a `HasTextUnitMotion` label wraps. Wanted: `log_warn` once in that case. Check: a wrapped unit-motion label logs the warning once; unwrapped rendering is unchanged.
+
+### Toggle knob lerps 0.2 per frame and ignores the caller's value
+
+`plugins/ui/imm_controls.h:502`: `animation_progress += (t-p)*0.2f` once per frame — 2× speed at 120Hz, never settles, no instant/pause check; the init callback (`:498`) also never re-reads the caller's `value` and `:605` overwrites it, so external resets desync (WM's ToggleSwitchShowcase hand-writes `animation_progress` to compensate). Wanted: dt-corrected exponential (`1 - pow(0.8, dt*60)`) + settle epsilon + snap when instant + sync from `value` each call, all in the one function; 60Hz feel preserved. Check: time-to-90% matches at 60/120/200fps; setting `value` externally moves the knob next frame; under instant the knob is at target frame 1.
+
+### Caret blink uses a hard-coded frame time and blinks under reduced motion
+
+`plugins/ui/text_input/text_area.h:390` calls `update_blink(state, 0.016f)` (~3Hz blink at 200fps; text_input already uses `ctx.dt` at `component.h:312-313`), and `update_blink` itself (`plugins/ui/text_input/utils.h:161-166`) has no reduced/instant gate. Wanted: pass `ctx.dt`; return steady-visible when `motion::is_instant()`. Check: blink period in seconds matches at 60/200fps; under reduced/instant the caret is steady.
+
+### Tray key-repeat drops the remainder
+
+`plugins/ui/systems.h:1190` resets `repeat_timer = 0.f` at threshold instead of `repeat_timer -= threshold`, so repeat rate varies with frame rate. Same family as the filed slider-repeat and tetr DAS/ARR entries, different site. Wanted: carry the remainder. Check: holding a tray key for 1.0s fires the same count (±1) at 60 and 200fps.
+
+### Sprite animation drops leftover frame time and uses raw dt
+
+`plugins/texture_manager.h:193-197` resets `frame_time = frame_dur()` instead of carrying the remainder (24fps art plays at ~20fps at 60Hz) and ignores the scaled clock (`scaled_dt` exists, `plugins/animation/store.h:29`). Wanted: subtract-and-carry; advance by scaled dt. Check: 24fps sprite advances 24 frames in 1.0s at 60/120/200fps and freezes under pause/time-scale 0.
+
+### Sokol `get_frame_time` ignores frames the backend itself skipped
+
+The frame callback accumulates/resets `g_frame_elapsed` (`backends/sokol/backend.h:620-625`) but the getter (`:343-351`) returns `sapp_frame_duration()`, so at target-60 on a 120Hz display everything runs half-speed. Wanted: return the accumulated elapsed. Check: static defect verified; runtime check still owed — at target 60/120Hz a 1s timeline completes in 1.0s (needs a 120Hz host, e.g. floatinghotel).
+
+### Particle drag flips velocity sign at low frame rates
+
+`plugins/particles.h:75-76`: explicit-Euler `vel -= vel*drag*dt` reverses velocity when `drag*dt > 1` and decays differently per fps. Wanted: exact `vel *= exp(-drag*dt)`. Check: with drag=10, velocity after 0.5s matches at 20/60/200fps and never changes sign.
+
+### `ease_scroll` glides on under instant/reduced motion
+
+`plugins/ui/components.h:637-663` never checks `is_instant` (the dt-corrected smoothing at `:652-653` and a snap path at `:644` already exist). Wanted: snap `offset = target` when instant — needs the instant flag visible in the ui leaf (ui cannot include `animation/track.h` today; small seam). Non-reduced defaults unchanged. Check: with instant on, wheel scroll lands on target the same frame; with it off, the glide is unchanged.
+
 ## Other consumer requests
 
 - Wordproc needs access-key underlines on individual characters.

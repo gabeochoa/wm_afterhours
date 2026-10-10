@@ -276,3 +276,177 @@ Demand 1 (single project, ordered easy → hard):
 ### Remaining hanabi live items not in a family above (grouped, all EXT unless noted)
 
 - [ ] Frame/host loop (EXT, host-loop plugin surface): CRITs done 2026-10-03: `frame_loop::request_frame()` (#542; thread-safe, coalescing, the wake handle #546 asks for) with `RunConfig::frame_mode` Continuous/OnDemand, backend input events requesting frames, `wait_for_frame_request` for custom hosts (`frame_loop_test` 20/20; WM HostLoopLab, E2E 360). #541 done with it: Metal caps full frames at `target_fps` in the display callback and `set_target_fps` retargets at runtime. Still open from this line: #543 indivisible frame phases (L), #544 non-consuming input-activity snapshot, #545 window exposure/backing events, #547 timer visual deadlines, #548 `dt` is callback time, #549 headless cadence harness, #541 Metal ignores `RunConfig::target_fps` (BUG), #580 cancellable background jobs, #581 deactivate hook for conditional systems, #587 frame-safe mailbox, #589 per-system CPU accounting, #585/#586 retained-byte attribution + memory-pressure event, #181/#183/#438 per-frame allocation family (ComponentConfig copies, focusable `std::set`, string churn), #155 first-draw pre-warm, #126/#125/#212/#145 GPU accounting family (byte totals, deferred frees, frame scope), #14 texture sampler mipmaps, #95 `clipboard.h` declares none of the symbols it calls (BUG), #50/#54 graphics/input reads bypass the injector (BUG), #70 entity created this frame not findable by id (BUG), #230 `mouse.pos` NaN until first event (BUG), #172 input injection requires the e2e plugin compiled in, #45 widget callbacks outlive their frame / imm `on_submit`, #38 container hover without clickable, #63 container draws over children, #64 window-level chrome/render layers, #90 `ctx.theme` read at render time, #74/#286 resolved layout tree walk + self position, #146 tree-size reporting, #3 absolute `button()` click vs manual hit-test, #13 alpha blending in `draw_texture_pro` (see Unit B opacity), #28a window focus query (Unit E), #37 text selection on read-only text (L), #259 script parser `\n` escape (EXT:e2e_testing, XS), #336 tab order scoping, #287 drag primitive unreachable from config (XS; see Unit F), #306 `with_auto_grow` row-count return (XS).
+
+## Audit triage 2026-10-10: WM-local defects (obvious; library ones in docs/AFTERHOURS_GAPS.md)
+
+- [ ] AnimationStressLab overrides reduced motion for the whole session: `src/systems/screens/AnimationStressLab.h:26,83` calls `motion::set_instant(reduced)` every frame with a local `reduced=false`, persisting after leaving the screen, against Settings (`src/settings.cpp:201`). Fix: init/write through Settings, delete the per-frame call. Check: entering/exiting the lab never changes the global reduced-motion setting.
+- [ ] TransitionsLab hold-timers strobe or vanish under instant: thinking/reasoning holds (`src/systems/screens/TransitionsLab.h:1269` + reasoning hold) finish frame 1 and re-fire every frame; ErrorHold/toast/Skeleton/Spin/Dissolve/Drop holds (`:549,859,954,996,1656,1898`) expire instantly; loop restarts (`:1742-1743` + shimmer) lack `!is_instant()` guards. Fix: `.essential()` on the hold tracks (the spinner at `:991` already has it), instant-guards on restarts. Check: under reduced/instant each hold lasts its wall-clock duration and fires once.
+- [ ] Hand-rolled demo loops ignore reduced motion: `AnimationLoopingDemo.h:36,89-100`, `TransitionsLab.h:1423-1445,1574+` (confetti/smoke/gradient `get_time()` unguarded), `AnimationSpringDemo.h:101`, `OffsiteBackupApp.h:46-50`. Fix: gate/freeze each on Settings reduced/instant. Check: with reduced motion on, none of the four screens move.
+- [ ] D-pad up/down each fire two actions: `src/input_mapping.h:62,81,67,86` — `WidgetBack = LEFT_FACE_UP = WidgetUp` and `WidgetNext = LEFT_FACE_DOWN = WidgetDown`. Fix: rebind Back/Next to the triggers. Check: D-pad up moves focus only (no Back action recorded).
+- [ ] Letterbox layout divides by zero on minimized windows: `src/systems/LetterboxLayout.h:19,23` divides by content width/height unchecked (inf/NaN rects at 0×0). Fix: return an empty layout when any dimension ≤ 0. Check: minimize to 0×0 and restore renders normally with no NaN rect logged.
+
+## Audit triage 2026-10-10: native support wanted in afterhours (prerequisite to any default change)
+
+Deduped from the six 2026-10-06 `todo-*.md` audits (147 unique capabilities; 763 OTHER items need no new support, 101 were already filed). Each item is a capability that does not exist today, verified absent by grep/opening the cited site. Paths are relative to `vendor/afterhours/src/`. `[then-default]` means a default flip also rides on the item; those defaults are NOT filed here — they stay in the separate current→proposed list pending decision.
+
+### Motion core
+
+- [ ] Cubic-bezier easing + strong curves: `Easing{kind,x1,y1,x2,y2}` + `cubic_bezier()` + ease_out_strong/ease_in_out_strong/ease_drawer/linear missing; `Timeline.curve` is a bare fn-ptr (`animation/timeline.h:30`). Check: grep cubic_bezier\|ease_out_strong > 0. [then-default]
+- [ ] `motion::ease` helper: one-call eased timeline missing (`timeline.h`). Check: grep 'motion::ease' > 0.
+- [ ] Per-keyframe easing: `Key{t,v}` only (`timeline.h:23`). Check: Key has an easing field.
+- [ ] Whole-duration easing `curve_whole` flag: curve is per-segment (`timeline.h:67`). Check: flag exists.
+- [ ] Asymmetric easing preset, needs cubic-bezier (`timeline.h:10`). Check: grep asymmetric > 0.
+- [ ] Stepped easing `steps(n)` (`timeline.h:30`). Check: steps() constructible.
+- [ ] Perceptual spring completion `perceptual_duration()` + flag; settle uses kRestRatio 1e-3 (`spring.h:78`). Check: grep perceptual > 0.
+- [ ] Overdamped springs: bounce clamped [0,.999] (`spring.h:51`). Check: bounce<0 solves.
+- [ ] `Spring::from_physics(stiffness,damping,mass)` (`spring.h:29`). Check: grep > 0.
+- [ ] Named springs move/drawer/rotate/press/playful (`spring.h:25-28`). Check: grep 'Spring::move\|playful' > 0. [then-default]
+- [ ] Velocity handoff `from(v,vel)` / `to(...,vel)` / `velocity(T)`; `from()` zeroes velocity (`track.h:118`). Check: a thrown spring carries velocity.
+- [ ] Timeline retarget keeps velocity; `begin()` does vel.fill(0) (`track.h:281`). Check: mid-flight retarget preserves derivative.
+- [ ] Timeline reversal shortening proportional to elapsed (`track.h:130`). Check: reversed duration scales.
+- [ ] Track pause/resume/seek (`store.h:23`). Check: methods exist.
+- [ ] Cancellable on_complete handle dropped on redirect (`track.h:172`). Check: handle type exists.
+- [ ] `motion::after(seconds,fn)` timer (`store.h`). Check: grep > 0.
+- [ ] Track head-delay `after()` (`track.h:152`). Check: grep 'Track &after' > 0.
+- [ ] Finite `repeat(int)` + iterations; `repeat(bool)` only (`track.h:162`). Check: repeat(3) stops.
+- [ ] `repeat_alternate()` reverse chain (`track.h:227`). Check: plays reversed.
+- [ ] `motion::stagger(span,step,order)` for arbitrary tracks (`text_unit_motion.h:28`). Check: helper exists outside text units.
+- [ ] `with_child_stagger(step,order)` (`ui_motion.h:358`). Check: grep > 0.
+- [ ] `motion::any_active(Entity)` (`store.h:33`). Check: grep > 0.
+- [ ] `Track::total_elapsed()` (`track.h:110`). Check: grep > 0.
+- [ ] HasTracks prune/shrink; maps only grow (`store.h:33`). Check: prune() erases finished tracks.
+- [ ] dt clamp in scaled_dt/AdvanceTracks (`store.h:29`). Check: ceiling present.
+- [ ] OnDemand request_frame while tracks are active (`store.h:92`). Check: AdvanceTracks requests frames.
+- [ ] e2e `wait_for_motion` (`e2e_testing/command_handlers.h:395`). Check: grep > 0.
+- [ ] Auto register_bridge; tracks freeze otherwise (`ui_motion.h:430`). Check: unregistered tracks advance.
+- [ ] Reduced motion != instant: `set_reduced` lands transforms, keeps ~150ms opacity/colour (`track.h:91`). Check: grep set_reduced > 0. [then-default]
+- [ ] MotionRule essential flag → `Track::essential` (`ui_motion.h:68`). Check: grep essential in ui_motion.h > 0. [then-default]
+- [ ] Per-property mode split / opacity no-overshoot; single mode today (`ui_motion.h:71`). Check: pop_in springs scale, eases opacity. [then-default]
+- [ ] Colour tracks reject bouncy springs (`ui_motion.h:300`). Check: bounce>0 clamped/logged for colour.
+- [ ] Per-property rest-delta wiring; `Spring.rest_delta` never set (`spring.h:17`). Check: deltas assigned per property. [then-default]
+- [ ] `on_state(state,props,enter,exit)` overload (`ui_motion.h:375`). Check: 4-arg form exists.
+- [ ] Delay param on all trigger builders; only on_appear has it (`ui_motion.h:358`). Check: on_hover with delay compiles.
+- [ ] Asymmetric `MotionRule.release`; today release_mode=mode (`ui_motion.h:172`). Check: distinct press/release modes. [then-default]
+- [ ] Replay `um::replay` + on_appear reset-on-hide/key; appeared never reset (`ui_motion.h:103`). Check: grep replay > 0. [then-default]
+- [ ] `um::initial(props)` pose builder (`ui_motion.h:358`). Check: grep > 0.
+- [ ] `um::loop(props,keyframes)` builder (`ui_motion.h:358`). Check: grep > 0.
+- [ ] Presence/on_exit primitive; only a modal-private Phase exists (`ui_motion.h:66`). Exit-hold need already tracked in the widget-lifetime item above; this is the motion API half. Check: grep on_exit > 0. [then-default]
+- [ ] Layout animation / FLIP `with_layout_animation` with last-rect (`store.h:33`; `autolayout.h`). Check: a rect change glides.
+- [ ] Shared-element `with_shared_id(key)` (`ui_motion.h:44`). Check: grep > 0.
+- [ ] scale_x/scale_y in MotionProps + HasUIModifiers + render (`ui_motion.h:44`; `components.h:311`). Check: non-uniform scale renders.
+- [ ] skew_x/skew_y props (`ui_motion.h:44`). Check: grep > 0.
+- [ ] rotate_x/rotate_y/perspective props (`ui_motion.h:44`). Check: grep > 0.
+- [ ] `clip_inset{t,r,b,l}` prop + feathered mask (`ui_motion.h:44`). Check: grep > 0.
+- [ ] MotionProps text/border colours; background only today (`ui_motion.h:52,300`). Check: tab/radio fades expressible. [then-default]
+- [ ] Motion translate as Size/h720 incl. slide_in fraction + text-unit from_x/y; raw px today (`ui_motion.h:22`). Check: resolves via resolve_to_pixels. [then-default]
+- [ ] Origin from Placement `with_origin_from`/`origin_for`; Placed.used discarded (`component_config.h:659`; `overlay.h:15`). Check: grep > 0. [then-default]
+- [ ] on_focus restricted to bg/opacity + warn (`ui_motion.h:371`). Check: transform focus rejected.
+
+### UI widgets
+
+- [ ] Toast fixed enter/exit tracks + dismiss exit phase; lifetime-expo only, dismiss instant (`toast.h:70,79,308`). Check: 3s/10s toasts share exit time. [then-default]
+- [ ] Toast swipe-dismiss (`toast.h`). Check: grep swipe > 0.
+- [ ] Toast stack slot glide; y written directly (`toast.h:295`). Check: siblings glide. [then-default]
+- [ ] Toast pin + wrapped height + length-scaled duration; fixed h720(48) (`toast.h:27`). Check: grep pin > 0.
+- [ ] Toast visible cap + '+N more' (`toast.h:277`). Check: 10 toasts capped. [then-default]
+- [ ] Toast scaled_dt pause/time_scale; elapsed += raw dt (`toast.h:251`). Check: pause freezes toast.
+- [ ] Toast lifetime pauses on hover (`toast.h:251`). Check: hovered toast persists.
+- [ ] Tooltip warm window + fade/scale enter track; owner change restarts 0.5s, pop-in (`tooltip.h:27,108`). Check: warm neighbour instant, cold fades. [then-default]
+- [ ] Modal presence→transform (Center scale / edges translate); opacity only (`modal.h:449`). Check: drawer slides. [then-default]
+- [ ] Modal drag-to-close rubber-band + velocity (`modal.h:53`). Check: grep drag > 0.
+- [ ] Backdrop separate faster-exit track; shares presence (`modal.h:449`). Check: backdrop outruns panel.
+- [ ] Cross-modal backdrop handover; flash/double-dim today (`modal.h:449`). Check: alpha held across swap. [then-default]
+- [ ] Modal finish at presence<0.02 (`modal.h:367`). Check: early close.
+- [ ] Exiting modal pointer-transparent; gate blocks UI (`modal.h:263`). Check: clicks pass during exit.
+- [ ] Non-top modal scale .96 + dim push-back (`modal.h:136`). Check: stacked modal recedes.
+- [ ] Menu/popover presence anchor-origin enter (`menu.h:101`). Check: scale+fade from anchor. [then-default]
+- [ ] Menu/popover exit fade, instant on select (`menu.h:80`). Check: outside-dismiss fades. [then-default]
+- [ ] Dropdown tray presence + rotating chevron entity; glyph swap today (`imm_containers.h:119,159`). Check: chevron rotates. [then-default]
+- [ ] Tab sliding indicator as a single Rect track; border teleports (`imm_containers.h:402`). Check: indicator glides. [then-default]
+- [ ] Tab prev-index exposure (`imm_containers.h:365`). Check: prev index readable.
+- [ ] Direction-aware index-delta slide helper (`imm_containers.h`). Check: grep > 0.
+- [ ] Checkbox `draw_partial(path,t)` mark track (`imm_controls.h:163`; `rendering.h:813`). Check: mark draws in ~150ms. [then-default]
+- [ ] Checkbox bg on_state fade wiring (`imm_controls.h:283`). Check: 120ms crossfade. [then-default]
+- [ ] Radio dot/dash scale+fade tracks (`imm_controls.h:423`). Check: dot pops. [then-default]
+- [ ] Toggle knob press-widen track (`imm_controls.h:587`). Check: 20→24 while active. [then-default]
+- [ ] Toggle whole-row >=44 + h720 track + hover-lighten (`imm_controls.h:495,554`). Check: the row toggles.
+- [ ] Slider grab colour track, position 1:1 (`imm_value.h:196`). Check: colour steps on grab. [then-default]
+- [ ] Stepper/nav label slide cue (`imm_value.h:666`; `imm_containers.h:247`). Check: directional slide. [then-default]
+- [ ] Progress `with_value_motion` tween + indeterminate, bar and circular (`imm_value.h:379`). Check: grep > 0.
+- [ ] Skeleton/shimmer primitive (`imm_value.h`). Check: grep skeleton > 0.
+- [ ] `hold_button(ctx,ep,seconds)` fill track (`modal.h:1098`). Check: grep > 0.
+- [ ] Collapsible/accordion measured-height primitive (`imm_containers.h`). Check: grep > 0.
+- [ ] Upstream badge primitive (WM `NotificationBadge.h`). Check: grep 'badge(' in vendor > 0.
+- [ ] Upstream NumberTicker/rolling_label (WM `rolling_number.h`). Check: grep in vendor > 0.
+- [ ] Tree rotating chevron + `hash(node_id)` keys (`tree_view.h:70`). Check: keys stable across rebuilds.
+- [ ] virtual_list empty-state slot (`imm_virtual_list.h:157`). Check: count=0 renders the slot.
+- [ ] Dropdown label-width option; scale_x(0.5) hardwired (`imm_containers.h:85`). Check: grep > 0.
+- [ ] split_pane code-set ratio glide (`imm_layout.h:265`). Check: programmatic ratio glides.
+- [ ] Split divider 12px grab + offset tracking (`imm_layout.h:151`). Check: hit rect wider than drawn.
+- [ ] Button press feedback: Theme `press_scale` + `with_press_scale` + on_press wiring (`imm_controls.h:32`). Check: grep press_scale > 0. [then-default]
+- [ ] Pressed colour API + renderer paints pressed_bg (`color.h:534`; `rendering.h:1719`). Check: grep > 0.
+- [ ] Animated hover colour track vs instant swap (`rendering.h:1721`). Check: hover crossfades. [then-default]
+- [ ] Focus ring travelling-rect spring (`rendering.h:229`). Check: ring glides between widgets.
+- [ ] `hit_outset` min 44px targets; hit = visual today (`systems.h:129`). Check: grep > 0. [then-default]
+- [ ] Fixed slider thumb h720(20)/44, value maps over w−thumb (`imm_value.h:219`). Check: thumb size fixed. [then-default]
+- [ ] Click hysteresis hit+10px + drag-away clears hot (`context.h:126,387`). Check: leaving and returning restores the click.
+- [ ] `Theme::lerp` (`theme.h:169`). Check: grep > 0.
+- [ ] Blur-behind-panel flush ordering (`rendering.h:2748`). Check: panel blurs its background.
+- [ ] Blur clamp/warn/reduced-skip at HasBlur write (`ui_motion.h:424`). Check: out-of-range clamps and logs.
+- [ ] Effect radius/axis/origin params + Blur crossfade; radius ×6 hard-coded (`effect_presets.h:80,91`). Check: params in signatures. [then-default]
+- [ ] `slide_in(Direction,...)` from any side (`basic_presets.h:37`). Check: vertical slide compiles.
+- [ ] shake/spin/pulse as rules + shake `amplitude_px` (`basic_presets.h:42`). Check: they return rules.
+- [ ] Drag Event `release_rect`/`source_rect` (`components.h:816`). Check: grep > 0.
+
+### Text/input
+
+- [ ] `tracking_em(font_px)`, drop the +1px constant (`rendering.h:884`). Check: grep > 0.
+- [ ] `letter_spacing_em` (`component_config.h:108`). Check: grep > 0.
+- [ ] Font tiers {weight, tracking_em, leading} (`theme.h:98`). Check: a tier applies all three.
+- [ ] Styled-label line-spacing parity (`rendering.h:906`). Check: styled labels honour line height. [then-default]
+- [ ] `Theme::text_scale` (`theme.h:326`). Check: grep > 0.
+- [ ] Label font size scales with `HasUIModifiers::scale` (`components.h:318`). Check: text grows with the modifier.
+- [ ] `with_tabular_numbers()` (`text_unit_motion.h`). Check: grep > 0.
+- [ ] TextUnitMotion Mode field; hard-coded quad today (`text_unit_motion.h:17`). Check: field exists. [then-default]
+- [ ] Removed-unit exit crossfade (`text_unit_motion.h:95`). Check: deleted chars fade out.
+- [ ] Prefix/suffix/LCS text diff; index compare only (`text_unit_motion.h:103`). Check: an inserted prefix remaps the suffix.
+- [ ] Stagger total cap `max_total`; 2000 chars = 80s today (`text_unit_motion.h:24`). Check: total stagger bounded.
+- [ ] `with_max_length` builder/field (`text_input/state.h:25`; only a comment in `component_config.h:36` today). Check: grep outside the comment > 0. [then-default]
+- [ ] max_length codepoint semantics, not bytes (`utils.h:113`). Check: a multibyte char counts as 1.
+- [ ] Grapheme-cluster caret/delete (`utils.h:131`). Check: a flag emoji deletes whole.
+- [ ] Unicode word boundaries (`utils.h:194`). Check: Alt+arrow stops at ideographs.
+- [ ] CJK/Thai line breaks (U+200B/3000/NBSP/`-`/`/`) (`text_selection.h:255`). Check: CJK text wraps.
+- [ ] Indic/Thai/tag extends U+0900–0DFF, U+E0020–E007F (`text_units.h:35`). Check: combining marks attach.
+- [ ] CJK word units + U+3000 space (`text_units.h:44`). Check: per-char split.
+- [ ] text_area `scroll_offset_x` with wrap off (`text_area.h:417`). Check: horizontal scroll follows the caret.
+- [ ] UTF-8 mask char storage (`component_config.h:176`). Check: '•' renders as the mask.
+- [ ] Runtime-scaled MIN_FONT floor (`rendering.h:378`). Check: floor scales with ui_scale. [then-default]
+- [ ] Slider keys Shift/Pg/Home/End (`imm_value.h:259`). Check: Home sets 0. [then-default]
+
+### Scroll/drag
+
+- [ ] Scroll momentum velocity decay (`components.h:536`). Check: grep scroll_velocity > 0.
+- [ ] Rubber-band overscroll + spring-back; hard clamp today (`components.h:619`). Check: edge stretch and return. [then-default]
+- [ ] `scroll_smoothing` as a time-constant/spring (`components.h:563`). Check: glide is refresh-independent.
+- [ ] Trackpad fractional-delta smoothing bypass (`systems.h:2239`). Check: no double easing.
+- [ ] Nested scroll chaining with remainder (`systems.h:2190`). Check: wheel chains outward only at the edge.
+- [ ] Keyboard Pg/Home/End scrolling (`systems.h:2190`). Check: grep PAGE > 0.
+- [ ] Scroll-edge fade (`components.h`). Check: grep > 0.
+- [ ] `scroll_progress` + `on_enter_viewport` hooks (`components.h:536`). Check: grep > 0.
+- [ ] Animated `glide_to` (`components.h:592`). Check: grep > 0.
+- [ ] Scrollbar hit thickness + hover widen (`components.h:678`). Check: hit 16 / drawn 6. [then-default]
+- [ ] Scrollbar reserved gutter (`components.h:671`). Check: content inset by the gutter. [then-default]
+- [ ] `scroll_speed` as a Size (`components.h:560`). Check: field type is Size. [then-default]
+- [ ] Pointer history + `release_velocity` (`context.h:104`). Check: grep > 0.
+- [ ] Drag pointer-velocity into the settle spring (`systems.h:1738`). Check: a throw carries into the settle.
+- [ ] Drag lift / spacer-grow / drop-fly + sibling FLIP (`systems.h:1701-1935`). Check: siblings glide, dropped item flies. [then-default]
+- [ ] ease_scroll/pinch request_frame wake (`components.h:637`; `gestures_macos.h:111`). Check: grep at both sites > 0.
+
+### Backends
+
+- [ ] OS reduced-motion queries on Windows/Linux + re-read on focus; `#else false` today (`reduced_motion.h:23`). Check: non-Apple returns the OS value.
+- [ ] OS reduce-transparency / increase-contrast queries (`reduced_motion.h`). Check: grep > 0.
+- [ ] Theme reduce_transparency / high_contrast switches (`theme.h:319`). Check: grep > 0.
+- [ ] Clipboard `get_text(max_bytes)` through all layers (`clipboard.h:14`). Check: truncation lands on a codepoint boundary.
+- [ ] pseudo_locale Accented mode (`pseudo_locale.h:33`). Check: grep > 0.
+- [ ] Particle Emitter reduced-motion flag (`particles.h:29`). Check: grep > 0.
