@@ -84,13 +84,18 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background(field_bg).with_border(field_border, 1.f).with_debug_name("pw_row"));
     auto pw_cfg = box(0, 0, 412, 44).with_font("AtkinsonMock", pixels(22 * s))
         .with_placeholder("Enter a demo password").without_border().with_debug_name("Password_input");
-    if (!show_password) pw_cfg.with_mask_char('*');
+    // The demo field opts into disabling clipboard export while hidden;
+    // masking alone does not do this.
+    if (!show_password)
+      pw_cfg.with_mask_char('*').with_copy_disabled().with_cut_disabled();
     if (text_input(context, mk(pw_row.ent(), 0), profile.password, pw_cfg)) status_message = "Password changed";
     if (button(context, mk(pw_row.ent(), 1), box(412, 0, 112, 44)
         .with_label(show_password ? "Hide" : "Show").with_alignment(TextAlignment::Center)
         .with_custom_background({73, 82, 108, 255}).with_custom_text_color(white)
         .with_font("AtkinsonMock", pixels(20 * s)).with_debug_name("pw_toggle"))) show_password = !show_password;
-    text(9, "Blank means no demo password. No account is created.", 72, 454, 524, 25, 17, muted);
+    text(9, show_password ? "Password visible: copy and cut work normally."
+                          : "Password hidden: copy and cut are disabled.",
+         72, 454, 524, 25, 17, muted, "password_clipboard_note");
     // Bio
     if (field(3, "Short bio / optional", "Write a short introduction", profile.bio, 493, 521, "Bio_input"))
       status_message = "Bio: " + profile.bio;
@@ -146,7 +151,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 32), box(668, 624, 540, 30).with_label(status_message.empty() ? "Demo form / ready" : status_message)
         .with_font("AtkinsonMock", pixels(19 * s)).with_alignment(TextAlignment::Left)
         .with_custom_text_color(white).with_text_overflow(TextOverflow::Ellipsis).with_debug_name("status_bar"));
-    text(33, "Tab: next field / Shift+Tab: previous / Ctrl or Cmd: A select all, C copy, V paste, X cut",
+    text(33, "Tab: next field / Shift+Tab: previous / Ctrl or Cmd: A all, C copy, V paste, X cut (except hidden password)",
          48, 686, 1184, 26, 18, muted, "kbd_hints");
   }
 };

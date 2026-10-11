@@ -422,6 +422,7 @@ Deduped from the six 2026-10-06 `todo-*.md` audits (147 unique capabilities; 763
 - [ ] UTF-8 mask char storage (`component_config.h:176`). Check: '•' renders as the mask.
 - [ ] Runtime-scaled MIN_FONT floor (`rendering.h:378`). Check: floor scales with ui_scale. [then-default]
 - [ ] Slider keys Shift/Pg/Home/End (`imm_value.h:259`). Check: Home sets 0. [then-default]
+- [ ] Revisit clipboard-disable API shape before it spreads: keep `with_copy_disabled()` / `with_cut_disabled()` / `with_paste_disabled(bool)` vs one `with_clipboard_actions_disabled(ClipboardAction::Copy | ClipboardAction::Cut)` flag-set sugar (`component_config.h:422`). Decide on discoverability, dynamic toggling, and replace-vs-accumulate semantics; do not reuse the sequential `EditCommand` enum. Check: one chosen spelling, tests updated.
 
 ### Scroll/drag
 

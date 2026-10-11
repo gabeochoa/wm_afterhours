@@ -1,0 +1,116 @@
+# The demo password field opts into disabling Copy and Cut while hidden;
+# Paste still works. Masking alone does not disable clipboard export.
+# A known clipboard value proves the disabled field never replaces it.
+
+goto_screen text_input
+wait 0.5
+
+# Put a known value on the clipboard from the unmasked email field.
+focus_ui Email_input
+wait 0.2
+type "sentinel"
+wait 0.3
+expect_input_text Email_input "sentinel"
+key CTRL+A
+wait 0.2
+key CTRL+C
+wait 0.2
+
+# Enter a masked password and select it.
+focus_ui Password_input
+wait 0.2
+type "secret123"
+wait 0.3
+expect_input_text Password_input "secret123"
+expect_no_text "secret123"
+expect_text "Password hidden: copy and cut are disabled."
+key CTRL+A
+wait 0.2
+expect_input_selection Password_input 0 9
+
+# Copy must leave the sentinel clipboard untouched.
+key CTRL+C
+wait 0.2
+focus_ui Bio_input
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Bio_input "sentinel"
+
+# Cut must neither replace the clipboard nor modify the password.
+focus_ui Password_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+X
+wait 0.3
+expect_input_text Password_input "secret123"
+
+focus_ui Bio_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Bio_input "sentinel"
+
+# Paste remains available in the masked field.
+focus_ui Password_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Password_input "sentinel"
+
+# Showing the password removes the demo's opt-in disables. Replace the
+# clipboard with a marker first so a successful visible Copy is observable.
+focus_ui Bio_input
+wait 0.2
+key CTRL+A
+wait 0.2
+type "marker"
+wait 0.3
+expect_input_text Bio_input "marker"
+key CTRL+A
+wait 0.2
+key CTRL+C
+wait 0.2
+
+click_ui pw_toggle
+wait 0.3
+expect_text "Password visible: copy and cut work normally."
+expect_text "sentinel"
+
+focus_ui Password_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+C
+wait 0.2
+focus_ui Bio_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Bio_input "sentinel"
+
+# Cut also works again once the password is visible.
+focus_ui Password_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+X
+wait 0.3
+expect_input_text Password_input ""
+
+focus_ui Bio_input
+wait 0.2
+key CTRL+A
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Bio_input "sentinel"
+
+screenshot masked_input_clipboard_disabled

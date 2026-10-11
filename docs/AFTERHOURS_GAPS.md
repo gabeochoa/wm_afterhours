@@ -347,9 +347,9 @@ The input collector exposes only `inputs()`, `inputs_pressed()` and `inputs_pres
 
 Deduped from the six 2026-10-06 `todo-*.md` audits (animation-vocabulary, apple-design, break-ui, find-animation-opportunities, improve-animations, review-animations; 1,179 raw items). Only defects verified against current code (`65d5292`) with a local fix are filed here. Items that change a default, add API, or retune taste are held pending decision and are deliberately not filed. Paths are relative to `vendor/afterhours/src/` unless noted. Five WM-local defects went to `todo.md` instead.
 
-### Masked password fields leak plaintext and corrupt the caret
+### No way to disable clipboard operations per field; masked clicks corrupt the caret
 
-`plugins/ui/text_input/component.h:582,590` allows Copy/Cut in `with_mask_char` fields (same in utils paths), and `:511-516` stores the masked string's codepoint index as a real byte offset, so clicking in `contraseña` lands inside `ñ` and the next keystroke writes invalid UTF-8. Wanted: refuse Copy/Cut while masked; convert codepoint index to byte offset in masked mode. Check: Cmd+C/X in a masked field leaves the clipboard unchanged; clicking after a masked multibyte char then typing produces valid UTF-8 with the char inserted at that codepoint.
+`plugins/ui/text_input/component.h` and the shared `utils.h` edit path always allowed Copy/Cut/Paste, with no per-field way to opt out; separately, masked click handling stored the masked string's codepoint index as a real byte offset, so clicking in `contraseña` lands inside `ñ` and the next keystroke writes invalid UTF-8. Wanted: opt-in `with_copy_disabled()`, `with_cut_disabled()`, and `with_paste_disabled()` (all allowed by default; masking alone must not change clipboard behavior), enforced on every keyboard and imperative edit path; convert masked codepoint indices to byte offsets. Check: a masked field copies by default; with copy/cut disabled, Cmd+C/X leaves the clipboard and text unchanged; with paste disabled, Cmd+V leaves the text unchanged; clicking after a masked multibyte char then typing produces valid UTF-8 with the char inserted at that codepoint.
 
 ### Stale caller indices read out of bounds across immediate containers
 
