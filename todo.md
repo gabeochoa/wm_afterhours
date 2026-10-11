@@ -449,5 +449,6 @@ Deduped from the six 2026-10-06 `todo-*.md` audits (147 unique capabilities; 763
 - [ ] OS reduce-transparency / increase-contrast queries (`reduced_motion.h`). Check: grep > 0.
 - [ ] Theme reduce_transparency / high_contrast switches (`theme.h:319`). Check: grep > 0.
 - [ ] Clipboard `get_text(max_bytes)` through all layers (`clipboard.h:14`). Check: truncation lands on a codepoint boundary.
+- [ ] Zero-cost `warn_once` keys: callers hand-build `std::string` keys and the gate still does a set lookup when logging is lean/compiled out (`warn_once.h:34`). Want key parts built only on first fire, no allocation or lookup on the hot path, and the macro to compile out entirely under lean logging. Check: a hot-path `warn_once` does no string/set work when it does not fire; first fire still warns exactly once.
 - [ ] pseudo_locale Accented mode (`pseudo_locale.h:33`). Check: grep > 0.
 - [ ] Particle Emitter reduced-motion flag (`particles.h:29`). Check: grep > 0.

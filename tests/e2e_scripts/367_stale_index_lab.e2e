@@ -1,0 +1,29 @@
+# Shrink resets selections to 0; stale indices error instead of reading OOB.
+
+goto_screen stale_index_lab
+wait 0.5
+expect_text "Stale index lab"
+expect_text "indices: dropdown 2 nav 2 tab 2 radio 2 (3 options)"
+expect_text "grid col 2 track: expand (no declared width)"
+assert_no_overflow
+assert_within_parents
+screenshot stale_index_three_options
+
+click_ui stale_shrink_btn
+wait 0.3
+expect_text "indices: dropdown 0 nav 0 tab 0 radio 0 (1 option)"
+expect_text "Only"
+screenshot stale_index_shrunk
+
+click_ui stale_shrink_btn
+wait 0.3
+expect_text "indices: dropdown 0 nav 0 tab 0 radio 0 (3 options)"
+
+click_ui stale_last_btn
+wait 0.3
+expect_text "indices: dropdown 2 nav 2 tab 2 radio 2 (3 options)"
+
+click_ui stale_shrink_btn
+wait 0.3
+expect_text "indices: dropdown 0 nav 0 tab 0 radio 0 (1 option)"
+screenshot stale_index_clamped
