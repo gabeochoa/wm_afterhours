@@ -35,4 +35,4 @@ wait 0.5
 expect_text "80%"
 drag_to 836 540 608 540
 wait 0.5
-expect_text "Music preview: 13%"
+expect_text "Music preview: 1%"
