@@ -17,7 +17,7 @@ wait 0.2
 mouse_move 500 219
 wait 0.2
 expect_text "Security patch"
-assert_ui drag_overlay x=411 y=202 w=178 h=34
+assert_ui drag_overlay x=426 y=202 w=178 h=34
 screenshot horizontal_drag_active
 mouse_up
 wait 0.3
@@ -28,7 +28,7 @@ mouse_down 150 219
 wait 0.2
 mouse_move 90 367
 wait 0.2
-assert_ui drag_overlay x=1 y=350 w=178 h=34
+assert_ui drag_overlay x=16 y=350 w=178 h=34
 screenshot horizontal_drag_cross_lane_active
 mouse_up
 wait 0.3

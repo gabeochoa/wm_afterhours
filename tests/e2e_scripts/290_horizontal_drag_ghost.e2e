@@ -9,7 +9,7 @@ mouse_down 150 219
 wait 0.2
 mouse_move 500 219
 wait 0.2
-assert_ui drag_overlay x=411 y=202 w=178 h=34
+assert_ui drag_overlay x=426 y=202 w=178 h=34
 screenshot horizontal_drag_ghost_on
 mouse_up
 wait 0.2
@@ -23,7 +23,7 @@ mouse_down 150 219
 wait 0.2
 mouse_move 500 219
 wait 0.2
-assert_ui drag_overlay x=411 y=202 w=178 h=34
+assert_ui drag_overlay x=426 y=202 w=178 h=34
 screenshot horizontal_drag_ghost_off
 mouse_up
 wait 0.2
