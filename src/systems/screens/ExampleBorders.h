@@ -54,10 +54,10 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
       return config.with_roundness(value).with_rounded_corners(corners);
     };
     // Background - covers entire screen
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(bg_deep).with_corner_radius(0).with_debug_name("bg"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1160, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1160, 720)
         .with_absolute_position(left, top).with_debug_name("borders_root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size = 18.f,
@@ -162,7 +162,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
       // Interactive button with border
       label(root.ent(), 130, "Interaction / live control and static state previews", 0, 397, 820, 28, 22, true);
       label(root.ent(), 131, "Nested panel", 868, 397, 292, 28, 22, true);
-      auto live = button(context, mk(root.ent(), 132), fraction(box(0, 439, 220, 56), .4f)
+      auto live = button(context, mk(root.ent()), fraction(box(0, 439, 220, 56), .4f)
           .with_label("Try bordered button").with_font("AtkinsonMock", pixels(20 * s))
           .with_alignment(TextAlignment::Center).with_custom_background(accent_blue)
           .with_custom_hover_bg(afterhours::colors::lighten(accent_blue, 1.2f))
@@ -184,14 +184,14 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
       label(root.ent(), 134, "Hover and pressed share the same fill. Native activation is reported on press.",
             0, 547, 828, 26, 18);
       // Nested panel demo
-      auto nested = div(context, mk(root.ent(), 135), box(868, 439, 280, 110).with_custom_background(panel_dark)
+      auto nested = div(context, mk(root.ent()), box(868, 439, 280, 110).with_custom_background(panel_dark)
           .with_border(accent_cyan, 2 * s).with_corner_radius(8 * s).with_debug_name("nested_outer"));
       label(nested.ent(), 0, "Parent / cyan", 12, 8, 256, 24, 18);
-      div(context, mk(nested.ent(), 1), box(16, 43, 120, 55).with_label("Filled child")
+      div(context, mk(nested.ent()), box(16, 43, 120, 55).with_label("Filled child")
           .with_font("AtkinsonMock", pixels(17 * s)).with_alignment(TextAlignment::Center)
           .with_custom_text_color(bg_deep).with_custom_background(sample_white)
           .with_border(accent_orange, 2 * s).with_corner_radius(8 * s).with_debug_name("nested_filled"));
-      div(context, mk(nested.ent(), 2), box(150, 43, 100, 55).with_label("Outline child")
+      div(context, mk(nested.ent()), box(150, 43, 100, 55).with_label("Outline child")
           .with_font("AtkinsonMock", pixels(15 * s)).with_alignment(TextAlignment::Center)
           .with_custom_text_color(text_light).with_border(text_light, 2 * s)
           .with_corner_radius(8 * s).with_debug_name("nested_outline"));

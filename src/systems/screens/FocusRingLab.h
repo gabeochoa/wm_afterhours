@@ -82,7 +82,7 @@ struct FocusRingLab : ScreenSystem<UIContext<InputAction>> {
       text(40 + i, spot.caption, 40 + static_cast<float>(i) * 240, 330, 230, 26, 16);
     }
 
-    if (button(context, mk(root.ent(), 50), ComponentConfig{}
+    if (button(context, mk(root.ent()), ComponentConfig{}
         .with_label(follow_mouse ? "Mode: FollowsMostRecentInput" : "Mode: Split")
         .with_720p_size(340, 44)
         .with_absolute_position(40 * scale, 400 * scale)

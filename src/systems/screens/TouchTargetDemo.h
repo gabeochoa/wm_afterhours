@@ -28,7 +28,7 @@ struct TouchTargetDemo : ScreenSystem<UIContext<InputAction>> {
     auto root = div(context, mk(entity), ComponentConfig{base}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0));
-    auto content = div(context, mk(root.ent(), 0), ComponentConfig{base}
+    auto content = div(context, mk(root.ent()), ComponentConfig{base}
         .with_size({pixels(width), pixels(660)})
         .with_absolute_position((context.screen_width - width) / 2, 24)
         .with_background(Theme::Usage::None));
@@ -39,7 +39,7 @@ struct TouchTargetDemo : ScreenSystem<UIContext<InputAction>> {
           .with_label(text).with_background(Theme::Usage::None)
           .with_custom_text_color(muted).with_debug_name(name));
     };
-    div(context, mk(content.ent(), 0), ComponentConfig{base}
+    div(context, mk(content.ent()), ComponentConfig{base}
         .with_size({pixels(width), pixels(44)}).with_label("Touch targets")
         .with_font("AtkinsonMock", pixels(32)).with_background(Theme::Usage::None));
     label(content.ent(), 1, "Red outlines mark clickable areas below the minimum size.",

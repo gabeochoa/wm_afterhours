@@ -127,11 +127,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       if (context.pressed(InputAction::WidgetLeft)) choose_tab((selected_tab + 5) % 6);
       if (context.pressed(InputAction::WidgetRight)) choose_tab((selected_tab + 1) % 6);
     }
-    div(context, mk(entity, 1), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({231, 213, 183, 255}).with_corner_radius(0)
         .with_debug_name("kirby_canvas"));
-    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(entity), box(scale, 0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                 (context.screen_height - 720 * scale) / 2)
         .with_debug_name("kirby_root"));
@@ -197,7 +197,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     label(23, profile.name, 635, 207, 326, 46, 34, ink, "kirby_profile_name");
     label(161, "Edit name", 635, 253, 326, 28, 16, ink, "kirby_edit_name", "FredokaMockBold");
     label(24, "Delete Data", 1056, 252, 124, 32, 16, {120, 67, 83, 255}, "kirby_delete_label");
-    div(context, mk(root.ent(), 162), box(scale, 414, 308, 130, 28)
+    div(context, mk(root.ent()), box(scale, 414, 308, 130, 28)
         .with_custom_background({112, 102, 84, 255}));
     label(25, "Common", 414, 308, 130, 28, 17, raylib::WHITE, "kirby_common", "FredokaMockBold");
     if (action(26, "", 556, 198, 426, 96, "kirby_name", false, 22, help[1], 48)) open(Detail::Name);
@@ -234,7 +234,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       label(52, titles[static_cast<size_t>(detail)], 440, 371, 705, 45, 29, ink, "kirby_detail_title");
       if (detail == Detail::Name) {
         label(53, "Name", 443, 436, 150, 47, 23, ink);
-        auto input = text_input(context, mk(root.ent(), 54), editing_name,
+        auto input = text_input(context, mk(root.ent()), editing_name,
             box(scale, 626, 430, 502, 52).with_font("FredokaMockBold", pixels((28) * scale))
                 .with_custom_background(raylib::WHITE).with_custom_text_color(ink)
                 .with_border({200, 184, 147, 255}, 2 * scale).with_corner_radius(5 * scale)
@@ -300,12 +300,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           profile.favorite = (profile.favorite + 1) % modes.size();
       }
     }
-    div(context, mk(root.ent(), 80), box(scale, 414, 646, 774, 36)
+    div(context, mk(root.ent()), box(scale, 414, 646, 774, 36)
         .with_label(!status.empty() ? status : !hover_help.empty() ? hover_help : help[static_cast<size_t>(detail)])
         .with_font("FredokaMockBold", pixels(21 * scale)).with_text_overflow(TextOverflow::Wrap).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Left).with_ignore_pointer_events()
         .with_debug_name("kirby_message"));
-    div(context, mk(root.ent(), 81), box(scale, 414, 687, 774, 2)
+    div(context, mk(root.ent()), box(scale, 414, 687, 774, 2)
         .with_custom_background(purple).with_ignore_pointer_events()
         .with_debug_name("kirby_footer_rule"));
   }

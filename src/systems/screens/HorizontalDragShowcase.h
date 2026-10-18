@@ -53,10 +53,10 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1160 * s), pixels(648 * s)})
         .with_absolute_position((context.screen_width - 1160 * s) / 2,
                                 (context.screen_height - 648 * s) / 2)
@@ -72,14 +72,14 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     text(0, "Horizontal Drag & Drop", 0, 0, 840, 42, 30, ink);
     text(1, "Drag between priority lanes or reorder within a lane.", 0, 50, 930, 28, 20, muted);
     text(2, "Neutral tags / lane markers show priority", 0, 82, 930, 24, 17, muted);
-    if (button(context, mk(root.ent(), 3), box(964, 4, 196, 40)
+    if (button(context, mk(root.ent()), box(964, 4, 196, 40)
         .with_label("Reset example").with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background({45, 67, 95, 255}).with_custom_text_color(ink)
         .with_corner_radius(8 * s).with_debug_name("hdrag_reset"))) {
       lanes = initial_lanes;
       status = "Reset / 7 tags restored to their starting lanes";
     }
-    if (button(context, mk(root.ent(), 7), box(916, 62, 244, 40)
+    if (button(context, mk(root.ent()), box(916, 62, 244, 40)
         .with_label(ghost_preview ? "Translucent preview: On" : "Translucent preview: Off")
         .with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background({45, 67, 95, 255}).with_custom_text_color(ink)

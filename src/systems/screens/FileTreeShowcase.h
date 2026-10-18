@@ -206,11 +206,11 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme.focus_ring_thickness = 1.5f * s;
     const float x = (context.screen_width - 1160 * s) / 2;
     const float y = (context.screen_height - 664 * s) / 2;
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(theme.background)
         .with_corner_radius(0).with_debug_name("bg"));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1160 * s), pixels(664 * s)}).with_absolute_position(x, y)
         .with_custom_background(theme.surface).with_border({78, 97, 121, 255}, 1)
         .with_corner_radius(12 * s).with_debug_name("main_container"));
@@ -278,7 +278,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       needs_refresh = false;
       preview_path.clear();
     }
-    auto tree_pair = mk(root.ent(), 3);
+    auto tree_pair = mk(root.ent());
     auto [tree_entity, tree_parent] = deref(tree_pair);
     auto &state = tree_entity.addComponentIfMissing<HasTreeViewState>();
     if (!seeded_expansion && !use_real_fs) {

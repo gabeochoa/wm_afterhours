@@ -45,14 +45,14 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_background(Theme::Usage::None)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(entity, 10), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({17, 23, 34, 255}).with_corner_radius(0)
         .with_debug_name("dv_canvas"));
     text(0, "Divider examples", 48, 20, 850, 43, 34, white, "dv_title");
     text(11, "Drag either grip. Measurements use screen pixels; pane shares exclude the handle.",
          48, 68, 1180, 28, 19, muted, "dv_instruction");
-    if (button(context, mk(entity, 12), box(1018, 24, 210, 42)
+    if (button(context, mk(entity), box(1018, 24, 210, 42)
         .with_label("Reset dividers").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({47, 79, 119, 255})
         .with_custom_text_color(white).with_corner_radius(8 * s)
@@ -106,13 +106,13 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Axis::X: the bar moves horizontally, so it is the vertical one.
-    auto row = div(context, mk(entity, 1), box(48, 146, 1180, 126)
+    auto row = div(context, mk(entity), box(48, 146, 1180, 126)
         .with_flex_direction(FlexDirection::Row)
         .with_custom_background(first_color).with_debug_name("dv_row"));
     left_w = std::clamp(left_w, 120.f, 900.f);
-    auto left = div(context, mk(row.ent(), 0),
+    auto left = div(context, mk(row.ent()),
         pane({pixels(left_w * s), percent(1)}, first_color, "dv_left"));
-    auto width_bar = divider(context, mk(row.ent(), 1), Axis::X,
+    auto width_bar = divider(context, mk(row.ent()), Axis::X,
         ComponentConfig{}.with_size({pixels(12 * s), percent(1)})
             .with_custom_background(bar_color).with_corner_radius(0)
             .with_on_draw_fg(grip(true)).with_debug_name("dv_vbar"));
@@ -123,7 +123,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
       left_w = next;
       left.cmp().set_desired_width(pixels(left_w * s));
     }
-    auto right = div(context, mk(row.ent(), 2),
+    auto right = div(context, mk(row.ent()),
         pane({expand(), percent(1)}, second_color, "dv_right"));
     const float left_pixels = left.cmp().rect().width;
     const float right_pixels = right.cmp().rect().width;
@@ -142,13 +142,13 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
                          width_drag),
          48, 281, 1180, 30, 19, muted, "dv_width_metrics");
 
-    auto col = div(context, mk(entity, 2), box(48, 354, 1180, 280)
+    auto col = div(context, mk(entity), box(48, 354, 1180, 280)
         .with_flex_direction(FlexDirection::Column)
         .with_custom_background(first_color).with_debug_name("dv_col"));
     top_h = std::clamp(top_h, 60.f, 220.f);
-    auto top = div(context, mk(col.ent(), 0),
+    auto top = div(context, mk(col.ent()),
         pane({percent(1), pixels(top_h * s)}, first_color, "dv_top"));
-    auto height_bar = divider(context, mk(col.ent(), 1), Axis::Y,
+    auto height_bar = divider(context, mk(col.ent()), Axis::Y,
         ComponentConfig{}.with_size({percent(1), pixels(12 * s)})
             .with_custom_background(bar_color).with_corner_radius(0)
             .with_on_draw_fg(grip(false)).with_debug_name("dv_hbar"));
@@ -159,7 +159,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
       top_h = next;
       top.cmp().set_desired_height(pixels(top_h * s));
     }
-    auto bottom = div(context, mk(col.ent(), 2),
+    auto bottom = div(context, mk(col.ent()),
         pane({percent(1), expand()}, second_color, "dv_bottom"));
     const auto preview = [&](ElementResult &result, const char *name,
                              const char *prefix, float height) {
@@ -192,7 +192,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
                          bottom_pixels, height_total > 0 ? 100 * bottom_pixels / height_total : 0,
                          height_drag),
          48, 637, 1180, 29, 19, muted, "dv_height_metrics");
-    div(context, mk(entity, 19), box(32, 354, 10, top_pixels / s)
+    div(context, mk(entity), box(32, 354, 10, top_pixels / s)
         .with_background(Theme::Usage::None).with_ignore_pointer_events()
         .with_on_draw_fg([=](RectangleType r) {
           const raylib::Color ink{139, 180, 224, 255};
@@ -204,7 +204,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Not every divider is draggable -- a 1px rule is the common case, and it
     // is the same widget with the drag simply ignored.
-    divider(context, mk(entity, 3), Axis::Y,
+    divider(context, mk(entity), Axis::Y,
         box(48, 676, 1180, 1 / s)
             .with_custom_background({139, 160, 191, 255})
             .with_ignore_pointer_events().with_skip_tabbing(true).with_debug_name("dv_rule"));
@@ -213,7 +213,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background({168, 194, 227, 255})
           .with_ignore_pointer_events());
     }
-    div(context, mk(entity, 4), box(48, 687, 154, 28)
+    div(context, mk(entity), box(48, 687, 154, 28)
         .with_label("divider()")
         .with_font("AtkinsonMock", pixels(26 * s))
         .with_custom_text_color(white).with_background(Theme::Usage::None)

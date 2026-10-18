@@ -43,11 +43,11 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
       events++;
     }
 
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ink).with_corner_radius(0)
         .with_ignore_pointer_events());
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("pz_root"));
@@ -67,7 +67,7 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     text(0, "Pinch zoom", 48, 24, 700, 48, 38, white, "pz_title", true);
     text(1, "Pinch two fingers on the trackpad to resize the square.",
          48, 78, 1184, 30, 23, muted, "pz_instruction");
-    if (button(context, mk(root.ent(), 2), box(1058, 132, 174, 44)
+    if (button(context, mk(root.ent()), box(1058, 132, 174, 44)
         .with_label("Reset to 1.00×").with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background(cyan).with_custom_text_color(ink)
         .with_corner_radius(6).with_debug_name("pz_reset"))) zoom = 1.f;
@@ -80,7 +80,7 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     text(9, "Pinch updates received", 712, 120, 260, 24, 17, muted);
     text(10, std::to_string(events), 712, 148, 260, 42, 30, white, "pz_events", true);
 
-    auto stage = div(context, mk(root.ent(), 11), box(48, 214, 816, 424)
+    auto stage = div(context, mk(root.ent()), box(48, 214, 816, 424)
         .with_custom_background(panel).with_clip_children(true).with_debug_name("pz_stage"));
     for (int i = 0; i < 37; ++i) {
       div(context, mk(stage.ent(), 20 + i), box(12.f + static_cast<float>(i) * 22, 0, 1, 424)
@@ -92,7 +92,7 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     }
     // A square that scales, so the zoom is visible rather than just numeric.
     const float side = 220.f * zoom;
-    div(context, mk(stage.ent(), 2), box(408 - side / 2, 212 - side / 2, side, side)
+    div(context, mk(stage.ent()), box(408 - side / 2, 212 - side / 2, side, side)
         .with_custom_background(afterhours::Color{66, 111, 185, 255})
         .with_ignore_pointer_events().with_debug_name("pz_box"));
     const std::array<RectangleType, 4> reference{{
@@ -102,13 +102,13 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(stage.ent(), 100 + static_cast<int>(i)), box(r.x, r.y, r.width, r.height)
           .with_custom_background(afterhours::Color{193, 219, 247, 170}).with_ignore_pointer_events());
     }
-    div(context, mk(stage.ent(), 110), box(298, 194, 220, 36)
+    div(context, mk(stage.ent()), box(298, 194, 220, 36)
         .with_label(fmt::format("{:.2f}×", zoom)).with_alignment(TextAlignment::Center)
         .with_font("AtkinsonMockBold", pixels(26 * s)).with_custom_text_color(white)
         .with_ignore_pointer_events().with_debug_name("pz_box_label"));
-    div(context, mk(root.ent(), 12), box(888, 214, 344, 424).with_custom_background(panel));
+    div(context, mk(root.ent()), box(888, 214, 344, 424).with_custom_background(panel));
     const bool pinching = afterhours::input::is_pinching();
-    div(context, mk(root.ent(), 13), box(908, 234, 144, 34)
+    div(context, mk(root.ent()), box(908, 234, 144, 34)
         .with_label(pinching ? "Pinching" : "Idle").with_alignment(TextAlignment::Center)
         .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(pinching ? ink : white)
         .with_custom_background(pinching ? cyan : afterhours::Color{53, 70, 91, 255})

@@ -63,13 +63,13 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
         config.with_border(context.theme.from_usage(role), 2 * s);
       return config;
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 82)
+    div(context, mk(root.ent()), box(left, 24, 1144, 82)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
     label("Button variants", 20, 29, 336, 42, 34, theme.font);
     label("Ocean Navy", 352, 39, 270, 30, 22, muted);
     label("Variant = appearance     Role = color     Size = geometry     Availability = enabled or disabled",
           20, 77, 1104, 25, 19, muted);
-    if (button(context, mk(root.ent(), id++), specimen(show_bounds ? "Hide bounds" : "Show bounds",
+    if (button(context, mk(root.ent()), specimen(show_bounds ? "Hide bounds" : "Show bounds",
           950, 38, 174, 36, 20, ButtonVariant::Filled, Theme::Usage::Secondary, "bv_toggle_bounds")))
       show_bounds = !show_bounds;
     const std::array<ButtonVariant, 3> variants{ButtonVariant::Filled, ButtonVariant::Outline, ButtonVariant::Ghost};
@@ -102,7 +102,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // --- Row 4: Size variants ---
-    div(context, mk(root.ent(), id++), box(left, 334, 1144, 106)
+    div(context, mk(root.ent()), box(left, 334, 1144, 106)
         .with_custom_background(theme.surface).with_corner_radius(8 * s).with_debug_name("bv_row_sizes"));
     label("Sizes", 20, 352, 116, 30, 22, theme.font);
     label("Role below", 20, 391, 116, 25, 17, muted);
@@ -166,7 +166,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     // --- Click counter ---
     int total = 0;
     for (int count : click_counts) total += count;
-    div(context, mk(root.ent(), id++), box(left, 666, 1144, 36)
+    div(context, mk(root.ent()), box(left, 666, 1144, 36)
         .with_custom_background(theme.surface).with_corner_radius(8 * s));
     label(last_pressed.empty() ? "Press any enabled specimen. Its name and count appear here."
                               : fmt::format("{}: {} press{} / {} total", last_pressed, last_count,

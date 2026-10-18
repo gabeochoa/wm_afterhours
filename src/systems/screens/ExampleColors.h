@@ -48,10 +48,10 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events().with_debug_name(name));
     };
     // Main panel
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 674)
+    div(context, mk(root.ent()), box(left, 24, 1144, 674)
         .with_custom_background(theme.background).with_debug_name("main_panel"));
     // Title
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 90)
+    div(context, mk(root.ent()), box(left, 24, 1144, 90)
         .with_custom_background(neutral).with_corner_radius(12 * s));
     label("Theme Color Swatches", 20, 34, 834, 42, 33, white);
     label("Midnight", 902, 39, 222, 34, 25, white, "colors_theme");
@@ -78,7 +78,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     label("Surfaces", 578, 159, 360, 23, 18, muted);
     label("Status", 950, 159, 174, 23, 18, muted);
     // Color row 1: Theme colors background
-    div(context, mk(root.ent(), id++), box(left, 185, 1144, 189)
+    div(context, mk(root.ent()), box(left, 185, 1144, 189)
         .with_custom_background({19, 23, 30, 255}).with_corner_radius(10 * s).with_debug_name("theme_tray"));
     for (size_t i = 0; i < theme_swatches.size(); ++i) {
       const auto &swatch = theme_swatches[i];
@@ -107,7 +107,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     // Row 2 label
     label("Fixed custom values", 20, 390, 1104, 31, 25, white);
     // Color row 2: Custom colors background
-    div(context, mk(root.ent(), id++), box(left, 429, 1144, 161)
+    div(context, mk(root.ent()), box(left, 429, 1144, 161)
         .with_custom_background({19, 23, 30, 255}).with_corner_radius(10 * s).with_debug_name("custom_tray"));
     // Custom color swatches with hex values
     struct CustomColorInfo {
@@ -158,7 +158,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), id++), box(left + 702, 604, 422, 57)
         .with_custom_background({240, 242, 247, 255}).with_corner_radius(6 * s).with_debug_name("colors_light_backing"));
     label("Same selected color", 718, 618, 254, 28, 18, {27, 35, 48, 255});
-    div(context, mk(root.ent(), id++), box(left + 994, 613, 112, 39)
+    div(context, mk(root.ent()), box(left + 994, 613, 112, 39)
         .with_custom_background(chosen).with_border({112, 124, 143, 255}, s)
         .with_corner_radius(4 * s).with_debug_name("colors_light_sample"));
   }

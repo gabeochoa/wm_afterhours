@@ -54,7 +54,7 @@ struct RollingNumberLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     };
     label("Numbers in motion", 0, 28, 1144, 48, 36, "rolling_title", true);
     label("A new total, with a softer landing.", 0, 86, 1144, 30, 22, "rolling_subtitle");
-    div(context, mk(root.ent(), id++), box(0, 144, 1144, 270)
+    div(context, mk(root.ent()), box(0, 144, 1144, 270)
         .with_custom_background({221, 233, 230, 255}).with_corner_radius(12 * s)
         .with_ignore_pointer_events());
     label("Total collected", 32, 162, 1080, 32, 22, "rolling_heading");
@@ -93,7 +93,7 @@ struct RollingNumberLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     for (std::size_t i = 0; i < smears.size(); ++i)
       smears[i] = blur && !reduced_motion
           ? std::min(7.f, static_cast<float>(std::abs(number.to[i] - number.from[i])) * remaining * remaining * 3.f) : 0.f;
-    div(context, mk(root.ent(), id++), box(32, 212, 1080, 154)
+    div(context, mk(root.ent()), box(32, 212, 1080, 154)
         .with_debug_name("rolling_digits").with_ignore_pointer_events()
         .with_on_draw_fg([positions, smears, font, ink, s](RectangleType r) {
           afterhours::begin_scissor_mode(static_cast<int>(r.x), static_cast<int>(r.y),

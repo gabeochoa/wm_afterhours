@@ -72,11 +72,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_corner_radius(0)
           .with_background(Theme::Usage::None);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0)
         .with_debug_name("modal_bg"));
-    auto main = div(context, mk(entity, 1), at(0, 0, 1280, 720)
+    auto main = div(context, mk(entity), at(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2,
                                 (context.screen_height - 720 * s) / 2)
         .with_debug_name("modal_main"));
@@ -151,7 +151,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     text(31, "Stacking", 68, 430, 176, 36, 23);
     if (launch(32, "Open settings", 264, 428, 240, "btn_stacked")) show_stacked_settings = true;
     text(33, "Then open reset confirmation", 264, 477, 348, 27, 18);
-    div(context, mk(main.ent(), 34), at(636, 432, 104, 58)
+    div(context, mk(main.ent()), at(636, 432, 104, 58)
         .with_ignore_pointer_events().with_debug_name("modals_stack_preview")
         .with_on_draw_fg([=](RectangleType r) {
           const float unit = r.width / 104;
@@ -247,10 +247,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Composable modal with custom content
     const bool form_was_open = show_composable_modal;
-    if (auto m = afterhours::modal(context, mk(entity, MODAL_COMPOSABLE), show_composable_modal,
+    if (auto m = afterhours::modal(context, mk(entity), show_composable_modal,
           afterhours::ModalConfig{}.with_size(pixels(580 * s), pixels(336 * s))
               .with_title("Composable Modal"))) {
-      div(context, mk(m.ent(), 0), content_config(532, 52)
+      div(context, mk(m.ent()), content_config(532, 52)
           .with_label("Edit these options. Save keeps them; Cancel discards edits."));
       // Checkboxes
       checkbox_field(m.ent(), 1, draft_options.a,
@@ -258,15 +258,15 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
       checkbox_field(m.ent(), 2, draft_options.b,
           draft_options.b ? "Option B: On" : "Option B: Off", "modals_option_b", 532, 36);
       // Progress indicator
-      div(context, mk(m.ent(), 3), content_config(532, 36).with_label("Progress: 65% / static example"));
+      div(context, mk(m.ent()), content_config(532, 36).with_label("Progress: 65% / static example"));
       // Buttons row
-      auto buttons = hstack(context, mk(m.ent(), 4), content_config(532, 48)
+      auto buttons = hstack(context, mk(m.ent()), content_config(532, 48)
           .with_no_wrap().with_gap(pixels(12 * s)).with_justify_content(JustifyContent::FlexEnd));
-      if (button(context, mk(buttons.ent(), 0), action_config("Cancel", 132, "modals_form_cancel"))) {
+      if (button(context, mk(buttons.ent()), action_config("Cancel", 132, "modals_form_cancel"))) {
         form_status = "Cancelled";
         show_composable_modal = false;
       }
-      if (button(context, mk(buttons.ent(), 1), action_config("Save", 132, "modals_form_save"))) {
+      if (button(context, mk(buttons.ent()), action_config("Save", 132, "modals_form_save"))) {
         saved_options = draft_options;
         form_status = "Saved";
         show_composable_modal = false;
@@ -277,7 +277,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // modal::info helper
     const bool info_was_open = show_info_modal;
-    auto info = afterhours::modal::info(context, mk(entity, MODAL_INFO), show_info_modal,
+    auto info = afterhours::modal::info(context, mk(entity), show_info_modal,
         "Information", "This is an informational message. Choose Got it to acknowledge it.", "Got it");
     if (info) style_dialog(info.ent(), 600, 84, std::array<float, 1>{132}, "modals_info");
     if (info_was_open && !show_info_modal)
@@ -286,7 +286,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // modal::confirm helper
     const bool confirm_was_open = show_confirm_modal;
-    auto confirm_result = afterhours::modal::confirm(context, mk(entity, MODAL_CONFIRM),
+    auto confirm_result = afterhours::modal::confirm(context, mk(entity),
         show_confirm_modal, "Confirm Action", "Are you sure you want to proceed with this demo action?",
         "Yes, proceed", "Cancel");
     if (confirm_result) style_dialog(confirm_result.ent(), 640, 84,
@@ -300,7 +300,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // modal::fyi helper
     const bool notice_was_open = show_fyi_modal;
-    auto fyi_result = afterhours::modal::fyi(context, mk(entity, MODAL_FYI), show_fyi_modal,
+    auto fyi_result = afterhours::modal::fyi(context, mk(entity), show_fyi_modal,
         "Update Available", "Version 2.0 is an example notice. These buttons report a choice; no download starts.",
         "Install Now", "Later", "Release Notes");
     if (fyi_result) style_dialog(fyi_result.ent(), 740, 84,
@@ -308,29 +308,29 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (notice_was_open && !show_fyi_modal) last_fyi_result = fyi_result.result();
 
     // Stacked modals - Settings with nested confirm
-    if (auto settings = afterhours::modal(context, mk(entity, MODAL_SETTINGS), show_stacked_settings,
+    if (auto settings = afterhours::modal(context, mk(entity), show_stacked_settings,
           afterhours::ModalConfig{}.with_size(pixels(600 * s), pixels(308 * s)).with_title("Settings"))) {
-      div(context, mk(settings.ent(), 0), content_config(552, 48)
+      div(context, mk(settings.ent()), content_config(552, 48)
           .with_label("Preferences update immediately in this example."));
       checkbox_field(settings.ent(), 1, notifications,
           notifications ? "Enable notifications: On" : "Enable notifications: Off",
           "modals_notifications", 552, 40);
       checkbox_field(settings.ent(), 2, dark_mode,
           dark_mode ? "Dark mode: On" : "Dark mode: Off", "modals_dark_mode", 552, 40);
-      auto buttons = hstack(context, mk(settings.ent(), 3), content_config(552, 48)
+      auto buttons = hstack(context, mk(settings.ent()), content_config(552, 48)
           .with_no_wrap().with_justify_content(JustifyContent::SpaceBetween));
-      if (button(context, mk(buttons.ent(), 0),
+      if (button(context, mk(buttons.ent()),
           action_config("Reset to Defaults", 240, "modals_settings_reset"))) {
         show_stacked_confirm = true; // Open nested modal
       }
-      if (button(context, mk(buttons.ent(), 1), action_config("Done", 132, "modals_settings_done")))
+      if (button(context, mk(buttons.ent()), action_config("Done", 132, "modals_settings_done")))
         show_stacked_settings = false;
       style_dialog(settings.ent(), 600, 148, {}, "modals_settings");
     }
 
     // Nested confirm modal (stacked on top of settings)
     const bool nested_was_open = show_stacked_confirm;
-    auto nested = afterhours::modal::confirm(context, mk(entity, MODAL_NESTED_CONFIRM),
+    auto nested = afterhours::modal::confirm(context, mk(entity),
         show_stacked_confirm, "Reset Settings?", "Reset notifications to On and dark mode to Off?", "Reset", "Cancel");
     if (nested) style_dialog(nested.ent(), 660, 84,
         std::array<float, 2>{132, 132}, "modals_nested");

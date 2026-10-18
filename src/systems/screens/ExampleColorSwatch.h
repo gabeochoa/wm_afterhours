@@ -87,7 +87,7 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
          48, 64, 1100, 28, 20, muted, "cs_subtitle");
 
     // ---- one card, three tinted columns ----
-    div(context, mk(root.ent(), id++), box(48, 110, 1184, 500)
+    div(context, mk(root.ent()), box(48, 110, 1184, 500)
         .with_custom_background({26, 33, 46, 255})
         .with_corner_radius(12 * s).with_debug_name("cs_card"));
     const auto column = [&](float x, afterhours::Color tint,
@@ -144,13 +144,13 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
     const bool was_accent_a_open = accent_a_open;
     const bool was_highlight_a_open = highlight_a_open;
     flow_label(body_c.ent(), 2, "Accent", 24, 19, white);
-    color_swatch_inline(context, mk(body_c.ent(), 3), accent, accent_open,
+    color_swatch_inline(context, mk(body_c.ent()), accent, accent_open,
                         swatch_cfg("cs_c_accent"));
     flow_label(body_c.ent(), 4, "Find highlight", 24, 19, white);
-    color_swatch_inline(context, mk(body_c.ent(), 5), highlight,
+    color_swatch_inline(context, mk(body_c.ent()), highlight,
                         highlight_open, swatch_cfg("cs_c_highlight"));
     flow_label(body_c.ent(), 6, "Border (locked)", 24, 19, muted);
-    color_swatch_inline(context, mk(body_c.ent(), 7), border, border_open,
+    color_swatch_inline(context, mk(body_c.ent()), border, border_open,
                         swatch_cfg("cs_c_border").with_disabled(true));
 
     // ---- B: preset grid popover ----
@@ -163,15 +163,15 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
                44, 17, muted);
     flow_label(body_b.ent(), 2, "Accent", 24, 19, white);
     auto accent_b_result = color_swatch_presets(
-        context, mk(body_b.ent(), 3), accent, accent_b_open,
+        context, mk(body_b.ent()), accent, accent_b_open,
         afterhours::ui::default_color_presets(), swatch_cfg("cs_b_accent"));
     flow_label(body_b.ent(), 4, "Find highlight", 24, 19, white);
     auto highlight_b_result = color_swatch_presets(
-        context, mk(body_b.ent(), 5), highlight, highlight_b_open,
+        context, mk(body_b.ent()), highlight, highlight_b_open,
         afterhours::ui::default_color_presets(),
         swatch_cfg("cs_b_highlight"));
     flow_label(body_b.ent(), 6, "Border (locked)", 24, 19, muted);
-    color_swatch_presets(context, mk(body_b.ent(), 7), border, border_b_open,
+    color_swatch_presets(context, mk(body_b.ent()), border, border_b_open,
                          afterhours::ui::default_color_presets(),
                          swatch_cfg("cs_b_border").with_disabled(true));
 
@@ -184,13 +184,13 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
                "hex. Edits write through.",
                44, 17, muted);
     flow_label(body_a.ent(), 2, "Accent", 24, 19, white);
-    color_swatch_editor(context, mk(body_a.ent(), 3), accent, accent_a_open,
+    color_swatch_editor(context, mk(body_a.ent()), accent, accent_a_open,
                         swatch_cfg("cs_a_accent"));
     flow_label(body_a.ent(), 4, "Find highlight", 24, 19, white);
-    color_swatch_editor(context, mk(body_a.ent(), 5), highlight,
+    color_swatch_editor(context, mk(body_a.ent()), highlight,
                         highlight_a_open, swatch_cfg("cs_a_highlight"));
     flow_label(body_a.ent(), 6, "Border (locked)", 24, 19, muted);
-    color_swatch_editor(context, mk(body_a.ent(), 7), border, border_a_open,
+    color_swatch_editor(context, mk(body_a.ent()), border, border_a_open,
                         swatch_cfg("cs_a_border").with_disabled(true));
 
     // The mock's mitigation for the slider wall and duplicate hex fields:
@@ -248,7 +248,7 @@ struct ExampleColorSwatch : ScreenSystem<UIContext<InputAction>> {
       }
       return saved;
     };
-    div(context, mk(root.ent(), id++), box(48, 626, 1184, 70)
+    div(context, mk(root.ent()), box(48, 626, 1184, 70)
         .with_custom_background({26, 33, 46, 255})
         .with_corner_radius(12 * s).with_debug_name("cs_preview_panel"));
     text("Current values", 72, 647, 200, 28, 22, white, "", true);

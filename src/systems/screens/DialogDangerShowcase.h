@@ -35,7 +35,7 @@ struct DialogDangerShowcase : ScreenSystem<UIContext<InputAction>> {
           save_present ? "Slot 03 / 06 Sep 2026, 21:14 / 4h 32m" : "Slot 03 / empty", save_present},
          {"Collection", save_present ? "3 demo saves" : "2 demo saves"},
          {"Storage", "In-memory demo data"}}, status);
-    if (button(context, mk(entity, 20), ComponentConfig{}
+    if (button(context, mk(entity), ComponentConfig{}
         .with_size({pixels(270 * s), pixels(44 * s)}).with_absolute_position(942 * s, 92 * s)
         .with_label("Delete selected save").with_font("AtkinsonMock", pixels(21 * s))
         .with_background(Theme::Usage::Error).with_auto_text_color(true)
@@ -43,7 +43,7 @@ struct DialogDangerShowcase : ScreenSystem<UIContext<InputAction>> {
       open = true;
       status = "3 demo saves. Chapter 3 autosave is selected.";
     }
-    if (button(context, mk(entity, 21), ComponentConfig{}
+    if (button(context, mk(entity), ComponentConfig{}
         .with_size({pixels(270 * s), pixels(44 * s)}).with_absolute_position(942 * s, 560 * s)
         .with_label("Reset save demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_background(Theme::Usage::Primary).with_auto_text_color(true)
@@ -52,7 +52,7 @@ struct DialogDangerShowcase : ScreenSystem<UIContext<InputAction>> {
       status = "Demo reset. All 3 saves restored.";
     }
     const bool confirming = open;
-    auto confirmation = afterhours::modal::confirm_danger(context, mk(entity, 1), open,
+    auto confirmation = afterhours::modal::confirm_danger(context, mk(entity), open,
         "Delete Chapter 3 autosave?",
         "Chapter 3 - Autosave\n"
         "Slot 03 / saved 06 Sep 2026, 21:14\n"
@@ -90,13 +90,13 @@ struct DialogDangerShowcase : ScreenSystem<UIContext<InputAction>> {
             .set(action++ == 0 ? "dd_keep" : "dd_delete");
       }
     }
-    div(context, mk(confirmation.ent(), 200), ComponentConfig{}
+    div(context, mk(confirmation.ent()), ComponentConfig{}
         .with_size({pixels(72 * s), pixels(84 * s)}).with_absolute_position(0, 50 * s)
         .with_label("03").with_font("AtkinsonMockBold", pixels(40 * s))
         .with_alignment(TextAlignment::Center).with_custom_text_color({220, 230, 246, 255})
         .with_custom_background({48, 66, 92, 255}).with_corner_radius(8 * s)
         .with_ignore_pointer_events().with_debug_name("dd_chapter_emblem"));
-    div(context, mk(confirmation.ent(), 201), ComponentConfig{}
+    div(context, mk(confirmation.ent()), ComponentConfig{}
         .with_size({pixels(82 * s), pixels(24 * s)}).with_absolute_position(-5 * s, 139 * s)
         .with_label("CHAPTER").with_font("AtkinsonMock", pixels(15 * s))
         .with_alignment(TextAlignment::Center).with_custom_text_color({171, 191, 219, 255})
@@ -108,7 +108,7 @@ struct DialogDangerShowcase : ScreenSystem<UIContext<InputAction>> {
       if (child.asE().get<UIComponentDebug>().name() != "modal_title") continue;
       child.asE().get<UIComponent>().desired_margin[Axis::left] = pixels(36 * s);
     }
-    div(context, mk(*header, 200), ComponentConfig{}
+    div(context, mk(*header), ComponentConfig{}
         .with_size({pixels(24 * s), pixels(28 * s)}).with_absolute_position(0, 6 * s)
         .with_background(Theme::Usage::None).with_ignore_pointer_events()
         .with_debug_name("dd_warning_icon").with_on_draw_fg([s](RectangleType r) {

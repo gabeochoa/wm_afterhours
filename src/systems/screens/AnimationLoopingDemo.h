@@ -59,7 +59,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 92)
+    div(context, mk(root.ent()), box(left, 24, 1144, 92)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     // Title
     label("Looping animations", 24, 34, 1096, 42, 34, text_light);
@@ -154,30 +154,30 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     const float box_y = 354.f;
     // ========== PULSE 1: Breathe (translate-based) ==========
     const float pulse1_x = left + 77.f;
-    div(context, mk(root.ent(), id++), box(pulse1_x - 3, box_y - 3, box_size + 6, box_size + 6)
+    div(context, mk(root.ent()), box(pulse1_x - 3, box_y - 3, box_size + 6, box_size + 6)
         .with_ignore_pointer_events().with_on_draw_fg([s, border](RectangleType r) {
           afterhours::draw_rectangle_rounded_lines_ex(r, .5f, 16, 2 * s, border);
         }));
     label("Fixed center outline", 35, 508, 222, 24, 18, muted);
     // Animated box - translate moves it in/out smoothly
-    div(context, mk(root.ent(), id++), box(pulse1_x + pulse1_offset, box_y + pulse1_offset, box_size, box_size)
+    div(context, mk(root.ent()), box(pulse1_x + pulse1_offset, box_y + pulse1_offset, box_size, box_size)
         .with_custom_background(box_blue).with_corner_radius(30 * s)
         .with_ignore_pointer_events().with_debug_name("pulse1_box"));
 
     // ========== PULSE 2: Opacity Glow ==========
     const float pulse2_x = left + 367.f;
     // Animated box with opacity
-    div(context, mk(root.ent(), id++), box(pulse2_x, box_y, box_size, box_size)
+    div(context, mk(root.ent()), box(pulse2_x, box_y, box_size, box_size)
         .with_custom_background(afterhours::colors::opacity_pct(box_green, pulse2_opacity))
         .with_corner_radius(30 * s).with_ignore_pointer_events().with_debug_name("pulse2_box"));
-    div(context, mk(root.ent(), id++), box(left + 310, 314, 18, 18)
+    div(context, mk(root.ent()), box(left + 310, 314, 18, 18)
         .with_custom_background(box_green).with_corner_radius(4 * s).with_ignore_pointer_events());
     label("100% reference", 336, 308, 210, 27, 18, muted);
     label(show_trails ? "8 samples across one cycle" : "The shape stays the same", 306, 516, 242, 24, 16, muted);
 
     // ========== BOUNCE ==========
     const float bounce_x = left + 657.f;
-    div(context, mk(root.ent(), id++), box(left + 798, 304, 28, 220)
+    div(context, mk(root.ent()), box(left + 798, 304, 28, 220)
         .with_ignore_pointer_events().with_on_draw_fg([s, border](RectangleType r) {
           const float x = r.x + 8 * s;
           raylib::DrawLineEx({x, r.y}, {x, r.y + 100 * s}, 2 * s, border);
@@ -189,7 +189,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     label("0", 818, 296, 36, 24, 16, muted);
     label("100", 818, 396, 36, 24, 16, muted);
     // Animated box (bounces down)
-    div(context, mk(root.ent(), id++), box(bounce_x, 304 + bounce_offset, box_size, box_size)
+    div(context, mk(root.ent()), box(bounce_x, 304 + bounce_offset, box_size, box_size)
         .with_custom_background(box_purple).with_corner_radius(30 * s)
         .with_ignore_pointer_events().with_debug_name("bounce_box"));
 
@@ -204,7 +204,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     const float indicator_x = orbit_center_x + std::cos(angle_rad) * orbit_radius;
     const float indicator_y = orbit_center_y + std::sin(angle_rad) * orbit_radius;
     // Outer ring (static)
-    div(context, mk(root.ent(), id++), box(rotate_x, box_y, box_size, box_size)
+    div(context, mk(root.ent()), box(rotate_x, box_y, box_size, box_size)
         .with_custom_background(afterhours::colors::opacity_pct(box_orange, .3f))
         .with_corner_radius(30 * s).with_ignore_pointer_events().with_debug_name("rotate_ring")
         .with_on_draw_fg([s](RectangleType r) {
@@ -215,13 +215,13 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
           raylib::DrawLineEx({center.x, center.y - 5 * s}, {center.x, center.y + 5 * s}, s, guide);
         }));
     // Spinning indicator
-    div(context, mk(root.ent(), id++), box(indicator_x, indicator_y, indicator_size, indicator_size)
+    div(context, mk(root.ent()), box(indicator_x, indicator_y, indicator_size, indicator_size)
         .with_custom_background(box_orange).with_corner_radius(5 * s)
         .with_border({255, 236, 209, 255}, 2 * s).with_ignore_pointer_events().with_debug_name("rotate_indicator"));
     label("Clockwise / fixed base", 895, 508, 234, 24, 18, muted);
 
     // Info footer
-    div(context, mk(root.ent(), id++), box(left, 626, 1144, 68)
+    div(context, mk(root.ent()), box(left, 626, 1144, 68)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(10 * s));
     label("phase = 2 pi t / period    |    Breathe: 10 sin(phase)    |    Glow: 0.5 + 0.5 sin(phase)",
           16, 632, 1112, 25, 20, text_light);

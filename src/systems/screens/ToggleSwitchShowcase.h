@@ -36,13 +36,13 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
     // Full-screen dark background
-    auto background = div(context, mk(entity, 0), ComponentConfig{}
+    auto background = div(context, mk(entity), ComponentConfig{}
         .with_size({screen_pct(1), screen_pct(1)}).with_background(Theme::Usage::Background)
         .with_corner_radius(0).with_debug_name("toggle_bg"));
-    auto root = div(context, mk(background.ent(), 0), at(0, 0, 1280, 720)
+    auto root = div(context, mk(background.ent()), at(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2));
     // Centered card (settings panel style)
-    div(context, mk(root.ent(), 0), at(304, 24, 672, 672)
+    div(context, mk(root.ent()), at(304, 24, 672, 672)
         .with_background(Theme::Usage::Surface).with_corner_radius(12 * s).with_debug_name("toggle_card"));
     const auto label = [&](int id, const std::string &caption, float x, float y,
                            float w, float h, float size, const std::string &name = "") {
@@ -95,7 +95,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     row(1, "Sound Effects", enable_sound, 214, false, false, "toggle_sound");
     row(2, "Vibration", enable_vibration, 258, false, false, "toggle_vibration");
     // Separator
-    div(context, mk(root.ent(), 5), at(328, 305, 624, 1).with_custom_background(theme.font_muted));
+    div(context, mk(root.ent()), at(328, 305, 624, 1).with_custom_background(theme.font_muted));
     // ── Circle Style Section ──
     label(6, "Preferences", 328, 313, 260, 28, 23);
     label(7, "Checkbox variants / circle", 666, 315, 286, 26, 18);
@@ -103,7 +103,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     row(4, "Auto-Save", auto_save, 395, true, false, "toggle_auto_save");
     row(5, "Cloud Sync", cloud_sync, 439, true, false, "toggle_cloud_sync");
     // Separator
-    div(context, mk(root.ent(), 8), at(328, 486, 624, 1).with_custom_background(theme.font_muted));
+    div(context, mk(root.ent()), at(328, 486, 624, 1).with_custom_background(theme.font_muted));
     // ── Disabled Section ──
     label(9, "Disabled", 328, 496, 260, 28, 23);
     label(10, "Track On / thumb On", 666, 498, 286, 26, 18);
@@ -114,7 +114,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     row(7, "Unavailable Option", disabled_off, 603, true, true, "toggle_unavailable");
     label(12, "Not available in this demo", 344, 644, 330, 22, 16);
     reset_pending = false;
-    if (button(context, mk(root.ent(), 13), at(706, 649, 246, 32)
+    if (button(context, mk(root.ent()), at(706, 649, 246, 32)
         .with_label("Reset demo defaults").with_font("AtkinsonMock", pixels(19 * s))
         .with_background(Theme::Usage::Primary).with_corner_radius(5 * s).with_debug_name("toggle_reset"))) {
       enable_notifications = true;

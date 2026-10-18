@@ -102,12 +102,12 @@ struct HostLoopLab : ScreenSystem<UIContext<InputAction>> {
       host_loop_async_done() = 0;
     }
 
-    div(context, mk(root.ent(), 6), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(36 * scale)})
         .with_absolute_position(32 * scale, 200 * scale)
         .with_background(Theme::Usage::Surface).with_corner_radius(5 * scale)
         .with_ignore_pointer_events());
-    div(context, mk(root.ent(), 7), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(36 * scale), pixels(36 * scale)})
         .with_absolute_position((36 + marker_x) * scale, 200 * scale)
         .with_background(Theme::Usage::Accent).with_corner_radius(5 * scale)

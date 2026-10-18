@@ -109,7 +109,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 96)
+    div(context, mk(root.ent()), box(left, 24, 1144, 96)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     // Title
     label("Animation basics", 24, 35, 1096, 42, 34, text_light);
@@ -190,14 +190,14 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     const float time = elapsed(clock_key);
     const std::string replay_name = !last_replayed ? "all three" : clock_key == BasicAnimKey::FadeIn ? "fade" : clock_key == BasicAnimKey::SlideIn ? "slide" : "scale";
     label(fmt::format("Last replay: {}  /  {:.2f} of {:.1f} s", replay_name, time, clock_duration), 0, 567, 1144, 28, 21, text_light, "basic_timeline_label");
-    div(context, mk(root.ent(), id++), box(left, 604, 1144, 8)
+    div(context, mk(root.ent()), box(left, 604, 1144, 8)
         .with_custom_background({66, 79, 101, 255}).with_ignore_pointer_events()
         .with_on_draw_fg([time, clock_duration](RectangleType r) {
           afterhours::draw_rectangle({r.x, r.y, r.width * time / clock_duration, r.height}, {129, 167, 232, 255});
           raylib::DrawCircleV({r.x + r.width * time / clock_duration, r.y + r.height / 2}, r.height * .8f, {235, 240, 250, 255});
         }));
     // ========== Restart Button ==========
-    if (button(context, mk(root.ent(), id++), box(left, 636, 240, 44)
+    if (button(context, mk(root.ent()), box(left, 636, 240, 44)
         .with_label("Replay all animations").with_font("AtkinsonMock", pixels(23 * s))
         .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light).with_corner_radius(8 * s)
         .with_debug_name("restart_btn"))) {

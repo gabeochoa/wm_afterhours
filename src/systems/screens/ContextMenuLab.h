@@ -177,7 +177,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background({49, 67, 94, 255}).with_custom_text_color(white)
           .with_corner_radius(7 * s).with_debug_name(name);
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 90)
+    div(context, mk(root.ent()), box(left, 24, 1144, 90)
         .with_custom_background({34, 42, 57, 255}).with_corner_radius(12 * s));
     label("Context menus", 20, 34, 1104, 42, 34, white, "cm_title");
     label("Right-click any file row. The menu opens at the pointer and adapts to the file state.",
@@ -185,7 +185,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
 
     // A file list, because right-clicking a row is the real shape of this
     // feature and a screen with one lone button showed none of it.
-    div(context, mk(root.ent(), id++), box(left, 132, 604, 390)
+    div(context, mk(root.ent()), box(left, 132, 604, 390)
         .with_custom_background({26, 33, 46, 255}).with_corner_radius(12 * s).with_debug_name("cm_filepanel"));
     label("File", 30, 150, 390, 30, 23, white);
     label("State", 448, 150, 126, 30, 23, white);
@@ -217,7 +217,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     }
     label("Discard is disabled: this fixture never deletes files.", 20, 493, 568, 24, 18, muted, "cm_discard_reason");
 
-    auto target = button(context, mk(root.ent(), id++), control(20, 550, 380, 44, "Open at pointer", "cm_target"));
+    auto target = button(context, mk(root.ent()), control(20, 550, 380, 44, "Open at pointer", "cm_target"));
     if (target || context.is_right_click(target.ent().id)) {
       mid_at = context.mouse.pos;
       mid_open = true;
@@ -227,7 +227,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     }
     label("Right-click or activate; uses the selected file.", 20, 601, 584, 25, 18, muted);
 
-    div(context, mk(root.ent(), id++), box(left + 624, 132, 520, 390)
+    div(context, mk(root.ent()), box(left + 624, 132, 520, 390)
         .with_custom_background({26, 33, 46, 255}).with_corner_radius(12 * s).with_debug_name("cm_notes"));
     label("Point anchoring", 644, 148, 480, 32, 27, white);
     label("The click position is the anchor.", 644, 191, 480, 27, 21, muted);
@@ -248,12 +248,12 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           }));
       label(side == 0 ? "Room below" : "Flipped above", 648 + side * 244, 428, 226, 27, 20, muted);
     }
-    if (button(context, mk(root.ent(), id++), control(644, 474, 230, 32,
+    if (button(context, mk(root.ent()), control(644, 474, 230, 32,
         show_anchor ? "Anchor crosshair: on" : "Anchor crosshair: off", "cm_anchor_toggle"))) show_anchor = !show_anchor;
     label("+ invocation point", 890, 477, 234, 27, 19, muted);
 
     label("No room below. Expect a flip above.", 724, 610, 400, 28, 19, muted, "cm_hint");
-    auto corner_target = button(context, mk(root.ent(), id++), control(784, 650, 340, 44,
+    auto corner_target = button(context, mk(root.ent()), control(784, 650, 340, 44,
         "Bottom-edge flip test", "cm_target_corner"));
     if (corner_target || context.is_right_click(corner_target.ent().id)) {
       corner_at = context.mouse.pos;
@@ -262,7 +262,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       mid_open = false;
       status = "corner menu opened";
     }
-    auto view_btn = button(context, mk(root.ent(), id++), control(644, 540, 230, 44,
+    auto view_btn = button(context, mk(root.ent()), control(644, 540, 230, 44,
         "View options", "cm_view"));
     if (view_btn) {
       view_at = context.mouse.pos;
@@ -272,7 +272,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       mid_open = false;
       corner_open = false;
     }
-    auto recent_btn = button(context, mk(root.ent(), id++), control(890, 540, 230, 44,
+    auto recent_btn = button(context, mk(root.ent()), control(890, 540, 230, 44,
         "Recent files", "cm_recent"));
     if (recent_btn) {
       recent_at = context.mouse.pos;
@@ -373,7 +373,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     apply_action(render_menu(corner_at, corner_open, reopen_corner, "cm_corner"));
     if (!show_anchor || (!mid_open && !corner_open)) return;
     const auto at = corner_open ? corner_at : mid_at;
-    div(context, mk(root.ent(), id++), ComponentConfig{}.with_size({pixels(20 * s), pixels(20 * s)})
+    div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(20 * s), pixels(20 * s)})
         .with_absolute_position(at.x - 10 * s, at.y - 10 * s).with_background(Theme::Usage::None)
         .with_ignore_pointer_events().with_render_layer(30).with_debug_name("cm_anchor")
         .with_on_draw_fg([s](RectangleType r) {

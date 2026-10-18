@@ -51,7 +51,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Root container
-    auto root = div(context, mk(entity, 0), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({17, 23, 34, 255}).with_corner_radius(0).with_debug_name("dropdown_bg"));
     const auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
@@ -63,7 +63,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Title
-    div(context, mk(root.ent(), 1), box(left, 24, 1144, 92)
+    div(context, mk(root.ent()), box(left, 24, 1144, 92)
         .with_custom_background({31, 42, 59, 255}).with_corner_radius(12 * s));
     label(2, "Dropdown Showcase", 20, 34, 1104, 42, 34, ink, "dropdown_title");
     label(3, "Choose a value. Compare labels, markers, disabled state, and custom styling.",
@@ -161,7 +161,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     label(86, "Disabled: " + disabled_options[disabled_idx], 276, 651, 244, 28, 21, ink);
     label(87, "Gemstone: " + styled_options[styled_idx], 532, 651, 244, 28, 21, ink);
     label(88, "Placement: below, flip, then clamp", 808, 568, 320, 28, 18, muted);
-    div(context, mk(root.ent(), 89), box(left + 824, 608, 286, 63)
+    div(context, mk(root.ent()), box(left + 824, 608, 286, 63)
         .with_ignore_pointer_events().with_on_draw_fg([s](RectangleType r) {
           const afterhours::Color line{138, 169, 210, 255};
           for (int i = 0; i < 2; ++i) {

@@ -50,10 +50,10 @@ struct TextMotionLab : ScreenSystem<UIContext<InputAction>> {
                                               .with_ignore_pointer_events().with_debug_name(debug));
     };
 
-    div(context, mk(entity, 0), box(0, 0, 1280, 720).with_custom_background({22, 24, 31, 255}).with_debug_name("bg"));
+    div(context, mk(entity), box(0, 0, 1280, 720).with_custom_background({22, 24, 31, 255}).with_debug_name("bg"));
     label(1, "Text motion: per-unit batching", 60, 30, 700, 28, false, "title");
     label(2, "Char and Word units: rise, slide, fade, scale. Forward, Reverse, CentreOut and Random staggers. One TextUnits command per label.", 60, 66, 1000, 15, true);
-    if (button(context, mk(entity, 3), box(1080, 26, 140, 40).with_label("Reset all")
+    if (button(context, mk(entity), box(1080, 26, 140, 40).with_label("Reset all")
                                            .with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(ink)
                                            .with_custom_background(panel).with_corner_radius(8 * s)
                                            .with_debug_name("reset_all_btn")))

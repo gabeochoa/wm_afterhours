@@ -25,10 +25,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s), pixels(h*s)})
           .with_absolute_position(x*s, y*s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1080*s), pixels(584*s)})
         .with_absolute_position((context.screen_width-1080*s)/2, (context.screen_height-584*s)/2)
         .with_background(Theme::Usage::None).with_debug_name("self_align_root"));
@@ -41,7 +41,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     label(1, "The parent stays a column; each child chooses its horizontal alignment.", 0,52,1080,32,21,true);
     label(2, "Column parent / align-items: FlexStart", 48,104,624,30,23);
     label(3, "Cross axis  <-------------------->", 48,142,600,28,18,true);
-    auto demo = vstack(context, mk(root.ent(), 4), box(48,184,600,224)
+    auto demo = vstack(context, mk(root.ent()), box(48,184,600,224)
         .with_custom_background({45,50,55,255}).with_border({100,110,120,255},2)
         .with_padding(Padding{.left=pixels(8*s),.right=pixels(8*s)})
         .with_justify_content(JustifyContent::SpaceAround).with_debug_name("demo"));
@@ -56,19 +56,19 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("self_align_"+std::to_string(i)))) last=names[i]+" activated";
     }
     if (guides) {
-      div(context,mk(root.ent(),10),box(348,184,1,224).with_custom_background({170,195,183,75}).with_ignore_pointer_events());
-      div(context,mk(root.ent(),11),box(640,380,16,2).with_custom_background(muted).with_ignore_pointer_events());
-      div(context,mk(root.ent(),12),box(30,184,2,224).with_custom_background(muted).with_ignore_pointer_events());
+      div(context,mk(root.ent()),box(348,184,1,224).with_custom_background({170,195,183,75}).with_ignore_pointer_events());
+      div(context,mk(root.ent()),box(640,380,16,2).with_custom_background(muted).with_ignore_pointer_events());
+      div(context,mk(root.ent()),box(30,184,2,224).with_custom_background(muted).with_ignore_pointer_events());
       label(13,"v",20,384,20,24,18,true);
     }
     label(14,"Main axis: top to bottom",48,420,600,28,19,true);
     label(15,"8 px left and right padding / 184 x 48 px children",48,454,600,28,18,true);
     label(16,"Parent default",712,104,360,30,23);
     label(17,"SelfAlign::Auto inherits FlexStart",712,142,360,28,18,true);
-    auto comparison=vstack(context,mk(root.ent(),18),box(712,184,360,90)
+    auto comparison=vstack(context,mk(root.ent()),box(712,184,360,90)
         .with_background(Theme::Usage::Surface).with_padding(Padding{.left=pixels(8*s),.right=pixels(8*s)})
         .with_justify_content(JustifyContent::Center).with_debug_name("self_align_default"));
-    div(context,mk(comparison.ent(),0),ComponentConfig{}.with_size({pixels(184*s),pixels(48*s)})
+    div(context,mk(comparison.ent()),ComponentConfig{}.with_size({pixels(184*s),pixels(48*s)})
         .with_label("Auto / inherited").with_font("AtkinsonMock",pixels(19*s))
         .with_background(Theme::Usage::Primary).with_auto_text_color(true).with_corner_radius(8*s));
     label(19,"Value                   Position",712,302,360,30,20);
@@ -76,7 +76,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     label(21,"Center                  Center",712,378,360,30,20,true);
     label(22,"FlexEnd                 Right - inset",712,416,360,30,20,true);
     label(23,last,48,506,600,32,21);
-    if (button(context,mk(root.ent(),24),box(712,506,360,40).with_label(guides ? "Alignment guides: on" : "Alignment guides: off")
+    if (button(context,mk(root.ent()),box(712,506,360,40).with_label(guides ? "Alignment guides: on" : "Alignment guides: off")
         .with_font("AtkinsonMock",pixels(19*s)).with_background(Theme::Usage::Secondary)
         .with_auto_text_color(true).with_debug_name("self_align_guides"))) guides=!guides;
     label(25,"Specimen dimensions are shown at 720p. Native SelfAlign computes every child position.",48,552,1024,28,18,true);

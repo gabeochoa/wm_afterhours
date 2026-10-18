@@ -93,12 +93,12 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     label("1. Growing composer", 16, 130, 486, 28, 24, white);
     label(fmt::format("Submissions: {}", sends), 514, 133, 194, 26, 19, white, "cl_send_count");
     label("auto_grow + submit_on_enter / Enter sends / Shift+Enter adds a line", 16, 160, 696, 22, 17, muted);
-    div(context, mk(root.ent(), id++), box(left + 18, 184, 688, 108)
+    div(context, mk(root.ent()), box(left + 18, 184, 688, 108)
         .with_size({pixels(688 * s), pixels(5 * line_height + 12)})
         .with_ignore_pointer_events().with_on_draw_fg([border, s](RectangleType rect) {
           raylib::DrawRectangleLinesEx(rect, s, border);
         }));
-    auto sent = text_area(context, mk(root.ent(), 1000), composer,
+    auto sent = text_area(context, mk(root.ent()), composer,
                           field_config(186, 28, "cl_composer").with_auto_grow().with_max_lines(5).with_submit_on_enter());
     // on_submit is what submit_on_enter fires; without a listener Enter would
     // just do nothing, which would read as the feature being broken.
@@ -125,11 +125,11 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     panel(0, 326, 728, 144);
     label("2. Fixed height, wrapping on", 16, 328, 696, 27, 24, white);
     label("Enter inserts a newline. Type past the edge to wrap. Row guides are optional.", 16, 354, 696, 20, 16, muted);
-    auto wrapped = text_area(context, mk(root.ent(), 1100), plain, field_config(374, 88, "cl_plain").with_size({pixels(580 * s), pixels(88 * s)}));
+    auto wrapped = text_area(context, mk(root.ent()), plain, field_config(374, 88, "cl_plain").with_size({pixels(580 * s), pixels(88 * s)}));
     const auto plain_view = viewport(wrapped);
     label(fmt::format("{:.0f} full rows", std::floor(plain_view[1] / line_height)), 612, 386, 100, 24, 16, muted);
     label("Fixed height", 612, 416, 100, 24, 16, muted);
-    div(context, mk(root.ent(), id++), box(left + 20, 374, 580, 88).with_render_layer(1)
+    div(context, mk(root.ent()), box(left + 20, 374, 580, 88).with_render_layer(1)
         .with_ignore_pointer_events().with_on_draw_fg([show = row_guides, line_height, plain_view](RectangleType r) {
           if (!show) return;
           for (float y = plain_view[3] + line_height; y < plain_view[3] + plain_view[1]; y += line_height)
@@ -140,7 +140,7 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     // 3. The control for panel 2: same width, wrapping off.
     panel(0, 480, 728, 88);
     label("3. No wrapping", 16, 484, 696, 28, 24, white);
-    auto unwrapped = text_area(context, mk(root.ent(), 1200), nowrap,
+    auto unwrapped = text_area(context, mk(root.ent()), nowrap,
                                field_config(536, 28, "cl_nowrap").with_size({pixels(580 * s), pixels(28 * s)}).with_word_wrap(false));
     const auto &unwrapped_state = unwrapped.ent().get<afterhours::text_input::HasTextAreaState>();
     const auto unwrapped_view = viewport(unwrapped);
@@ -211,7 +211,7 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     label(fmt::format("Last submission / {} bytes", last_submitted.size()), 768, 373, 360, 28, 21, white);
     std::string preview = last_submitted;
     for (char &c : preview) if (c == '\n') c = ' ';
-    div(context, mk(root.ent(), id++), box(left + 768, 409, 360, 32)
+    div(context, mk(root.ent()), box(left + 768, 409, 360, 32)
         .with_label(sends == 0 ? "Nothing submitted yet" : preview.empty() ? "Empty submission" : preview)
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(muted)
         .with_text_overflow(TextOverflow::Ellipsis).with_alignment(TextAlignment::Left)

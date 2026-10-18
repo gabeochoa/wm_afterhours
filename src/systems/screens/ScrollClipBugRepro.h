@@ -49,7 +49,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     const float left = (sw - 1280 * scale) / 2;
     const float top = (sh - 720 * scale) / 2;
     context.scaling_mode = ScalingMode::Proportional;
-    div(context, mk(entity, 0), ComponentConfig{}.with_size({pixels(sw), pixels(sh)})
+    div(context, mk(entity), ComponentConfig{}.with_size({pixels(sw), pixels(sh)})
         .with_custom_background(bg).with_corner_radius(0).with_debug_name("bg"));
     const auto box = [scale, left, top](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
@@ -70,10 +70,10 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     };
     int preset = -1;
     if (original_fixture) {
-      div(context, mk(entity, 1), ComponentConfig{}.with_size({pixels(sw - 360), pixels(30)})
+      div(context, mk(entity), ComponentConfig{}.with_size({pixels(sw - 360), pixels(30)})
           .with_absolute_position(20, 8).with_label("Nested Clip Container Regression Tests")
           .with_font("AtkinsonMock", pixels(22)).with_custom_text_color(white));
-      div(context, mk(entity, 2), ComponentConfig{}.with_size({pixels(sw - 40), pixels(20)})
+      div(context, mk(entity), ComponentConfig{}.with_size({pixels(sw - 40), pixels(20)})
           .with_absolute_position(20, 39).with_label("Original geometry: 40px rows / outer height = window height - 102px / inner = 1.5x outer")
           .with_font("AtkinsonMock", pixels(16)).with_custom_text_color({195, 205, 220, 255}));
     } else {
@@ -101,7 +101,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // ── Panel 1: CONTROL ──
     float p1_x = panel_left + margin;
-    div(context, mk(entity, 10),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("1: Control")
             .with_size(ComponentSize{pixels((int)col_w), pixels(original_fixture ? 19 : 29 * scale)})
@@ -110,7 +110,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(white));
 
     auto scroll1 = vstack(
-        context, mk(entity, 11),
+        context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p1_x, scroll_y)
@@ -139,7 +139,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // ── Panel 2: HasClipChildren rows in scroll view ──
     float p2_x = panel_left + margin * 2.0f + col_w;
-    div(context, mk(entity, 20),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("2: ClipChild rows")
             .with_size(ComponentSize{pixels((int)col_w), pixels(original_fixture ? 19 : 29 * scale)})
@@ -148,7 +148,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(white));
 
     auto scroll2 = vstack(
-        context, mk(entity, 21),
+        context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p2_x, scroll_y)
@@ -178,7 +178,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // ── Panel 3: HasClipChildren wrapper around rows, in scroll view ──
     float p3_x = panel_left + margin * 3.0f + col_w * 2.0f;
-    div(context, mk(entity, 30),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("3: Nested wrapper")
             .with_size(ComponentSize{pixels((int)col_w), pixels(original_fixture ? 19 : 29 * scale)})
@@ -187,7 +187,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(white));
 
     auto scroll3 = vstack(
-        context, mk(entity, 31),
+        context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p3_x, scroll_y)
@@ -201,7 +201,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // Wrapper div with Overflow::Hidden that contains all rows
     auto wrapper = vstack(
-        context, mk(scroll3.ent(), 0),
+        context, mk(scroll3.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), children()})
             .with_overflow(Overflow::Hidden, Axis::X)
@@ -224,7 +224,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // ── Panel 4: Scroll view inside scroll view ──
     float p4_x = panel_left + margin * 4.0f + col_w * 3.0f;
-    div(context, mk(entity, 40),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("4: Scroll in scroll")
             .with_size(ComponentSize{pixels((int)col_w), pixels(original_fixture ? 19 : 29 * scale)})
@@ -234,7 +234,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // Outer scroll view
     auto outer_scroll = vstack(
-        context, mk(entity, 41),
+        context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p4_x, scroll_y)
@@ -248,7 +248,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
 
     // Inner scroll view (taller than outer, so outer scrolls it)
     auto inner_scroll = vstack(
-        context, mk(outer_scroll.ent(), 0),
+        context, mk(outer_scroll.ent()),
         ComponentConfig{}
             .with_size(
                 ComponentSize{percent(1.0f), pixels(scroll_h * 1.5f)})
@@ -290,7 +290,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     inner_state.scrollbar_thumb_color = original_fixture ? std::nullopt : std::optional<afterhours::Color>{afterhours::Color{0, 0, 0, 0}};
     if (original_fixture) return;
     const float footer_y = scroll_y + scroll_h + 2 * scale;
-    div(context, mk(entity, 1000), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(sw), pixels(std::max(0.f, sh - footer_y))})
         .with_absolute_position(0, footer_y).with_custom_background(bg)
         .with_corner_radius(0).with_render_layer(10).with_ignore_pointer_events());

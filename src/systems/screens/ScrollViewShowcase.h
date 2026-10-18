@@ -47,9 +47,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Left).with_text_overflow(TextOverflow::Wrap)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 124).with_custom_background(theme.surface).with_corner_radius(10 * scale));
+    div(context, mk(root.ent()), box(0, 24, 1144, 124).with_custom_background(theme.surface).with_corner_radius(10 * scale));
     label(1, 16, 34, 1112, 45, "Scroll View Demo", 35);
-    checkbox(context, mk(root.ent(), 2), invert_scroll, box(16, 95, 36, 36)
+    checkbox(context, mk(root.ent()), invert_scroll, box(16, 95, 36, 36)
         .with_custom_background(theme.secondary).with_checkbox_indicators("", "").with_debug_name("scroll_invert")
         .with_on_draw_fg([value = invert_scroll, color = theme.font, scale](RectangleType r) {
           afterhours::draw_rectangle_outline({r.x + 7 * scale, r.y + 7 * scale, r.width - 14 * scale, r.height - 14 * scale}, color, 2 * scale);
@@ -74,11 +74,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     label(21, 20, 222, 512, 31, "Mouse wheel or vertical trackpad swipe", 21, "", true);
     label(30, 612, 177, 512, 36, "Horizontal Scroll / 15 items", 27);
     label(31, 612, 222, 512, 31, "Horizontal swipe or drag the bottom scrollbar", 21, "", true);
-    auto vertical = vstack(context, mk(root.ent(), 22), box(20, 266, 512, 300)
+    auto vertical = vstack(context, mk(root.ent()), box(20, 266, 512, 300)
         .with_custom_background({233, 240, 246, 255}).with_border(theme.font_muted, 1)
         .with_overflow(Overflow::Scroll, Axis::Y).with_padding(Padding::all(pixels(6 * scale)))
         .with_debug_name("vert_scroll"));
-    auto horizontal = hstack(context, mk(root.ent(), 32), box(612, 266, 512, 110)
+    auto horizontal = hstack(context, mk(root.ent()), box(612, 266, 512, 110)
         .with_custom_background({233, 240, 246, 255}).with_border(theme.font_muted, 1)
         .with_overflow(Overflow::Scroll, Axis::X).with_no_wrap().with_padding(Padding::all(pixels(6 * scale)))
         .with_debug_name("horiz_scroll"));

@@ -63,7 +63,7 @@ struct PodcastLibrary : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background)
         .with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), box(0, 0, 1280, 720)
+    auto root = div(context, mk(entity), box(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2,
                                 (context.screen_height - 720 * s) / 2)
         .with_debug_name("podcast_root"));
@@ -86,9 +86,9 @@ struct PodcastLibrary : ScreenSystem<UIContext<InputAction>> {
     text(2, "Signal", 48, 24, 520, 46, 36, theme.font, "podcast_title", true);
     text(3, "Your podcast library", 48, 77, 750, 30, 22, theme.font_muted);
     text(4, "A little room to listen.", 892, 40, 340, 30, 21, theme.primary);
-    div(context, mk(root.ent(), 5), box(48, 132, 330, 406)
+    div(context, mk(root.ent()), box(48, 132, 330, 406)
         .with_background(Theme::Usage::Surface).with_corner_radius(14 * s));
-    div(context, mk(root.ent(), 6), box(68, 152, 290, 222)
+    div(context, mk(root.ent()), box(68, 152, 290, 222)
         .with_custom_background(theme.primary).with_corner_radius(8 * s)
         .with_on_draw_fg([s](RectangleType r) {
           const afterhours::Color dark{36, 61, 64, 255};
@@ -104,7 +104,7 @@ struct PodcastLibrary : ScreenSystem<UIContext<InputAction>> {
     text(10, "With Maya Chen", 68, 435, 290, 27, 20, theme.font_muted);
     text(11, "Stories for the spaces\nbetween everything else.", 68, 472, 290, 52,
          19, theme.font_muted).ent().get<HasLabel>().text_overflow = TextOverflow::Wrap;
-    div(context, mk(root.ent(), 12), box(402, 132, 830, 406)
+    div(context, mk(root.ent()), box(402, 132, 830, 406)
         .with_background(Theme::Usage::Surface).with_corner_radius(14 * s));
     text(13, "Latest episodes", 426, 148, 560, 34, 26, theme.font, "", true);
     text(14, "4 episodes", 1094, 152, 116, 26, 18, theme.font_muted);
@@ -130,7 +130,7 @@ struct PodcastLibrary : ScreenSystem<UIContext<InputAction>> {
       text(70 + static_cast<int>(i), episode.date, 1110, y + 40,
            90, 24, 17, theme.font_muted);
     }
-    div(context, mk(root.ent(), 80), box(48, 562, 1184, 120)
+    div(context, mk(root.ent()), box(48, 562, 1184, 120)
         .with_background(Theme::Usage::Surface).with_corner_radius(14 * s)
         .with_debug_name("podcast_player"));
     text(81, episodes[selected].title, 72, 578, 710, 32, 25,
@@ -147,7 +147,7 @@ struct PodcastLibrary : ScreenSystem<UIContext<InputAction>> {
                174, 30, "podcast_speed"))
       speed_index = (speed_index + 1) % speeds.size();
     float progress = position / static_cast<float>(episodes[selected].seconds);
-    if (slider(context, mk(root.ent(), 86), progress,
+    if (slider(context, mk(root.ent()), progress,
         box(72, 643, 710, 22).with_background(Theme::Usage::Secondary)
             .with_debug_name("podcast_timeline")))
       position = progress * episodes[selected].seconds;

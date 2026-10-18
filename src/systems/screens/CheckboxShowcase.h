@@ -61,7 +61,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("bg"));
-    auto content = div(context, mk(root.ent(), 0), ComponentConfig{}
+    auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1144 * s), pixels(720 * s)}).with_absolute_position(left, top)
         .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("card"));
     int id = 0;
@@ -93,23 +93,23 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
       return static_cast<bool>(changed);
     };
 
-    auto header = div(context, mk(content.ent(), id++), box(0, 24, 1144, 88)
+    auto header = div(context, mk(content.ent()), box(0, 24, 1144, 88)
         .with_custom_background({30, 42, 62, 255}).with_corner_radius(12 * s));
     // Title
     label(header.ent(), "Checkbox Components", 20, 8, 850, 40, 33, "checkbox_title");
     label(header.ent(), "Neon Dark / square marks, independent states, and group limits", 20, 52, 740, 26, 20, "", true);
-    if (button(context, mk(header.ent(), id++), box(914, 10, 210, 36)
+    if (button(context, mk(header.ent()), box(914, 10, 210, 36)
         .with_label("Reset demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
         .with_corner_radius(7 * s).with_debug_name("checkbox_reset"))) reset();
     label(header.ent(), "Last: " + last_change, 774, 52, 350, 26, 18, "checkbox_feedback", true);
 
     // ========== LEFT COLUMN ==========
-    auto left_col = div(context, mk(content.ent(), id++), box(0, 132, 556, 568)
+    auto left_col = div(context, mk(content.ent()), box(0, 132, 556, 568)
         .with_background(Theme::Usage::Surface).with_corner_radius(12 * s).with_debug_name("left_col"));
     label(left_col.ent(), "Individual controls", 20, 12, 516, 33, 27);
     label(left_col.ent(), "Theme roles", 20, 54, 300, 27, 23);
-    if (button(context, mk(left_col.ent(), id++), box(366, 52, 170, 30)
+    if (button(context, mk(left_col.ent()), box(366, 52, 170, 30)
         .with_label("Match checked").with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * s).with_debug_name("checkbox_match_roles"))) {

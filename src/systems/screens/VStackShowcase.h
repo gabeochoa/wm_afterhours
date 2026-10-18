@@ -25,9 +25,9 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1160*s),pixels(664*s)})
+    auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1160*s),pixels(664*s)})
         .with_absolute_position((context.screen_width-1160*s)/2,(context.screen_height-664*s)/2)
         .with_background(Theme::Usage::None).with_debug_name("root"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
@@ -96,9 +96,9 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
       for(int i=0;i<4;++i) if(button(context,mk(sidebar.ent(),i),ComponentConfig{}.with_size({percent(1),pixels(48*s)})
           .with_label(names[i]).with_font("AtkinsonMock",pixels(22*s)).with_background(selected==names[i]?Theme::Usage::Primary:Theme::Usage::Secondary)
           .with_auto_text_color(true).with_margin(Margin{.bottom=pixels(12*s)}).with_debug_name("vstack_nav_"+std::to_string(i)))) selected=names[i];
-      auto content=vstack(context,mk(layout.ent(),1),ComponentConfig{}.with_size({percent(0.60f),percent(1)})
+      auto content=vstack(context,mk(layout.ent()),ComponentConfig{}.with_size({percent(0.60f),percent(1)})
           .with_custom_background(panel).with_padding(Padding::all(pixels(12*s))).with_margin(Margin{.left=pixels(12*s)}));
-      div(context,mk(content.ent(),0),ComponentConfig{}.with_size({percent(1),pixels(48*s)})
+      div(context,mk(content.ent()),ComponentConfig{}.with_size({percent(1),pixels(48*s)})
           .with_label(selected+" / Content").with_font("AtkinsonMock",pixels(24*s)).with_custom_text_color(ink));
       const std::array<std::string,3> names2{"Alerts","Activity","Stats"};
       for(int i=0;i<3;++i) {

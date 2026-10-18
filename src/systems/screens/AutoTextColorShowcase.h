@@ -99,7 +99,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             x, y + 36, width, 22, 17, muted, debug + "_result");
     };
 
-    div(context, mk(root.ent(), id++), box(0, 12, 1144, 84)
+    div(context, mk(root.ent()), box(0, 12, 1144, 84)
         .with_custom_background({25, 45, 72, 255}).with_corner_radius(12 * s));
     label("Auto text color", 20, 21, 600, 39, 33, ink);
     label("Default enabled", 906, 28, 218, 28, 21, muted);

@@ -147,7 +147,7 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
           .with_debug_name(name));
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(sw), pixels(sh)}).with_custom_background({14, 24, 36, 255})
         .with_corner_radius(0).with_debug_name("menu_canvas"));
     text(10, "Anchored menus", 48, 20, 1184, 44, 34, white, "menu_showcase_title");
@@ -155,7 +155,7 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
          48, 70, 1184, 27, 20, muted, "menu_subtitle");
     text(12, "Choose a menu, then a row. Shortcut labels are hints; this demo reports your selection.",
          48, 101, 1184, 25, 18, muted, "menu_instruction");
-    div(context, mk(entity, 13), at(48, 184, 370, 64)
+    div(context, mk(entity), at(48, 184, 370, 64)
         .with_custom_background({26, 41, 57, 255}).with_corner_radius(8 * s)
         .with_debug_name("menu_bar"));
     text(14, "Live menu examples", 450, 188, 782, 30, 24, white, "menu_live_heading");
@@ -248,11 +248,11 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
         .with_absolute_position(48 * s, sh - 24 * s)
         .with_custom_background({53, 86, 106, 255}).with_ignore_pointer_events()
         .with_debug_name("menu_anchor_baseline"));
-    div(context, mk(entity, 83), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(sw), pixels(1)})
         .with_absolute_position(0, sh - 1).with_custom_background({77, 120, 138, 255})
         .with_ignore_pointer_events().with_debug_name("menu_viewport_edge"));
-    div(context, mk(entity, 84), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(430 * s), pixels(28 * s)})
         .with_absolute_position((sw - 430 * s) / 2, sh - 67 * s)
         .with_label(fmt::format("Viewport bottom: y = {:.0f} px", sh))

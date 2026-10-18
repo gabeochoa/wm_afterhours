@@ -90,7 +90,7 @@ struct ColourTrackLab : ScreenSystem<UIContext<InputAction>> {
     const float p = prog.value_or(0.f);
     auto &alpha_track = motion::anim<ColorType>(Key::Alpha);
 
-    div(context, mk(entity, 0), box(0, 0, 1280, 720).with_custom_background({255, 245, 235, 255}).with_debug_name("bg"));
+    div(context, mk(entity), box(0, 0, 1280, 720).with_custom_background({255, 245, 235, 255}).with_debug_name("bg"));
     label(1, "Colour tracks: OKLab", 60, 36, 700, 30, false, "title");
     label(2, "Colour tracks interpolate in OKLab (L, a, b) plus linear alpha. The middle swatch is the track colour, the right swatch is a per-channel sRGB lerp at the same progress.", 60, 76, 1160, 17, true);
     char pbuf[40];
@@ -129,7 +129,7 @@ struct ColourTrackLab : ScreenSystem<UIContext<InputAction>> {
     std::snprintf(abuf, sizeof abuf, "a: %d", int(alpha_track.value_or(ColorType{255, 115, 105, 255}).a));
     label(202, abuf, 840, ay, 200, 18, false, "alpha_value");
 
-    auto spring_btn = button(context, mk(entity, 210),
+    auto spring_btn = button(context, mk(entity),
                              box(60, 548, 300, 48).with_label(spring_on ? "Spring: blue" : "Spring: coral")
                                  .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(ink)
                                  .with_corner_radius(10 * s).with_debug_name("spring_btn")
@@ -137,7 +137,7 @@ struct ColourTrackLab : ScreenSystem<UIContext<InputAction>> {
                                                     motion::Spring::smooth())));
     if (spring_btn) spring_on = !spring_on;
     label(211, "The button background is a ui_motion colour track on a spring; toggling crosses in OKLab.", 380, 560, 820, 17, true);
-    if (button(context, mk(entity, 212), box(60, 624, 160, 44).with_label("Replay")
+    if (button(context, mk(entity), box(60, 624, 160, 44).with_label("Replay")
                                              .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
                                              .with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
                                              .with_debug_name("replay_btn")))

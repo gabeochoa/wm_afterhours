@@ -43,7 +43,7 @@ struct TextAreaLab : ScreenSystem<UIContext<InputAction>> {
          16, 48, 1180, 28, 19);
 
     text(2, "Composer (placeholder + auto-grow)", 32, 108, 560, 30, 21);
-    text_area(context, mk(root.ent(), 3), draft, ComponentConfig{}
+    text_area(context, mk(root.ent()), draft, ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(40 * scale)})
         .with_absolute_position(32 * scale, 146 * scale)
         .with_font("AtkinsonMock", pixels(19 * scale))
@@ -54,7 +54,7 @@ struct TextAreaLab : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("composer"));
 
     text(4, "Caller background", 32, 330, 560, 30, 21);
-    text_area(context, mk(root.ent(), 5), custom_text, ComponentConfig{}
+    text_area(context, mk(root.ent()), custom_text, ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(84 * scale)})
         .with_absolute_position(32 * scale, 368 * scale)
         .with_font("AtkinsonMock", pixels(19 * scale))
@@ -63,12 +63,12 @@ struct TextAreaLab : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("custom_area"));
 
     text(6, "Transparent background", 660, 108, 560, 30, 21);
-    div(context, mk(root.ent(), 7), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(120 * scale)})
         .with_absolute_position(660 * scale, 146 * scale)
         .with_background(Theme::Usage::Primary)
         .with_corner_radius(8 * scale));
-    text_area(context, mk(root.ent(), 8), ghost_text, ComponentConfig{}
+    text_area(context, mk(root.ent()), ghost_text, ComponentConfig{}
         .with_size({pixels(528 * scale), pixels(88 * scale)})
         .with_absolute_position(676 * scale, 162 * scale)
         .with_font("AtkinsonMock", pixels(19 * scale))

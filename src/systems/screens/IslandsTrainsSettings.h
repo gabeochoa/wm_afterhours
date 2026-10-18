@@ -193,12 +193,12 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels((21.f) * scale));
 
-    div(context, mk(entity, 1), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(screen_w), pixels(screen_h)})
         .with_corner_radius(0).with_background(Theme::Usage::None)
         .with_on_draw_bg([](RectangleType r) { draw_background(r); })
         .with_debug_name("it_canvas"));
-    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(entity), box(scale, 0, 0, 1280, 720)
         .with_absolute_position((screen_w - 1280 * scale) / 2,
                                 (screen_h - 720 * scale) / 2)
         .with_debug_name("it_root"));
@@ -212,12 +212,12 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    div(context, mk(root.ent(), 1),
+    div(context, mk(root.ent()),
         box(scale, 320, 0, 640, 720)
             .with_on_draw_bg([](RectangleType r) { draw_paper(r); })
             .with_debug_name("it_paper"));
 
-    if (button(context, mk(root.ent(), 2),
+    if (button(context, mk(root.ent()),
                box(scale, 894, 18, 42, 42)
                    .with_label("")
                    .with_on_draw_bg([](RectangleType r) { draw_close_shape(r); })
@@ -240,7 +240,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    div(context, mk(root.ent(), 10), box(scale, 450, 18, 380, 48)
+    div(context, mk(root.ent()), box(scale, 450, 18, 380, 48)
         .with_label("SETTINGS").with_font("Gaegu-Bold", pixels(38 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
         .with_debug_name("it_title"));
@@ -257,7 +257,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                     266, "it_pan");
     render_step_row(context, root.ent(), scale, 100, "Rotation speed", cam_rotate_speed,
                     312, "it_rotate");
-    if (button(context, mk(root.ent(), 130), box(scale, 352, 358, 576, 36)
+    if (button(context, mk(root.ent()), box(scale, 352, 358, 576, 36)
         .with_label("Keyboard controls").with_custom_background({207, 219, 190, 255})
         .with_corner_radius(6 * scale).with_font("Gaegu-Bold", pixels(25 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
@@ -274,7 +274,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     render_section(context, root.ent(), scale, 210, "TUTORIAL", 544);
     detail_label(context, root.ent(), scale, 211,
                  "Practice panning, track laying and a train run.", 352, 572, 576, 24, 21);
-    if (button(context, mk(root.ent(), 220), box(scale, 352, 602, 576, 36)
+    if (button(context, mk(root.ent()), box(scale, 352, 602, 576, 36)
         .with_label("PLAY TUTORIAL").with_font("Gaegu-Bold", pixels(25 * scale))
         .with_custom_text_color(text).with_custom_background({231, 230, 184, 255})
         .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale)
@@ -288,7 +288,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       tutorial_step = 0; camera_offset = 0; track_placed = false;
       train_running = false; train_progress = 0;
     }
-    if (button(context, mk(root.ent(), 230), box(scale, 352, 664, 294, 38)
+    if (button(context, mk(root.ent()), box(scale, 352, 664, 294, 38)
         .with_label("RESET TO DEFAULTS").with_font("Gaegu-Bold", pixels(25 * scale))
         .with_custom_text_color(text).with_border({139, 151, 111, 255}, scale)
         .with_corner_radius(6 * scale).with_alignment(TextAlignment::Center)
@@ -356,7 +356,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         "Start the train and watch it reach the second station."};
     detail_label(c, p, scale, 560, titles[tutorial_step], 456, 105, 367, 41, 27);
     detail_label(c, p, scale, 561, instructions[tutorial_step], 456, 153, 367, 77, 23);
-    div(c, mk(p, 562), box(scale, 456, 251, 367, 180).with_custom_background(row)
+    div(c, mk(p), box(scale, 456, 251, 367, 180).with_custom_background(row)
         .with_corner_radius(10 * scale).with_ignore_pointer_events().with_debug_name("it_practice_scene")
         .with_on_draw_fg([offset = camera_offset, track = track_placed, progress = train_progress](RectangleType r) {
           const float s = r.width / 367;

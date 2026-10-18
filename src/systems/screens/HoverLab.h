@@ -62,7 +62,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
           .with_debug_name(name));
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({16, 22, 33, 255}).with_corner_radius(0)
         .with_debug_name("hv_canvas"));
@@ -71,7 +71,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
          48, 68, 1184, 28, 21, muted, "hv_summary");
     text(3, "Move across each row and star. Click the stars: 1 and 2 count; 3 passes pointer clicks to its row.",
          48, 99, 1184, 25, 18, muted, "hv_hint");
-    if (button(context, mk(entity, 4), at(1032, 26, 200, 40)
+    if (button(context, mk(entity), at(1032, 26, 200, 40)
         .with_label("Reset click counts").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({47, 68, 97, 255}).with_custom_text_color(white)
         .with_corner_radius(8 * s).with_debug_name("hv_reset"))) {
@@ -175,7 +175,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
       text(id + 3, n == 2 ? "No" : "Yes", 1040, y + 30, 76, 30, 21, white, "");
       text(id + 4, n == 2 ? "No" : "Yes", 1128, y + 30, 84, 30, 21, white, "");
     }
-    div(context, mk(entity, 370), at(720, 562, 512, 138)
+    div(context, mk(entity), at(720, 562, 512, 138)
         .with_custom_background({25, 34, 50, 255}).with_corner_radius(12 * s)
         .with_debug_name("hv_api_panel"));
     text(371, "Hover queries used by these rows", 740, 572, 472, 27,

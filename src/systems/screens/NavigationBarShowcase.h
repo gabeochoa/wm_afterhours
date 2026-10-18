@@ -30,10 +30,10 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(880 * s), pixels(636 * s)})
         .with_absolute_position((context.screen_width - 880 * s) / 2,
                                 (context.screen_height - 636 * s) / 2)

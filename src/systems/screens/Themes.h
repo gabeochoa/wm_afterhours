@@ -72,10 +72,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    auto background = div(context, mk(entity, 0), ComponentConfig{}
+    auto background = div(context, mk(entity), ComponentConfig{}
         .with_size({screen_pct(1), screen_pct(1)}).with_background(Theme::Usage::Background)
         .with_corner_radius(0).with_debug_name("main_bg"));
-    auto root = div(context, mk(background.ent(), 0), at(0, 0, 1280, 720)
+    auto root = div(context, mk(background.ent()), at(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2));
     const auto label = [&](int id, const std::string &caption, float x, float y,
                            float w, float h, float size, const std::string &name = "") {
@@ -90,7 +90,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     label(2, "Active: " + get_theme_name(current_theme), 740, 30, 492, 32, 22, "theme_active");
     // ========== MAIN CONTENT ==========
     // LEFT - Theme Selection
-    div(context, mk(root.ent(), 3), at(48, 128, 264, 558)
+    div(context, mk(root.ent()), at(48, 128, 264, 558)
         .with_background(Theme::Usage::Surface).with_corner_radius(10 * s).with_debug_name("selector_panel"));
     label(4, "Select Theme", 64, 145, 232, 30, 24);
     // Theme buttons
@@ -157,7 +157,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     label(85, toggle_state ? "On" : "Off", 974, 389, 70, 32, 20, "theme_toggle_state");
     auto toggle_config = at(1108, 385, 104, 40).with_debug_name("theme_toggle");
     toggle_config.corner_radius.reset();
-    toggle_switch(context, mk(root.ent(), 86), toggle_state, toggle_config);
+    toggle_switch(context, mk(root.ent()), toggle_state, toggle_config);
     // Cards with shadows demo
     label(90, "Shadow comparison / same Primary background", 356, 431, 856, 24, 18);
     const std::string offset = fmt::format("{:g}", 2 * s);
@@ -192,7 +192,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     for (auto edge : {Axis::top, Axis::bottom}) line.cmp().desired_margin[edge] = pixels(0);
     // Progress bar
     label(122, "Loading: 72% / fill Primary / track Secondary", 356, 639, 856, 25, 18);
-    progress_bar(context, mk(root.ent(), 123), .72f,
+    progress_bar(context, mk(root.ent()), .72f,
         at(356, 668, 856, 12).with_background(Theme::Usage::Primary).with_debug_name("theme_progress"),
         ProgressBarLabelStyle::None);
   }

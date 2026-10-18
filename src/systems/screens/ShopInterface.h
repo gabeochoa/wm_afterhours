@@ -374,19 +374,19 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_default_font("Garamond", pixels(17.f * scale));
 
     auto root = div(
-        context, mk(entity, 0),
+        context, mk(entity),
         box(scale, 0, 0, 1280, 720)
             .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
             .with_on_draw_bg([](RectangleType r) { draw_shop_background(r); })
             .with_debug_name("shop_root"));
     if (closed) {
-      div(context, mk(root.ent(), 990),
+      div(context, mk(root.ent()),
           box(scale, 390, 260, 500, 80)
               .with_label("Shop closed")
               .with_font("Garamond", pixels(42.f * scale))
               .with_custom_text_color(cream)
               .with_alignment(TextAlignment::Center));
-      if (button(context, mk(root.ent(), 991),
+      if (button(context, mk(root.ent()),
                  box(scale, 490, 365, 300, 60)
                      .with_label("Return to shop")
                      .with_custom_background(wood)
@@ -398,21 +398,21 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    div(context, mk(root.ent(), 1),
+    div(context, mk(root.ent()),
         box(scale, 38, 24, 560, 28)
             .with_label("WILLOWBROOK - MARKET DISTRICT")
             .with_font("Garamond", pixels(17.f * scale))
             .with_letter_spacing(0)
             .with_custom_text_color(gold)
             .with_debug_name("shop_location"));
-    div(context, mk(root.ent(), 2),
+    div(context, mk(root.ent()),
         box(scale, 1156, 22, 86, 28)
             .with_label("Day 12")
             .with_font("Garamond", pixels(14.f * scale))
             .with_custom_text_color(afterhours::Color{225, 193, 107, 255})
             .with_alignment(TextAlignment::Right));
 
-    div(context, mk(root.ent(), 9), box(scale, 1126, 27, 22, 22)
+    div(context, mk(root.ent()), box(scale, 1126, 27, 22, 22)
         .with_on_draw_fg([scale, this](RectangleType r) {
           const Vector2Type center{r.x + r.width / 2, r.y + r.height / 2};
           afterhours::draw_circle(static_cast<int>(center.x), static_cast<int>(center.y), 5 * scale, gold);
@@ -429,7 +429,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             afterhours::draw_poly({r.x + r.width * .3f, r.y + r.height * .3f}, 4, 5 * scale, 0, gold);
             afterhours::draw_poly({r.x + r.width * .7f, r.y + r.height * .6f}, 4, 5 * scale, 0, gold);
           }).with_ignore_pointer_events());
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         box(scale, 65, 73, 420, 58)
             .with_label("General Store")
             .with_font("Garamond", pixels(56.f * scale))
@@ -437,14 +437,14 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                               .35f * scale)
             .with_custom_text_color(afterhours::Color{244, 222, 181, 255})
             .with_debug_name("shop_title"));
-    div(context, mk(root.ent(), 11),
+    div(context, mk(root.ent()),
         box(scale, 39, 128, 470, 25)
             .with_label("\"Welcome, adventurer! Browse my finest wares.\"")
             .with_font("Garamond", pixels(21.f * scale))
             .with_custom_text_color(afterhours::Color{212, 190, 154, 255})
             .with_debug_name("shop_quote"));
 
-    div(context, mk(root.ent(), 20),
+    div(context, mk(root.ent()),
         box(scale, 1054, 91, 32, 32)
             .with_on_draw_fg([](RectangleType r) {
               afterhours::draw_circle(static_cast<int>(r.x + r.width * .5f),
@@ -457,27 +457,27 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_ignore_pointer_events()
             .with_debug_name("shop_coin_icon"));
-    div(context, mk(root.ent(), 21),
+    div(context, mk(root.ent()),
         box(scale, 1098, 84, 144, 46)
             .with_label(format_gold(player_gold) + " G")
             .with_font("Garamond", pixels(37.f * scale))
             .with_custom_text_color(afterhours::Color{244, 222, 181, 255})
             .with_alignment(TextAlignment::Left)
             .with_debug_name("shop_gold"));
-    div(context, mk(root.ent(), 22),
+    div(context, mk(root.ent()),
         box(scale, 1098, 127, 144, 25)
             .with_label("YOUR GOLD")
             .with_font("Garamond", pixels(17.f * scale))
             .with_letter_spacing(0)
             .with_custom_text_color(gold));
 
-    div(context, mk(root.ent(), 100),
+    div(context, mk(root.ent()),
         box(scale, 38, 163, 750, 500)
             .with_on_draw_bg([fill = parchment](RectangleType r) {
               draw_parchment(r, fill);
             })
             .with_debug_name("shop_wares"));
-    div(context, mk(root.ent(), 101),
+    div(context, mk(root.ent()),
         box(scale, 42, 167, 742, 52)
             .with_custom_background(afterhours::Color{194, 169, 127, 255})
             .with_ignore_pointer_events());
@@ -502,7 +502,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       if (active)
         div(context, mk(root.ent(), 114 + static_cast<int>(i)), box(scale, 52 + static_cast<float>(i) * 107, 211, 87, 4).with_custom_background(wood_dark));
     }
-    div(context, mk(root.ent(), 115),
+    div(context, mk(root.ent()),
         box(scale, 290, 181, 470, 28)
             .with_label(selected_tab == 0 ? "Goods for the road ahead"
                                           : "Selling is unavailable in this demo.")
@@ -600,7 +600,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_ignore_pointer_events());
     }
 
-    div(context, mk(root.ent(), 780),
+    div(context, mk(root.ent()),
         box(scale, 73, 633, 680, 20)
             .with_label(
                 "All goods inspected by the Willowbrook Merchants' Guild.")
@@ -609,13 +609,13 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     auto &sel = buy_items[selected_item];
-    div(context, mk(root.ent(), 800),
+    div(context, mk(root.ent()),
         box(scale, 812, 163, 430, 209)
             .with_on_draw_bg([fill = parchment](RectangleType r) {
               draw_parchment(r, fill);
             })
             .with_debug_name("shop_detail"));
-    div(context, mk(root.ent(), 801),
+    div(context, mk(root.ent()),
         box(scale, 847, 193, 82, 98)
             .with_on_draw_fg([index = selected_item,
                               color = sel.icon_color](RectangleType r) {
@@ -623,33 +623,33 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_ignore_pointer_events()
             .with_debug_name("shop_detail_art"));
-    div(context, mk(root.ent(), 802),
+    div(context, mk(root.ent()),
         box(scale, 951, 180, 266, 24)
             .with_label(sel.category == "Consumable" ? "CONSUMABLE" : sel.category)
             .with_font("Garamond", pixels(17.f * scale))
             .with_letter_spacing(0)
             .with_custom_text_color(muted)
             .with_debug_name("shop_detail_category"));
-    div(context, mk(root.ent(), 803),
+    div(context, mk(root.ent()),
         box(scale, 951, 208, 266, 38)
             .with_label(sel.name)
             .with_font("Garamond", pixels(32.f * scale)).with_text_stroke(ink, .4f * scale)
             .with_custom_text_color(ink)
             .with_debug_name("shop_detail_name"));
-    div(context, mk(root.ent(), 804),
+    div(context, mk(root.ent()),
         box(scale, 951, 247, 266, 40)
             .with_label(sel.description)
             .with_font("Garamond", pixels(17.f * scale))
             .with_custom_text_color(ink)
             .with_debug_name("shop_detail_description"));
-    div(context, mk(root.ent(), 805),
+    div(context, mk(root.ent()),
         box(scale, 951, 289, 266, 25)
             .with_label("Price per item: " + std::to_string(sel.price) + " G")
             .with_font("Garamond", pixels(18.f * scale))
             .with_custom_text_color(ink)
             .with_debug_name("shop_detail_price"));
     if (button(
-            context, mk(root.ent(), 806),
+            context, mk(root.ent()),
             box(scale, 831, 319, 392, 38)
                 .with_label(selected_tab == 0 ? "Add to basket" : "Sell preview only")
                 .with_on_draw_bg([](RectangleType r) { draw_wood_button(r); })
@@ -660,21 +660,21 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       add_selected_to_cart();
     }
 
-    div(context, mk(root.ent(), 900), box(scale, 812, 386, 430, 277)
+    div(context, mk(root.ent()), box(scale, 812, 386, 430, 277)
         .with_on_draw_bg([fill = parchment](RectangleType r) { draw_parchment(r, fill); })
         .with_debug_name("shop_basket"));
-    div(context, mk(root.ent(), 901), box(scale, 838, 402, 202, 34)
+    div(context, mk(root.ent()), box(scale, 838, 402, 202, 34)
         .with_label("Your basket").with_font("Garamond", pixels(32 * scale))
         .with_text_stroke(ink, .35f * scale).with_custom_text_color(ink)
         .with_debug_name("shop_basket_title"));
-    div(context, mk(root.ent(), 902), box(scale, 1050, 408, 164, 26)
+    div(context, mk(root.ent()), box(scale, 1050, 408, 164, 26)
         .with_label(std::to_string(get_cart_item_count()) + " items")
         .with_font("Garamond", pixels(17 * scale)).with_custom_text_color(muted)
         .with_alignment(TextAlignment::Right).with_debug_name("shop_cart_count"));
-    div(context, mk(root.ent(), 903), box(scale, 1060, 435, 128, 20)
+    div(context, mk(root.ent()), box(scale, 1060, 435, 128, 20)
         .with_label("Line total").with_font("Garamond", pixels(14 * scale))
         .with_custom_text_color(muted).with_alignment(TextAlignment::Right));
-    auto basket_rows = div(context, mk(root.ent(), 904), box(scale, 838, 457, 378, 94)
+    auto basket_rows = div(context, mk(root.ent()), box(scale, 838, 457, 378, 94)
         .with_flex_direction(FlexDirection::Column).with_overflow(Overflow::Scroll, Axis::Y)
         .with_debug_name("shop_basket_rows"));
     int basket_action = 0;
@@ -710,7 +710,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       quantity_button(5, 350, "x", "shop_remove_", 2);
     }
     if (cart.empty())
-      div(context, mk(basket_rows.ent(), 99), ComponentConfig{}
+      div(context, mk(basket_rows.ent()), ComponentConfig{}
           .with_size({pixels(378 * scale), pixels(38 * scale)}).with_label("Your basket is empty.")
           .with_font("Garamond", pixels(18 * scale)).with_custom_text_color(muted));
     if (basket_action != 0) selected_item = action_item;
@@ -726,34 +726,34 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
         cart.erase(it);
       }
     }
-    div(context, mk(root.ent(), 930), box(scale, 838, 557, 378, 1)
+    div(context, mk(root.ent()), box(scale, 838, 557, 378, 1)
         .with_custom_background(afterhours::Color{169, 139, 98, 255}));
-    div(context, mk(root.ent(), 931), box(scale, 838, 562, 92, 31)
+    div(context, mk(root.ent()), box(scale, 838, 562, 92, 31)
         .with_label("Total").with_font("Garamond", pixels(30 * scale))
         .with_text_stroke(ink, .35f * scale).with_custom_text_color(ink));
-    div(context, mk(root.ent(), 932), box(scale, 1090, 562, 126, 31)
+    div(context, mk(root.ent()), box(scale, 1090, 562, 126, 31)
         .with_label(std::to_string(get_cart_total()) + " G")
         .with_font("Garamond", pixels(30 * scale)).with_text_stroke(ink, .4f * scale)
         .with_custom_text_color(ink).with_alignment(TextAlignment::Right).with_debug_name("shop_total"));
-    div(context, mk(root.ent(), 933), box(scale, 838, 590, 378, 24)
+    div(context, mk(root.ent()), box(scale, 838, 590, 378, 24)
         .with_label(get_cart_total() > player_gold ? "Not enough gold for this basket" :
             "Gold remaining: " + format_gold(player_gold - get_cart_total()) + " G")
         .with_font("Garamond", pixels(16 * scale)).with_custom_text_color(muted)
         .with_debug_name("shop_remaining"));
-    if (button(context, mk(root.ent(), 934), box(scale, 838, 619, 378, 30)
+    if (button(context, mk(root.ent()), box(scale, 838, 619, 378, 30)
         .with_label(cart.empty() ? "Basket empty" : "Purchase / " + std::to_string(get_cart_total()) + " G")
         .with_custom_background(wood_dark).with_border(gold, 2 * scale)
         .with_font("Garamond", pixels(25 * scale)).with_custom_text_color(cream)
         .with_alignment(TextAlignment::Center).with_debug_name("shop_purchase"))) purchase_cart();
 
-    div(context, mk(root.ent(), 980),
+    div(context, mk(root.ent()),
         box(scale, 38, 681, 474, 30)
             .with_label("[Enter] Select   [X] Add   [Y] Remove")
             .with_font("Garamond", pixels(17.f * scale))
             .with_custom_text_color(afterhours::Color{196, 179, 151, 255})
             .with_debug_name("shop_footer_left"));
     if (button(
-            context, mk(root.ent(), 981),
+            context, mk(root.ent()),
             box(scale, 1050, 681, 190, 30)
                 .with_label("[B] Leave shop")
                 .with_font("Garamond", pixels(17.f * scale))
@@ -761,7 +761,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_alignment(TextAlignment::Right)
                 .with_debug_name("shop_leave")))
       closed = true;
-    div(context, mk(root.ent(), 982),
+    div(context, mk(root.ent()),
         box(scale, 504, 681, 536, 30)
             .with_label(status)
             .with_font("Garamond", pixels(17.f * scale))

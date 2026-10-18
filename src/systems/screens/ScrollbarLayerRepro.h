@@ -23,26 +23,26 @@ struct ScrollbarLayerRepro : ScreenSystem<afterhours::ui::UIContext<InputAction>
     ctx.scaling_mode = ScalingMode::Proportional;
     const auto base = ComponentConfig{}.with_font("AtkinsonMock", pixels(22.f * scale))
         .with_custom_text_color(ctx.theme.font);
-    div(ctx, mk(entity, 0), ComponentConfig{}
+    div(ctx, mk(entity), ComponentConfig{}
         .with_size({pixels(ctx.screen_width), pixels(ctx.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ctx.theme.background).with_corner_radius(0));
     auto title = base;
-    div(ctx, mk(entity, 1), title.with_size({pixels(1184.f * scale), pixels(48.f * scale)})
+    div(ctx, mk(entity), title.with_size({pixels(1184.f * scale), pixels(48.f * scale)})
         .with_absolute_position(left + 48.f * scale, 32.f * scale)
         .with_font_size(pixels(34.f * scale)).with_label("Scrollbar layer reproduction")
         .with_alignment(TextAlignment::Left).with_transparent_bg());
     auto description = base;
-    div(ctx, mk(entity, 2), description.with_size({pixels(1184.f * scale), pixels(40.f * scale)})
+    div(ctx, mk(entity), description.with_size({pixels(1184.f * scale), pixels(40.f * scale)})
         .with_absolute_position(left + 48.f * scale, 88.f * scale)
         .with_label("Open the dialog. The list's scrollbar should disappear behind it.")
         .with_alignment(TextAlignment::Left).with_transparent_bg());
     auto launcher = base;
-    if (button(ctx, mk(entity, 3), launcher.with_size({pixels(224.f * scale), pixels(44.f * scale)})
+    if (button(ctx, mk(entity), launcher.with_size({pixels(224.f * scale), pixels(44.f * scale)})
         .with_absolute_position(left + 48.f * scale, 144.f * scale)
         .with_label("Open dialog").with_debug_name("scrollbar_repro_open"))) open = true;
 
     auto list_config = base;
-    auto list = div(ctx, mk(entity, 4), list_config
+    auto list = div(ctx, mk(entity), list_config
         .with_size({pixels(520.f * scale), pixels(360.f * scale)})
         .with_absolute_position(left + 200.f * scale, 224.f * scale)
         .with_custom_background(ctx.theme.surface).with_corner_radius(8.f * scale)
@@ -56,7 +56,7 @@ struct ScrollbarLayerRepro : ScreenSystem<afterhours::ui::UIContext<InputAction>
           .with_alignment(TextAlignment::Left).with_transparent_bg());
     }
 
-    auto dialog = afterhours::modal(ctx, mk(entity, 5), open,
+    auto dialog = afterhours::modal(ctx, mk(entity), open,
         afterhours::ModalConfig{}.with_size(pixels(640.f * scale), pixels(320.f * scale))
             .with_closed_by(afterhours::ClosedBy::Any));
     if (!dialog) return;
@@ -64,16 +64,16 @@ struct ScrollbarLayerRepro : ScreenSystem<afterhours::ui::UIContext<InputAction>
     auto content = base;
     content.with_render_layer(layer).with_transparent_bg().with_alignment(TextAlignment::Left);
     auto heading = content;
-    div(ctx, mk(dialog.ent(), 0), heading.with_size({percent(1.f), pixels(48.f * scale)})
+    div(ctx, mk(dialog.ent()), heading.with_size({percent(1.f), pixels(48.f * scale)})
         .with_label("Foreground dialog").with_debug_name("scrollbar_repro_dialog_title"));
     auto explanation = content;
-    div(ctx, mk(dialog.ent(), 1), explanation.with_size({percent(1.f), pixels(64.f * scale)})
+    div(ctx, mk(dialog.ent()), explanation.with_size({percent(1.f), pixels(64.f * scale)})
         .with_label("Try scrolling here. The background list should stay still.")
         .with_text_overflow(TextOverflow::Wrap));
     auto space = content;
-    div(ctx, mk(dialog.ent(), 2), space.with_size({percent(1.f), expand()}));
+    div(ctx, mk(dialog.ent()), space.with_size({percent(1.f), expand()}));
     auto close = base;
-    if (button(ctx, mk(dialog.ent(), 3), close.with_render_layer(layer)
+    if (button(ctx, mk(dialog.ent()), close.with_render_layer(layer)
         .with_size({pixels(132.f * scale), pixels(44.f * scale)})
         .with_label("Close").with_debug_name("scrollbar_repro_close"))) open = false;
   }

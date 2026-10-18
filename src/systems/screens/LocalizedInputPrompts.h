@@ -60,7 +60,7 @@ struct LocalizedInputPrompts : ScreenSystem<UIContext<InputAction>> {
       ++jumps;
       jump_time = .6f;
     }
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0));
     const auto box = [s](float x, float y, float w, float h) {
@@ -68,7 +68,7 @@ struct LocalizedInputPrompts : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_corner_radius(0)
           .with_transparent_bg().with_skip_grid_snap(true);
     };
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1280, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2,
                                 (context.screen_height - 720 * s) / 2)
         .with_debug_name("lp_root"));
@@ -84,7 +84,7 @@ struct LocalizedInputPrompts : ScreenSystem<UIContext<InputAction>> {
     label(2, "Keyboard prompts in English and Korean", 56, 90, 920, 34, 22, muted);
     label(3, "One Space key, two natural sentence orders. Narrow the cards to see both prompts wrap.",
           56, 135, 1150, 30, 18, muted);
-    if (button(context, mk(root.ent(), 4), box(988, 88, 236, 42)
+    if (button(context, mk(root.ent()), box(988, 88, 236, 42)
         .with_label(compact ? "Use wide cards" : "Use narrow cards")
         .with_font("NotoSansKRInline", pixels(18 * s)).with_custom_background({39, 63, 80, 255})
         .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("lp_width"))) compact = !compact;
@@ -121,7 +121,7 @@ struct LocalizedInputPrompts : ScreenSystem<UIContext<InputAction>> {
     label(40, "Try the action", 56, 524, 500, 36, 24, ink);
     label(41, "Press Space to jump.", 56, 572, 500, 32, 20, muted);
     label(42, "Jumps: " + std::to_string(jumps), 56, 622, 500, 36, 22, accent, "lp_jumps");
-    div(context, mk(root.ent(), 43), box(656, 536, 568, 130)
+    div(context, mk(root.ent()), box(656, 536, 568, 130)
         .with_custom_background({25, 36, 52, 255}).with_corner_radius(12 * s)
         .with_on_draw_fg([jump = jump_time, s, accent](RectangleType r) {
           const float phase = 1.f - jump / .6f;

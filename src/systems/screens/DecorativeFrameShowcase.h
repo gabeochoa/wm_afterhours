@@ -36,10 +36,10 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("bg"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1144, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1144, 720)
         .with_absolute_position(left, top).with_debug_name("frames_root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size = 18.f,
@@ -49,12 +49,12 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(strong ? theme.font : theme.font_muted)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 80)
+    div(context, mk(root.ent()), box(0, 24, 1144, 80)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
     label(root.ent(), 1, "Decorative frames", 20, 28, 790, 40, 34, true);
     label(root.ent(), 2, "Identical content and dimensions. Original colors above; neutral colors below.",
           20, 72, 1104, 25, 19);
-    if (button(context, mk(root.ent(), 3), box(874, 37, 250, 34)
+    if (button(context, mk(root.ent()), box(874, 37, 250, 34)
         .with_label(show_content_bounds ? "Hide content bounds" : "Show content bounds")
         .with_font("AtkinsonMock", pixels(18 * s)).with_alignment(TextAlignment::Center)
         .with_background(Theme::Usage::Primary).with_auto_text_color(true).with_corner_radius(8 * s)

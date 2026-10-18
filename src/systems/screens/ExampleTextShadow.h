@@ -45,7 +45,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     };
     label(0, 0, 24, 884, 45, "Text drop shadow", 35, ink);
     label(1, 0, 79, 1144, 31, "Atkinson / native shadow rendering / metadata uses rendered pixel offsets", 22, muted);
-    if (button(context, mk(root.ent(), 2), box(910, 29, 234, 43).with_label(guides ? "Box guides: On" : "Box guides: Off")
+    if (button(context, mk(root.ent()), box(910, 29, 234, 43).with_label(guides ? "Box guides: On" : "Box guides: Off")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(white).with_custom_text_color(ink)
         .with_corner_radius(6 * scale).with_debug_name("shadow_guides"))) guides = !guides;
     const auto backing = [&](int id, float y, float h) {
@@ -73,7 +73,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     sample(42, 356, 532, 304, 50, "LIGHT", 34, white, {{0, 0, 0, 180}, 3 * scale, 3 * scale}, "shadow_light");
     label(43, 20, 592, 306, 30, "S7 / No shadow / 34px at 1×", 19, pale);
     label(44, 356, 586, 304, 41, fmt::format("S8 / offset +{:.1f}, +{:.1f}px\nBlack / alpha 180 of 255", 3 * scale, 3 * scale), 19, pale);
-    div(context, mk(root.ent(), 50), box(704, 137, 440, 499).with_custom_background(panel).with_corner_radius(8 * scale));
+    div(context, mk(root.ent()), box(704, 137, 440, 499).with_custom_background(panel).with_corner_radius(8 * scale));
     label(51, 724, 145, 400, 30, "Offset ladder / +x right, +y down", 22, white);
     const std::array<float, 7> offsets{0, 1, 2, 4, 6, 8, 10};
     for (size_t i = 0; i < offsets.size(); ++i) {

@@ -50,7 +50,7 @@ struct StaleIndexLab : ScreenSystem<UIContext<InputAction>> {
             "resets them to 0 first; forget that and the library errors.",
          40, 64, 1180, 28, 19);
 
-    if (button(context, mk(root.ent(), 2), box(40, 108, 300, 44)
+    if (button(context, mk(root.ent()), box(40, 108, 300, 44)
             .with_label(shrunk ? "Restore 3 options" : "Shrink to 1 option")
             .with_font("AtkinsonMock", pixels(19 * s))
             .with_background(Theme::Usage::Primary)
@@ -59,7 +59,7 @@ struct StaleIndexLab : ScreenSystem<UIContext<InputAction>> {
       if (shrunk)
         dropdown_idx = nav_idx = tab_idx = radio_idx = 0;
     }
-    if (button(context, mk(root.ent(), 3), box(360, 108, 240, 44)
+    if (button(context, mk(root.ent()), box(360, 108, 240, 44)
             .with_label("Select last")
             .with_font("AtkinsonMock", pixels(19 * s))
             .with_background(Theme::Usage::Surface)
@@ -72,17 +72,17 @@ struct StaleIndexLab : ScreenSystem<UIContext<InputAction>> {
                : std::vector<std::string>{"Alpha", "Beta", "Gamma"};
 
     text(10, "Dropdown", 40, 176, 300, 26, 19);
-    dropdown(context, mk(root.ent(), 11), options, dropdown_idx,
+    dropdown(context, mk(root.ent()), options, dropdown_idx,
              box(40, 204, 300, 44)
                  .with_font("AtkinsonMock", pixels(19 * s))
                  .with_debug_name("stale_dropdown"));
     text(12, "Navigation bar", 380, 176, 380, 26, 19);
-    navigation_bar(context, mk(root.ent(), 13), options, nav_idx,
+    navigation_bar(context, mk(root.ent()), options, nav_idx,
                    box(380, 204, 380, 44)
                        .with_font("AtkinsonMock", pixels(19 * s))
                        .with_debug_name("stale_nav"));
     text(14, "Radio group", 800, 176, 300, 26, 19);
-    auto radio_wrap = div(context, mk(root.ent(), 15),
+    auto radio_wrap = div(context, mk(root.ent()),
                           box(800, 204, 300, 150)
                               .with_background(Theme::Usage::None)
                               .with_debug_name("stale_radio_wrap"));
@@ -92,24 +92,24 @@ struct StaleIndexLab : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("stale_radio");
     if (shrunk) {
       static constexpr std::array<std::string_view, 1> one{"Only"};
-      radio_group(context, mk(radio_wrap.ent(), 0), one, radio_idx,
+      radio_group(context, mk(radio_wrap.ent()), one, radio_idx,
                   radio_cfg);
     } else {
       static constexpr std::array<std::string_view, 3> three{"Alpha",
                                                              "Beta", "Gamma"};
-      radio_group(context, mk(radio_wrap.ent(), 0), three, radio_idx,
+      radio_group(context, mk(radio_wrap.ent()), three, radio_idx,
                   radio_cfg);
     }
 
     text(20, "Tabs", 40, 276, 300, 26, 19);
-    tab_container(context, mk(root.ent(), 21), options, tab_idx,
+    tab_container(context, mk(root.ent()), options, tab_idx,
                   box(40, 304, 720, 44)
                       .with_font("AtkinsonMock", pixels(19 * s))
                       .with_debug_name("stale_tabs"));
 
     text(30, "Grid: 3 columns, 1 declared track width", 40, 380, 720, 26,
          19);
-    auto tbl = grid(context, mk(root.ent(), 31),
+    auto tbl = grid(context, mk(root.ent()),
                     GridConfig{}.with_rows(1).with_cols(3)
                         .with_col_widths({pixels(80 * s)})
                         .with_row_height(pixels(40 * s)),

@@ -34,7 +34,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
     float left_col_x = screen_width * 0.15f;
     float right_col_x = screen_width * 0.55f;
 
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Screen: showcase - Complete Component Showcase")
             .with_size(
@@ -48,7 +48,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     float current_y = start_y;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Dropdown")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -61,7 +61,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
     current_y += 30.0f;
     std::vector<std::string> dropdown_options = {"Option 1", "Option 2",
                                                  "Option 3"};
-    dropdown(context, mk(entity, 10), dropdown_options, dropdown_index,
+    dropdown(context, mk(entity), dropdown_options, dropdown_index,
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(component_width),
                                           pixels(component_height)})
@@ -71,7 +71,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Pagination")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -84,7 +84,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
     current_y += 30.0f;
     std::vector<std::string> pagination_options = {"Page 1", "Page 2", "Page 3",
                                                    "Page 4"};
-    pagination(context, mk(entity, 11), pagination_options, pagination_index,
+    pagination(context, mk(entity), pagination_options, pagination_index,
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(component_width),
                                             pixels(component_height)})
@@ -94,7 +94,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 3),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Navigation Bar")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -106,7 +106,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += 30.0f;
     std::vector<std::string> nav_options = {"Home", "About", "Contact"};
-    navigation_bar(context, mk(entity, 12), nav_options, nav_bar_index,
+    navigation_bar(context, mk(entity), nav_options, nav_bar_index,
                    ComponentConfig{}
                        .with_size(ComponentSize{pixels(component_width),
                                                 pixels(component_height)})
@@ -116,7 +116,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y = start_y;
 
-    div(context, mk(entity, 4),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Checkboxes")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -127,7 +127,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_checkboxes"));
 
     current_y += 30.0f;
-    checkbox(context, mk(entity, 13), checkbox_1,
+    checkbox(context, mk(entity), checkbox_1,
              ComponentConfig{}
                  .with_label("Checkbox 1")
                  .with_size(ComponentSize{pixels(component_width),
@@ -137,7 +137,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
                  .with_debug_name("showcase_checkbox_1"));
 
     current_y += spacing * 0.7f;
-    checkbox(context, mk(entity, 14), checkbox_2,
+    checkbox(context, mk(entity), checkbox_2,
              ComponentConfig{}
                  .with_label("Checkbox 2 (checked)")
                  .with_size(ComponentSize{pixels(component_width),
@@ -149,7 +149,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
     current_y += spacing * 0.7f;
     std::array<std::string_view, 3> group_labels = {"A", "B", "C"};
     checkbox_group(
-        context, mk(entity, 15), checkbox_group_values, group_labels,
+        context, mk(entity), checkbox_group_values, group_labels,
         std::make_pair(0, 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(component_width), pixels(150.0f)})
@@ -160,7 +160,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += 170.0f;
 
-    div(context, mk(entity, 5),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Sliders")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -171,7 +171,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_sliders"));
 
     current_y += 30.0f;
-    slider(context, mk(entity, 16), slider_1,
+    slider(context, mk(entity), slider_1,
            ComponentConfig{}
                .with_label("Slider 1")
                .with_size(ComponentSize{pixels(component_width),
@@ -182,7 +182,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
            SliderHandleValueLabelPosition::WithLabel);
 
     current_y += spacing;
-    slider(context, mk(entity, 17), slider_2,
+    slider(context, mk(entity), slider_2,
            ComponentConfig{}
                .with_label("Slider 2")
                .with_size(ComponentSize{pixels(component_width),
@@ -194,7 +194,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 6),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Button")
             .with_size(ComponentSize{pixels(component_width), pixels(25.0f)})
@@ -206,7 +206,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
 
     current_y += 30.0f;
     auto button_result = button(
-        context, mk(entity, 18),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Click Me (" + std::to_string(button_clicks) + ")")
             .with_size(ComponentSize{pixels(component_width),
@@ -230,7 +230,7 @@ struct ExampleComponentShowcase : afterhours::System<UIContext<InputAction>> {
         " | Checkboxes: " + std::to_string(checkbox_group_values.count()) +
         " | Button: " + std::to_string(button_clicks);
 
-    div(context, mk(entity, 200),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(status)
             .with_size(

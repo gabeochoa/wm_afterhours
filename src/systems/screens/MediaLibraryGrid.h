@@ -183,9 +183,9 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     }
     return result;
   }
-  void image(UIContext<InputAction> &c, afterhours::Entity &p, int id, int i,
+  void image(UIContext<InputAction> &c, afterhours::Entity &p, int i,
              float x, float y, float w, float h) {
-    div(c, mk(p, id), box(x, y, w, h).with_ignore_pointer_events()
+    div(c, mk(p), box(x, y, w, h).with_ignore_pointer_events()
         .with_on_draw_bg([texture = art[i]](RectangleType r) {
           raylib::DrawTexturePro(texture, {0, 0, static_cast<float>(texture.width),
               static_cast<float>(texture.height)}, r, {0, 0}, 0, raylib::WHITE);
@@ -197,10 +197,10 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
         .with_border(active ? gold : transparent, active ? 3 * scale : 0)
         .with_ignore_pointer_events().with_debug_name("ml_poster_" + std::to_string(item)));
     const float unit = std::min(w / 200, h / 260), ox = (w - unit * 200) / 2;
-    image(c, frame.ent(), 0, item % 6, ox, 0, unit * 200, unit * 260);
+    image(c, frame.ent(), item % 6, ox, 0, unit * 200, unit * 260);
     const bool dark = item % 6 == 1 || item % 6 == 4 || item % 6 == 5;
     const float ty = item % 6 == 4 ? 33 : 212;
-    if (unit >= .5f) div(c, mk(frame.ent(), 1), box(ox + 8 * unit, ty * unit, 184 * unit, 25 * unit)
+    if (unit >= .5f) div(c, mk(frame.ent()), box(ox + 8 * unit, ty * unit, 184 * unit, 25 * unit)
         .with_label(upper(ITEMS[item].title)).with_font("AtkinsonMockBold", pixels((std::string(ITEMS[item].title).size() > 15 ? 13 : 17) * unit * 1.25f * scale))
         .with_custom_text_color(dark ? afterhours::Color{40, 56, 60, 255} : afterhours::Color{246, 236, 219, 255})
         .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
@@ -223,7 +223,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
       if (progress >= duration) playing = false;
     }
     auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_absolute_position((c.screen_width - 1280 * scale) / 2, (c.screen_height - 720 * scale) / 2).with_debug_name("ml_bg"));
-    auto &p = root.ent(); image(c, p, 900, 6, 0, 0, 1280, 720);
+    auto &p = root.ent(); image(c, p, 6, 0, 0, 1280, 720);
     div(c, mk(p, 0), box(0, 0, 1280, 66).with_custom_background({23, 24, 25, 245}));
     label(c, p, 1, "media", 25, 13, 125, 45, 29, ink, "ml_brand", true);
     label(c, p, 2, ">", 100, 9, 43, 49, 37, gold);
@@ -240,14 +240,14 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
           raylib::DrawCircleLinesV({r.x + 7 * s, r.y + 7 * s}, 6 * s, color);
           raylib::DrawLineEx({r.x + 11 * s, r.y + 11 * s}, {r.x + 17 * s, r.y + 17 * s}, 2 * s, color);
         }));
-    div(c, mk(p, 44), box(28, 458, 7, 7).with_ignore_pointer_events()
+    div(c, mk(p), box(28, 458, 7, 7).with_ignore_pointer_events()
         .with_on_draw_fg([](RectangleType r) { raylib::DrawCircleV({r.x + r.width / 2, r.y + r.height / 2}, r.width / 2, {132, 201, 156, 255}); }));
     if (query != previous_query) { previous_query = query; page = 0; }
     if (action(c, p, 5, "Home", 884, 16, 66, 36, "ml_home")) { section = Section::Library; view = View::Recommended; media_filter = 0; page = 0; }
     if (action(c, p, 6, "Server", 958, 16, 72, 36, "ml_server")) overlay = Overlay::Server;
     if (action(c, p, 7, "Settings", 1038, 16, 104, 36, "ml_settings")) overlay = Overlay::Settings;
     if (action(c, p, 8, "Guest", 1150, 16, 114, 36, "ml_profile", true)) overlay = Overlay::Profile;
-    div(c, mk(p, 10), box(0, 66, 202, 654).with_custom_background({25, 26, 28, 102}));
+    div(c, mk(p), box(0, 66, 202, 654).with_custom_background({25, 26, 28, 102}));
     label(c, p, 11, "YOUR MEDIA", 28, 92, 152, 24, 15, muted, "", true);
     const std::array<const char *, 5> sections{"Library", "Movies", "TV Shows", "Music", "Watchlist"};
     for (int i = 0; i < 5; ++i) {

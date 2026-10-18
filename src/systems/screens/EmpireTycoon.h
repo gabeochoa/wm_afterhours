@@ -279,7 +279,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 })
                 .with_debug_name("empire_root"));
 
-    auto content = div(context, mk(root.ent(), 1), ComponentConfig{}
+    auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
         .with_background(Theme::Usage::None).with_corner_radius(0));
@@ -291,7 +291,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
              box(scale, x, y, w, h).with_ignore_pointer_events());
     };
 
-    div(context, mk(content.ent(), 10),
+    div(context, mk(content.ent()),
         box(scale, 88, 23, 330, 105)
             .with_label("DREAM")
             .with_font("FredokaMockBold", pixels(100.f * scale))
@@ -301,7 +301,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                               7.f * scale)
             .with_letter_spacing(-3.f * scale)
             .with_debug_name("empire_title_dream"));
-    div(context, mk(content.ent(), 11),
+    div(context, mk(content.ent()),
         box(scale, 89, 113, 320, 56)
             .with_label("INCORPORATED")
             .with_font("FredokaMockBold", pixels(49.f * scale))
@@ -312,7 +312,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_letter_spacing(-2.f * scale)
             .with_debug_name("empire_title_incorporated"));
 
-    div(context, mk(content.ent(), 20),
+    div(context, mk(content.ent()),
         box(scale, 777, 33, 402, 78)
             .with_custom_background(afterhours::Color{128, 211, 246, 245})
             .with_border(stroke, 3.f)
@@ -321,16 +321,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               outline(r, 39.f * scale, 3.f * scale, stroke);
             })
             .with_debug_name("empire_cash_pill"));
-    div(context, mk(content.ent(), 21),
+    div(context, mk(content.ent()),
         box(scale, 788, 40, 65, 65)
             .with_on_draw_fg([](RectangleType r) { draw_coin(r); })
             .with_ignore_pointer_events()
             .with_debug_name("empire_coin"));
-    div(context, mk(content.ent(), 700), box(scale, 794, 45, 49, 49)
+    div(context, mk(content.ent()), box(scale, 794, 45, 49, 49)
         .with_label("$").with_font("FredokaMockBold", pixels(38 * scale))
         .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
 
-    div(context, mk(content.ent(), 22),
+    div(context, mk(content.ent()),
         box(scale, 858, 43, 285, 62)
             .with_label(format_money(cash))
             .with_font("FredokaMockBold", pixels(46.f * scale))
@@ -377,7 +377,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     }
 
-    div(context, mk(content.ent(), 90),
+    div(context, mk(content.ent()),
         box(scale, 86, 246, 138, 333)
             .with_custom_background(afterhours::Color{191, 238, 255, 245})
             .with_border(stroke, 3.f)
@@ -437,7 +437,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    div(context, mk(content.ent(), 200),
+    div(context, mk(content.ent()),
         box(scale, 254, 257, 942, 342)
             .with_on_draw_bg([](RectangleType r) { draw_panel(r); })
             .with_debug_name("empire_dashboard"));
@@ -453,7 +453,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     heading(210, 294, "Production Overview");
     heading(211, 820, "Current Projects");
 
-    div(context, mk(content.ent(), 220),
+    div(context, mk(content.ent()),
         box(scale, 282, 330, 430, 170)
             .with_custom_background(card_bg)
             .with_border(afterhours::Color{93, 153, 184, 255}, 2.f)
@@ -462,7 +462,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               outline(r, 16.f * scale, 2.f * scale, panel_edge);
             })
             .with_debug_name("empire_production_list"));
-    div(context, mk(content.ent(), 241), box(scale, 301, 331, 390, 21)
+    div(context, mk(content.ent()), box(scale, 301, 331, 390, 21)
         .with_label("items/min / change from starting rate").with_font("FredokaMockBold", pixels(16 * scale))
         .with_custom_text_color(ink).with_ignore_pointer_events());
     for (size_t i = 0; i < production.size(); ++i) {
@@ -590,19 +590,19 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         .with_label("Update v2.0 is live").with_font("FredokaMockBold", pixels(20 * scale)).with_custom_text_color(ink));
     div(context, mk(content.ent(), 403), box(scale, 84, 625, 88, 28)
         .with_label("GLOBAL").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
-    div(context, mk(content.ent(), 404), box(scale, 84, 660, 88, 26)
+    div(context, mk(content.ent()), box(scale, 84, 660, 88, 26)
         .with_label("DEVTEAM").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
-    div(context, mk(content.ent(), 410), box(scale, 474, 617, 386, 32)
+    div(context, mk(content.ent()), box(scale, 474, 617, 386, 32)
         .with_label("Park development " + std::to_string(static_cast<int>(std::lround(milestone_pct * 100))) + "%")
         .with_font("FredokaMockBold", pixels(23 * scale)).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Center).with_debug_name("empire_milestone_title"));
-    div(context, mk(content.ent(), 414), box(scale, 474, 650, 386, 28)
+    div(context, mk(content.ent()), box(scale, 474, 650, 386, 28)
         .with_label(milestone_rewarded ? "$50,000 reward collected" : "Goal: 100% / Reward: $50,000")
         .with_font("FredokaMockBold", pixels(21 * scale)).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Center));
-    div(context, mk(content.ent(), 411), box(scale, 490, 682, 354, 14)
+    div(context, mk(content.ent()), box(scale, 490, 682, 354, 14)
         .with_custom_background({76, 95, 122, 255}).with_corner_radius(7 * scale).with_debug_name("empire_milestone_bar"));
-    div(context, mk(content.ent(), 412), box(scale, 492, 684, 350 * milestone_pct, 10)
+    div(context, mk(content.ent()), box(scale, 492, 684, 350 * milestone_pct, 10)
         .with_custom_background(yellow).with_corner_radius(5 * scale).with_debug_name("empire_milestone_fill"));
 
     const std::array<float, 3> tool_positions{920, 1026, 1140};

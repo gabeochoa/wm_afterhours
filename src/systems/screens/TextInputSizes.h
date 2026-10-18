@@ -35,10 +35,10 @@ struct TextInputSizes : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color border{119, 132, 161, 255}, panel{24, 29, 42, 255};
     const afterhours::Color muted{177, 194, 220, 255}, white{236, 242, 251, 255}, cyan{120, 212, 219, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background({12, 17, 27, 255}).with_corner_radius(0));
-    auto root = div(context, mk(entity, 0), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * sx), pixels(720)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("sizes_root"));
@@ -58,7 +58,7 @@ struct TextInputSizes : ScreenSystem<UIContext<InputAction>> {
     text(2, "Exact field heights; native caret, selection and padding.", 48, 71, 730, 28, 19, muted);
     text(3, "Height", 48, 111, 96, 27, 19, white);
     text(4, fmt::format("Shared field width: {:.0f} px", 620 * sx), 164, 111, 620, 27, 19, white, "sizes_width");
-    div(context, mk(root.ent(), 5), box(828, 110, 404, 510).with_custom_background(panel).with_corner_radius(10));
+    div(context, mk(root.ent()), box(828, 110, 404, 510).with_custom_background(panel).with_corner_radius(10));
     int active_index = -1;
     float active_font = 0, active_padding_x = 0, active_padding_y = 0;
     size_t selected_bytes = 0;
@@ -133,11 +133,11 @@ struct TextInputSizes : ScreenSystem<UIContext<InputAction>> {
     text(109, fmt::format("Layout pad X {:.1f} / Y {:.1f} px", active_padding_x, active_padding_y), 848, 418, 364, 27, 18, muted, "sizes_padding");
     text(110, fmt::format("Selected bytes: {}", selected_bytes), 848, 454, 364, 27, 18, muted, "sizes_selection");
     text(111, "One focused field, one caret.", 848, 490, 364, 27, 17, muted);
-    if (button(context, mk(root.ent(), 115), box(848, 522, 364, 34)
+    if (button(context, mk(root.ent()), box(848, 522, 364, 34)
         .with_label(height_derived ? "Height-derived font: on" : "Height-derived font: off")
         .with_font("AtkinsonMock", pixels(18 * sx)).with_custom_background({63, 84, 114, 255})
         .with_custom_text_color(white).with_corner_radius(6).with_debug_name("sizes_font_mode"))) height_derived = !height_derived;
-    if (button(context, mk(root.ent(), 112), box(848, 566, 364, 34)
+    if (button(context, mk(root.ent()), box(848, 566, 364, 34)
         .with_label(midlines ? "Midline guides: on" : "Midline guides: off")
         .with_font("AtkinsonMock", pixels(18 * sx)).with_custom_background({63, 84, 114, 255})
         .with_custom_text_color(white).with_corner_radius(6).with_debug_name("sizes_guides"))) midlines = !midlines;

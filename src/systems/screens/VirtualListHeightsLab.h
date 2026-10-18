@@ -86,7 +86,7 @@ struct VirtualListHeightsLab : ScreenSystem<UIContext<InputAction>> {
 
     asked_this_frame = 0;
     auto list = virtual_list(
-        context, mk(root.ent(), 6), count,
+        context, mk(root.ent()), count,
         [&](size_t i) {
           asked_this_frame++;
           return height_of_msg(first_msg + static_cast<long>(i));

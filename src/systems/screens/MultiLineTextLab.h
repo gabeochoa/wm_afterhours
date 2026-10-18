@@ -53,7 +53,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None)
           .with_ignore_pointer_events());
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
     label(1, "Multi-line Text Lab", 48, 20, 1184, 30);
@@ -99,7 +99,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
       label(15, "Dim::Text / " + metrics(sized), 360, 478, 330, 18);
       label(16, "5 / Styled runs / 28px rows", 48, 530, 310);
       label(17, "6 / Two breaks / one blank line", 360, 530, 324);
-      div(context, mk(entity, 24), at(48, 564, 280, 96)
+      div(context, mk(entity), at(48, 564, 280, 96)
           .with_styled_label({TextSpan{"- removed line\n", {230, 90, 90, 255}},
               TextSpan{"+ added line\n", {90, 210, 120, 255}}, TextSpan{"  context line", muted}})
           .with_font("AtkinsonMock", pixels(FS * s)).with_font_size(FS * s)
@@ -122,7 +122,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
       label(35, "Fixed height leaves spare space below the text.", 704, 368, 528);
       label(36, "Content-derived height follows the text block.", 704, 404, 528);
       const auto bounds = sized.cmp().rect();
-      div(context, mk(entity, 26), ComponentConfig{}
+      div(context, mk(entity), ComponentConfig{}
           .with_size({pixels(12 * s), pixels(bounds.height)})
           .with_absolute_position(bounds.x + bounds.width + 12 * s, bounds.y)
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
@@ -132,13 +132,13 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
             raylib::DrawLineEx({r.x, r.y + r.height}, {r.x + r.width, r.y + r.height}, s, muted);
           }));
       label(37, "7 / Monospaced companion / DGOne", 704, 470, 528, 22);
-      div(context, mk(entity, 27), at(704, 506, 420, 96)
+      div(context, mk(entity), at(704, 506, 420, 96)
           .with_styled_label({TextSpan{"- removed line\n", {230, 90, 90, 255}},
               TextSpan{"+ added line\n", {90, 210, 120, 255}}, TextSpan{"  context line", muted}})
           .with_font("DGOne", pixels(18 * s)).with_alignment(TextAlignment::Left)
           .with_custom_background(box).with_debug_name("ml_monospace"));
       label(38, "Red: removed / Green: added / Grey: context", 704, 616, 528, 18);
-      div(context, mk(entity, 28), at(656, 603, 12, 18).with_ignore_pointer_events()
+      div(context, mk(entity), at(656, 603, 12, 18).with_ignore_pointer_events()
           .with_on_draw_fg([s, muted](RectangleType r) {
             raylib::DrawLineEx({r.x, r.y}, {r.x, r.y + r.height}, s, muted);
             raylib::DrawLineEx({r.x, r.y}, {r.x + r.width, r.y}, s, muted);
@@ -157,7 +157,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
     const auto handle_color = held ? afterhours::Color{255, 230, 120, 255}
                             : hot ? afterhours::Color{190, 235, 255, 255}
                                   : afterhours::Color{120, 200, 255, 255};
-    auto handle = div(context, mk(entity, 45), at(BOX_X + box_w - HANDLE, BOX_Y + box_h - HANDLE, HANDLE, HANDLE)
+    auto handle = div(context, mk(entity), at(BOX_X + box_w - HANDLE, BOX_Y + box_h - HANDLE, HANDLE, HANDLE)
         .with_custom_background(handle_color).with_debug_name("ml_resize_handle")
         .with_on_draw_fg([s](RectangleType r) {
           for (int i = 0; i < 3; ++i) {
@@ -174,7 +174,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
       ++drag_count;
     };
     handle.ent().addComponentIfMissing<HasDragListener>(resize).cb = resize;
-    div(context, mk(entity, 46), at(48, 244, 1184, 1).with_custom_background({92, 121, 145, 255}).with_ignore_pointer_events());
+    div(context, mk(entity), at(48, 244, 1184, 1).with_custom_background({92, 121, 145, 255}).with_ignore_pointer_events());
     label(47, "Reference: " + metrics(reference), 688, 582, 544);
     label(48, "A short fixed box intentionally clips text. The green box must fit its complete text.", 48, 622, 1184, 18);
     label(49, fmt::format("Hot: {} / Dragging: {} / Drag updates: {}", hot ? "Yes" : "No", held ? "Yes" : "No", drag_count), 48, 658, 1184, 19);

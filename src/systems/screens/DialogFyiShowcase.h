@@ -45,7 +45,7 @@ struct DialogFyiShowcase : ScreenSystem<UIContext<InputAction>> {
     dialog_backdrop::draw_context(context, entity, "Documents",
         {{"Document", document_name, document_open},
          {"Status", document_open ? dirty ? "Unsaved changes" : "All changes saved" : "Closed", dirty}}, status);
-    if (button(context, mk(entity, 20), box(942, 92, 270, 44)
+    if (button(context, mk(entity), box(942, 92, 270, 44)
         .with_label(document_open ? "Close document" : "Reopen saved document")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
         .with_auto_text_color(true).with_corner_radius(8 * s).with_debug_name("df_close_or_reopen"))) {
@@ -63,7 +63,7 @@ struct DialogFyiShowcase : ScreenSystem<UIContext<InputAction>> {
         status = "Closed the document. No unsaved changes.";
       }
     }
-    if (button(context, mk(entity, 21), box(926, 586, 286, 40)
+    if (button(context, mk(entity), box(926, 586, 286, 40)
         .with_label("Reset unsaved demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_background(Theme::Usage::Primary).with_auto_text_color(true).with_corner_radius(8 * s)
         .with_debug_name("df_reset"))) {
@@ -75,13 +75,13 @@ struct DialogFyiShowcase : ScreenSystem<UIContext<InputAction>> {
       return_to_editor = false;
       status = "Demo reset. The document has unsaved edits.";
     }
-    div(context, mk(entity, 22), box(264, 301, 948, 34)
+    div(context, mk(entity), box(264, 301, 948, 34)
         .with_label(document_open ? "Editor preview" : "Saved version / document closed")
         .with_font("AtkinsonMockBold", pixels(27 * s)).with_custom_text_color({213, 226, 243, 255})
         .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
     afterhours::EntityID editor_id = -1;
     if (document_open) {
-      auto editor = text_area(context, mk(entity, 23), draft_text, box(264, 342, 948, 232)
+      auto editor = text_area(context, mk(entity), draft_text, box(264, 342, 948, 232)
           .with_font("AtkinsonMock", pixels(22 * s)).with_line_height(pixels(30 * s))
           .with_custom_text_color({224, 233, 248, 255}).with_custom_background({29, 38, 53, 255})
           .with_word_wrap(true).with_corner_radius(8 * s).with_debug_name("df_editor"));
@@ -92,19 +92,19 @@ struct DialogFyiShowcase : ScreenSystem<UIContext<InputAction>> {
         break;
       }
     } else {
-      div(context, mk(entity, 24), box(264, 342, 948, 232).with_label(saved_text)
+      div(context, mk(entity), box(264, 342, 948, 232).with_label(saved_text)
           .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color({199, 212, 231, 255})
           .with_custom_background({29, 38, 53, 255}).with_corner_radius(8 * s)
           .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name("df_saved_preview"));
     }
-    div(context, mk(entity, 25), box(264, 590, 634, 31)
+    div(context, mk(entity), box(264, 590, 634, 31)
         .with_label("Editable demo / save data lasts for this session")
         .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color({164, 185, 213, 255})
         .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
 
     const bool confirming = open;
-    auto confirmation = afterhours::modal::fyi(context, mk(entity, 1), open,
+    auto confirmation = afterhours::modal::fyi(context, mk(entity), open,
         "Save changes before leaving?",
         "North meadow field notes.txt\n"
         "You are closing this document with unsaved edits.\n"

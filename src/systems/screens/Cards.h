@@ -37,7 +37,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("cards_bg"));
-    auto content = div(context, mk(root.ent(), 0), ComponentConfig{}
+    auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1144.f * s), pixels(720.f * s)})
         .with_absolute_position(left, top).with_background(Theme::Usage::None)
         .with_corner_radius(0).with_debug_name("cards_main"));
@@ -59,7 +59,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    auto header = div(context, mk(content.ent(), id++), box(0, 24, 1144, 80)
+    auto header = div(context, mk(content.ent()), box(0, 24, 1144, 80)
         .with_background(Theme::Usage::Primary).with_corner_radius(12 * s));
     const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.darkfont);
     // Title - larger font for better visibility
@@ -70,7 +70,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     label(content.ent(), "140 x 100 px / requested 1 px border #968273 / fills and corners vary",
           312, 123, 832, 27, 20, theme.font_muted, "cards_style_dimensions");
     // Row 1: Basic cards - all simple like theme swatches
-    auto styles = div(context, mk(content.ent(), id++), box(0, 158, 1144, 180).with_debug_name("row1_cards"));
+    auto styles = div(context, mk(content.ent()), box(0, 158, 1144, 180).with_debug_name("row1_cards"));
     const std::array<const char *, 4> style_names{"Surface", "Primary", "Sharp", "Custom"};
     const std::array<Theme::Usage, 4> style_roles{Theme::Usage::Surface, Theme::Usage::Primary,
         Theme::Usage::Accent, Theme::Usage::Secondary};
@@ -130,7 +130,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           raylib::DrawLineEx({r.x + 10 * s, r.y}, {r.x + 10 * s, r.y + 16 * s}, s, color);
         }));
 
-    div(context, mk(panels.ent(), id++), box(588, 0, 556, 170).with_ignore_pointer_events()
+    div(context, mk(panels.ent()), box(588, 0, 556, 170).with_ignore_pointer_events()
         .with_on_draw_bg([s](RectangleType r) {
           const float cell = 20 * s;
           for (float y = 0; y < r.height; y += cell)
@@ -143,13 +143,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Info panel with different opacity
     const float opacity = compare_opaque ? 1.f : .3f;
     const auto fill = afterhours::colors::opacity_pct(theme.primary, opacity);
-    auto info = vstack(context, mk(panels.ent(), id++), box(588, 0, 556, 170)
+    auto info = vstack(context, mk(panels.ent()), box(588, 0, 556, 170)
         .with_custom_background(fill).with_corner_radius(6 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
         .with_no_wrap().with_debug_name("info_panel"));
     const auto info_ink = compare_opaque ? header_ink : theme.font;
     child_label(info.ent(), compare_opaque ? "Opaque Comparison" : "Semi-Transparent", 36, 28, info_ink, "info_title", true);
-    div(context, mk(info.ent(), id++), ComponentConfig{}.with_size({percent(1.f), pixels(55 * s)})
+    div(context, mk(info.ent()), ComponentConfig{}.with_size({percent(1.f), pixels(55 * s)})
         .with_label("Checkerboard reveals blending.\nText stays opaque.")
         .with_font("AtkinsonMock", pixels(21 * s)).with_custom_text_color(info_ink)
         .with_background(Theme::Usage::None).with_text_overflow(TextOverflow::Wrap)
@@ -157,14 +157,14 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     child_label(info.ent(), fmt::format("Primary fill: {:.0f}% / alpha {}/255", opacity * 100, fill.a),
                 23, 19, info_ink, "cards_opacity_value");
 
-    if (button(context, mk(content.ent(), id++), box(0, 568, 182, 34)
+    if (button(context, mk(content.ent()), box(0, 568, 182, 34)
         .with_label(show_guides ? "Hide guides" : "Show guides")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
         .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_guides")))
       show_guides = !show_guides;
     label(content.ent(), show_guides ? "Guides on / content padding: 12 px" : "Guides off / content padding: 12 px",
           198, 572, 374, 27, 19, theme.font_muted, "cards_guide_status");
-    if (button(context, mk(content.ent(), id++), box(588, 568, 260, 34)
+    if (button(context, mk(content.ent()), box(588, 568, 260, 34)
         .with_label(compare_opaque ? "Restore 30% fill" : "Compare opaque fill")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
         .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_opacity")))
@@ -173,7 +173,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 3: Theme comparison
     label(content.ent(), "Theme palette / Cozy Kraft", 0, 614, 1144, 28, 25, theme.font);
-    auto palette = div(context, mk(content.ent(), id++), box(0, 651, 1144, 58).with_debug_name("row3_themes"));
+    auto palette = div(context, mk(content.ent()), box(0, 651, 1144, 58).with_debug_name("row3_themes"));
     const std::array<Theme::Usage, 5> roles{Theme::Usage::Primary, Theme::Usage::Secondary,
         Theme::Usage::Accent, Theme::Usage::Surface, Theme::Usage::Background};
     const std::array<const char *, 5> names{"Primary", "Secondary", "Accent", "Surface", "Background"};

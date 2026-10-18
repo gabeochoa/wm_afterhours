@@ -140,10 +140,10 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1160 * s), pixels(628 * s)})
         .with_absolute_position((context.screen_width - 1160 * s) / 2, (context.screen_height - 628 * s) / 2)
         .with_background(Theme::Usage::None).with_debug_name("radio_bg"));

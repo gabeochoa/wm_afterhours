@@ -111,10 +111,10 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
     const float left = (context.screen_width - 1280 * scale) / 2;
     const float top = (context.screen_height - 720 * scale) / 2;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18 * scale));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background({15, 22, 35, 255}).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("ss_root"));
@@ -146,7 +146,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
     text(2, fmt::format("Before y: {:.0f} px", left_y), 48, 416, 330, 27, 19, white, "ss_readout_y");
     text(3, fmt::format("After y: {:.0f} px", right_y), 400, 416, 330, 27, 19, white, "ss_after_y");
     text(4, fmt::format("Short y: {:.0f} px", short_y), 752, 416, 200, 27, 19, white, "ss_short_y");
-    div(context, mk(root.ent(), 20), box(980, 110, 248, 570).with_custom_background({28, 39, 57, 255}).with_corner_radius(8 * scale));
+    div(context, mk(root.ent()), box(980, 110, 248, 570).with_custom_background({28, 39, 57, 255}).with_corner_radius(8 * scale));
     text(21, "Sync rules", 992, 122, 224, 32, 26, white, "", true);
     text(22, "Same group, same offset.", 992, 166, 224, 25, 17, muted);
     text(23, "Each view keeps its limits.", 992, 196, 224, 25, 17, muted);
@@ -194,7 +194,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ss_hint_h"));
 
     auto header =
-        hstack(context, mk(entity, 4),
+        hstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(table_w), pixels(26 * scale)})
                    .with_absolute_position(48.f * scale, 478.f * scale)
@@ -227,7 +227,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name(fmt::format("ss_col_{}", c)));
 
     auto table =
-        vstack(context, mk(entity, 5),
+        vstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(table_w), pixels(150 * scale)})
                    .with_absolute_position(48.f * scale, 506.f * scale)
@@ -270,7 +270,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name(fmt::format("ss_cell_{}_{}", r, c)));
     }
 
-    div(context, mk(entity, 6),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(900 * scale), pixels(26 * scale)})
             .with_absolute_position(48.f * scale, 664.f * scale)

@@ -1,0 +1,80 @@
+# Theme builder: token table drives live theme application.
+# Preset picks, hex edits, shape sliders and inspector all read back.
+goto_screen theme_builder
+resize 1280 720
+wait 0.5
+
+expect_text "Theme builder"
+expect_text "Text"
+expect_text "Surfaces"
+expect_text "Brand"
+expect_text "Status"
+expect_text "Focus"
+expect_text "Shape"
+expect_text "Live preview"
+expect_text "Accent #82B3FF"
+expect_text "Focus #9BC7FF"
+expect_text "Primary #3565C9"
+expect_text "12px"
+expect_text "3px"
+
+# Pick a preset for accent: the preview readout follows the publish.
+click_ui tb_swatch_accent
+wait 0.3
+click_ui color_preset_1
+wait 0.3
+expect_text "Accent #2E7D6B"
+expect_no_ui color_preset_1
+
+# Reopen and type a custom hex instead; hex edits write through and
+# leave the palette open, the anchor toggles it closed.
+click_ui tb_swatch_accent
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "FF0000"
+wait 0.3
+expect_text "Accent #FF0000"
+click_ui tb_swatch_accent
+wait 0.3
+expect_no_ui color_preset_0
+
+# A second token edits through the same palette.
+click_ui tb_swatch_focus
+wait 0.3
+click_ui color_preset_0
+wait 0.3
+expect_text "Focus #3C659C"
+expect_no_ui color_preset_0
+
+# Shape sliders move their readouts (integer readouts: a drag lands
+# within a percent of its target).
+set_slider tb_radius_slider 1.0
+wait 0.3
+expect_text "24px"
+set_slider tb_ring_slider 0.0
+wait 0.3
+expect_text "0px"
+set_slider tb_radius_slider 0.5
+wait 0.3
+expect_text "12px"
+set_slider tb_ring_slider 0.5
+wait 0.3
+expect_text "3px"
+
+# Inspector: clicking a preview element jumps to its token.
+# Save is nested in the card; the button's token wins.
+expect_text "Inspected: none"
+click_ui tb_preview_save
+wait 0.3
+expect_text "Inspected: Primary #3565C9"
+# The jump opened Primary's palette: picking a preset edits Primary.
+click_ui color_preset_1
+wait 0.3
+expect_text "Inspected: Primary #2E7D6B"
+expect_no_ui color_preset_1
+# A chip jumps to its status token.
+click_ui tb_chip_error
+wait 0.3
+expect_text "Inspected: Error #C03947"

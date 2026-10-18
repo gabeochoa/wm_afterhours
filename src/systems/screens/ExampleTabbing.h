@@ -27,9 +27,9 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_custom_background(bg).with_corner_radius(0).with_debug_name("background"));
-    auto panel=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(920*s),pixels(596*s)})
+    auto panel=div(context,mk(entity),ComponentConfig{}.with_size({pixels(920*s),pixels(596*s)})
         .with_absolute_position((context.screen_width-920*s)/2,(context.screen_height-596*s)/2)
         .with_custom_background(surface).with_corner_radius(12*s).with_debug_name("main_panel"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
@@ -53,7 +53,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     label(31,"It appears after keyboard navigation begins.",476,180,412,56,20,true);
     label(32,"Four colors test the same yellow ring",476,246,412,32,19,true);
     label(33,"against different button backgrounds.",476,276,412,32,19,true);
-    div(context,mk(panel.ent(),34),box(486,334,74,40).with_custom_background({0,0,0,0})
+    div(context,mk(panel.ent()),box(486,334,74,40).with_custom_background({0,0,0,0})
         .with_border(theme.focus,1).with_corner_radius(11*s).with_ignore_pointer_events());
     label(35,"Ring color / #FFFF64",584,326,304,30,19);
     label(36,"Requested stroke 4 px / offset 5 px",476,390,412,30,18,true);
@@ -61,7 +61,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     const int total=button_clicks[0]+button_clicks[1]+button_clicks[2]+button_clicks[3];
     label(38,"Total activations: "+std::to_string(total),32,484,420,32,24);
     label(39,"Last activated: "+(last<0 ? std::string("none") : names[last]),32,524,420,30,20,true);
-    if(button(context,mk(panel.ent(),40),box(660,486,228,42).with_label("Reset count")
+    if(button(context,mk(panel.ent()),box(660,486,228,42).with_label("Reset count")
         .with_font("AtkinsonMock",pixels(20*s)).with_background(Theme::Usage::Secondary)
         .with_auto_text_color(true).with_corner_radius(8*s).with_debug_name("tab_reset"))) {
       button_clicks.fill(0);last=-1;

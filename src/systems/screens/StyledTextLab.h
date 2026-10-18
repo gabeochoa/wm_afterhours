@@ -34,10 +34,10 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     const auto green = afterhours::Color{120, 220, 150, 255};
     using afterhours::colors::FontWeight;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background({16, 23, 36, 255}).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("st_root"));
@@ -60,13 +60,13 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     };
     text(0, "Styled text", 48, 18, 720, 46, 38, white, "st_title", true);
     text(1, "Native span weights, wrapping and explicit line breaks", 48, 65, 900, 28, 22, muted);
-    if (button(context, mk(root.ent(), 2), box(1012, 24, 216, 38)
+    if (button(context, mk(root.ent()), box(1012, 24, 216, 38)
         .with_label(guides ? "Run widths: on" : "Run widths: off")
         .with_font("AtkinsonMock", pixels(19 * s)).with_custom_background(box_color)
         .with_custom_text_color(white).with_corner_radius(6 * s).with_debug_name("st_guides"))) guides = !guides;
     // --- The one that actually shows a weight change: DGOne has @bold.
     text(10, "01 / Weight + color", 48, 105, 560, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 11), specimen(11, 48, 146, 560, 60, "DGOne", FS, "st_real_pair")
+    div(context, mk(root.ent()), specimen(11, 48, 146, 560, 60, "DGOne", FS, "st_real_pair")
         .with_styled_label({
                 TextSpan{"regular ", white, FontWeight::Regular},
                 TextSpan{"BOLD", amber, FontWeight::Bold},
@@ -75,7 +75,7 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     text(12, "DGOne + DGOne@bold / BOLD requests Bold", 48, 222, 560, 27, 18, muted);
     // --- Weight is independent of colour: same colour, different weights.
     text(20, "02 / Weight only", 660, 105, 560, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 21), specimen(21, 660, 146, 560, 60, "DGOne", FS, "st_same_colour")
+    div(context, mk(root.ent()), specimen(21, 660, 146, 560, 60, "DGOne", FS, "st_same_colour")
         .with_styled_label({
                 TextSpan{"one colour ", white, FontWeight::Regular},
                 TextSpan{"two weights", white, FontWeight::Bold},
@@ -84,7 +84,7 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     // --- Bold inside a wrapping paragraph. Both DGOne weights have the same
     // advance width; the wrapper still measures every run at its own weight.
     text(30, "03 / Wrapped spans", 48, 269, 360, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 31), specimen(31, 48, 316, 360, 140, "DGOne", 16, "st_wrap_bold")
+    div(context, mk(root.ent()), specimen(31, 48, 316, 360, 140, "DGOne", 16, "st_wrap_bold")
         .with_styled_label({
                 TextSpan{"the quick brown ", white, FontWeight::Regular},
                 TextSpan{"fox jumps over", green, FontWeight::Bold},
@@ -94,7 +94,7 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     text(32, fmt::format("Wrap width {:.0f} screen px", 360 * s - 10), 48, 472, 360, 26, 18, muted, "st_wrap_width");
     // --- Weight survives a hard break, the markdown/diff shape.
     text(40, "04 / Explicit newline", 440, 269, 360, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 41), specimen(41, 440, 316, 360, 140, "DGOne", 16, "st_break_bold")
+    div(context, mk(root.ent()), specimen(41, 440, 316, 360, 140, "DGOne", 16, "st_break_bold")
         .with_styled_label({
                 TextSpan{"Heading\n", amber, FontWeight::Bold},
                 TextSpan{"body text on the next line\n", white,
@@ -113,7 +113,7 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     // --- The fallback: Gaegu-Bold has no @bold registered, so a Bold span
     // renders the same face rather than failing to find a font.
     text(60, "05 / Missing bold fallback", 48, 529, 560, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 61), specimen(61, 48, 573, 560, 60, "Gaegu-Bold", FS, "st_fallback")
+    div(context, mk(root.ent()), specimen(61, 48, 573, 560, 60, "Gaegu-Bold", FS, "st_fallback")
         .with_styled_label({
                 TextSpan{"asks for regular ", white, FontWeight::Regular},
                 TextSpan{"asks for bold", amber, FontWeight::Bold},
@@ -121,7 +121,7 @@ struct StyledTextLab : ScreenSystem<UIContext<InputAction>> {
     text(62, "Gaegu-Bold / no Gaegu-Bold@bold registered", 48, 648, 560, 26, 18, muted, "st_fallback_font");
     text(63, "Expected: both requests use the same face.", 48, 679, 560, 26, 18, white);
     text(70, "06 / Fallback, same color", 660, 529, 560, 30, 24, white, "", true);
-    div(context, mk(root.ent(), 71), specimen(71, 660, 573, 560, 60, "Gaegu-Bold", FS, "st_fallback_same_color")
+    div(context, mk(root.ent()), specimen(71, 660, 573, 560, 60, "Gaegu-Bold", FS, "st_fallback_same_color")
         .with_styled_label({TextSpan{"asks for regular ", white, FontWeight::Regular},
                             TextSpan{"asks for bold", white, FontWeight::Bold}}));
     text(72, "Identical face and color / requested Regular, Bold", 660, 648, 560, 26, 18, muted);

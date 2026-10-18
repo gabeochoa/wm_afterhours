@@ -92,14 +92,14 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     const auto action = afterhours::Color{57, 99, 168, 255};
 
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             ComponentConfig{}
                 .with_size({screen_pct(1.f), screen_pct(1.f)})
                 .with_custom_background(afterhours::Color{9, 14, 24, 255})
                 .with_corner_radius(0.f)
                 .with_debug_name("adv_modal_bg"));
     auto main =
-        vstack(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent()),
                ComponentConfig{}
                    .with_size({pixels(panel_width), pixels(500.f * scale)})
                    .with_absolute_position((sw - panel_width) / 2.f,
@@ -111,13 +111,13 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("adv_modal_main"));
 
     // Title
-    div(context, mk(main.ent(), 0),
+    div(context, mk(main.ent()),
         ComponentConfig{}
             .with_label("Advanced Modals")
             .with_size({percent(1.f), pixels(40.f * scale)})
             .with_font("AtkinsonMockBold", pixels(36.f * scale))
             .with_custom_text_color(ink));
-    div(context, mk(main.ent(), 4),
+    div(context, mk(main.ent()),
         ComponentConfig{}
             .with_label("Four interactive examples: validation, guided setup, "
                         "preferences, and feedback.")
@@ -175,7 +175,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     };
 
     // 2x2 grid of trigger buttons
-    auto grid_top = hstack(context, mk(main.ent(), 1),
+    auto grid_top = hstack(context, mk(main.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.f), pixels(144.f * scale)})
                                .with_gap(pixels(16.f * scale))
@@ -194,7 +194,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       show_wizard = true;
       wizard_step = 0;
     }
-    auto grid_bot = hstack(context, mk(main.ent(), 2),
+    auto grid_bot = hstack(context, mk(main.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.f), pixels(144.f * scale)})
                                .with_gap(pixels(16.f * scale))
@@ -224,7 +224,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       status = "Open a modal above to get started";
 
     auto status_panel =
-        div(context, mk(main.ent(), 3),
+        div(context, mk(main.ent()),
             ComponentConfig{}
                 .with_size({percent(1.f), pixels(56.f * scale)})
                 .with_custom_background(surface)
@@ -234,7 +234,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                                       .bottom = pixels(8.f * scale),
                                       .right = pixels(16.f * scale)})
                 .with_margin(Margin::Top(pixels(16.f * scale))));
-    div(context, mk(status_panel.ent(), 0),
+    div(context, mk(status_panel.ent()),
         ComponentConfig{}
             .with_label(status)
             .with_size({percent(1.f), percent(1.f)})
@@ -246,7 +246,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     // Modal 1: Login Form
     // =====================================================================
     if (auto m = afterhours::modal(
-            context, mk(entity, MODAL_LOGIN), show_login,
+            context, mk(entity), show_login,
             afterhours::ModalConfig{}
                 .with_size(pixels(420), pixels(400))
                 .with_title("Login")
@@ -258,7 +258,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
           Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Username label + input
-      div(context, mk(m.ent(), 0),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Username")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -268,7 +268,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      text_input(context, mk(m.ent(), 1), login_username,
+      text_input(context, mk(m.ent()), login_username,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
@@ -280,7 +280,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("login_username_input"));
 
       // Password label + input
-      div(context, mk(m.ent(), 2),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Password")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -290,7 +290,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      text_input(context, mk(m.ent(), 3), login_password,
+      text_input(context, mk(m.ent()), login_password,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
@@ -303,7 +303,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("login_password_input"));
 
       // Remember me toggle
-      toggle_switch(context, mk(m.ent(), 4), login_remember,
+      toggle_switch(context, mk(m.ent()), login_remember,
                     ComponentConfig{}
                         .with_label("Remember me")
                         .with_size(ComponentSize{pixels(300), pixels(36)})
@@ -314,7 +314,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Error message
       if (!login_error.empty()) {
-        div(context, mk(m.ent(), 5),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label(login_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -326,14 +326,14 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Buttons
       auto btn_row =
-          hstack(context, mk(m.ent(), 6),
+          hstack(context, mk(m.ent()),
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
                      .with_justify_content(JustifyContent::FlexEnd)
                      .with_align_items(AlignItems::Center)
                      .with_render_layer(CL));
 
-      if (button(context, mk(btn_row.ent(), 0),
+      if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
                      .with_background(Theme::Usage::Secondary)
@@ -344,7 +344,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         show_login = false;
       }
 
-      if (button(context, mk(btn_row.ent(), 1),
+      if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Login")
                      .with_size(ComponentSize{pixels(100), pixels(36)})
@@ -366,7 +366,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     // Modal 2: Multi-Step Wizard
     // =====================================================================
     if (auto m = afterhours::modal(
-            context, mk(entity, MODAL_WIZARD), show_wizard,
+            context, mk(entity), show_wizard,
             afterhours::ModalConfig{}
                 .with_size(pixels(480), pixels(500))
                 .with_title("Setup Wizard")
@@ -379,7 +379,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Progress bar
       float progress = static_cast<float>(wizard_step + 1) / 3.0f;
-      progress_bar(context, mk(m.ent(), 0), progress,
+      progress_bar(context, mk(m.ent()), progress,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(1.0f), pixels(24)})
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -388,7 +388,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       // Step indicator
       std::string step_label =
           "Step " + std::to_string(wizard_step + 1) + " of 3";
-      div(context, mk(m.ent(), 1),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label(step_label)
               .with_size(ComponentSize{percent(1.0f), pixels(40)})
@@ -401,7 +401,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       if (wizard_step == 0) {
         // Step 1: Account info
-        div(context, mk(m.ent(), 2),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label("Name")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -411,7 +411,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_skip_tabbing(true)
                 .with_render_layer(CL));
 
-        text_input(context, mk(m.ent(), 3), wizard_name,
+        text_input(context, mk(m.ent()), wizard_name,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                        .with_background(Theme::Usage::Secondary)
@@ -421,7 +421,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                        .with_render_layer(CL)
                        .with_debug_name("wizard_name_input"));
 
-        div(context, mk(m.ent(), 4),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label("Email")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -431,7 +431,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_skip_tabbing(true)
                 .with_render_layer(CL));
 
-        text_input(context, mk(m.ent(), 5), wizard_email,
+        text_input(context, mk(m.ent()), wizard_email,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                        .with_background(Theme::Usage::Secondary)
@@ -443,7 +443,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       } else if (wizard_step == 1) {
         // Step 2: Preferences
-        div(context, mk(m.ent(), 2),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label("Theme")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -455,7 +455,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
         std::array<std::string_view, 3> theme_options = {"Light", "Dark",
                                                           "Auto"};
-        radio_group(context, mk(m.ent(), 3), theme_options,
+        radio_group(context, mk(m.ent()), theme_options,
                     wizard_theme_idx,
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
@@ -465,7 +465,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                         .with_debug_name("wizard_theme_radio"));
 
         toggle_switch(
-            context, mk(m.ent(), 4), wizard_notifications,
+            context, mk(m.ent()), wizard_notifications,
             ComponentConfig{}
                 .with_label("Enable notifications")
                 .with_size(ComponentSize{pixels(340), pixels(40)})
@@ -476,7 +476,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       } else {
         // Step 3: Summary
-        div(context, mk(m.ent(), 2),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label("Review your settings:")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -492,7 +492,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                               "\nTheme: " + std::string(wizard_theme_idx == 0 ? "Light" : wizard_theme_idx == 1 ? "Dark" : "Auto") +
                               "\nNotifications: " + (wizard_notifications ? "On" : "Off");
 
-        div(context, mk(m.ent(), 3),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label(summary)
                 .with_size(ComponentSize{percent(1.0f), h720(100)})
@@ -508,7 +508,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Navigation buttons
       auto nav_row =
-          hstack(context, mk(m.ent(), 10),
+          hstack(context, mk(m.ent()),
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
                      .with_justify_content(JustifyContent::SpaceBetween)
@@ -516,7 +516,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                      .with_render_layer(CL));
 
       if (wizard_step > 0) {
-        if (button(context, mk(nav_row.ent(), 0),
+        if (button(context, mk(nav_row.ent()),
                    ComponentConfig{}
                        .with_label("Back")
                        .with_size(ComponentSize{pixels(100), pixels(36)})
@@ -526,14 +526,14 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         }
       } else {
         // Spacer for alignment
-        div(context, mk(nav_row.ent(), 0),
+        div(context, mk(nav_row.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(100), pixels(36)})
                 .with_render_layer(CL));
       }
 
       if (wizard_step < 2) {
-        if (button(context, mk(nav_row.ent(), 1),
+        if (button(context, mk(nav_row.ent()),
                    ComponentConfig{}
                        .with_label("Next")
                        .with_size(ComponentSize{pixels(100), pixels(36)})
@@ -544,7 +544,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
           wizard_step++;
         }
       } else {
-        if (button(context, mk(nav_row.ent(), 1),
+        if (button(context, mk(nav_row.ent()),
                    ComponentConfig{}
                        .with_label("Finish")
                        .with_size(ComponentSize{pixels(100), pixels(36)})
@@ -562,7 +562,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     // Modal 3: Settings Panel
     // =====================================================================
     if (auto m = afterhours::modal(
-            context, mk(entity, MODAL_SETTINGS), show_settings,
+            context, mk(entity), show_settings,
             afterhours::ModalConfig{}
                 .with_size(pixels(460), pixels(440))
                 .with_title("Settings")
@@ -574,7 +574,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
           Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Volume slider
-      div(context, mk(m.ent(), 0),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Volume")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -584,7 +584,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      slider(context, mk(m.ent(), 1), settings_volume,
+      slider(context, mk(m.ent()), settings_volume,
              ComponentConfig{}
                  .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                  .with_background(Theme::Usage::Primary)
@@ -594,7 +594,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
              SliderHandleValueLabelPosition::OnHandle);
 
       // Language dropdown
-      div(context, mk(m.ent(), 2),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Language")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -606,7 +606,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       std::array<std::string_view, 4> languages = {"English", "Spanish",
                                                      "French", "German"};
-      dropdown(context, mk(m.ent(), 3), languages, settings_lang_idx,
+      dropdown(context, mk(m.ent()), languages, settings_lang_idx,
                ComponentConfig{}
                    .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                    .with_font("AtkinsonMock", pixels(20.f))
@@ -615,7 +615,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("settings_lang_dropdown"));
 
       // Toggle switches - use pixel widths so labels aren't clipped
-      toggle_switch(context, mk(m.ent(), 4), settings_dark_mode,
+      toggle_switch(context, mk(m.ent()), settings_dark_mode,
                     ComponentConfig{}
                         .with_label("Dark Mode")
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
@@ -624,7 +624,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                         .with_render_layer(CL)
                         .with_debug_name("settings_dark_toggle"));
 
-      toggle_switch(context, mk(m.ent(), 5), settings_notifs,
+      toggle_switch(context, mk(m.ent()), settings_notifs,
                     ComponentConfig{}
                         .with_label("Notifications")
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
@@ -635,14 +635,14 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Action buttons - Reset on far left, Cancel+Apply on right
       auto btn_row =
-          hstack(context, mk(m.ent(), 6),
+          hstack(context, mk(m.ent()),
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
                      .with_justify_content(JustifyContent::SpaceBetween)
                      .with_align_items(AlignItems::Center)
                      .with_render_layer(CL));
 
-      if (button(context, mk(btn_row.ent(), 0),
+      if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Reset")
                      .with_size(ComponentSize{pixels(80), pixels(36)})
@@ -657,7 +657,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       }
 
       auto right_btns =
-          hstack(context, mk(btn_row.ent(), 1),
+          hstack(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_size(ComponentSize{pixels(200), pixels(44)})
                      .with_justify_content(JustifyContent::FlexEnd)
@@ -665,7 +665,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_render_layer(CL));
 
-      if (button(context, mk(right_btns.ent(), 0),
+      if (button(context, mk(right_btns.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
                      .with_background(Theme::Usage::Secondary)
@@ -680,7 +680,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         show_settings = false;
       }
 
-      if (button(context, mk(right_btns.ent(), 1),
+      if (button(context, mk(right_btns.ent()),
                  ComponentConfig{}
                      .with_label("Apply")
                      .with_size(ComponentSize{pixels(80), pixels(36)})
@@ -701,7 +701,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     // Modal 4: Feedback Form
     // =====================================================================
     if (auto m = afterhours::modal(
-            context, mk(entity, MODAL_FEEDBACK), show_feedback,
+            context, mk(entity), show_feedback,
             afterhours::ModalConfig{}
                 .with_size(pixels(480), pixels(580))
                 .with_title("Submit Feedback")
@@ -713,7 +713,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
           Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Subject
-      div(context, mk(m.ent(), 0),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Subject")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -723,7 +723,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      text_input(context, mk(m.ent(), 1), feedback_subject,
+      text_input(context, mk(m.ent()), feedback_subject,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
@@ -735,7 +735,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("feedback_subject_input"));
 
       // Category dropdown
-      div(context, mk(m.ent(), 2),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Category")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -747,7 +747,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       std::array<std::string_view, 4> categories = {"Bug", "Feature",
                                                       "Question", "Other"};
-      dropdown(context, mk(m.ent(), 3), categories,
+      dropdown(context, mk(m.ent()), categories,
                feedback_category_idx,
                ComponentConfig{}
                    .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
@@ -757,7 +757,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("feedback_cat_dropdown"));
 
       // Severity slider
-      div(context, mk(m.ent(), 4),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Severity")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -767,7 +767,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      slider(context, mk(m.ent(), 5), feedback_severity,
+      slider(context, mk(m.ent()), feedback_severity,
              ComponentConfig{}
                  .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                  .with_background(Theme::Usage::Primary)
@@ -777,7 +777,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
              SliderHandleValueLabelPosition::OnHandle);
 
       // Message text area
-      div(context, mk(m.ent(), 6),
+      div(context, mk(m.ent()),
           ComponentConfig{}
               .with_label("Message")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -787,7 +787,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_render_layer(CL));
 
-      text_area(context, mk(m.ent(), 7), feedback_message,
+      text_area(context, mk(m.ent()), feedback_message,
                 ComponentConfig{}
                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(100)})
                     .with_background(Theme::Usage::Primary)
@@ -801,7 +801,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Error message
       if (!feedback_error.empty()) {
-        div(context, mk(m.ent(), 8),
+        div(context, mk(m.ent()),
             ComponentConfig{}
                 .with_label(feedback_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -813,14 +813,14 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       // Buttons
       auto btn_row =
-          hstack(context, mk(m.ent(), 9),
+          hstack(context, mk(m.ent()),
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
                      .with_justify_content(JustifyContent::FlexEnd)
                      .with_align_items(AlignItems::Center)
                      .with_render_layer(CL));
 
-      if (button(context, mk(btn_row.ent(), 0),
+      if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
                      .with_background(Theme::Usage::Secondary)
@@ -831,7 +831,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         show_feedback = false;
       }
 
-      if (button(context, mk(btn_row.ent(), 1),
+      if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Submit")
                      .with_size(ComponentSize{pixels(100), pixels(36)})

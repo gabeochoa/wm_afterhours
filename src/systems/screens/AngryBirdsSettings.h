@@ -184,7 +184,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void action_label(UIContext<InputAction> &context,
                     afterhours::Entity &board) {
-    div(context, mk(board, 90),
+    div(context, mk(board),
         ComponentConfig{}
             .with_label(std::string(has_changes() ? "Unsaved changes" : "All changes saved") +
                         (status_message.empty() ? "" : "\n" + status_message))
@@ -244,7 +244,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_audio(UIContext<InputAction> &context,
                     afterhours::Entity &board) {
-    div(context, mk(board, 20),
+    div(context, mk(board),
         ComponentConfig{}
             .with_label("Tap an icon to toggle. Your changes apply when saved.")
             .with_size(ComponentSize{pixels(700.f * layout_scale),
@@ -391,7 +391,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_detail(UIContext<InputAction> &context,
                      afterhours::Entity &board) {
-    div(context, mk(board, 100),
+    div(context, mk(board),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(786.f * layout_scale),
                                      pixels(390.f * layout_scale)})
@@ -576,19 +576,19 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    })
                    .with_debug_name("ab_root"));
 
-    div(context, mk(root.ent(), 30), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(220.f * s), pixels(36.f * s)})
         .with_absolute_position(pixels(56.f * s), pixels(12.f * s))
         .with_label("5 / 5 lives").with_font("FredokaMockBold", pixels(27.f * s))
         .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
-    div(context, mk(root.ent(), 31), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(220.f * s), pixels(36.f * s)})
         .with_absolute_position(pixels(1004.f * s), pixels(12.f * s))
         .with_label("1000 coins").with_font("FredokaMockBold", pixels(27.f * s))
         .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
 
     if (!settings_open) {
-      div(context, mk(root.ent(), 20),
+      div(context, mk(root.ent()),
           ComponentConfig{}
               .with_label("SETTINGS CLOSED")
               .with_size(ComponentSize{pixels(440.f * s), pixels(55.f * s)})
@@ -607,7 +607,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.f), screen_pct(1.f)})
             .with_absolute_position(pixels(0.f), pixels(0.f))
@@ -617,7 +617,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     const auto board_texture = art[Board];
     auto board = div(
-        context, mk(root.ent(), 0),
+        context, mk(root.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(940.f * s), pixels(600.f * s)})
             .with_absolute_position(pixels(170.f * s), pixels(60.f * s))
@@ -627,7 +627,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_debug_name("ab_board"));
 
-    div(context, mk(board.ent(), 1),
+    div(context, mk(board.ent()),
         ComponentConfig{}
             .with_label("SETTINGS")
             .with_size(ComponentSize{pixels(450.f * s), pixels(72.f * s)})
@@ -657,7 +657,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     const auto close_texture = art[Close];
     if (button(
-            context, mk(root.ent(), 1),
+            context, mk(root.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(60.f * s), pixels(60.f * s)})
                 .with_absolute_position(pixels(1016.f * s), pixels(104.f * s))

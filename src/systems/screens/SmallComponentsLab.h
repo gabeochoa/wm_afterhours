@@ -42,59 +42,59 @@ struct SmallComponentsLab : ScreenSystem<UIContext<InputAction>> {
     text(1, "settings_list + settings_row, value_pill, divider_line", 16, 48, 900, 28, 19);
 
     text(2, "Settings list (dividers and alignment built in)", 32, 108, 560, 30, 21);
-    auto list = settings_list(context, mk(root.ent(), 3), ComponentConfig{}
+    auto list = settings_list(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(580 * scale), children()})
         .with_absolute_position(32 * scale, 146 * scale)
         .with_debug_name("scl_list"));
     auto pct = [](float v) {
       return std::to_string(static_cast<int>(v * 100.f + 0.5f)) + "%";
     };
-    auto row_volume = settings_row(context, mk(list.ent(), 0), "Volume");
-    slider(context, mk(row_volume.ent(), 0), volume, ComponentConfig{}
+    auto row_volume = settings_row(context, mk(list.ent()), "Volume");
+    slider(context, mk(row_volume.ent()), volume, ComponentConfig{}
         .with_size({pixels(200 * scale), pixels(28 * scale)}));
-    value_pill(context, mk(row_volume.ent(), 1), pct(volume), ComponentConfig{}
+    value_pill(context, mk(row_volume.ent()), pct(volume), ComponentConfig{}
         .with_size({pixels(80 * scale), pixels(28 * scale)})
         .with_margin(Margin::Left(pixels(12 * scale))));
-    auto row_bright = settings_row(context, mk(list.ent(), 1), "Brightness");
-    slider(context, mk(row_bright.ent(), 0), brightness, ComponentConfig{}
+    auto row_bright = settings_row(context, mk(list.ent()), "Brightness");
+    slider(context, mk(row_bright.ent()), brightness, ComponentConfig{}
         .with_size({pixels(200 * scale), pixels(28 * scale)}));
-    value_pill(context, mk(row_bright.ent(), 1), pct(brightness), ComponentConfig{}
+    value_pill(context, mk(row_bright.ent()), pct(brightness), ComponentConfig{}
         .with_size({pixels(80 * scale), pixels(28 * scale)})
         .with_margin(Margin::Left(pixels(12 * scale))));
     static const std::vector<std::string> qualities = {"Low", "Medium", "High", "Ultra"};
-    auto row_quality = settings_row(context, mk(list.ent(), 2), "Quality");
-    stepper(context, mk(row_quality.ent(), 0), qualities, quality, ComponentConfig{}
+    auto row_quality = settings_row(context, mk(list.ent()), "Quality");
+    stepper(context, mk(row_quality.ent()), qualities, quality, ComponentConfig{}
         .with_size({pixels(200 * scale), pixels(32 * scale)}));
-    value_pill(context, mk(row_quality.ent(), 1), qualities[quality], ComponentConfig{}
+    value_pill(context, mk(row_quality.ent()), qualities[quality], ComponentConfig{}
         .with_size({pixels(96 * scale), pixels(28 * scale)})
         .with_margin(Margin::Left(pixels(12 * scale))));
-    auto row_notif = settings_row(context, mk(list.ent(), 3), "Notifications");
-    toggle_switch(context, mk(row_notif.ent(), 0), notifications);
-    value_pill(context, mk(row_notif.ent(), 1), notifications ? "On" : "Off",
+    auto row_notif = settings_row(context, mk(list.ent()), "Notifications");
+    toggle_switch(context, mk(row_notif.ent()), notifications);
+    value_pill(context, mk(row_notif.ent()), notifications ? "On" : "Off",
                ComponentConfig{}
                    .with_size({pixels(64 * scale), pixels(28 * scale)})
                    .with_margin(Margin::Left(pixels(12 * scale))));
 
     text(4, "divider_line, horizontal", 660, 108, 560, 30, 21);
     text(5, "Text above the rule.", 660, 150, 560, 26, 17);
-    divider_line(context, mk(root.ent(), 6), Axis::X, ComponentConfig{}
+    divider_line(context, mk(root.ent()), Axis::X, ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(1)})
         .with_absolute_position(660 * scale, 186 * scale));
     text(7, "Text below the rule.", 660, 198, 560, 26, 17);
 
     text(8, "divider_line, vertical", 660, 262, 560, 30, 21);
-    auto panes = div(context, mk(root.ent(), 9), ComponentConfig{}
+    auto panes = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(150 * scale)})
         .with_absolute_position(660 * scale, 300 * scale)
         .with_flex_direction(FlexDirection::Row));
-    div(context, mk(panes.ent(), 0), ComponentConfig{}
+    div(context, mk(panes.ent()), ComponentConfig{}
         .with_size({expand(), percent(1.f)}).with_label("Left pane")
         .with_background(Theme::Usage::Surface)
         .with_padding(Padding::all(pixels(16 * scale)))
         .with_alignment(TextAlignment::Center)
         .with_align_items(AlignItems::Center).with_justify_content(JustifyContent::Center));
-    divider_line(context, mk(panes.ent(), 1), Axis::Y);
-    div(context, mk(panes.ent(), 2), ComponentConfig{}
+    divider_line(context, mk(panes.ent()), Axis::Y);
+    div(context, mk(panes.ent()), ComponentConfig{}
         .with_size({expand(), percent(1.f)}).with_label("Right pane")
         .with_background(Theme::Usage::Surface)
         .with_padding(Padding::all(pixels(16 * scale)))

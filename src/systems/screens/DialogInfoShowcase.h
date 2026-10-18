@@ -49,7 +49,7 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
            {"Connection", "Offline demo / reconnect unavailable"}},
           "The disconnected lobby remains here until you return to the menu.");
     }
-    if (button(context, mk(entity, 20),
+    if (button(context, mk(entity),
                ComponentConfig{}
                    .with_size({pixels(270 * scale), pixels(44 * scale)})
                    .with_absolute_position(942 * scale, 92 * scale)
@@ -62,7 +62,7 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
 
     const bool was_open = open;
     auto notice = afterhours::modal::info(
-        context, mk(entity, 1), open, "Connection lost",
+        context, mk(entity), open, "Connection lost",
         "Demo lobby: North pier co-op / host Alex\n"
         "This session cannot continue while disconnected.\n"
         "No match was started, so there is no progress to lose.\n"
@@ -87,7 +87,7 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
         action.asE().addComponentIfMissing<UIComponentDebug>("di_return").set("di_return");
       }
     }
-    div(context, mk(notice.ent(), 30),
+    div(context, mk(notice.ent()),
         ComponentConfig{}
             .with_size({pixels(30 * scale), pixels(30 * scale)})
             .with_absolute_position((width - 83) * scale, 5 * scale)

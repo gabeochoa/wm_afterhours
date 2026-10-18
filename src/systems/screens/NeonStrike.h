@@ -117,10 +117,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color muted{152, 164, 142, 255};
     const afterhours::Color edge{81, 92, 76, 255};
     const afterhours::Color gold{194, 155, 77, 255};
-    div(context, mk(entity, 9900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({13, 16, 15, 255}).with_corner_radius(0));
-    div(context, mk(entity, 0), box(0, 0, 1280, 720)
+    div(context, mk(entity), box(0, 0, 1280, 720)
         .with_custom_background({13, 16, 15, 255}).with_debug_name("neon_root"));
     picture(1, 0, 0, 0, 1280, 720);
     panel(2, 0, 0, 1280, 720, {13, 16, 15, 105}, {0, 0, 0, 0});
@@ -193,7 +193,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 3; ++i)
       panel(173 + i, 216.f + i * 16.f, 474, 11, 11, i == 0 ? ink : edge, muted);
     panel(180, 31, 501, 238, 189, {14, 23, 21, 255}, {101, 112, 93, 255});
-    div(context, mk(entity, 181), box(37, 507, 226, 158).with_ignore_pointer_events()
+    div(context, mk(entity), box(37, 507, 226, 158).with_ignore_pointer_events()
         .with_on_draw_fg([gold](RectangleType r) {
           const float x = r.width / 201.f, y = r.height / 173.f;
           const auto rect = [&](float px, float py, float w, float h, afterhours::Color color) {
@@ -225,7 +225,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     text(185, "Ally markers", 290, 508, 116, 24, 17, {99, 210, 218, 255});
     text(186, "B / Objective", 414, 508, 140, 24, 17, gold);
     text(193, "M4 / AUTOMATIC", 290, 544, 190, 24, 18, ink);
-    if (button(context, mk(entity, 190), box(282, 565, 316, 60)
+    if (button(context, mk(entity), box(282, 565, 316, 60)
         .with_custom_background({15, 23, 19, 140}).with_debug_name("neon_reload"))) reload();
     text(191, std::to_string(ammo_clip), 290, 565, 78, 58, 48, ink, "neon_magazine");
     text(192, "/ " + std::to_string(ammo_reserve), 370, 581, 102, 38, 28, muted, "neon_reserve", false);

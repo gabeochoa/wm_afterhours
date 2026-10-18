@@ -179,17 +179,17 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Proportional;
 
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             ComponentConfig{}.with_size({pixels(screen_w), pixels(screen_h)}).with_corner_radius(0)
                 .with_on_draw_bg([](RectangleType r) { draw_signal_field(r); })
                 .with_debug_name("ds_root"));
-    auto content = div(context, mk(root.ent(), 1), ComponentConfig{}
+    auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
         .with_background(Theme::Usage::None).with_corner_radius(0));
 
     const float initial_x = settings_open ? 64.f : 448.f;
-    div(context, mk(content.ent(), 10),
+    div(context, mk(content.ent()),
         box(scale, initial_x, 188, 325, 350)
             .with_on_draw_bg([fill = afterhours::Color{11, 25, 31, 112},
                               line = panel_line](RectangleType r) {
@@ -197,7 +197,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_debug_name("ds_back_layer"));
 
-    div(context, mk(content.ent(), 11),
+    div(context, mk(content.ent()),
         box(scale, initial_x + 18, 196, 285, 28)
             .with_label("INITIAL SETTINGS")
             .with_font("ArchivoMockBold", pixels(23.f * scale))
@@ -241,14 +241,14 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     if (!settings_open) {
-      div(context, mk(content.ent(), 39), box(scale, 448, 554, 380, 32)
+      div(context, mk(content.ent()), box(scale, 448, 554, 380, 32)
           .with_label("More Settings / Enter to return")
           .with_font("ArchivoMock", pixels(20 * scale))
           .with_custom_text_color(text).with_debug_name("ds_initial_hint"));
       return;
     }
 
-    div(context, mk(content.ent(), 40),
+    div(context, mk(content.ent()),
         box(scale, 338, 62, 465, 42)
             .with_label("MORE SETTINGS")
             .with_font("ArchivoMockBold", pixels(36.f * scale))
@@ -256,7 +256,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("ds_more_settings"));
 
-    div(context, mk(content.ent(), 41),
+    div(context, mk(content.ent()),
         box(scale, 338, 114, 465, 40)
             .with_label("")
             .with_on_draw_bg([fill = afterhours::Color{69, 103, 117, 140},
@@ -264,7 +264,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               draw_holo_plate(r, fill, line, true);
             })
             .with_debug_name("ds_front_header"));
-    div(context, mk(content.ent(), 43),
+    div(context, mk(content.ent()),
         box(scale, 362, 119, 420, 30)
             .with_label("INITIAL SETTINGS > MORE SETTINGS")
              .with_font("ArchivoMock", pixels(22.f * scale))
@@ -272,7 +272,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_ignore_pointer_events());
 
-    div(context, mk(content.ent(), 42),
+    div(context, mk(content.ent()),
         box(scale, 338, 114, 465, 526)
             .with_ignore_pointer_events()
             .with_debug_name("ds_front_layer"));
@@ -313,20 +313,20 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_ignore_pointer_events());
     }
 
-    div(context, mk(content.ent(), 190),
+    div(context, mk(content.ent()),
         box(scale, 338, 586, 465, 54)
             .with_on_draw_bg([fill = afterhours::Color{37, 66, 75, 180},
                               line = panel_line](RectangleType r) {
               draw_holo_plate(r, fill, line, false);
             })
             .with_debug_name("ds_front_footer"));
-    div(context, mk(content.ent(), 191),
+    div(context, mk(content.ent()),
         box(scale, 446, 600, 110, 30)
             .with_label("SELECT")
             .with_font("ArchivoMockBold", pixels(22.f * scale))
             .with_custom_text_color(text)
             .with_debug_name("ds_prompt_select"));
-    if (button(context, mk(content.ent(), 192),
+    if (button(context, mk(content.ent()),
         box(scale, 647, 600, 116, 30)
             .with_label("BACK")
             .with_font("ArchivoMockBold", pixels(22.f * scale))
@@ -336,13 +336,13 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       else settings_open = false;
     }
 
-    div(context, mk(content.ent(), 194), box(scale, 362, 600, 70, 30)
+    div(context, mk(content.ent()), box(scale, 362, 600, 70, 30)
         .with_label("Enter").with_font("ArchivoMockBold", pixels(22 * scale))
         .with_custom_background(text).with_custom_text_color(panel_dark).with_corner_radius(3 * scale));
-    div(context, mk(content.ent(), 195), box(scale, 583, 600, 54, 30)
+    div(context, mk(content.ent()), box(scale, 583, 600, 54, 30)
         .with_label("Esc").with_font("ArchivoMockBold", pixels(22 * scale))
         .with_custom_background(text).with_custom_text_color(panel_dark).with_corner_radius(3 * scale));
-    div(context, mk(content.ent(), 196), box(scale, 362, 446, 420, 23)
+    div(context, mk(content.ent()), box(scale, 362, 446, 420, 23)
         .with_label("INFORMATION").with_font("ArchivoMock", pixels(18 * scale))
         .with_custom_text_color(muted).with_ignore_pointer_events());
     const std::array<std::array<const char *, 2>, 8> previews{{
@@ -356,10 +356,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         {{"View the studio, engine,", "build, and acknowledgments."}},
     }};
     if (!detail_open) {
-      div(context, mk(content.ent(), 240), box(scale, 844, 164, 380, 248)
+      div(context, mk(content.ent()), box(scale, 844, 164, 380, 248)
           .with_custom_background(afterhours::Color{16, 43, 52, 100})
           .with_border(panel_line, scale).with_debug_name("ds_preview_panel"));
-      div(context, mk(content.ent(), 241), box(scale, 864, 186, 340, 40)
+      div(context, mk(content.ent()), box(scale, 864, 186, 340, 40)
           .with_label(categories[active_tab]).with_font("ArchivoMockBold", pixels(28 * scale))
           .with_custom_text_color(text).with_debug_name("ds_preview_title"));
       for (size_t line = 0; line < 2; ++line)
@@ -380,7 +380,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{94, 140, 148, 185}, 1.f)
             .with_debug_name("ds_detail_panel"));
 
-    if (button(context, mk(content.ent(), 251),
+    if (button(context, mk(content.ent()),
                box(scale, 864, 178, 200, 28)
                    .with_label("< SETTINGS")
                    .with_font("ArchivoMock", pixels(20.f * scale))
@@ -390,7 +390,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       detail_open = false;
     }
 
-    div(context, mk(content.ent(), 252),
+    div(context, mk(content.ent()),
         box(scale, 864, 213, 340, 38)
             .with_label(categories[active_tab])
             .with_font("ArchivoMock", pixels(25.f * scale))

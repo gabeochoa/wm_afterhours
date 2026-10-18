@@ -80,7 +80,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Full screen root ────────────────────────────────────────
     auto root =
-        vstack(context, mk(entity, 0),
+        vstack(context, mk(entity),
                ComponentConfig{layout}
                    .with_size(ComponentSize{pixels(sw), pixels(sh)})
                    .with_custom_background(bg)
@@ -90,7 +90,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Header bar ──────────────────────────────────────────────
     auto header = hstack(
-        context, mk(root.ent(), 1),
+        context, mk(root.ent()),
         ComponentConfig{layout}
             .with_size(ComponentSize{pixels(sw), pixels(48)})
             .with_custom_background(surface)
@@ -100,7 +100,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_no_wrap()
             .with_debug_name("header"));
 
-    div(context, mk(header.ent(), 0),
+    div(context, mk(header.ent()),
         ComponentConfig{layout}
             .with_label("Adaptive Scaling Demo")
             .with_size(ComponentSize{pixels(260), pixels(32)})
@@ -109,7 +109,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     std::string scale_label =
         std::format("Viewport: {:.0f} x {:.0f} px", sw, sh);
-    div(context, mk(header.ent(), 1),
+    div(context, mk(header.ent()),
         ComponentConfig{layout}
             .with_label(scale_label)
             .with_size(ComponentSize{pixels(280), pixels(28)})
@@ -119,7 +119,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Controls bar ────────────────────────────────────────────
     auto controls = hstack(
-        context, mk(root.ent(), 2),
+        context, mk(root.ent()),
         ComponentConfig{layout}
             .with_size(ComponentSize{pixels(sw), pixels(52)})
             .with_custom_background(afterhours::colors::darken(surface, 0.85f))
@@ -133,7 +133,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("controls"));
 
     auto mode_btn =
-        button(context, mk(controls.ent(), 0),
+        button(context, mk(controls.ent()),
                ComponentConfig{layout}
                    .with_label(use_adaptive ? "Adaptive >" : "Proportional >")
                    .with_size(ComponentSize{pixels(200), pixels(36)})
@@ -148,7 +148,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     if (mode_btn)
       next_adaptive = !use_adaptive;
 
-    auto zoom_out = button(context, mk(controls.ent(), 1),
+    auto zoom_out = button(context, mk(controls.ent()),
                            ComponentConfig{layout}
                                .with_label("-")
                                .with_size(ComponentSize{pixels(36), pixels(36)})
@@ -164,7 +164,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
       next_scale_index--;
     }
 
-    div(context, mk(controls.ent(), 2),
+    div(context, mk(controls.ent()),
         ComponentConfig{layout}
             .with_label(std::format("{:.0f}%", current_scale * 100.f))
             .with_size(ComponentSize{pixels(60), pixels(36)})
@@ -176,7 +176,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin::Right(pixels(4)))
             .with_alignment(TextAlignment::Center));
 
-    auto zoom_in = button(context, mk(controls.ent(), 3),
+    auto zoom_in = button(context, mk(controls.ent()),
                           ComponentConfig{layout}
                               .with_label("+")
                               .with_size(ComponentSize{pixels(36), pixels(36)})
@@ -197,7 +197,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                                         info.is_narrow()   ? "narrow"
                                         : info.is_medium() ? "medium"
                                                            : "wide");
-    div(context, mk(controls.ent(), 4),
+    div(context, mk(controls.ent()),
         ComponentConfig{layout}
             .with_label(info_text)
             .with_size(ComponentSize{pixels(500), pixels(28)})
@@ -205,7 +205,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Left));
 
-    div(context, mk(root.ent(), 4),
+    div(context, mk(root.ent()),
         ComponentConfig{layout}
             .with_label(std::format("Scale steps: 50, 75, 100, 125, 150, 200, "
                                     "250, 300%.  Mode button switches to {}.",
@@ -216,7 +216,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Content area ────────────────────────────────────────────
     auto viewport =
-        vstack(context, mk(root.ent(), 3),
+        vstack(context, mk(root.ent()),
                ComponentConfig{layout}
                    .with_size({pixels(sw), pixels(viewport_h)})
                    .with_overflow(scrollable ? Overflow::Auto : Overflow::Hidden)
@@ -226,7 +226,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode =
         use_adaptive ? ScalingMode::Adaptive : ScalingMode::Proportional;
     auto content =
-        hstack(context, mk(viewport.ent(), 0),
+        hstack(context, mk(viewport.ent()),
                ComponentConfig{layout}
                    .with_size(ComponentSize{pixels(canvas_w), pixels(canvas_h)})
                    .with_padding(Padding::all(pixels(16)))
@@ -236,7 +236,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Left column ─────────────────────────────────────────────
     auto left_col = vstack(
-        context, mk(content.ent(), 0),
+        context, mk(content.ent()),
         ComponentConfig{layout}
             .with_size(ComponentSize{pixels(280), pixels(canvas_h - 32)})
             .with_margin(Margin::Right(pixels(16)))
@@ -246,7 +246,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     // Card 1: Basic pixel sizing
     {
       auto card =
-          vstack(context, mk(left_col.ent(), 0),
+          vstack(context, mk(left_col.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(184)})
                      .with_custom_background(card_bg)
@@ -257,7 +257,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_pixel"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Pixel Sizing")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -265,7 +265,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(accent)
               .with_margin(Margin::Bottom(pixels(8))));
 
-      div(context, mk(card.ent(), 1),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Equal squares; color varies.")
               .with_size(ComponentSize{percent(1.0f), pixels(22)})
@@ -274,7 +274,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(10))));
 
       auto boxes =
-          hstack(context, mk(card.ent(), 2),
+          hstack(context, mk(card.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(48)})
                      .with_align_items(AlignItems::Center)
@@ -298,7 +298,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     // Card 2: Buttons
     {
       auto card =
-          vstack(context, mk(left_col.ent(), 1),
+          vstack(context, mk(left_col.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(168)})
                      .with_custom_background(card_bg)
@@ -309,7 +309,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_buttons"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Pixel Buttons")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -317,7 +317,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(accent)
               .with_margin(Margin::Bottom(pixels(10))));
 
-      if (button(context, mk(card.ent(), 1),
+      if (button(context, mk(card.ent()),
                  ComponentConfig{layout}
                      .with_label("A: fill width x 36px")
                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
@@ -332,7 +332,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("adaptive_button_a")))
         selected_button = "A selected";
 
-      if (button(context, mk(card.ent(), 2),
+      if (button(context, mk(card.ent()),
                  ComponentConfig{layout}
                      .with_label("B: fill width x 36px")
                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
@@ -353,7 +353,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     // Card 3: Padding demo
     {
       auto card =
-          vstack(context, mk(left_col.ent(), 2),
+          vstack(context, mk(left_col.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(120)})
                      .with_custom_background(card_bg)
@@ -363,7 +363,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_padding"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Padding: 14px all sides")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -372,7 +372,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(8))));
 
       auto inner = div(
-          context, mk(card.ent(), 1),
+          context, mk(card.ent()),
           ComponentConfig{layout}
               .with_size(ComponentSize{percent(1.0f), pixels(46)})
               .with_custom_background(afterhours::colors::darken(card_bg, 0.7f))
@@ -404,7 +404,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ── Right column ────────────────────────────────────────────
     auto right_col = vstack(
-        context, mk(content.ent(), 1),
+        context, mk(content.ent()),
         ComponentConfig{layout}
             .with_size(ComponentSize{pixels(right_w), pixels(canvas_h - 32)})
             .with_no_wrap()
@@ -413,7 +413,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     // Card 4: Expand demo
     {
       auto card =
-          vstack(context, mk(right_col.ent(), 0),
+          vstack(context, mk(right_col.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(176)})
                      .with_custom_background(card_bg)
@@ -424,7 +424,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_expand"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Expand & Flex / widths in a 1 : 2 : 3 ratio")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -432,7 +432,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(accent)
               .with_margin(Margin::Bottom(pixels(8))));
 
-      div(context, mk(card.ent(), 1),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Adaptive scales pixel lengths. Percent and expand "
                           "share the available space.")
@@ -442,7 +442,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(10))));
 
       // Three weighted expand children
-      auto row = hstack(context, mk(card.ent(), 2),
+      auto row = hstack(context, mk(card.ent()),
                         ComponentConfig{layout}
                             .with_size(ComponentSize{percent(1.0f), pixels(64)})
                             .with_no_wrap()
@@ -490,7 +490,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_screenpct"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("pixels(80), h720(80), screen_pct(6.25%)")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -498,7 +498,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(accent)
               .with_margin(Margin::Bottom(pixels(8))));
 
-      div(context, mk(card.ent(), 1),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("h720(80) is 80/720 of viewport width here; 6.25% is "
                           "80/1280.")
@@ -508,7 +508,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(8))));
 
       auto bars =
-          hstack(context, mk(card.ent(), 2),
+          hstack(context, mk(card.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(52)})
                      .with_no_wrap()
@@ -516,7 +516,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("bars"));
 
       // Bar using pixels (scales in Adaptive)
-      div(context, mk(bars.ent(), 0),
+      div(context, mk(bars.ent()),
           ComponentConfig{layout}
               .with_label("80px")
               .with_size(ComponentSize{pixels(80), percent(1.0f)})
@@ -530,7 +530,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("adaptive_pixels"));
 
       // Bar using h720 (does NOT scale) with per-component override
-      div(context, mk(bars.ent(), 1),
+      div(context, mk(bars.ent()),
           ComponentConfig{layout}
               .with_label("80/720")
               .with_size(ComponentSize{h720(80.0f), percent(1.0f)})
@@ -545,7 +545,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("adaptive_h720"));
 
       // Bar using screen_pct (does NOT scale)
-      div(context, mk(bars.ent(), 2),
+      div(context, mk(bars.ent()),
           ComponentConfig{layout}
               .with_label("6.25%")
               .with_size(
@@ -557,10 +557,10 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_corner_radius(8.f * pixel_scale)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("adaptive_screen_pct"));
-      auto ruler = div(context, mk(card.ent(), 3),
+      auto ruler = div(context, mk(card.ent()),
                        ComponentConfig{layout}.with_size({percent(1.f), pixels(20)}));
       const float ruler_height = 20.f * std::min(1.f, pixel_scale);
-      div(context, mk(ruler.ent(), 20),
+      div(context, mk(ruler.ent()),
           ComponentConfig{layout}
               .with_size({pixels(320), pixels(1)})
               .with_scaling_mode(ScalingMode::Proportional)
@@ -585,7 +585,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     // Card 6: LayoutInfo breakpoints
     {
       auto card =
-          vstack(context, mk(right_col.ent(), 2),
+          vstack(context, mk(right_col.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(132)})
                      .with_custom_background(card_bg)
@@ -595,7 +595,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_no_wrap()
                      .with_debug_name("card_breakpoints"));
 
-      div(context, mk(card.ent(), 0),
+      div(context, mk(card.ent()),
           ComponentConfig{layout}
               .with_label("Width breakpoints / logical pixels")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
@@ -604,7 +604,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(8))));
 
       auto pills =
-          hstack(context, mk(card.ent(), 1),
+          hstack(context, mk(card.ent()),
                  ComponentConfig{layout}
                      .with_size(ComponentSize{percent(1.0f), pixels(26)})
                      .with_align_items(AlignItems::Center)
@@ -633,7 +633,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               info.is_short() ? "Height: short <600 / active"
                               : "Height: regular >=600 / active");
     }
-    auto measurements = vstack(context, mk(right_col.ent(), 3),
+    auto measurements = vstack(context, mk(right_col.ent()),
                                ComponentConfig{layout}
                                    .with_size({percent(1.f), pixels(50)})
                                    .with_margin(Margin::Top(pixels(4))));

@@ -26,9 +26,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1080*s),pixels(680*s)})
+    auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1080*s),pixels(680*s)})
         .with_absolute_position((context.screen_width-1080*s)/2,(context.screen_height-680*s)/2)
         .with_background(Theme::Usage::Surface).with_corner_radius(12*s).with_debug_name("root"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
@@ -80,9 +80,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
         }
       }
     };
-    style_options(setting_row(context,mk(root.ent(),20),row_config("Language",SettingRowControlType::Stepper,"setting_language",380),
+    style_options(setting_row(context,mk(root.ent()),row_config("Language",SettingRowControlType::Stepper,"setting_language",380),
         std::make_pair(&language_idx,languages),box(32,348,1016,48).with_font("AtkinsonMock",pixels(22*s))),"setting_language");
-    style_options(setting_row(context,mk(root.ent(),21),row_config("Graphics quality",SettingRowControlType::Stepper,"setting_quality",380),
+    style_options(setting_row(context,mk(root.ent()),row_config("Graphics quality",SettingRowControlType::Stepper,"setting_quality",380),
         std::make_pair(&quality_idx,quality_options),box(32,402,1016,48).with_font("AtkinsonMock",pixels(22*s))),"setting_quality");
     label(4,"VOLUME / 0% to 100%",32,466,1016,26,19,true);
     const auto volume=[&](int id,const std::string &title,float &value,float y,const std::string &name) {

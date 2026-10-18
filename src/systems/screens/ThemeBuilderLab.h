@@ -1,0 +1,477 @@
+#pragma once
+
+#include "../../external.h"
+#include "../../input_mapping.h"
+#include "../ExampleScreenRegistry.h"
+#include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/color_swatch.h>
+
+// Theme builder lab: token table + live preview + inspector.
+// Token links, undo/redo, export/import are later pieces.
+struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
+  struct TokenRow {
+    Theme::Usage usage;
+    const char *name;
+    const char *debug;
+    const char *category;
+  };
+  // Order is the table order; the category header prints on change.
+  static constexpr TokenRow kTokens[] = {
+      {Theme::Usage::Font, "Text", "text", "Text"},
+      {Theme::Usage::DarkFont, "Dark font", "darkfont", "Text"},
+      {Theme::Usage::FontMuted, "Muted text", "muted", "Text"},
+      {Theme::Usage::Background, "Background", "background", "Surfaces"},
+      {Theme::Usage::Surface, "Surface", "surface", "Surfaces"},
+      {Theme::Usage::Primary, "Primary", "primary", "Brand"},
+      {Theme::Usage::Secondary, "Secondary", "secondary", "Brand"},
+      {Theme::Usage::Accent, "Accent", "accent", "Brand"},
+      {Theme::Usage::Error, "Error", "error", "Status"},
+      {Theme::Usage::Success, "Success", "success", "Status"},
+      {Theme::Usage::Warning, "Warning", "warning", "Status"},
+      {Theme::Usage::Focus, "Focus ring", "focus", "Focus"},
+  };
+  static constexpr int kTokenCount = 12;
+
+  Theme edited;
+  bool open[kTokenCount] = {};
+  // Token index the inspector last jumped to, or -1 before any click.
+  int inspected = -1;
+  // Sliders are 0..1 fractions; derived into the theme below each frame,
+  // so the readouts and the theme can never disagree.
+  float radius01 = 0.5f; // -> panel_corner_radius 0..24px, default 12px
+  float ring01 = 0.5f;   // -> focus_ring_thickness 0..6px, default 3px
+  std::string preview_name = "Weekend workshop";
+  bool preview_notifications = true;
+  float preview_volume = 0.6f;
+
+  void for_each_with(afterhours::Entity &entity,
+                     UIContext<InputAction> &ctx, float) override {
+    using namespace afterhours;
+    using namespace afterhours::ui;
+    using namespace afterhours::ui::imm;
+
+    edited.panel_corner_radius = radius01 * 24.f;
+    edited.focus_ring_thickness = ring01 * 6.f;
+    ctx.set_theme(edited);
+    ctx.scaling_mode = ScalingMode::Proportional;
+
+    const auto layout = [](float w, float h) {
+      return ComponentConfig{}.with_size({w1280(w), h720(h)});
+    };
+    const Color chrome_text{240, 245, 253, 255};
+    const Color chrome_muted{181, 195, 216, 255};
+    const Color chrome_highlight{255, 213, 79, 255};
+    const Color chrome_bg{14, 19, 28, 255};
+    const Color swatch_bg{42, 54, 71, 255};
+
+    div(ctx, mk(entity),
+        ComponentConfig{}
+            .with_size({pixels(ctx.screen_width), pixels(ctx.screen_height)})
+            .with_absolute_position(0, 0)
+            .with_custom_background(chrome_bg)
+            .with_corner_radius(0)
+            .with_debug_name("tb_root"));
+    auto page = vstack(ctx, mk(entity),
+                       layout(1232, 688)
+                           .with_margin(Margin{.top = h720(16),
+                                              .left = w1280(24)})
+                           .with_gap(h720(8))
+                           .with_transparent_bg()
+                           .with_debug_name("tb_page"));
+    auto header = vstack(ctx, mk(page.ent()),
+                         layout(1232, 56)
+                             .with_gap(h720(4))
+                             .with_transparent_bg());
+    div(ctx, mk(header.ent()),
+        layout(1232, 32)
+            .with_label("Theme builder")
+            .with_font_size(FontSize::Large)
+            .with_font_weight(colors::FontWeight::Bold)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg());
+    div(ctx, mk(header.ent()),
+        layout(1232, 20)
+            .with_label("Edit every theme token and watch the preview follow.")
+            .with_custom_text_color(chrome_muted)
+            .with_transparent_bg());
+
+    auto main = hstack(ctx, mk(page.ent()),
+                       layout(1232, 624)
+                           .with_gap(w1280(16))
+                           .with_no_wrap()
+                           .with_transparent_bg());
+
+    // TODO: reevaluate — swatch container is 52 tall (28 button + 24 gap).
+    // Gap is not inheritable, so rows size to children().
+    auto table = hstack(ctx, mk(main.ent()),
+                        layout(816, 624)
+                            .with_gap(w1280(16))
+                            .with_no_wrap()
+                            .with_transparent_bg()
+                            .with_debug_name("tb_table"));
+    bool was_open[kTokenCount] = {};
+    for (int i = 0; i < kTokenCount; i++)
+      was_open[i] = open[i];
+    const auto token_column = [&](afterhours::Entity &col, int begin,
+                                  int end) {
+      int child = 0;
+      const char *current_category = "";
+      for (int i = begin; i < end; i++) {
+        const TokenRow &token = kTokens[i];
+        if (std::string(token.category) != current_category) {
+          current_category = token.category;
+          div(ctx, mk(col, child++),
+              layout(400, 20)
+                  .with_label(token.category)
+                  .with_font_weight(colors::FontWeight::Bold)
+                  .with_custom_text_color(chrome_text)
+                  .with_transparent_bg()
+                  .with_debug_name(std::string("tb_category_") +
+                                   token.category));
+        }
+        auto token_row = hstack(ctx, mk(col, child++),
+                                ComponentConfig{}
+                                    .with_size({w1280(400), children()})
+                                    .with_gap(w1280(8))
+                                    .with_no_wrap()
+                                    .with_transparent_bg());
+        div(ctx, mk(token_row.ent(), 0),
+            layout(110, 28)
+                .with_label(token.name)
+                .with_font_size(FontSize::Small)
+                .with_custom_text_color(inspected == i ? chrome_highlight
+                                                       : chrome_text)
+                .with_transparent_bg());
+        color_swatch_presets(
+            ctx, mk(token_row.ent(), 1), edited.color_ref(token.usage),
+            open[i], default_color_presets(),
+            ComponentConfig{}
+                .with_size({expand(), h720(28)})
+                // TODO: reevaluate — the button inset is charged on
+                // both sides, so only a narrow font fits the label.
+                .with_font("AtkinsonMock", FontSize::Small)
+                .with_custom_background(swatch_bg)
+                .with_custom_text_color(chrome_text)
+                .with_debug_name(std::string("tb_swatch_") + token.debug));
+      }
+      return child;
+    };
+    auto col0 = vstack(ctx, mk(table.ent()),
+                       layout(400, 624)
+                           .with_gap(h720(3))
+                           .with_transparent_bg());
+    token_column(col0.ent(), 0, 8);
+    auto col1 = vstack(ctx, mk(table.ent()),
+                       layout(400, 624)
+                           .with_gap(h720(3))
+                           .with_transparent_bg());
+    int col1_child = token_column(col1.ent(), 8, kTokenCount);
+    // One palette open at a time, like the colour-swatch lab: a newly
+    // opened row closes the rest on the next frame.
+    for (int i = 0; i < kTokenCount; i++) {
+      if (open[i] && !was_open[i]) {
+        for (int j = 0; j < kTokenCount; j++)
+          if (j != i)
+            open[j] = false;
+        break;
+      }
+    }
+
+    // ---- shape scalars the preview shows ----
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label("Shape")
+            .with_font_weight(colors::FontWeight::Bold)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg()
+            .with_debug_name("tb_category_shape"));
+    const auto shape_row = [&](afterhours::Entity &parent, int child,
+                               const char *label,
+                               const std::string &readout, float &value,
+                               const char *slider_debug,
+                               const char *readout_debug) {
+      auto shape = hstack(ctx, mk(parent, child),
+                          ComponentConfig{}
+                              .with_size({w1280(400), children()})
+                              .with_gap(w1280(8))
+                              .with_no_wrap()
+                              .with_transparent_bg());
+      div(ctx, mk(shape.ent(), 0),
+          layout(110, 28)
+              .with_label(label)
+              .with_font_size(FontSize::Small)
+              .with_custom_text_color(chrome_text)
+              .with_transparent_bg());
+      slider(ctx, mk(shape.ent(), 1), value,
+             ComponentConfig{}
+                 .with_size({expand(), h720(28)})
+                 .with_debug_name(slider_debug));
+      div(ctx, mk(shape.ent(), 2),
+          layout(80, 28)
+              .with_label(readout)
+              .with_custom_text_color(chrome_text)
+              .with_transparent_bg()
+              .with_debug_name(readout_debug));
+    };
+    shape_row(col1.ent(), col1_child++, "Panel radius",
+              fmt::format("{}px",
+                          static_cast<int>(std::round(radius01 * 24.f))),
+              radius01, "tb_radius_slider", "tb_radius_readout");
+    // Integer readouts: an E2E slider drag lands within a percent of
+    // its target, so a decimal readout would flake.
+    shape_row(col1.ent(), col1_child++, "Focus ring",
+              fmt::format("{}px",
+                          static_cast<int>(std::round(ring01 * 6.f))),
+              ring01, "tb_ring_slider", "tb_ring_readout");
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label("Edits apply to this screen only.")
+            .with_custom_text_color(chrome_muted)
+            .with_transparent_bg());
+
+    // ---- inspector readout: the jump lands here, in the table ----
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label("Inspector")
+            .with_font_weight(colors::FontWeight::Bold)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg()
+            .with_debug_name("tb_category_inspector"));
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label("Click a preview element.")
+            .with_custom_text_color(chrome_muted)
+            .with_transparent_bg());
+    std::string inspected_text = "Inspected: none.";
+    if (inspected >= 0 && inspected < kTokenCount) {
+      const TokenRow &token = kTokens[inspected];
+      const Color c = edited.color_ref(token.usage);
+      inspected_text = fmt::format("Inspected: {} #{}", token.name,
+                                   colors::to_hex_string(c, c.a < 255));
+    }
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label(inspected_text)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg()
+            .with_debug_name("tb_inspected"));
+
+    // ---- live preview: a typical settings page, usages only ----
+    auto preview_col = vstack(ctx, mk(main.ent()),
+                              layout(400, 624)
+                                  .with_gap(h720(8))
+                                  .with_transparent_bg());
+    div(ctx, mk(preview_col.ent()),
+        layout(400, 20)
+            .with_label("Live preview")
+            .with_font_weight(colors::FontWeight::Bold)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg());
+    auto preview = vstack(ctx, mk(preview_col.ent()),
+                          layout(400, 592)
+                              .with_color_usage(Theme::Usage::Background)
+                              .with_corner_radius(
+                                  ctx.theme.panel_corner_radius)
+                              // TODO: reevaluate — Padding::all(h720)
+                              // resolves horizontal against the width.
+                              .with_padding(Padding{.top = h720(16),
+                                                   .left = w1280(16),
+                                                   .bottom = h720(16),
+                                                   .right = w1280(16)})
+                              .with_gap(h720(10))
+                              .with_debug_name("tb_preview"));
+    auto preview_title = div(ctx, mk(preview.ent()),
+                             layout(368, 32)
+                                 .with_label("Workspace")
+                                 .with_font_size(FontSize::Large)
+                                 .with_font_weight(
+                                     colors::FontWeight::Bold)
+                                 .with_transparent_bg());
+    auto preview_subtitle = div(ctx, mk(preview.ent()),
+                                layout(368, 28)
+                                    .with_label(
+                                        "A page using the edited theme.")
+                                    .with_text_color(
+                                        Theme::Usage::FontMuted)
+                                    .with_text_overflow(TextOverflow::Wrap)
+                                    .with_transparent_bg());
+    auto card = vstack(ctx, mk(preview.ent()),
+                       layout(368, 240)
+                           .with_color_usage(Theme::Usage::Surface)
+                           .with_corner_radius(
+                               ctx.theme.panel_corner_radius)
+                           .with_padding(Padding{.top = h720(12),
+                                                .left = w1280(12),
+                                                .bottom = h720(12),
+                                                .right = w1280(12)})
+                           .with_gap(h720(8))
+                           .with_debug_name("tb_preview_card"));
+    auto preview_project = div(ctx, mk(card.ent()),
+                                 layout(344, 24)
+                                     .with_label("Project name")
+                                     .with_transparent_bg());
+    ui::imm::text_input(ctx, mk(card.ent()), preview_name,
+                        layout(344, 40)
+                            .with_placeholder("Enter a project name")
+                            .with_debug_name("tb_preview_name"));
+    auto card_buttons = hstack(ctx, mk(card.ent()),
+                               layout(344, 40)
+                                   .with_gap(w1280(8))
+                                   .with_no_wrap()
+                                   .with_transparent_bg());
+    auto save_btn = button(ctx, mk(card_buttons.ent()),
+                           layout(180, 40)
+                               .with_label("Save changes")
+                               .with_button_variant(ButtonVariant::Filled)
+                               .with_debug_name("tb_preview_save"));
+    button(ctx, mk(card_buttons.ent()),
+           layout(120, 40)
+               .with_label("Cancel")
+               .with_button_variant(ButtonVariant::Outline)
+               .with_debug_name("tb_preview_cancel"));
+    auto toggle_el = toggle_switch(ctx, mk(card.ent()),
+                                     preview_notifications,
+                                     layout(344, 36)
+                                         .with_label("Email notifications")
+                                         .with_debug_name(
+                                             "tb_preview_toggle"));
+    button(ctx, mk(card.ent()),
+           layout(200, 40)
+               .with_label("Invite members")
+               .with_disabled(true)
+               .with_debug_name("tb_preview_disabled"));
+    auto chips = hstack(ctx, mk(preview.ent()),
+                        layout(368, 32)
+                            .with_gap(w1280(8))
+                            .with_no_wrap()
+                            .with_transparent_bg());
+    // TODO: reevaluate — ElementResult cannot be stored (reference member).
+    // Chips are unrolled so each keeps its own handle.
+    auto chip_error_el = div(ctx, mk(chips.ent()),
+                             layout(117, 32)
+                                 .with_label("Error")
+                                 .with_color_usage(Theme::Usage::Error)
+                                 .with_text_color(Theme::Usage::Font)
+                                 .with_corner_radius(6.f)
+                                 .with_debug_name("tb_chip_error"));
+    auto chip_success_el = div(ctx, mk(chips.ent()),
+                               layout(117, 32)
+                                   .with_label("Success")
+                                   .with_color_usage(Theme::Usage::Success)
+                                   .with_text_color(Theme::Usage::Font)
+                                   .with_corner_radius(6.f)
+                                   .with_debug_name("tb_chip_success"));
+    auto chip_warning_el = div(ctx, mk(chips.ent()),
+                               layout(117, 32)
+                                   .with_label("Warning")
+                                   .with_color_usage(Theme::Usage::Warning)
+                                   .with_text_color(Theme::Usage::Font)
+                                   .with_corner_radius(6.f)
+                                   .with_debug_name("tb_chip_warning"));
+    auto volume_row = hstack(ctx, mk(preview.ent()),
+                             layout(368, 36)
+                                 .with_gap(w1280(8))
+                                 .with_no_wrap()
+                                 .with_transparent_bg());
+    div(ctx, mk(volume_row.ent()),
+        layout(80, 36)
+            .with_label("Volume")
+            .with_transparent_bg());
+    auto volume_el = slider(ctx, mk(volume_row.ent()), preview_volume,
+                              ComponentConfig{}
+                                  .with_size({expand(), h720(36)})
+                                  .with_debug_name("tb_preview_volume"));
+    div(ctx, mk(volume_row.ent()),
+        layout(64, 36)
+            .with_label(fmt::format("{}%",
+                                    static_cast<int>(std::round(
+                                        preview_volume * 100.f))))
+            .with_transparent_bg()
+            .with_debug_name("tb_preview_volume_value"));
+    auto focus_row = hstack(ctx, mk(preview.ent()),
+                            layout(368, 40)
+                                .with_gap(w1280(8))
+                                .with_no_wrap()
+                                .with_transparent_bg());
+    auto focus_btn = button(ctx, mk(focus_row.ent()),
+                            layout(180, 40)
+                                .with_label("Focus me")
+                                .with_button_variant(ButtonVariant::Outline)
+                                .with_debug_name("tb_preview_focus"));
+    div(ctx, mk(focus_row.ent()),
+        layout(180, 40)
+            .with_label("Tab here to see the focus ring.")
+            .with_font_size(FontSize::Small)
+            .with_text_color(Theme::Usage::FontMuted)
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_transparent_bg());
+    auto status_el = div(ctx, mk(preview.ent()),
+                         layout(368, 28)
+                             .with_label("Enter a project name first.")
+                             .with_text_color(Theme::Usage::Error)
+                             .with_transparent_bg());
+    div(ctx, mk(preview.ent()),
+        layout(368, 28)
+            .with_font_size(FontSize::Small)
+            .with_label(fmt::format(
+                "Accent #{} · Focus #{} · Primary #{}",
+                colors::to_hex_string(edited.accent, edited.accent.a < 255),
+                colors::to_hex_string(edited.focus, edited.focus.a < 255),
+                colors::to_hex_string(edited.primary,
+                                      edited.primary.a < 255)))
+            .with_text_color(Theme::Usage::FontMuted)
+            .with_transparent_bg()
+            .with_debug_name("tb_preview_tokens"));
+
+    // TODO: reevaluate — divs have no click callback; test press vs rects.
+    // Innermost first; inspecting never consumes the click.
+    const auto inspect = [&](int idx) {
+      inspected = idx;
+      for (int j = 0; j < kTokenCount; j++)
+        open[j] = (j == idx);
+    };
+    const auto inspect_usage = [&](Theme::Usage usage) {
+      for (int i = 0; i < kTokenCount; i++)
+        if (kTokens[i].usage == usage)
+          inspect(i);
+    };
+    if (ctx.mouse.just_pressed) {
+      const Vector2Type pos = ctx.mouse.pos;
+      const auto inside = [&](const ElementResult &el) {
+        return el.ent().template has<UIComponent>() &&
+               is_mouse_inside(
+                   pos, el.ent().template get<UIComponent>().rect());
+      };
+      if (inside(save_btn))
+        inspect_usage(Theme::Usage::Primary);
+      else if (inside(focus_btn))
+        inspect_usage(Theme::Usage::Focus);
+      else if (inside(toggle_el))
+        inspect_usage(Theme::Usage::Accent);
+      else if (inside(volume_el))
+        inspect_usage(Theme::Usage::Secondary);
+      else if (inside(chip_error_el))
+        inspect_usage(Theme::Usage::Error);
+      else if (inside(chip_success_el))
+        inspect_usage(Theme::Usage::Success);
+      else if (inside(chip_warning_el))
+        inspect_usage(Theme::Usage::Warning);
+      else if (inside(status_el))
+        inspect_usage(Theme::Usage::Error);
+      else if (inside(preview_title))
+        inspect_usage(Theme::Usage::Font);
+      else if (inside(preview_subtitle))
+        inspect_usage(Theme::Usage::FontMuted);
+      else if (inside(preview_project))
+        inspect_usage(Theme::Usage::Font);
+      else if (inside(card))
+        inspect_usage(Theme::Usage::Surface);
+      else if (inside(preview))
+        inspect_usage(Theme::Usage::Background);
+    }
+  }
+};
+
+REGISTER_EXAMPLE_SCREEN(theme_builder, "System Demos",
+                        "theme builder: token table driving a live preview",
+                        ThemeBuilderLab)

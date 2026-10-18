@@ -71,7 +71,7 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 900), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ink).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("wg_root"));
@@ -89,8 +89,8 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
     };
     text(0, "Widget integration gallery", 48, 20, 1184, 44, 36, white, "wg_title", true);
     text(1, "button_group · pagination · spacer · image · icon_row · with_icon", 48, 70, 1184, 28, 21, muted);
-    div(context, mk(root.ent(), 2), box(48, 110, 568, 550).with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("wg_left"));
-    div(context, mk(root.ent(), 3), box(644, 110, 588, 550).with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("wg_right"));
+    div(context, mk(root.ent()), box(48, 110, 568, 550).with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("wg_left"));
+    div(context, mk(root.ent()), box(644, 110, 588, 550).with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("wg_right"));
     const auto style_child = [&](afterhours::Entity &child, float width, bool selected, const std::string &debug) {
       auto &cmp = child.get<UIComponent>();
       cmp.desired[Axis::X] = pixels(width * s);
@@ -110,7 +110,7 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
       }
     };
     text(10, "Editing tools / button_group", 68, 128, 528, 32, 25, white, "", true);
-    auto group = button_group(context, mk(root.ent(), 11), tools, box(68, 174, 528, 44)
+    auto group = button_group(context, mk(root.ent()), tools, box(68, 174, 528, 44)
         .with_flex_direction(FlexDirection::Row).with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background(control).with_debug_name("wg_group"));
     if (group) last_group = group.as<int>();
@@ -153,15 +153,15 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
         .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(white)
         .with_custom_background({59, 91, 135, 255}).with_corner_radius(5 * s).with_skip_grid_snap(true).with_debug_name("wg_head"));
     head.ent().get<HasLabel>().text_x_offset = 10 * s;
-    auto flexible = spacer(context, mk(srow.ent(), 1));
+    auto flexible = spacer(context, mk(srow.ent()));
     flexible.ent().get<UIComponentDebug>().set("wg_space");
     flexible.cmp().skip_grid_snap = true;
-    auto tail = div(context, mk(srow.ent(), 2), ComponentConfig{}.with_size({pixels(90 * s), pixels(40 * s)})
+    auto tail = div(context, mk(srow.ent()), ComponentConfig{}.with_size({pixels(90 * s), pixels(40 * s)})
         .with_label("tail").with_text_inset(0, 0).with_alignment(TextAlignment::Left)
         .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(white)
         .with_custom_background({131, 88, 61, 255}).with_corner_radius(5 * s).with_skip_grid_snap(true).with_debug_name("wg_tail"));
     tail.ent().get<HasLabel>().text_x_offset = 10 * s;
-    div(context, mk(root.ent(), 32), box(158, 574, 348, 8).with_ignore_pointer_events()
+    div(context, mk(root.ent()), box(158, 574, 348, 8).with_ignore_pointer_events()
         .with_on_draw_fg([muted](RectangleType r) {
           afterhours::draw_rectangle({r.x, r.y + 3, r.width, 1}, muted);
           afterhours::draw_rectangle({r.x, r.y, 1, r.height}, muted);

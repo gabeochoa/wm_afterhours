@@ -172,18 +172,18 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
          580, 48, 660, 30, 16, muted);
 
     // The app frame.
-    auto frame = div(context, mk(root.ent(), 10), abs(16, 92, 1228, 612)
+    auto frame = div(context, mk(root.ent()), abs(16, 92, 1228, 612)
         .with_custom_background(app_bg).with_corner_radius(10 * scale));
     auto &f = frame.ent();
 
     // Top bar.
-    auto bar = div(context, mk(f, 11), abs(0, 0, 1228, 54)
+    auto bar = div(context, mk(f), abs(0, 0, 1228, 54)
         .with_custom_background(panel).with_corner_radius(10 * scale));
-    div(context, mk(root.ent(), 12), abs(40, 104, 170, 32).with_label("friendface")
+    div(context, mk(root.ent()), abs(40, 104, 170, 32).with_label("friendface")
           .with_font("AtkinsonMockBold", pixels(24 * scale)).with_custom_text_color(brand)
           .with_text_overflow(TextOverflow::Ellipsis)
           .with_ignore_pointer_events());
-    auto search = text_input(context, mk(bar.ent(), 13), search_text,
+    auto search = text_input(context, mk(bar.ent()), search_text,
         ComponentConfig{}.with_size({pixels(230 * scale), pixels(36 * scale)})
             .with_absolute_position(180 * scale, 9 * scale)
             .with_placeholder("Search friendface")
@@ -208,7 +208,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         "pl_profile", bar.ent());
 
     // Left sidebar.
-    auto side = div(context, mk(f, 21), abs(16, 70, 232, 520));
+    auto side = div(context, mk(f), abs(16, 70, 232, 520));
     auto &s = side.ent();
     auto side_row = [&](int id, float y, const std::string &label, bool bold = false,
                         afterhours::Color color = afterhours::Color{233, 238, 248, 255}) {
@@ -221,7 +221,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_corner_radius(6 * scale).with_text_overflow(TextOverflow::Ellipsis));
     };
     avatar(s, 61, 2, 3, 32, "Gabe Ochoa");
-    div(context, mk(s, 62), ComponentConfig{}
+    div(context, mk(s), ComponentConfig{}
         .with_size({pixels(180 * scale), pixels(26 * scale)})
         .with_absolute_position(44 * scale, 6 * scale).with_label("Gabe Ochoa")
         .with_font("AtkinsonMockBold", pixels(17 * scale)).with_custom_text_color(ink)
@@ -235,7 +235,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
     side_row(33, 464, "Analog Photography");
 
     // Right sidebar.
-    auto right = div(context, mk(f, 70), abs(932, 70, 280, 520));
+    auto right = div(context, mk(f), abs(932, 70, 280, 520));
     auto &r = right.ent();
     text(71, "Friend requests", 948, 162, 240, 28, 18, ink, true);
     struct Req { int id; const char *name; const char *mutual; };
@@ -295,7 +295,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
           .with_size({pixels(52 * scale), pixels(5 * scale)})
           .with_absolute_position(10 * scale, (17.f + stripe * 11.f) * scale)
           .with_custom_background(afterhours::Color{255, 255, 255, 70}));
-    div(context, mk(sponsored.ent(), 3), ComponentConfig{}
+    div(context, mk(sponsored.ent()), ComponentConfig{}
         .with_size({pixels(16 * scale), pixels(16 * scale)})
         .with_absolute_position(38 * scale, 18 * scale)
         .with_custom_background(afterhours::Color{240, 190, 70, 255})
@@ -303,7 +303,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
     text(97, "Sponsored: Night Market tickets are on sale now.", 1024, 644, 196, 44, 13, muted);
 
     // Feed column (scrolls).
-    auto feed_col = div(context, mk(f, 50), ComponentConfig{}
+    auto feed_col = div(context, mk(f), ComponentConfig{}
         .with_size({pixels(600 * scale), pixels(542 * scale)})
         .with_absolute_position(280 * scale, 70 * scale)
         .with_flex_direction(FlexDirection::Column)
@@ -311,7 +311,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         .with_overflow(Overflow::Scroll, Axis::Y)
         .with_debug_name("pl_feed"));
     auto &fd = feed_col.ent();
-    auto stories = hstack(context, mk(fd, 51), ComponentConfig{}
+    auto stories = hstack(context, mk(fd), ComponentConfig{}
         .with_size({pixels(584 * scale), pixels(140 * scale)}).with_gap(pixels(8 * scale)));
     const char *story_names[] = {"Ana Ruiz", "Sam W.", "Priya Nair", "Leo M."};
     for (int i = 0; i < 4; i++) {
@@ -338,7 +338,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(600 * scale), pixels(108 * scale)})
         .with_custom_background(panel).with_corner_radius(10 * scale));
     avatar(composer.ent(), 74, 14, 14, 40, "Gabe Ochoa");
-    auto draft_field = text_input(context, mk(composer.ent(), 71), draft,
+    auto draft_field = text_input(context, mk(composer.ent()), draft,
         ComponentConfig{}.with_size({pixels(404 * scale), pixels(40 * scale)})
             .with_absolute_position(64 * scale, 14 * scale)
             .with_placeholder("What's on your mind, Gabe?")
@@ -356,7 +356,7 @@ struct PseudoLocaleLab : ScreenSystem<UIContext<InputAction>> {
         draft.clear();
       }
     }
-    div(context, mk(composer.ent(), 73), ComponentConfig{}
+    div(context, mk(composer.ent()), ComponentConfig{}
         .with_size({pixels(568 * scale), pixels(30 * scale)})
         .with_absolute_position(16 * scale, 66 * scale)
         .with_label("Live video      Photo or video      Feeling or activity")

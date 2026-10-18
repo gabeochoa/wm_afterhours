@@ -49,21 +49,21 @@ struct TypographyCompositionLab
     label("Words with room to play", 0, 26, 1144, 48, 36, ink, "type_title", true);
     label("A bold arrangement. The same clear message.", 0, 82, 1144, 32,
           22, muted, "type_subtitle");
-    div(context, mk(root.ent(), id++), box(0, 138, 1144, 350)
+    div(context, mk(root.ent()), box(0, 138, 1144, 350)
         .with_custom_background({225, 235, 229, 255})
         .with_debug_name("type_composition"));
     label("A FRESH PERSPECTIVE", 36, 158, 650, 28, 18, teal, "type_overline");
     label("Make waves", 36, 508, 660, 38, 27, ink, "type_reading_order", true);
     label("Big ideas deserve a little space. Start with yours.", 36, 550,
           1072, 32, 22, muted, "type_description");
-    if (button(context, mk(root.ent(), id++), box(0, 610, 180, 52)
+    if (button(context, mk(root.ent()), box(0, 610, 180, 52)
         .with_label("Replay").with_font("AtkinsonMockBold", pixels(22 * s))
         .with_custom_background(teal).with_custom_text_color({255, 255, 255, 255})
         .with_corner_radius(8 * s).with_debug_name("type_replay"))) {
       ++replays;
       elapsed = reduced_motion ? 1.f : 0.f;
     }
-    if (button(context, mk(root.ent(), id++), box(204, 610, 300, 52)
+    if (button(context, mk(root.ent()), box(204, 610, 300, 52)
         .with_label(reduced_motion ? "Reduced motion: on" : "Reduced motion: off")
         .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
         .with_custom_background({221, 229, 236, 255}).with_border(muted, s)
@@ -75,12 +75,12 @@ struct TypographyCompositionLab
     const float first = 1.f - (1.f - progress) * (1.f - progress) * (1.f - progress);
     const float delayed = std::clamp((elapsed - .12f) / .8f, 0.f, 1.f);
     const float second = 1.f - (1.f - delayed) * (1.f - delayed) * (1.f - delayed);
-    div(context, mk(root.ent(), id++), box(50 - 32 * (1.f - first), 202, 620, 154)
+    div(context, mk(root.ent()), box(50 - 32 * (1.f - first), 202, 620, 154)
         .with_label("MAKE").with_font("AtkinsonMockBold", pixels(144 * s))
         .with_custom_text_color(ink).with_alignment(TextAlignment::Left)
         .with_opacity(.4f + .6f * first).with_ignore_pointer_events()
         .with_debug_name("type_make"));
-    div(context, mk(root.ent(), id++), box(292 + 32 * (1.f - second), 302 + 12 * (1.f - second), 810, 156)
+    div(context, mk(root.ent()), box(292 + 32 * (1.f - second), 302 + 12 * (1.f - second), 810, 156)
         .with_label("WAVES").with_font("AtkinsonMockBold", pixels(144 * s))
         .with_custom_text_color(teal).with_alignment(TextAlignment::Left)
         .with_opacity(.4f + .6f * second).with_ignore_pointer_events()

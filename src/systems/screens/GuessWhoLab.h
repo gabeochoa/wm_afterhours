@@ -183,7 +183,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("gw_canvas"));
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
                 .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                         (context.screen_height - 720 * scale) / 2)
@@ -224,17 +224,17 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
           }));
       return result;
     };
-    sprite(context, mk(root.ent(), 1), logo_texture,
+    sprite(context, mk(root.ent()), logo_texture,
            {0.f, 0.f, static_cast<float>(logo_texture.width), static_cast<float>(logo_texture.height)},
            box(scale, 41, 8, 228, 85).with_ignore_pointer_events().with_debug_name("gw_logo"));
-    div(context, mk(root.ent(), 2), box(scale, 357, 24, 34, 34)
+    div(context, mk(root.ent()), box(scale, 357, 24, 34, 34)
         .with_custom_background(navy).with_corner_radius(17 * scale));
     text(3, "1", 357, 23, 34, 34, 22, white, TextAlignment::Center, "AtkinsonMock");
     text(4, "Player 1 / Your turn", 406, 23, 380, 35, 21, navy);
     text(6, "Find the mystery person", 406, 57, 470, 25, 20, theme.font_muted, TextAlignment::Left, "AtkinsonMock");
 
     if (button(
-            context, mk(root.ent(), 5),
+            context, mk(root.ent()),
             box(scale, 1066.f, 29.f, 170.f, 42.f)
                 .with_label("New game")
                 .with_font("AtkinsonMock", pixels(21.f * scale))
@@ -263,7 +263,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
       reset();
     }
 
-    div(context, mk(root.ent(), 10), box(scale, 40, 94, 1200, 76)
+    div(context, mk(root.ent()), box(scale, 40, 94, 1200, 76)
         .with_custom_background({255, 255, 255, 255}).with_corner_radius(12 * scale).with_debug_name("gw_question"));
     text(11, "Does your person", 58, 98, 280, 24, 17, navy);
     text(16, "Answer", 364, 98, 100, 24, 17, navy, TextAlignment::Left, "AtkinsonMock");
@@ -271,7 +271,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
     pick(13, answers, answer_index, 364, 126, 100, 36, 22, white, navy, "gw_answer");
     text(17, "Enter the other player's answer.\nAsk to remove faces that do not match.",
          727, 111, 332, 49, 16, theme.font_muted, TextAlignment::Left, "AtkinsonMock");
-    if (button(context, mk(root.ent(), 14),
+    if (button(context, mk(root.ent()),
                box(scale, 488.f, 120.f, 208.f, 44.f)
                    .with_label("Ask question")
                    .with_font("AtkinsonMock", pixels(22.f * scale))
@@ -303,7 +303,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
     }
     text(15, fmt::format("{} faces left", faces_left()), 1070, 99, 152, 31, 22, navy, TextAlignment::Right);
     text(18, "Board status", 1070, 132, 152, 24, 16, theme.font_muted, TextAlignment::Right, "AtkinsonMock");
-    div(context, mk(root.ent(), 19), box(scale, 1080, 160, 136.f * static_cast<float>(faces_left()) / kCount, 3)
+    div(context, mk(root.ent()), box(scale, 1080, 160, 136.f * static_cast<float>(faces_left()) / kCount, 3)
         .with_custom_background(navy).with_ignore_pointer_events());
     std::string history = "Clues appear here after you ask.";
     if (!clue_history.empty()) {
@@ -315,7 +315,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
     }
     text(21, "Recent clues", 45, 173, 126, 23, 17, navy, TextAlignment::Left, "AtkinsonMock");
     text(22, history, 180, 173, 1050, 23, 17, theme.font_muted, TextAlignment::Left, "AtkinsonMock");
-    div(context, mk(root.ent(), 20), box(scale, 40, 198, 1200, 484)
+    div(context, mk(root.ent()), box(scale, 40, 198, 1200, 484)
         .with_on_draw_bg([scale](RectangleType r) { draw_board(r, scale); }).with_debug_name("gw_board"));
     for (int row = 0; row < kRows; ++row)
       text(30 + row, std::string(1, static_cast<char>('A' + row)), 39, 248 + row * 160.f,

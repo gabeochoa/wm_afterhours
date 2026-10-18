@@ -63,7 +63,7 @@ struct TextCacheLab : ScreenSystem<UIContext<InputAction>> {
 
     text(8, "Styled columns (DGOne)", 32, 292, 500, 30, 21);
     text(9, "min(base * 2 ** attempt, 30000)", 32, 330, 700, 30, 21, "DGOne");
-    div(context, mk(root.ent(), 10), ComponentConfig{}
+    div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(700 * scale), pixels(30 * scale)})
         .with_absolute_position(32 * scale, 362 * scale)
         .with_styled_label({{"min", {120, 200, 255, 255}},

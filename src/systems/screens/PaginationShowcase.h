@@ -54,7 +54,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events().with_debug_name(name));
     };
     // Title
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 98)
+    div(context, mk(root.ent()), box(0, 24, 1144, 98)
         .with_custom_background({29, 43, 63, 255}).with_corner_radius(12 * scale));
     label(1, "Pagination and option selectors", 20, 33, 1104, 44, 34, ink, "pagination_title");
     label(2, "Choose a page or one option. Each row keeps its own selection.", 20, 83, 1104, 27, 21, muted);
@@ -166,7 +166,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     label(32, "Selected: " + color_options[color_idx] + " / " + std::to_string(color_idx + 1) + " of 5",
           20, 613, 662, 27, 22, ink, "pag3_result");
     label(33, boundary(color_idx, color_options.size()), 20, 642, 662, 22, 18, muted);
-    div(context, mk(root.ent(), 34), box(724, 535, 86, 98).with_custom_background(swatches[color_idx])
+    div(context, mk(root.ent()), box(724, 535, 86, 98).with_custom_background(swatches[color_idx])
         .with_corner_radius(7 * scale).with_debug_name("pag3_swatch"));
     label(35, color_options[color_idx], 830, 533, 274, 36, 29, ink);
     const auto color = swatches[color_idx];

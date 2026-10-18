@@ -125,7 +125,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 116)
+    div(context, mk(root.ent()), box(left, 24, 1144, 116)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     label("Springy!", 24, 34, 1096, 42, 34, text_light);
     label("Spring animation variants", 24, 80, 1096, 26, 23, text_light);
@@ -133,7 +133,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
           24, 108, 1096, 25, 19, muted);
 
     // ========== Restart Button ==========
-    if (button(context, mk(root.ent(), id++), box(left, 582, 226, 46)
+    if (button(context, mk(root.ent()), box(left, 582, 226, 46)
         .with_label("Restart all five").with_font("AtkinsonMock", pixels(23 * s))
         .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light)
         .with_corner_radius(8 * s).with_debug_name("restart_btn"))) {
@@ -142,7 +142,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
       box_click_times.fill(-10.f);
       last_sample = "All five";
     }
-    if (button(context, mk(root.ent(), id++), box(left + 242, 582, 226, 46)
+    if (button(context, mk(root.ent()), box(left + 242, 582, 226, 46)
         .with_label(slow_preview ? "Slow preview: 0.25x" : "Slow preview: off")
         .with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background(slow_preview ? afterhours::Color{62, 104, 173, 255} : afterhours::Color{47, 60, 82, 255})

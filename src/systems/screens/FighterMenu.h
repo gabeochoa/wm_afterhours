@@ -221,7 +221,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("fighter_canvas"));
 
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             box(scale, 0, 0, 1280, 720)
                 .with_absolute_position((screen_w - 1280 * scale) / 2,
                                         (screen_h - 720 * scale) / 2)
@@ -235,7 +235,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                 })
                 .with_debug_name("fighter_root"));
 
-    div(context, mk(root.ent(), 1),
+    div(context, mk(root.ent()),
         box(scale, 0, 0, 700, 150)
             .with_on_draw_bg([c = black](RectangleType r) {
               afterhours::draw_rectangle({r.x, r.y, r.width * 0.65f, r.height},
@@ -246,7 +246,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_ignore_pointer_events()
             .with_debug_name("title_wedge"));
 
-    div(context, mk(root.ent(), 2),
+    div(context, mk(root.ent()),
         box(scale, 26, 13, 480, 105)
             .with_label("Main Menu")
             .with_font("Garamond", pixels(96.f * scale))
@@ -256,7 +256,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_letter_spacing(-1.f * scale)
             .with_debug_name("fighter_title"));
 
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         box(scale, 942, 48, 282, 52)
             .with_on_draw_bg([bg = black](RectangleType r) {
               afterhours::draw_rectangle(
@@ -271,7 +271,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                        afterhours::Color{105, 110, 100, 255});
             })
             .with_debug_name("currency_panel"));
-    div(context, mk(root.ent(), 11),
+    div(context, mk(root.ent()),
         box(scale, 976, 52, 224, 44)
             .with_label(fmt::format("{},{:03} P$", currency / 1000, currency % 1000))
             .with_font("Garamond", pixels(39.f * scale))
@@ -279,7 +279,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Right)
             .with_debug_name("fighter_currency"));
 
-    div(context, mk(root.ent(), 20),
+    div(context, mk(root.ent()),
         box(scale, 73, 130, 1135, 53)
             .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_border(afterhours::Color{54, 85, 104, 255}, 0.f)
@@ -342,7 +342,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
         choose_tab(i);
     }
 
-    div(context, mk(root.ent(), 45),
+    div(context, mk(root.ent()),
         box(scale, 596, 214, 218, 34)
             .with_label(selected_tab == 1 ? "Online Mode" : "Offline Mode")
             .with_custom_background(afterhours::Color{238, 233, 203, 245})
@@ -424,7 +424,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     const auto &current = options[active_option];
-    div(context, mk(root.ent(), 230),
+    div(context, mk(root.ent()),
         box(scale, 850, 204, 376, 286)
             .with_on_draw_bg([scale, fill = holo](RectangleType r) {
               const float cut = 24 * scale;
@@ -444,12 +444,12 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                        {r.x + r.width, r.y - 5 * scale}, 2 * scale,
                                        {129, 215, 71, 200});
             }).with_debug_name("fighter_holo_card"));
-    div(context, mk(root.ent(), 231), box(scale, 916, 225, 254, 37)
+    div(context, mk(root.ent()), box(scale, 916, 225, 254, 37)
         .with_label(current.short_label).with_font("Garamond", pixels(29 * scale))
         .with_letter_spacing(2 * scale).with_custom_text_color({17, 52, 43, 255})
         .with_alignment(TextAlignment::Center).with_debug_name("fighter_holo_label"));
     if (active_option == 5) {
-      div(context, mk(root.ent(), 232), box(scale, 953, 280, 140, 140)
+      div(context, mk(root.ent()), box(scale, 953, 280, 140, 140)
           .with_on_draw_fg(draw_binding_icon).with_ignore_pointer_events()
           .with_debug_name("fighter_holo_gear"));
     } else {
@@ -458,22 +458,22 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       const float ratio = 148.f / std::max(source.width, source.height);
       const float width = source.width * ratio;
       const float height = source.height * ratio;
-      sprite(context, mk(root.ent(), 232), icons[icon], source,
+      sprite(context, mk(root.ent()), icons[icon], source,
              box(scale, 1023 - width / 2, 345 - height / 2, width, height)
                  .with_ignore_pointer_events().with_debug_name("fighter_holo_gear"));
     }
-    div(context, mk(root.ent(), 240), box(scale, 826, 418, 432, 70)
+    div(context, mk(root.ent()), box(scale, 826, 418, 432, 70)
         .with_label(current.label).with_font("Garamond", pixels(54 * scale))
         .with_letter_spacing(-1 * scale).with_custom_text_color(white)
         .with_text_stroke(black, 3 * scale).with_text_shadow(lime, 0, 2 * scale)
         .with_debug_name("fighter_selected_name"));
-    div(context, mk(root.ent(), 250), box(scale, 804, 492, 476, 170)
+    div(context, mk(root.ent()), box(scale, 804, 492, 476, 170)
         .with_on_draw_bg([scale, bg = deep_black](RectangleType r) {
           afterhours::draw_rectangle({r.x + 24 * scale, r.y, r.width - 24 * scale, r.height}, bg);
           draw_triangle_ccw({r.x + 24 * scale, r.y}, {r.x, r.y + r.height / 2},
                             {r.x + 24 * scale, r.y + r.height}, bg);
         }).with_debug_name("fighter_description"));
-    div(context, mk(root.ent(), 251), box(scale, 834, 501, 412, 30)
+    div(context, mk(root.ent()), box(scale, 834, 501, 412, 30)
         .with_label(std::array<const char *, 4>{"OFFLINE / ", "ONLINE / ", "CUSTOMIZE / ", "OPTIONS / "}[selected_tab] + std::string(current.short_label))
         .with_custom_background(lime).with_font("Garamond", pixels(22 * scale))
         .with_custom_text_color(black).with_alignment(TextAlignment::Left)
@@ -501,7 +501,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("fighter_prompt_key_" + std::to_string(id)));
     };
     keycap(310, "", 250, 32);
-    div(context, mk(root.ent(), 309), box(scale, 254, 683, 24, 24)
+    div(context, mk(root.ent()), box(scale, 254, 683, 24, 24)
         .with_on_draw_fg([](RectangleType r) {
           const auto p = [=](float x, float y) { return Vector2Type{r.x + r.width * x, r.y + r.height * y}; };
           const afterhours::Color c{15, 15, 15, 255};

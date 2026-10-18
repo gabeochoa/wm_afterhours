@@ -68,11 +68,11 @@ struct DialogPromptShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(22 * s)).with_background(Theme::Usage::Primary)
           .with_custom_text_color({235, 241, 250, 255}).with_corner_radius(8 * s).with_debug_name(name);
     };
-    if (button(context, mk(entity, 20), control(972, 92, "Rename selected file", "dp_open"))) {
+    if (button(context, mk(entity), control(972, 92, "Rename selected file", "dp_open"))) {
       value = current_name;
       open = true;
     }
-    if (button(context, mk(entity, 21), control(972, 560, "Reset file demo", "dp_reset"))) {
+    if (button(context, mk(entity), control(972, 560, "Reset file demo", "dp_reset"))) {
       current_name = "untitled_map";
       value = current_name;
       status = "Demo reset. All 3 original filenames restored.";
@@ -84,7 +84,7 @@ struct DialogPromptShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto previous_font_size = defaults.default_font_size;
     defaults.set_default_font("AtkinsonMock", pixels(22 * s));
     const bool was_open = open;
-    auto prompt = afterhours::modal::prompt(context, mk(entity, 1), open, value, "Rename file",
+    auto prompt = afterhours::modal::prompt(context, mk(entity), open, value, "Rename file",
         "Current: " + current_name + ".map", "Rename", "Cancel");
     defaults.set_default_font(previous_font_name, previous_font_size);
     if (fonts) fonts->set_active(previous_active_font);

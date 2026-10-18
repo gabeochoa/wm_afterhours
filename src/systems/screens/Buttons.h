@@ -60,19 +60,19 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_cursor(CursorType::Pointer).with_debug_name(name);
     };
     // Main container background - centered on screen with padding
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 676)
+    div(context, mk(root.ent()), box(left, 24, 1144, 676)
         .with_custom_background(theme.background).with_corner_radius(12 * s).with_debug_name("buttons_bg"));
     // Title
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 94)
+    div(context, mk(root.ent()), box(left, 24, 1144, 94)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
     label("Button Gallery", 20, 34, 1104, 42, 34, text, "buttons_title");
     label("Compare theme roles, dimensions, single selection, and custom colors or corners.",
           20, 80, 894, 28, 20, muted);
-    if (button(context, mk(root.ent(), id++), specimen(950, 76, 174, 32,
+    if (button(context, mk(root.ent()), specimen(950, 76, 174, 32,
         show_guides ? "Guides: on" : "Guides: off", "buttons_guides", 18))) show_guides = !show_guides;
 
     // Row 1: Basic button roles and availability
-    div(context, mk(root.ent(), id++), box(left, 128, 1144, 116)
+    div(context, mk(root.ent()), box(left, 128, 1144, 116)
         .with_custom_background(theme.surface).with_corner_radius(10 * s).with_debug_name("row1_states"));
     label("Roles", 20, 140, 172, 30, 25, text);
     label("and availability", 20, 173, 172, 25, 17, muted);
@@ -91,23 +91,23 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // color makes the disabled state more visually obvious per accessibility
     // guidelines.
     constexpr float disabled_opacity = .45f;
-    div(context, mk(root.ent(), id++), box(left + 908, 154, 128, 53)
+    div(context, mk(root.ent()), box(left + 908, 154, 128, 53)
         .with_on_draw_fg([s, line](RectangleType r) {
           afterhours::draw_rectangle_rounded_lines_ex(r, .2f, 12, s, line);
         }).with_ignore_pointer_events().with_debug_name("disabled_reference"));
-    button(context, mk(root.ent(), id++), specimen(912, 158, 120, 45, "Disabled", "btn_disabled")
+    button(context, mk(root.ent()), specimen(912, 158, 120, 45, "Disabled", "btn_disabled")
         .with_custom_background({60, 65, 80, 255}).with_custom_text_color({140, 140, 150, 255})
         .with_auto_text_color(false).with_disabled(true).with_opacity(disabled_opacity)
         .with_border({100, 100, 110, 180}, 2 * s));
     label("Disabled / opacity 45%", 872, 209, 208, 24, 17, text, "disabled_caption");
 
     // Row 2: Different sizes - controls share a vertical center
-    div(context, mk(root.ent(), id++), box(left, 254, 1144, 122)
+    div(context, mk(root.ent()), box(left, 254, 1144, 122)
         .with_custom_background(theme.surface).with_corner_radius(10 * s).with_debug_name("row2_sizes"));
     label("Sizes", 20, 269, 172, 30, 25, text);
     label("Same test label", 20, 302, 172, 24, 17, muted);
     label("Vertical center", 20, 338, 172, 23, 17, muted);
-    div(context, mk(root.ent(), id++), box(left + 206, 301, 652, 30)
+    div(context, mk(root.ent()), box(left + 206, 301, 652, 30)
           .with_on_draw_fg([s, line, visible = show_guides](RectangleType r) {
             if (!visible) return;
             for (float x = r.x; x < r.x + r.width; x += 12 * s) {

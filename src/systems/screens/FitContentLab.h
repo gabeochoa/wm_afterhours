@@ -56,25 +56,25 @@ struct FitContentLab : ScreenSystem<UIContext<InputAction>> {
         {"ah", false},
         {"anyway it is fixed", true},
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({17, 23, 34, 255}).with_corner_radius(0)
         .with_debug_name("fc_root"));
     label(1, "Fit-content bubbles", 48, 20, 916, 44, 34, white, "fc_title");
     label(2, "Same text, different maximum width.", 48, 70, 1184, 28, 21, muted, "fc_subtitle");
-    if (button(context, mk(entity, 3), at(984, 26, 248, 42)
+    if (button(context, mk(entity), at(984, 26, 248, 42)
         .with_label(show_guides ? "Hide measurement guides" : "Show measurement guides")
         .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(white)
         .with_custom_background({43, 70, 108, 255}).with_corner_radius(8 * s)
         .with_debug_name("fc_guides"))) show_guides = !show_guides;
-    div(context, mk(entity, 4), at(244, 111, 18, 18).with_custom_background(incoming)
+    div(context, mk(entity), at(244, 111, 18, 18).with_custom_background(incoming)
         .with_corner_radius(5 * s));
     label(5, "Incoming / left", 270, 105, 210, 30, 18, white, "fc_incoming_legend");
-    div(context, mk(entity, 6), at(486, 111, 18, 18).with_custom_background(outgoing)
+    div(context, mk(entity), at(486, 111, 18, 18).with_custom_background(outgoing)
         .with_corner_radius(5 * s));
     label(7, "You / right", 512, 105, 187, 30, 18, white, "fc_outgoing_legend");
     label(8, "4 = sample layout story", 742, 105, 290, 30, 18, muted, "fc_sample_note");
-    div(context, mk(entity, 9), at(240, 144, 800, 1)
+    div(context, mk(entity), at(240, 144, 800, 1)
         .with_custom_background({58, 75, 99, 255}));
 
     // Two caps, same content: the bubbles are sized by what is in them.

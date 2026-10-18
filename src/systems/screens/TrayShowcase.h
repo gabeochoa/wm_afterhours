@@ -23,9 +23,9 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("tray_bg"));
-    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1000*s),pixels(596*s)})
+    auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1000*s),pixels(596*s)})
         .with_absolute_position((context.screen_width-1000*s)/2,(context.screen_height-596*s)/2)
         .with_background(Theme::Usage::Surface).with_corner_radius(12*s).with_debug_name("card"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
@@ -37,12 +37,12 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
     label(1,"One Tab stop per group. Arrow keys choose an item; Enter activates it.",32,74,936,32,21,true);
     label(2,"Horizontal group / Left + Right",32,126,570,32,23);
     label(3,"Vertical group / Up + Down",644,126,324,32,23);
-    div(context,mk(root.ent(),4),box(20,168,600,102).with_border({72,88,109,255},1).with_custom_background({0,0,0,0}).with_corner_radius(8*s));
-    div(context,mk(root.ent(),5),box(632,168,348,234).with_border({72,88,109,255},1).with_custom_background({0,0,0,0}).with_corner_radius(8*s));
-    auto horizontal=tray(context,mk(root.ent(),6),box(32,184,576,70)
+    div(context,mk(root.ent()),box(20,168,600,102).with_border({72,88,109,255},1).with_custom_background({0,0,0,0}).with_corner_radius(8*s));
+    div(context,mk(root.ent()),box(632,168,348,234).with_border({72,88,109,255},1).with_custom_background({0,0,0,0}).with_corner_radius(8*s));
+    auto horizontal=tray(context,mk(root.ent()),box(32,184,576,70)
         .with_flex_direction(FlexDirection::Row).with_no_wrap().with_justify_content(JustifyContent::SpaceAround)
         .with_align_items(AlignItems::Center).with_gap(pixels(10*s)).with_debug_name("h_tray"));
-    auto vertical=tray(context,mk(root.ent(),7),box(644,184,324,202)
+    auto vertical=tray(context,mk(root.ent()),box(644,184,324,202)
         .with_flex_direction(FlexDirection::Column).with_no_wrap().with_gap(pixels(14*s)).with_debug_name("v_tray"));
     const std::array<std::string,3> names{"Alpha","Beta","Gamma"};
     const std::array<afterhours::Color,3> colors{{{165,55,140,255},{55,195,195,255},{145,215,65,255}}};
@@ -66,7 +66,7 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
     const std::string active=context.has_focus(horizontal.ent().id)?"Horizontal":context.has_focus(vertical.ent().id)?"Vertical":"Outside the trays";
     label(13,"Active tray: "+active,32,450,580,32,22);
     label(14,"Last activated: "+last,32,492,580,32,22);
-    if(button(context,mk(root.ent(),15),box(680,460,288,44).with_label("Reset demo")
+    if(button(context,mk(root.ent()),box(680,460,288,44).with_label("Reset demo")
         .with_font("AtkinsonMock",pixels(21*s)).with_background(Theme::Usage::Secondary)
         .with_auto_text_color(true).with_corner_radius(8*s).with_debug_name("tray_reset"))) {
       h_clicks.fill(0);v_clicks.fill(0);last="none";

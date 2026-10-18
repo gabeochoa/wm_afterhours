@@ -99,7 +99,7 @@ struct CurvedTextStressLab : ScreenSystem<UIContext<InputAction>> {
                       measureMs, layoutMs, drawMs, glyphsLastFrame, strings()),
           48, 92, 1000, 16, false, "curved_stress_stages");
     label("Curved strings", 950, 36, 160, 14, true);
-    slider(context, mk(root.ent(), id++), stringsSlider,
+    slider(context, mk(root.ent()), stringsSlider,
            box(950, 58, 220, 28).with_debug_name("curved_stress_strings"));
     if (control(spin ? "Spin: on" : "Spin: off", 950, 96, 104, "curved_stress_spin"))
       spin = !spin;
@@ -120,7 +120,7 @@ struct CurvedTextStressLab : ScreenSystem<UIContext<InputAction>> {
     const int count = strings();
     const float cellW = 296.f;
     const float cellH = 470.f / static_cast<float>((count + 2) / 3);
-    div(context, mk(root.ent(), id++),
+    div(context, mk(root.ent()),
         box(48, 150, 880, 470).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_stress_stage")
             .with_on_draw_fg([this, fonts, count, s, ink, accent, cellW,

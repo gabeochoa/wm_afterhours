@@ -160,3 +160,5 @@ goto_screen validation_throttle_lab
 wait 0.5
 goto_screen wm_defaults_lab
 wait 0.5
+goto_screen theme_builder
+wait 0.5

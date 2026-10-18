@@ -154,7 +154,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(section == i ? text_dark : text_light)
           .with_corner_radius(7 * scale).with_debug_name("ns_tab_" + std::to_string(i)))) section = i;
     }
-    div(context, mk(root.ent(), 20), box(0, 183, 1144, 490)
+    div(context, mk(root.ent()), box(0, 183, 1144, 490)
         .with_custom_background({45, 37, 30, 255}).with_corner_radius(10 * scale));
     label(21, "Kenney Fantasy UI / native nine-slice rendering / source corners keep their pixel dimensions", 0, 685, 1144, 27, 19, muted);
     const auto specimen = [&](int id, raylib::Texture2D texture, int slice, float x, float y,
@@ -298,14 +298,14 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(outer.ent(), 0), ComponentConfig{}.with_size({percent(1.f), pixels(42 * scale)})
         .with_label("Nested panels").with_font("AtkinsonMock", pixels(27 * scale))
         .with_custom_text_color(text_dark).with_background(Theme::Usage::None).with_corner_radius(0));
-    auto children_row = hstack(context, mk(outer.ent(), 1), ComponentConfig{}
+    auto children_row = hstack(context, mk(outer.ent()), ComponentConfig{}
         .with_size({percent(1.f), pixels(108 * scale)}).with_gap(pixels(16 * scale))
         .with_margin(Margin{.top = pixels(12 * scale)}).with_background(Theme::Usage::None));
-    div(context, mk(children_row.ent(), 0), ComponentConfig{}.with_size({pixels(146 * scale), pixels(104 * scale)})
+    div(context, mk(children_row.ent()), ComponentConfig{}.with_size({pixels(146 * scale), pixels(104 * scale)})
         .with_label("Gold child").with_nine_slice_border(border_005, 16, {180, 140, 80, 255})
         .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(text_dark)
         .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("ns_gold_child"));
-    div(context, mk(children_row.ent(), 1), ComponentConfig{}.with_size({pixels(146 * scale), pixels(104 * scale)})
+    div(context, mk(children_row.ent()), ComponentConfig{}.with_size({pixels(146 * scale), pixels(104 * scale)})
         .with_label("Blue child").with_nine_slice_border(border_010, 16, {100, 140, 180, 255})
         .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(text_dark)
         .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("ns_blue_child"));

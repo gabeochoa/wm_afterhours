@@ -27,7 +27,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
     float component_height = 50.0f;
     float start_x = (screen_width - component_width) / 2.0f;
 
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Screen: sliders - Slider Test Screen")
             .with_size(
@@ -41,7 +41,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     float current_y = start_y;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Slider at 0%")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -52,7 +52,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_1"));
 
     current_y += 35.0f;
-    slider(context, mk(entity, 10), slider_1,
+    slider(context, mk(entity), slider_1,
            ComponentConfig{}
                .with_size(ComponentSize{pixels(component_width),
                                         pixels(component_height)})
@@ -63,7 +63,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Slider at 50%")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -74,7 +74,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_2"));
 
     current_y += 35.0f;
-    slider(context, mk(entity, 11), slider_2,
+    slider(context, mk(entity), slider_2,
            ComponentConfig{}
                .with_size(ComponentSize{pixels(component_width),
                                         pixels(component_height)})
@@ -85,7 +85,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 3),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Slider at 100%")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -96,7 +96,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_3"));
 
     current_y += 35.0f;
-    slider(context, mk(entity, 12), slider_3,
+    slider(context, mk(entity), slider_3,
            ComponentConfig{}
                .with_size(ComponentSize{pixels(component_width),
                                         pixels(component_height)})
@@ -107,7 +107,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    slider(context, mk(entity, 13), slider_with_label,
+    slider(context, mk(entity), slider_with_label,
            ComponentConfig{}
                .with_label("Volume")
                .with_size(ComponentSize{pixels(component_width),
@@ -119,7 +119,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    slider(context, mk(entity, 14), slider_with_label_newline,
+    slider(context, mk(entity), slider_with_label_newline,
            ComponentConfig{}
                .with_label("Brightness")
                .with_size(ComponentSize{pixels(component_width),
@@ -131,7 +131,7 @@ struct ExampleSliders : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    slider(context, mk(entity, 15), slider_on_handle,
+    slider(context, mk(entity), slider_on_handle,
            ComponentConfig{}
                .with_label("Value on Handle")
                .with_size(ComponentSize{pixels(component_width),

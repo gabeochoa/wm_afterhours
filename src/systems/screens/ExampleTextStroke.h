@@ -46,7 +46,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     label(0, 0, 24, 884, 45, "Text stroke / outline", 35, white);
     label(1, 0, 79, 1144, 31, "Atkinson / continuous rounded outlines / cached glyph coverage", 22, muted);
     const std::array<const char *, 3> detail_labels{"Glyph detail: Off", "Glyph detail: 5px", "Glyph detail: 10px"};
-    if (button(context, mk(root.ent(), 2), box(910, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
+    if (button(context, mk(root.ent()), box(910, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(panel).with_custom_text_color(white)
         .with_corner_radius(6 * scale).with_debug_name("stroke_detail_toggle"))) detail = (detail + 1) % 3;
     const auto backing = [&](int id, float y, float h) {
@@ -65,12 +65,12 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     backing(30, 403, 112);
     sample(31, 20, 414, 306, 77, "GLOW", 56, {20, 20, 40, 255}, {80, 220, 255, 255}, 8, "stroke_bright");
     label(32, 356, 419, 304, 84, fmt::format("T5 / Bright outline\n#141428 + #50DCFF\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 21, muted);
-    div(context, mk(root.ent(), 40), box(0, 529, 680, 111).with_custom_background({220, 225, 235, 255}).with_corner_radius(8 * scale).with_debug_name("light_bg"));
+    div(context, mk(root.ent()), box(0, 529, 680, 111).with_custom_background({220, 225, 235, 255}).with_corner_radius(8 * scale).with_debug_name("light_bg"));
     sample(41, 20, 535, 306, 58, "WHITE", 40, white, {0, 0, 0, 255}, 0, "stroke_white_none");
     sample(42, 356, 535, 304, 58, "WHITE", 40, white, {0, 0, 0, 255}, 4, "stroke_white");
     label(43, 20, 603, 306, 27, "T6 / Low contrast / no stroke", 20, {40, 52, 71, 255});
     label(44, 356, 603, 304, 27, fmt::format("T7 / Outlined / {:.1f}px black", 4 * scale), 20, {40, 52, 71, 255});
-    div(context, mk(root.ent(), 50), box(704, 137, 440, 503).with_custom_background(panel).with_corner_radius(8 * scale));
+    div(context, mk(root.ent()), box(704, 137, 440, 503).with_custom_background(panel).with_corner_radius(8 * scale));
     if (detail == 0) {
       label(51, 724, 146, 400, 33, "Thickness ladder / 40px font at 1×", 23, white);
       const std::array<float, 6> thicknesses{0, 2, 4, 6, 8, 10};

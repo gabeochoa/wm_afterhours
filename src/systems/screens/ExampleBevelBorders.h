@@ -66,7 +66,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 84)
+    div(context, mk(root.ent()), box(left, 24, 1144, 84)
         .with_custom_background({36, 45, 62, 255}).with_corner_radius(12 * s));
     label("Bevel borders", 20, 31, 1104, 42, 34, text);
     label(fmt::format("Outer squares: {:.0f} x {:.0f}px. Select one to inspect its edge layers below.", 100 * s, 100 * s),
@@ -126,7 +126,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     label("Raised", 24, 307, 110, 32, 23, text, "row_label_0");
     label("Sunken", 24, 427, 110, 32, 23, text, "row_label_1");
     label("0px = flat", 143, 377, 116, 20, 15, muted);
-    div(context, mk(root.ent(), id++), box(left + 1072, 276, 66, 220)
+    div(context, mk(root.ent()), box(left + 1072, 276, 66, 220)
         .with_ignore_pointer_events().with_on_draw_fg([s, line](RectangleType r) {
           const float x = r.x;
           raylib::DrawLineEx({x, r.y}, {x, r.y + 6.f}, s, line);
@@ -139,10 +139,10 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     label("6px", 1083, 271, 54, 25, 17, text);
     label("Invert", 1064, 379, 74, 24, 16, muted);
 
-    div(context, mk(root.ent(), id++), box(left, 524, 274, 170)
+    div(context, mk(root.ent()), box(left, 524, 274, 170)
         .with_custom_background({36, 45, 62, 255}).with_corner_radius(12 * s));
     label("1px corner, enlarged", 16, 533, 244, 29, 22, text);
-    div(context, mk(root.ent(), id++), box(left + 20, 578, 84, 84)
+    div(context, mk(root.ent()), box(left + 20, 578, 84, 84)
         .with_custom_background(panel).with_ignore_pointer_events()
         .with_on_draw_fg([color = light_edge](RectangleType r) {
           const float pixel = r.width / 12.f;
@@ -152,7 +152,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     label("Top + left", 120, 578, 144, 24, 19, text);
     label("1 outer layer", 120, 609, 144, 24, 18, muted);
     label("Raised corner", 120, 642, 144, 24, 18, muted);
-    div(context, mk(root.ent(), id++), box(left + 290, 524, 854, 170)
+    div(context, mk(root.ent()), box(left + 290, 524, 854, 170)
         .with_custom_background({36, 45, 62, 255}).with_corner_radius(12 * s));
     const bool raised = selected_style == BevelStyle::Raised;
     label(fmt::format("Selected: {} / {}px / {:.0f}px interior", raised ? "raised" : "sunken",
@@ -161,7 +161,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     label("Top / left", 310, 572, 140, 24, 18, muted);
     label("Face", 693, 572, 96, 24, 18, muted);
     label("Bottom / right", 948, 572, 180, 24, 18, muted);
-    div(context, mk(root.ent(), id++), box(left + 466, 602, 500, 34)
+    div(context, mk(root.ent()), box(left + 466, 602, 500, 34)
         .with_custom_background(panel).with_ignore_pointer_events()
         .with_on_draw_fg([s, raised, count = selected_thickness, face = panel,
                           highlight = light_edge, shadow = dark_edge](RectangleType r) {

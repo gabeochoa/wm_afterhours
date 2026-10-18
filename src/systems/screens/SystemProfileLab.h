@@ -67,7 +67,7 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     label(6, 0, 234, 1144, 50, "Build with AFTERHOURS_ENABLE_PROFILING=1 to collect timings.", 23, muted);
     return;
 #else
-    div(context, mk(root.ent(), 20), box(0, 496, 1144, 212).with_custom_background(panel).with_corner_radius(8 * scale));
+    div(context, mk(root.ent()), box(0, 496, 1144, 212).with_custom_background(panel).with_corner_radius(8 * scale));
     auto &fonts = *afterhours::EntityHelper::get_singleton_cmp<FontManager>();
     const auto previous_font = fonts.active_font;
     fonts.set_active("AtkinsonMock");
@@ -75,7 +75,7 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     options.font_size = 18 * scale;
     options.max_rows = 5;
     options.refresh_hz = 0;
-    auto native_pair = mk(root.ent(), 21);
+    auto native_pair = mk(root.ent());
     profiler_panel(context, native_pair, collector, state, options, box(0, 126, 1144, 582));
     fonts.set_active(previous_font);
     auto &native = deref(native_pair).first;
@@ -126,7 +126,7 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     }
     const auto &snapshot = state.snapshot;
     const bool sampled = !snapshot.frame_ms.empty();
-    div(context, mk(root.ent(), 22), box(212, 126, 112, 44).with_custom_background(collector.recording() ? afterhours::Color{28, 85, 64, 255} : field)
+    div(context, mk(root.ent()), box(212, 126, 112, 44).with_custom_background(collector.recording() ? afterhours::Color{28, 85, 64, 255} : field)
         .with_corner_radius(6 * scale));
     label(23, 216, 133, 104, 29, collector.recording() ? "Recording" : "Stopped", 18, ink, "spl_state", true);
     const std::array<std::string, 7> names{"FPS", "Avg / frame", "p50 / ms", "p95 / ms", "p99 / ms", "Process CPU", "Resident memory"};

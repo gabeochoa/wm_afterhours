@@ -47,15 +47,15 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 98)
+    div(context, mk(root.ent()), box(0, 24, 1144, 98)
         .with_custom_background({30, 42, 60, 255}).with_corner_radius(12 * scale));
     label(1, "Grid layout", 20, 34, 800, 44, 34, ink, "gl_title");
     label(2, "Declare tracks once. Every row shares the same column boundaries.", 20, 83, 1104, 28, 21, muted);
-    if (button(context, mk(root.ent(), 3), box(864, 43, 260, 40)
+    if (button(context, mk(root.ent()), box(864, 43, 260, 40)
         .with_label("Swap text lengths").with_font("AtkinsonMock", pixels(22 * scale))
         .with_custom_background({48, 69, 99, 255}).with_custom_text_color(ink)
         .with_corner_radius(7 * scale).with_debug_name("gl_swap"))) swap_lengths = !swap_lengths;
-    div(context, mk(root.ent(), 4), box(0, 140, 1144, 224)
+    div(context, mk(root.ent()), box(0, 140, 1144, 224)
         .with_custom_background({25, 34, 49, 255}).with_corner_radius(10 * scale));
     label(5, "Example 1 / equal columns, ragged text", 20, 150, 1104, 32, 25, ink, "gl_cap1");
     label(6, "Equal 1fr tracks / " + std::to_string(static_cast<int>(std::lround(1104 * scale))) + "px total / '-' is an empty-value fixture", 20, 187, 1104, 24, 20, muted);
@@ -64,7 +64,7 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
         {"1", "a", "maintainer of everything", "-"},
         {"2", "a much longer name", "dev", "sometimes"},
     };
-    auto t1 = grid(context, mk(root.ent(), 7), GridConfig{}
+    auto t1 = grid(context, mk(root.ent()), GridConfig{}
         .with_rows(3).with_cols(4).with_row_height(pixels(44 * scale))
         .with_cell_border(BorderWeight::Thin, line),
         box(20, 218, 1104, 1).with_size({pixels(1104 * scale), children()})
@@ -124,7 +124,7 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
       }
     }
     label(16, "Border inspection / Medium requests 2px", 608, 440, 516, 30, 22, ink);
-    auto detail = grid(context, mk(root.ent(), 17), GridConfig{}
+    auto detail = grid(context, mk(root.ent()), GridConfig{}
         .with_rows(1).with_cols(1).with_row_height(pixels(88 * scale))
         .with_cell_border(BorderWeight::Medium, outer_line),
         box(608, 483, 190, 1).with_size({pixels(190 * scale), children()}).with_debug_name("gl_border_detail"));
@@ -132,7 +132,7 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
         .with_label("Native cell").with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(ink)
         .with_custom_background(zebra).with_corner_radius(0).with_text_inset(0, 0));
     detail_cell.ent().get<HasLabel>().text_x_offset = 12 * scale;
-    div(context, mk(root.ent(), 18), box(824, 483, 300, 88)
+    div(context, mk(root.ent()), box(824, 483, 300, 88)
         .with_ignore_pointer_events().with_on_draw_fg([scale, outer_line, zebra](RectangleType r) {
           afterhours::draw_rectangle(r, outer_line);
           afterhours::draw_rectangle({r.x + 16 * scale, r.y + 16 * scale,

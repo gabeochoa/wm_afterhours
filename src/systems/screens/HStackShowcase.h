@@ -43,10 +43,10 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_corner_radius(0).with_skip_grid_snap(true);
     };
     // Full-screen root
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("bg"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1160, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1160, 720)
         .with_absolute_position(left, top).with_debug_name("root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size = 18.f, bool strong = false) {
@@ -74,7 +74,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       label(root.ent(), 10, "Equal-width children", 0, 174, 1160, 31, 26, true);
       label(root.ent(), 11, "Each child takes 30% of content width. SpaceAround distributes the remaining width; explicit gap is 0.",
             0, 210, 1160, 27, 19);
-      auto row1 = hstack(context, mk(root.ent(), 12), box(0, 246, 1160, 88)
+      auto row1 = hstack(context, mk(root.ent()), box(0, 246, 1160, 88)
           .with_custom_background(panel_bg).with_padding(Padding::all(pixels(16 * s)))
           .with_align_items(AlignItems::Center).with_justify_content(JustifyContent::SpaceAround)
           .with_debug_name("basic_row"));
@@ -187,7 +187,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     // Card row
     label(root.ent(), 84, "Four equal cards", 760, 380, 400, 31, 25, true);
     label(root.ent(), 85, "Each 22% wide / SpaceAround / gap 0", 760, 415, 400, 25, 17);
-    auto cards = hstack(context, mk(root.ent(), 86), box(760, 452, 400, 64)
+    auto cards = hstack(context, mk(root.ent()), box(760, 452, 400, 64)
         .with_justify_content(JustifyContent::SpaceAround).with_align_items(AlignItems::Center).with_debug_name("cards"));
     const std::array<afterhours::Color, 4> card_colors{teal, green, orange, purple};
     for (int i = 0; i < 4; ++i)
@@ -199,7 +199,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     // == Row 4: Dashboard cards spanning full width ==
     label(root.ent(), 90, "Six expanding cards", 0, 553, 1160, 31, 25, true);
     label(root.ent(), 91, "expand() divides remaining width equally / five fixed 40px gaps / card width 160px at 720p", 0, 590, 1160, 26, 18);
-    auto dashboard = hstack(context, mk(root.ent(), 92), box(0, 628, 1160, 60)
+    auto dashboard = hstack(context, mk(root.ent()), box(0, 628, 1160, 60)
         .with_gap(pixels(40 * s)).with_align_items(AlignItems::Center).with_debug_name("dashboard"));
     const std::array<afterhours::Color, 6> dash_colors{blue, pink, green, orange, purple, teal};
     const std::array<const char *, 6> names{"Users", "Revenue", "Orders", "Growth", "Active", "Churn"};

@@ -86,7 +86,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Full-screen root
     auto root =
-        vstack(context, mk(entity, 0),
+        vstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                    .with_background(Theme::Usage::Background)
@@ -98,7 +98,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("abs_root"));
 
     // Title
-    div(context, mk(root.ent(), 0),
+    div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("Absolute Positioning")
             .with_custom_text_color(ink)
@@ -109,7 +109,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // -- Section 1: Translate positioning (correct pattern) --
     auto section1 = vstack(
-        context, mk(root.ent(), 1),
+        context, mk(root.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(136.f * scale)})
             .with_custom_background(panel_bg)
@@ -126,7 +126,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // A container with a relatively-positioned child and an absolute child
     auto s1_container =
-        div(context, mk(section1.ent(), 1),
+        div(context, mk(section1.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(66.f * scale)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
@@ -135,7 +135,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("s1_container"));
 
     // Absolute box positioned via translate
-    if (button(context, mk(s1_container.ent(), 0),
+    if (button(context, mk(s1_container.ent()),
                ComponentConfig{}
                    .with_label("(100,10)")
                    .with_size(ComponentSize{pixels(160.f * scale),
@@ -150,7 +150,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     "reference pixels.";
 
     // Another absolute box further right
-    if (button(context, mk(s1_container.ent(), 1),
+    if (button(context, mk(s1_container.ent()),
                ComponentConfig{}
                    .with_label("(300,10)")
                    .with_size(ComponentSize{pixels(160.f * scale),
@@ -165,7 +165,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     "reference pixels.";
 
     auto translate_ruler =
-        div(context, mk(section1.ent(), 2),
+        div(context, mk(section1.ent()),
             ComponentConfig{}.with_size({percent(1.f), pixels(22.f * scale)}));
     for (const int x : {0, 100, 300}) {
       line(s1_container.ent(), 100 + x, static_cast<float>(x) * scale, 0.f,
@@ -181,7 +181,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     line(s1_container.ent(), 500, 12.f * scale, 0.f, scale, 10.f * scale);
     line(s1_container.ent(), 501, 8.f * scale, 10.f * scale, 9.f * scale,
          scale);
-    div(context, mk(s1_container.ent(), 502),
+    div(context, mk(s1_container.ent()),
         ComponentConfig{}
             .with_label("y=10")
             .with_size({pixels(64.f * scale), pixels(22.f * scale)})
@@ -191,7 +191,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // -- Section 2: Corner pinning --
     auto section2 =
-        div(context, mk(root.ent(), 2),
+        div(context, mk(root.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(184.f * scale)})
                 .with_custom_background(panel_bg)
@@ -212,7 +212,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     const float corner_h = 112.f * scale;
 
     auto corner_area =
-        div(context, mk(section2.ent(), 1),
+        div(context, mk(section2.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(corner_w), pixels(corner_h)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
@@ -221,7 +221,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("corner_area"));
 
     // Top-left
-    if (button(context, mk(corner_area.ent(), 0),
+    if (button(context, mk(corner_area.ent()),
                ComponentConfig{}
                    .with_label("TL")
                    .with_size(ComponentSize{pixels(44.f * scale),
@@ -235,7 +235,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     "outlined container.";
 
     // Top-right
-    if (button(context, mk(corner_area.ent(), 1),
+    if (button(context, mk(corner_area.ent()),
                ComponentConfig{}
                    .with_label("TR")
                    .with_size(ComponentSize{pixels(44.f * scale),
@@ -249,7 +249,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     "outlined container.";
 
     // Bottom-left
-    if (button(context, mk(corner_area.ent(), 2),
+    if (button(context, mk(corner_area.ent()),
                ComponentConfig{}
                    .with_label("BL")
                    .with_size(ComponentSize{pixels(44.f * scale),
@@ -263,7 +263,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     "outlined container.";
 
     // Bottom-right
-    if (button(context, mk(corner_area.ent(), 3),
+    if (button(context, mk(corner_area.ent()),
                ComponentConfig{}
                    .with_label("BR")
                    .with_size(ComponentSize{pixels(44.f * scale),
@@ -287,7 +287,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // -- Section 3: Mixed absolute + flow --
     auto section3 = vstack(
-        context, mk(root.ent(), 3),
+        context, mk(root.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(132.f * scale)})
             .with_custom_background(panel_bg)
@@ -303,7 +303,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             "Flow and overlays: the badge does not reserve layout space");
 
     auto mixed_container = hstack(
-        context, mk(section3.ent(), 1),
+        context, mk(section3.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(60.f * scale)})
             .with_custom_background(afterhours::Color{30, 36, 50, 255})
@@ -338,7 +338,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Absolute badge overlaid in top-right corner
-    div(context, mk(mixed_container.ent(), 10),
+    div(context, mk(mixed_container.ent()),
         ComponentConfig{}
             .with_label("BADGE")
             .with_size(
@@ -363,7 +363,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // -- Section 4: screen_pct sizing --
     auto section4 = vstack(
-        context, mk(root.ent(), 4),
+        context, mk(root.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(132.f * scale)})
             .with_custom_background(panel_bg)
@@ -379,7 +379,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             fmt::format("Screen percentages: viewport width {:.0f} px", sw));
 
     auto s4_container =
-        div(context, mk(section4.ent(), 1),
+        div(context, mk(section4.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(60.f * scale)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
@@ -389,7 +389,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // A box sized as 30% of screen width, 8% of screen height
     auto percentage_0 =
-        div(context, mk(s4_container.ent(), 0),
+        div(context, mk(s4_container.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.3f), screen_pct(0.08f)})
                 .with_custom_background(green)
@@ -399,7 +399,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                                       .right = pixels(12.f * scale)})
                 .with_absolute_position(0.f, 0.f)
                 .with_debug_name("abs_screen_pct"));
-    div(context, mk(percentage_0.ent(), 0),
+    div(context, mk(percentage_0.ent()),
         ComponentConfig{}
             .with_label("30% x 8% of screen")
             .with_size({percent(1.f), percent(1.f)})
@@ -408,7 +408,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Another box at a different position
     auto percentage_1 =
-        div(context, mk(s4_container.ent(), 1),
+        div(context, mk(s4_container.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.2f), screen_pct(0.08f)})
                 .with_custom_background(orange)
@@ -418,14 +418,14 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                                       .right = pixels(12.f * scale)})
                 .with_absolute_position(sw * .3f + 20.f * scale, 0.f)
                 .with_debug_name("abs_screen_pct_2"));
-    div(context, mk(percentage_1.ent(), 0),
+    div(context, mk(percentage_1.ent()),
         ComponentConfig{}
             .with_label("20% x 8% of screen")
             .with_size({percent(1.f), percent(1.f)})
             .with_font("AtkinsonMock", pixels(22.f * scale))
             .with_custom_text_color(afterhours::Color{10, 20, 30, 255}));
     auto percentage_ruler =
-        hstack(context, mk(section4.ent(), 2),
+        hstack(context, mk(section4.ent()),
                ComponentConfig{}
                    .with_size({percent(1.f), pixels(24.f * scale)})
                    .with_no_wrap()
@@ -436,7 +436,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
                     sw * .3f, sw * .2f, sh * .08f),
         24.f, "percentage_dimensions", pixels(560.f * scale));
     auto viewport_scale =
-        div(context, mk(percentage_ruler.ent(), 1),
+        div(context, mk(percentage_ruler.ent()),
             ComponentConfig{}.with_size({expand(), pixels(24.f * scale)}));
     line(viewport_scale.ent(), 0, 0.f, 20.f * scale, well_width - 560.f * scale,
          scale);

@@ -94,13 +94,13 @@ struct CommandPickerDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> 
     };
     label(1, "Command picker", 0, 32, 1184, 34, text);
     label(2, "Search by name or category. Try grn, counter, or zoom.", 0, 84, 1184, 20, muted);
-    afterhours::command_picker::panel(ctx, mk(entity, 3), commands, picker, ComponentConfig{}
+    afterhours::command_picker::panel(ctx, mk(entity), commands, picker, ComponentConfig{}
         .with_absolute_position(left, 148.f * scale)
         .with_size({pixels(824.f * scale), pixels(488.f * scale)})
         .with_padding(Padding::all(pixels(16.f * scale)))
         .with_font("AtkinsonMock", pixels(18.f * scale))
         .with_custom_background(surface).with_corner_radius(12.f * scale));
-    div(ctx, mk(entity, 4), ComponentConfig{}
+    div(ctx, mk(entity), ComponentConfig{}
         .with_absolute_position(left + 848.f * scale, 148.f * scale)
         .with_size({pixels(336.f * scale), pixels(488.f * scale)})
         .with_custom_background(surface).with_corner_radius(12.f * scale));
@@ -124,7 +124,7 @@ struct CommandPickerDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> 
       }
     }
     const float tile = 64.f * static_cast<float>(zoom) / 100.f;
-    div(ctx, mk(entity, 10), ComponentConfig{}
+    div(ctx, mk(entity), ComponentConfig{}
         .with_absolute_position(left + (1016.f - tile / 2.f) * scale, (490.f - tile / 2.f) * scale)
         .with_size({pixels(tile * scale), pixels(tile * scale)})
         .with_custom_background(highlight).with_corner_radius(8.f * scale));

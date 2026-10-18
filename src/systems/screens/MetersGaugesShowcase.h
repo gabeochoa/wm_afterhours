@@ -134,11 +134,11 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     label(55, "Circular companion", 860, 242, 264, 28, 21, ink);
     label(56, "0-100-0% / 6s loop", 860, 275, 264, 25, 20, muted);
     label(57, "3 seconds each way", 860, 305, 264, 25, 20, muted);
-    if (button(context, mk(root.ent(), 58), box(860, 337, 126, 32)
+    if (button(context, mk(root.ent()), box(860, 337, 126, 32)
         .with_label(anim_paused ? "Resume" : "Pause").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background({47, 72, 103, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * scale).with_debug_name("mg_pause"))) anim_paused = !anim_paused;
-    if (button(context, mk(root.ent(), 59), box(998, 337, 126, 32)
+    if (button(context, mk(root.ent()), box(998, 337, 126, 32)
         .with_label("Restart").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background({47, 72, 103, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * scale).with_debug_name("mg_restart"))) {

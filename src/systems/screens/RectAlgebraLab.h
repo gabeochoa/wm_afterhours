@@ -31,10 +31,10 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color orange{245, 183, 111, 255};
     const afterhours::Color green{146, 219, 181, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ink).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(x0, y0).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("ral_root"));
@@ -59,7 +59,7 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     text(6, "Inspector", 496, 155, 130, 27, 18, blue);
     text(7, "Header / cut_top 22 px", 672, 155, 380, 27, 18, blue);
     // ---- Tiling, the way a WM does it -------------------------------------
-    div(context, mk(root.ent(), 10), box(32, 190, 596, 280)
+    div(context, mk(root.ent()), box(32, 190, 596, 280)
         .with_custom_background(afterhours::Color{24, 27, 36, 255})
             .with_on_draw_fg([](RectangleType rr) {
               namespace r = afterhours::rect;
@@ -93,7 +93,7 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
             })
         .with_debug_name("ral_tiling"));
     // ---- The report's repro ------------------------------------------------
-    div(context, mk(root.ent(), 11), box(652, 190, 596, 280)
+    div(context, mk(root.ent()), box(652, 190, 596, 280)
         .with_custom_background(afterhours::Color{24, 27, 36, 255})
             .with_on_draw_fg([guides = center_guides](RectangleType rr) {
               namespace r = afterhours::rect;
@@ -143,7 +143,7 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     text(33, "4  Hit target / expand 12 px = 88 × 60 px", 652, 582, 596, 28, 20, orange);
     text(34, "5  align_top / bottom / left / right", 652, 614, 596, 28, 20, green);
     text(35, "All operation values are screen px.", 652, 658, 380, 28, 18, muted);
-    if (button(context, mk(root.ent(), 40), box(1032, 656, 216, 36)
+    if (button(context, mk(root.ent()), box(1032, 656, 216, 36)
         .with_label(center_guides ? "Center guides: on" : "Center guides: off")
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background(purple)
         .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("ral_guides")))

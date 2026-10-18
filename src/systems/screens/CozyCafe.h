@@ -148,7 +148,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     // ========== BACKGROUND AND PAPER BOARD ==========
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size({pixels(screen_w), pixels(screen_h)})
             .with_corner_radius(0)
@@ -158,7 +158,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_background(Theme::Usage::None)
             .with_debug_name("cafe_background"));
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         box(116, 15, 1048, 690, paper_surface, 38)
             .with_soft_shadow(0, 6 * scale, 0, {110, 83, 52, 45})
             .with_on_draw_fg(outline(38, 4, {107, 78, 52, 255}))
@@ -171,11 +171,11 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     label(10, "Blossom Cafe", 188, 41, 428, 60, 52, dark_text,
           "cafe_title", "GaeguMock");
     // Gold pill background
-    div(context, mk(entity, 20),
+    div(context, mk(entity),
         box(663, 43, 207, 56, {255, 247, 222, 255}, 16)
             .with_on_draw_fg(outline(16, 2, brown_border))
             .with_debug_name("gold_pill"));
-    div(context, mk(entity, 22),
+    div(context, mk(entity),
         box(676, 57, 27, 27, {223, 174, 70, 255}, 13.5f)
             .with_label("G")
             .with_font("GaeguMock", px(18))
@@ -186,7 +186,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     label(21, std::to_string(gold_coins) + " coins", 705, 52, 158, 38,
           26, dark_text, "gold_text", "GaeguMock");
     // Rating box - widened to fit all content including numeric rating
-    div(context, mk(entity, 30),
+    div(context, mk(entity),
         box(883, 37, 252, 68, {255, 247, 222, 255}, 16)
             .with_on_draw_fg(outline(16, 2, brown_border))
             .with_debug_name("rating_box"));
@@ -206,20 +206,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== LEFT PANEL: Today's Specials ==========
     // Center content to better match square inspiration on widescreen
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         box(149, 125, 465, 390, panel_left, 36)
             .with_soft_shadow(4 * scale, 7 * scale, 0, {110, 83, 52, 55})
             .with_on_draw_fg(outline(36, 3, brown_border))
             .with_debug_name("specials_panel"));
     // Brown header
-    div(context, mk(entity, 101),
+    div(context, mk(entity),
         box(149, 133, 465, 60, {0, 0, 0, 0})
             .with_label("Today's Specials")
             .with_font("GaeguMock", px(43))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("specials_title"));
-    div(context, mk(entity, 102),
+    div(context, mk(entity),
         box(166, 203, 429, 292, {255, 249, 227, 255}, 22)
             .with_on_draw_fg(outline(22, 2, {158, 130, 91, 255}))
             .with_debug_name("specials_inner"));
@@ -331,7 +331,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center)
               .with_debug_name("patience_low"));
     }
-    if (button(context, mk(entity, 250),
+    if (button(context, mk(entity),
                box(709, 421, 355, 48,
                    waiting_customers.empty() ? panel_left : rose_btn, 20)
                    .with_label(waiting_customers.empty()
@@ -361,21 +361,21 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     label(303, "Music: " + std::to_string(static_cast<int>(
                                 std::round(music_volume * 100))) + "%",
           153, 536, 161, 35, 24, dark_text, "music_label", "GaeguMock");
-    slider(context, mk(entity, 300), music_volume,
+    slider(context, mk(entity), music_volume,
            box(320, 537, 373, 36, {0, 0, 0, 0}, 18)
                .with_debug_name("music_slider"),
            SliderHandleValueLabelPosition::None);
-    div(context, mk(entity, 301),
+    div(context, mk(entity),
         box(324, 548, 365, 14, {205, 186, 148, 255}, 7)
             .with_ignore_pointer_events()
             .with_debug_name("music_track"));
     if (music_volume > 0) {
-      div(context, mk(entity, 302),
+      div(context, mk(entity),
           box(324, 548, 365 * music_volume, 14, {104, 130, 82, 255}, 7)
               .with_ignore_pointer_events()
               .with_debug_name("music_fill"));
     }
-    div(context, mk(entity, 304),
+    div(context, mk(entity),
         box(320 + 345 * music_volume, 541, 28, 28, cream_surface, 14)
             .with_on_draw_fg(outline(14, 2.5f, brown_border))
             .with_ignore_pointer_events()
@@ -384,7 +384,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== CHAT BOX ==========
     label(399, "Guild chat", 154, 575, 250, 27, 24, dark_text,
           "guild_chat_title", "GaeguMock");
-    div(context, mk(entity, 400),
+    div(context, mk(entity),
         box(152, 605, 543, 78, chat_bg, 12)
             .with_on_draw_fg(outline(12, 2, brown_border))
             .with_debug_name("chat_box"));
@@ -481,7 +481,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_ignore_pointer_events());
     }
     bool tool_open = opened_tool >= 0;
-    auto tool_panel = popover(context, mk(entity, 600),
+    auto tool_panel = popover(context, mk(entity),
         {ax(152), ay(687), 543 * scale, 0}, tool_open,
         overlay::Placement::Above,
         ComponentConfig{}.with_size({px(543), px(112)})
@@ -490,7 +490,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("tool_details"));
     if (!tool_open) { opened_tool = -1; return; }
     const auto &tool = tools[opened_tool];
-    div(context, mk(tool_panel.ent(), 601),
+    div(context, mk(tool_panel.ent()),
         ComponentConfig{}.with_size({px(424), px(28)}).with_absolute_position(pixels(12 * scale), pixels(5 * scale)).with_transparent_bg()
             .with_label(std::string(tool.name) + " opened")
             .with_font("GaeguMock", px(27))
@@ -499,7 +499,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     const char *details[] = {"Pantry: stock check due\nStorage: shelf labels ready",
                               "Recipe notebook: try a lavender latte.",
                               "Your crafting station has no new notices."};
-    div(context, mk(tool_panel.ent(), 602),
+    div(context, mk(tool_panel.ent()),
         ComponentConfig{}.with_size({px(510), px(61)}).with_absolute_position(pixels(13 * scale), pixels(41 * scale)).with_transparent_bg()
             .with_label(details[opened_tool])
             .with_font("GaeguMock", px(18))

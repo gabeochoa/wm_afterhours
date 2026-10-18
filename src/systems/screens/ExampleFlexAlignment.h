@@ -35,10 +35,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_skip_grid_snap(true);
     };
     // Full screen root
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("bg"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1160, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1160, 720)
         .with_absolute_position(left, top).with_debug_name("root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size = 18.f,
@@ -53,7 +53,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     label(root.ent(), 1, "Within each set, only the layout rule changes. Dimensions use 720p design pixels.",
           0, 70, 1160, 27, 20);
     // Use tab_container for category selection
-    tab_container(context, mk(root.ent(), 2), category_labels, active_category,
+    tab_container(context, mk(root.ent()), category_labels, active_category,
         box(0, 111, 1160, 38).with_font("AtkinsonMock", pixels(20 * s))
             .with_alignment(TextAlignment::Center).with_debug_name("category_tabs"));
     const std::array<JustifyContent, 5> justify{JustifyContent::FlexStart, JustifyContent::FlexEnd,

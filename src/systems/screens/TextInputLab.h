@@ -50,10 +50,10 @@ struct TextInputLab : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color white{235, 240, 250, 255}, muted{176, 193, 217, 255};
     const afterhours::Color panel{28, 40, 58, 255}, accent{127, 218, 218, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * scale));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background({14, 21, 34, 255}).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true).with_debug_name("lab_root"));
     auto box = [&](float x, float y, float w, float h) {
@@ -71,14 +71,14 @@ struct TextInputLab : ScreenSystem<UIContext<InputAction>> {
     text(0, "Text input inspector", 48, 20, 1184, 44, 36, white, "lab_title", true);
     text(4, "Observe caret, selection and horizontal scrolling in native fields.", 48, 70, 1184, 28, 22, muted);
     text(5, "Selection and caret specimen", 48, 110, 560, 28, 23, white, "", true);
-    auto field = text_input(context, mk(root.ent(), 1), value, box(48, 148, 360, 40)
+    auto field = text_input(context, mk(root.ent()), value, box(48, 148, 360, 40)
         .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_background(panel)
         .with_border(muted, 1.f).with_debug_name("lab_input"));
-    bool reset = button(context, mk(root.ent(), 6), box(426, 148, 182, 40)
+    bool reset = button(context, mk(root.ent()), box(426, 148, 182, 40)
         .with_label("Reset fixture").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background(accent).with_custom_text_color({14, 21, 34, 255})
         .with_corner_radius(6 * scale).with_debug_name("lab_reset"));
-    const bool load_unicode = button(context, mk(root.ent(), 70), box(910, 148, 322, 40)
+    const bool load_unicode = button(context, mk(root.ent()), box(910, 148, 322, 40)
         .with_label("Primary: load café").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background(accent).with_custom_text_color({14, 21, 34, 255})
         .with_corner_radius(6 * scale).with_debug_name("lab_unicode"));
@@ -123,7 +123,7 @@ struct TextInputLab : ScreenSystem<UIContext<InputAction>> {
     previous_start = state.selection_start();
     previous_end = state.selection_end();
     previous_focus = state.is_focused;
-    div(context, mk(root.ent(), 7), box(48, 218, 560, 350).with_custom_background(panel).with_corner_radius(10 * scale));
+    div(context, mk(root.ent()), box(48, 218, 560, 350).with_custom_background(panel).with_corner_radius(10 * scale));
     text(8, "Inspector / primary field", 68, 232, 380, 32, 25, white, "", true);
     text(9, state.is_focused ? "Focused" : "Unfocused", 454, 235, 134, 27, 19, state.is_focused ? accent : muted, "lab_focus");
     const std::array<std::string, 6> labels{"Caret byte index", "Selection start byte", "Selection end byte", "Selected code points", "Horizontal scroll", "Text bytes / code points"};
@@ -142,7 +142,7 @@ struct TextInputLab : ScreenSystem<UIContext<InputAction>> {
     text(33, "A code point is not always a complete visible character.", 48, 657, 560, 26, 18, muted);
     // Text wider than the field. It must not paint outside the box.
     text(40, "Overflow specimen", 648, 110, 584, 28, 23, white, "lab_overflow_caption", true);
-    auto overflow = text_input(context, mk(root.ent(), 3), overflow_value, box(648, 148, 240, 40)
+    auto overflow = text_input(context, mk(root.ent()), overflow_value, box(648, 148, 240, 40)
         .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_background(panel)
         .with_border(muted, 1.f).with_debug_name("lab_overflow_input"));
     if (reset) {
@@ -155,7 +155,7 @@ struct TextInputLab : ScreenSystem<UIContext<InputAction>> {
     const float text_width = fonts ? afterhours::measure_text(fonts->get_font("AtkinsonMock"), overflow_value.c_str(), 20 * scale, 1.f).x : 0;
     text(43, fmt::format("Field {:.0f} px / full text {:.0f} px", overflow.cmp().rect().width, text_width), 648, 207, 584, 27, 19, muted, "lab_overflow_size");
     text(44, "Full source / overflow field", 648, 246, 584, 26, 19, accent);
-    text_area(context, mk(root.ent(), 45), overflow_value, box(648, 278, 584, 84)
+    text_area(context, mk(root.ent()), overflow_value, box(648, 278, 584, 84)
         .with_font("AtkinsonMock", pixels(18 * scale)).with_line_height(pixels(23 * scale))
         .with_custom_text_color(white).with_custom_background(panel).with_readonly()
         .with_word_wrap(true).with_debug_name("lab_overflow_source"));

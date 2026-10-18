@@ -28,7 +28,7 @@ struct MotionModalCheckpoint : ScreenSystem<UIContext<InputAction>> {
     };
     if (reopen_in > 0 && --reopen_in == 0) open = true;
 
-    div(context, mk(entity, 0), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
+    div(context, mk(entity), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({255, 245, 235, 255}).with_corner_radius(0).with_debug_name("bg"));
     const auto label = [&](int id, const std::string &text, float x, float y) {
       return div(context, mk(entity, id), box(x, y, 500, 30).with_label(text)
@@ -36,32 +36,32 @@ struct MotionModalCheckpoint : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
     };
     label(1, "Modal checkpoint: fade in, fade out, input blocked while leaving", 80, 60);
-    auto open_btn = button(context, mk(entity, 2), box(80, 140, 200, 56).with_label("Open").with_custom_background(coral)
+    auto open_btn = button(context, mk(entity), box(80, 140, 200, 56).with_label("Open").with_custom_background(coral)
                    .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink).with_corner_radius(12 * s)
                    .with_debug_name("open_btn"));
     if (open_btn) open = true;
-    auto bg_btn = button(context, mk(entity, 3), box(320, 140, 200, 56).with_label("Background").with_custom_background({170, 235, 200, 255})
+    auto bg_btn = button(context, mk(entity), box(320, 140, 200, 56).with_label("Background").with_custom_background({170, 235, 200, 255})
                    .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink).with_corner_radius(12 * s)
                    .with_debug_name("bg_btn"));
     if (bg_btn) ++bg_clicks;
 
-    auto dialog = afterhours::modal(context, mk(entity, 5), open,
+    auto dialog = afterhours::modal(context, mk(entity), open,
                                     afterhours::ModalConfig{}
                                         .with_title("Fading dialog")
                                         .with_size(h720(420), h720(220))
                                         .with_motion(motion::Spring::gentle(), motion::Timeline{.keys = {{0.f, 0.f}, {1.5f, 1.f}}}));
     if (dialog) {
-      if (button(context, mk(dialog.ent(), 1),
+      if (button(context, mk(dialog.ent()),
                  ComponentConfig{}.with_size({pixels(140 * s), pixels(44 * s)}).with_label("Inner")
                      .with_custom_background({200, 170, 220, 255}).with_font("AtkinsonMock", pixels(20 * s))
                      .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("inner_btn")))
         ++inner_clicks;
-      if (button(context, mk(dialog.ent(), 2),
+      if (button(context, mk(dialog.ent()),
                  ComponentConfig{}.with_size({pixels(140 * s), pixels(44 * s)}).with_label("Close")
                      .with_custom_background(coral).with_font("AtkinsonMock", pixels(20 * s))
                      .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("close_btn")))
         open = false;
-      if (button(context, mk(dialog.ent(), 3),
+      if (button(context, mk(dialog.ent()),
                  ComponentConfig{}.with_size({pixels(220 * s), pixels(44 * s)}).with_label("Close then reopen")
                      .with_custom_background({255, 215, 140, 255}).with_font("AtkinsonMock", pixels(20 * s))
                      .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("close_reopen_btn"))) {

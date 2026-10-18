@@ -202,12 +202,12 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     if (!tutorial_open && context.pressed(InputAction::MenuBack)) settings_open = false;
 
-    div(context, mk(entity, 1), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(night_mode ? night_edge : day_edge)
         .with_corner_radius(0).with_debug_name("mm_canvas"));
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
                 .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                         (context.screen_height - 720 * scale) / 2)
@@ -218,7 +218,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     if (!settings_open) {
       if (button(
-              context, mk(root.ent(), 1),
+              context, mk(root.ent()),
               box(scale, 510.f, 320.f, 260.f, 70.f)
                   .with_label("Open Settings")
                   .with_font("AtkinsonMock", pixels(33.f * scale))
@@ -234,7 +234,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    auto back = button(context, mk(root.ent(), 2), box(scale, 48, 40, 152, 48)
+    auto back = button(context, mk(root.ent()), box(scale, 48, 40, 152, 48)
         .with_label("Back").with_font("AtkinsonMock", pixels(26 * scale))
         .with_custom_text_color(ink).with_custom_background(night_mode ? night_road : day_road)
         .with_text_inset(40 * scale, 0).with_alignment(TextAlignment::Left)
@@ -346,7 +346,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             feedback = "Sensitivity " +
                        sensitivity[static_cast<size_t>(sensitivity_level)];
           });
-      div(context, mk(root.ent(), 140),
+      div(context, mk(root.ent()),
           box(scale, 472, 521, 716, 2)
               .with_custom_background(night_mode
                                           ? afterhours::Color{105, 128, 132, 255}
@@ -359,7 +359,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(152, "Keep pressed to draw or remove roads.", 472, 382, 550, 27, 19);
       text(153, "Controller pointer speed: Low / Default / High.", 472, 478, 716, 27, 19);
       text(154, "Compare the alternative colors in this preview.", 472, 584, 550, 27, 19);
-      div(context, mk(root.ent(), 155), box(scale, 1060, 596, 128, 22)
+      div(context, mk(root.ent()), box(scale, 1060, 596, 128, 22)
           .with_ignore_pointer_events().with_debug_name("mm_palette_preview")
           .with_on_draw_fg([this](RectangleType r) {
             const std::array<afterhours::Color, 3> palette = colorblind_mode
@@ -471,7 +471,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     text(800, "Mini Motorways / 10.2", 48, 658, 350, 36, 18);
-    auto tutorial = button(context, mk(root.ent(), 801), box(scale, 976, 654, 224, 48)
+    auto tutorial = button(context, mk(root.ent()), box(scale, 976, 654, 224, 48)
         .with_label("Tutorial guide").with_font("AtkinsonMock", pixels(24 * scale))
         .with_custom_background({59, 115, 118, 255}).with_custom_text_color({255, 255, 255, 255})
         .with_alignment(TextAlignment::Left).with_text_inset(18 * scale, 0)
@@ -484,7 +484,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       feedback.clear();
     }
     if (!feedback.empty() && !tutorial_open)
-      div(context, mk(root.ent(), 802), box(scale, 440, 658, 510, 36)
+      div(context, mk(root.ent()), box(scale, 440, 658, 510, 36)
           .with_label(feedback)
           .with_font(feedback == "Language " + languages[3] ? "Sazanami" : "AtkinsonMock",
                      pixels(18 * scale))
@@ -498,7 +498,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(canvas).with_border(ink, 4 * scale)
                 .with_debug_name("mm_tutorial_panel")));
     if (tutorial_panel) {
-      div(context, mk(tutorial_panel.ent(), 902),
+      div(context, mk(tutorial_panel.ent()),
           box(scale, 42.f, 30.f, 536.f, 65.f)
               .with_label("Build Your First Motorway")
               .with_font("AtkinsonMock", pixels(37.f * scale))
@@ -506,7 +506,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center)
               .with_text_inset(0.f, 0.f)
               .with_render_layer(42));
-      div(context, mk(tutorial_panel.ent(), 903),
+      div(context, mk(tutorial_panel.ent()),
           box(scale, 55.f, 107.f, 510.f, 155.f)
               .with_label("1. Drag between matching homes and destinations.\n"
                           "2. Hold to remove a road.\n"
@@ -516,7 +516,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_text_overflow(TextOverflow::Wrap)
               .with_text_inset(0.f, 0.f)
               .with_render_layer(42));
-      if (button(context, mk(tutorial_panel.ent(), 904),
+      if (button(context, mk(tutorial_panel.ent()),
                  box(scale, 215.f, 297.f, 190.f, 58.f)
                      .with_label("Got it")
                      .with_font("AtkinsonMock", pixels(27.f * scale))

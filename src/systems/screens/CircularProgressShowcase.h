@@ -72,7 +72,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
           box(left + x, y, diameter, diameter).with_custom_background(color)
           .with_border(track_dark, pixels(thickness * s)).with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 82)
+    div(context, mk(root.ent()), box(left, 24, 1144, 82)
         .with_custom_background(card_dark).with_corner_radius(12 * s));
     // Title
     label("Circular progress indicators", 20, 29, 1104, 42, 34, text_light);
@@ -158,7 +158,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             "stroke_label_" + std::to_string(i), true);
     }
 
-    div(context, mk(root.ent(), id++), box(left, 548, 780, 156)
+    div(context, mk(root.ent()), box(left, 548, 780, 156)
         .with_custom_background(card_dark).with_corner_radius(10 * s));
     label("MAIN / diameter / stroke / value", 12, 551, 370, 26, 18, text_light);
     label("SIZE / diameter / stroke / value", 406, 551, 362, 26, 18, text_light);
@@ -173,7 +173,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     label(fmt::format("Live phase: {:.2f}s / 3.33s", animated_progress / animation_speed),
           12, 674, 370, 24, 17, muted, "circular_live_phase");
-    div(context, mk(root.ent(), id++), box(left + 796, 540, 348, 164)
+    div(context, mk(root.ent()), box(left + 796, 540, 348, 164)
         .with_custom_background(card_dark).with_corner_radius(10 * s));
     label("Thin detail", 808, 553, 156, 29, 23, text_light);
     label("2x geometry", 808, 587, 156, 25, 19, muted);

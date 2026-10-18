@@ -40,7 +40,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     };
     label(0, 0, 24, 825, 45, "Text overflow", 35, ink);
     label(1, 0, 78, 1144, 32, "Native text rendering / gray specimen frames / observed renderer limits are labeled.", 22);
-    if (button(context, mk(root.ent(), 2), box(838, 27, 306, 44)
+    if (button(context, mk(root.ent()), box(838, 27, 306, 44)
         .with_label(comparison ? "Show original specimens" : "Compare overflow modes")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
         .with_custom_background(surface).with_corner_radius(6 * scale).with_debug_name("overflow_compare"))) comparison = !comparison;
@@ -49,7 +49,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 #else
     label(3, 0, 119, 264, 28, "Debug flag: OFF", 21, orange);
 #endif
-    div(context, mk(root.ent(), 4), box(289, 120, 26, 26).with_ignore_pointer_events()
+    div(context, mk(root.ent()), box(289, 120, 26, 26).with_ignore_pointer_events()
         .with_custom_background({255, 50, 50, 60}).with_border(afterhours::Color{255, 50, 50, 200}, 2));
     label(5, 326, 119, 818, 28, "Debug border key / the batched renderer currently omits this overlay.", 19);
     auto &fonts = *afterhours::EntityHelper::get_singleton_cmp<FontManager>();
@@ -69,13 +69,13 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     if (!comparison) {
       label(10, 0, 166, 552, 34, "Pass specimens / content fits", 26, green);
       label(11, 592, 166, 552, 34, "Constrained specimens / ellipsis enabled", 25, orange);
-      div(context, mk(root.ent(), 12), box(0, 210, 380, 100).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_1"));
+      div(context, mk(root.ent()), box(0, 210, 380, 100).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_1"));
       specimen(13, 10, 220, 360, 80, "This text fits perfectly", 22, TextOverflow::Ellipsis, "fit_large", "Gaegu-Bold");
       label(14, 0, 318, 552, 54, "F1 / Expected: fits\n" + measurements("This text fits perfectly", 360, 80, 22, "Gaegu-Bold"), 19);
-      div(context, mk(root.ent(), 15), box(0, 383, 380, 60).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_2"));
+      div(context, mk(root.ent()), box(0, 383, 380, 60).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_2"));
       specimen(16, 10, 388, 360, 50, "Short text", 20, TextOverflow::Ellipsis, "fit_short");
       label(17, 0, 451, 552, 54, "F2 / Expected: fits\n" + measurements("Short text", 360, 50, 20), 19);
-      div(context, mk(root.ent(), 18), box(0, 522, 52, 52).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_3"));
+      div(context, mk(root.ent()), box(0, 522, 52, 52).with_custom_background(surface).with_border(edge, 1).with_debug_name("card_ok_3"));
       specimen(19, 4, 526, 44, 44, "OK", 16, TextOverflow::Ellipsis, "fit_ok");
       label(20, 70, 526, 482, 56, "F3 / OK / 52 × 52px outer box at 1×\n" + measurements("OK", 44, 44, 16), 19);
       const std::array<std::string, 4> texts{"This is way too much text for this tiny container!", "Height is too small!", "No way this fits", "Long text in narrow space"};

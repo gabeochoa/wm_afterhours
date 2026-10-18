@@ -69,11 +69,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       return fmt::format("{} x {}px", std::lround(width * scale), std::lround(height * scale));
     };
     // Title
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 98)
+    div(context, mk(root.ent()), box(0, 24, 1144, 98)
         .with_custom_background({30, 42, 60, 255}).with_corner_radius(12 * scale));
     label(1, "Image & Sprite Components", 20, 34, 830, 44, 34, ink, "image_title");
     label(2, "One source, four uses. Inspect the image, its frame, and its behavior.", 20, 83, 1104, 28, 21, muted);
-    if (button(context, mk(root.ent(), 3), box(894, 42, 230, 42)
+    if (button(context, mk(root.ent()), box(894, 42, 230, 42)
         .with_label(show_bounds ? "Hide image bounds" : "Show image bounds")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
         .with_custom_background({49, 71, 100, 255}).with_corner_radius(7 * scale)
@@ -171,7 +171,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto light_image = box(844, 482, 64, 64)
         .with_ignore_pointer_events().with_debug_name("image_light_sprite");
     if (tint_images) light_image.with_image_tint({113, 190, 255, 128});
-    sprite(context, mk(root.ent(), 128), gear.texture, gear.source, light_image);
+    sprite(context, mk(root.ent()), gear.texture, gear.source, light_image);
     label(129, tint_images ? "Tint + 50% alpha" : "White + alpha", 920, 482, 204, 27, 21, ink);
     label(130, "Light checkerboard", 920, 516, 204, 25, 18, muted);
     // Row 4: Icon row demo with labels

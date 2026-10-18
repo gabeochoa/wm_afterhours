@@ -41,7 +41,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
     float dropdown_height = 50.0f;
     float start_x = (screen_width - dropdown_width) / 2.0f;
 
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Screen: dropdowns - Dropdown Test Screen")
             .with_size(
@@ -60,7 +60,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     float current_y = start_y;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Static Dropdown (1 option)")
             .with_size(ComponentSize{pixels(dropdown_width), pixels(30.0f)})
@@ -71,7 +71,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_1"));
 
     current_y += 35.0f;
-    dropdown(context, mk(entity, 10), static_1_options, static_1_index,
+    dropdown(context, mk(entity), static_1_options, static_1_index,
              ComponentConfig{}
                  .with_label("1 Option:")
                  .with_size(ComponentSize{pixels(dropdown_width),
@@ -82,7 +82,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += dropdown_height + 10.0f;
     auto button_1_result = button(
-        context, mk(entity, 20),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button Under 1-Option Dropdown (Clicks: " +
                         std::to_string(button_under_1_clicks) + ")")
@@ -101,7 +101,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += 80.0f;
 
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Static Dropdown (2 options)")
             .with_size(ComponentSize{pixels(dropdown_width), pixels(30.0f)})
@@ -112,7 +112,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_2"));
 
     current_y += 35.0f;
-    dropdown(context, mk(entity, 11), static_2_options, static_2_index,
+    dropdown(context, mk(entity), static_2_options, static_2_index,
              ComponentConfig{}
                  .with_label("2 Options:")
                  .with_size(ComponentSize{pixels(dropdown_width),
@@ -123,7 +123,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += dropdown_height + 10.0f;
     auto button_2_result = button(
-        context, mk(entity, 21),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button Under 2-Option Dropdown (Clicks: " +
                         std::to_string(button_under_2_clicks) + ")")
@@ -142,7 +142,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += 80.0f;
 
-    div(context, mk(entity, 3),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Static Dropdown (5 options)")
             .with_size(ComponentSize{pixels(dropdown_width), pixels(30.0f)})
@@ -153,7 +153,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_5"));
 
     current_y += 35.0f;
-    dropdown(context, mk(entity, 12), static_5_options, static_5_index,
+    dropdown(context, mk(entity), static_5_options, static_5_index,
              ComponentConfig{}
                  .with_label("5 Options:")
                  .with_size(ComponentSize{pixels(dropdown_width),
@@ -164,7 +164,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += dropdown_height + 10.0f;
     auto button_5_result = button(
-        context, mk(entity, 22),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button Under 5-Option Dropdown (Clicks: " +
                         std::to_string(button_under_5_clicks) + ")")
@@ -183,7 +183,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += 80.0f;
 
-    div(context, mk(entity, 4),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Dynamic Dropdown (changes every click)")
             .with_size(ComponentSize{pixels(dropdown_width), pixels(30.0f)})
@@ -195,7 +195,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += 35.0f;
     auto dropdown_dynamic_result =
-        dropdown(context, mk(entity, 13), dynamic_options, dynamic_index,
+        dropdown(context, mk(entity), dynamic_options, dynamic_index,
                  ComponentConfig{}
                      .with_label("Dynamic:")
                      .with_size(ComponentSize{pixels(dropdown_width),
@@ -214,7 +214,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
 
     current_y += dropdown_height + 10.0f;
     auto button_dynamic_result = button(
-        context, mk(entity, 23),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button Under Dynamic Dropdown (Clicks: " +
                         std::to_string(button_under_dynamic_clicks) + ")")
@@ -232,7 +232,7 @@ struct ExampleDropdowns : afterhours::System<UIContext<InputAction>> {
     }
 
     current_y += 80.0f;
-    div(context, mk(entity, 200),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Instructions: Open dropdowns and try clicking buttons "
                         "underneath to test click-through prevention")

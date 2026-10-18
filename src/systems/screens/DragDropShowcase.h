@@ -147,11 +147,11 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_corner_radius(0)
           .with_background(Theme::Usage::None).with_skip_grid_snap(true);
     };
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("bg"));
     // Root container
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1160, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1160, 720)
         .with_absolute_position(left, top).with_debug_name("drag_drop_root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float font_size = 18.f,
@@ -192,7 +192,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     const std::array<afterhours::Color, 3> accents{{{136, 173, 233, 255}, {238, 191, 116, 255}, {126, 209, 166, 255}}};
     const auto wheel = afterhours::input::get_mouse_wheel_move_v();
     // Columns container
-    auto columns = div(context, mk(root.ent(), 6), box(0, 142, 1160, 422).with_debug_name("columns_container"));
+    auto columns = div(context, mk(root.ent()), box(0, 142, 1160, 422).with_debug_name("columns_container"));
     for (int col = 0; col < 3; ++col) {
       const auto &items = column_data(col);
       const float x = col * 392.f;
@@ -266,7 +266,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
           fmt::format("Rows {}-{} of {}", first_visible[col] + 1, visible_end, items.size()),
           26, cue_y, items.empty() ? 322.f : 202.f, 22, 16, false, "visible_rows_" + std::to_string(col));
     }
-    div(context, mk(root.ent(), 7), box(0, 580, 1160, 76).with_custom_background(theme.surface).with_corner_radius(12 * s));
+    div(context, mk(root.ent()), box(0, 580, 1160, 76).with_custom_background(theme.surface).with_corner_radius(12 * s));
     label(root.ent(), 8, "Move task", 12, 585, 152, 26, 18, true);
     label(root.ent(), 13, fmt::format("Row {} of {}", selected_index + 1, column_data(selected_column).size()),
           152, 585, 132, 26, 16, false, "selected_position");

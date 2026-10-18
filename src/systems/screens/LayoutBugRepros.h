@@ -44,7 +44,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     int sh = Settings::get().get_screen_height();
 
     // Full-screen background
-    div(context, mk(entity, 0),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(sw), pixels(sh)})
             .with_custom_background(bg_dark)
@@ -86,7 +86,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     status(110, true, 520, 44);
 
     // Absolute parent: 300x80, colored cyan
-    auto r1_parent = div(context, mk(entity, 101),
+    auto r1_parent = div(context, mk(entity),
                          ComponentConfig{}
                              .with_size(ComponentSize{pixels(300), pixels(80)})
                              .with_absolute_position(sec1_x, sec1_y + 22.f)
@@ -94,7 +94,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                              .with_debug_name("r1_parent"));
 
     // Child with percent(1.0) width — should be 300px, bug = 1280px (overflows)
-    div(context, mk(r1_parent.ent(), 0),
+    div(context, mk(r1_parent.ent()),
         ComponentConfig{}
             .with_label("percent(1.0) child")
             .with_size(ComponentSize{percent(1.0f), pixels(60)})
@@ -121,7 +121,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     // Absolute parent, Row direction, 600px wide
     auto r2_parent =
-        hstack(context, mk(entity, 201),
+        hstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(600), pixels(80)})
                    .with_absolute_position(sec2_x, sec2_y + 22.f)
@@ -130,7 +130,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("r2_parent"));
 
     // Three children, each 100px wide, different colors
-    div(context, mk(r2_parent.ent(), 0),
+    div(context, mk(r2_parent.ent()),
         ComponentConfig{}
             .with_label("A")
             .with_size(ComponentSize{pixels(100), pixels(60)})
@@ -141,7 +141,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(10)})
             .with_debug_name("r2_A"));
 
-    div(context, mk(r2_parent.ent(), 1),
+    div(context, mk(r2_parent.ent()),
         ComponentConfig{}
             .with_label("B")
             .with_size(ComponentSize{pixels(100), pixels(60)})
@@ -152,7 +152,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(10)})
             .with_debug_name("r2_B"));
 
-    div(context, mk(r2_parent.ent(), 2),
+    div(context, mk(r2_parent.ent()),
         ComponentConfig{}
             .with_label("C")
             .with_size(ComponentSize{pixels(100), pixels(60)})
@@ -180,7 +180,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     float r3_py = sec3_y + 22.f;
 
     auto r3_parent =
-        vstack(context, mk(entity, 301),
+        vstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(300), pixels(100)})
                    .with_absolute_position(r3_px, r3_py)
@@ -190,7 +190,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("r3_parent"));
 
     // Two flow children
-    div(context, mk(r3_parent.ent(), 0),
+    div(context, mk(r3_parent.ent()),
         ComponentConfig{}
             .with_label("Child 1")
             .with_size(ComponentSize{pixels(280), pixels(35)})
@@ -201,7 +201,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(5), .left = pixels(10)})
             .with_debug_name("r3_child1"));
 
-    div(context, mk(r3_parent.ent(), 1),
+    div(context, mk(r3_parent.ent()),
         ComponentConfig{}
             .with_label("Child 2")
             .with_size(ComponentSize{pixels(280), pixels(35)})
@@ -213,7 +213,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("r3_child2"));
 
     // Crosshair marker at (0,0) — if children appear here, bug confirmed
-    div(context, mk(entity, 302),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("+")
             .with_size(ComponentSize{pixels(20), pixels(20)})
@@ -228,7 +228,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     text(303, "Expected: both flow children stay inside the yellow parent.", 20, 416, 680, 22, 17);
     text(8004, "Parent x400 / y312 screen px", 20, 343, 365, 24, 18);
     text(8005, "Children 280 x 35px / top margin 5px", 20, 375, 365, 24, 17);
-    div(context, mk(entity, 8006), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(370), pixels(2)}).with_absolute_position(20, 331)
         .with_custom_background({120, 132, 145, 255}).with_corner_radius(0).with_ignore_pointer_events());
 
@@ -242,7 +242,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     status(410, true, 520, 440);
 
     // First created (mk ID 5000): RED box
-    div(context, mk(entity, 5000),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("RED mk(5000)")
             .with_size(ComponentSize{pixels(200), pixels(70)})
@@ -254,7 +254,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("r4_red"));
 
     // Second created (mk ID 2000): BLUE box, overlapping
-    div(context, mk(entity, 2000),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("BLUE mk(2000)")
             .with_size(ComponentSize{pixels(200), pixels(70)})
@@ -279,7 +279,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     status(510, false, 520, 570);
 
     // Button with children() width — auto-sized to text content
-    auto auto_width = button(context, mk(entity, 501),
+    auto auto_width = button(context, mk(entity),
            ComponentConfig{}
                .with_label("Settings & Configuration")
                .with_size(ComponentSize{children(), pixels(40)})
@@ -292,7 +292,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("r5_auto"));
 
     // Reference button with manually specified width
-    auto fixed_width = button(context, mk(entity, 502),
+    auto fixed_width = button(context, mk(entity),
            ComponentConfig{}
                .with_label("Settings & Configuration")
                .with_size(ComponentSize{pixels(250), pixels(40)})
@@ -319,7 +319,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     status(610, false, 1090, 44);
 
     // Absolute parent for the tab_container
-    auto r6_parent = div(context, mk(entity, 601),
+    auto r6_parent = div(context, mk(entity),
                          ComponentConfig{}
                              .with_size(ComponentSize{pixels(500), pixels(60)})
                              .with_absolute_position(sec6_x, sec6_y + 22.f)
@@ -328,7 +328,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                              .with_debug_name("r6_parent"));
 
     std::vector<std::string> tab_labels = {"Tab A", "Tab B", "Tab C"};
-    tab_container(context, mk(r6_parent.ent(), 0), tab_labels, active_tab,
+    tab_container(context, mk(r6_parent.ent()), tab_labels, active_tab,
                   ComponentConfig{}
                       .with_size(ComponentSize{percent(1.0f), pixels(44)})
                       .with_no_wrap()
@@ -361,7 +361,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     // Use explicit pixel width (parent 450px - 2px border each side = 446px)
     // instead of percent(1.0f) to avoid expand() resolution issues
     // inside absolutely-positioned containers
-    toggle_switch(context, mk(r7_parent.ent(), 0), toggle_a,
+    toggle_switch(context, mk(r7_parent.ent()), toggle_a,
                   ComponentConfig{}
                       .with_label("Toggle A")
                       .with_size(ComponentSize{pixels(446), pixels(42)})
@@ -369,7 +369,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                       .with_margin(Margin{.bottom = pixels(4)})
                       .with_debug_name("r7_toggle_a"));
 
-    toggle_switch(context, mk(r7_parent.ent(), 1), toggle_b,
+    toggle_switch(context, mk(r7_parent.ent()), toggle_b,
                   ComponentConfig{}
                       .with_label("Toggle B")
                       .with_size(ComponentSize{pixels(446), pixels(42)})
@@ -377,7 +377,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                       .with_margin(Margin{.bottom = pixels(4)})
                       .with_debug_name("r7_toggle_b"));
 
-    toggle_switch(context, mk(r7_parent.ent(), 2), toggle_c,
+    toggle_switch(context, mk(r7_parent.ent()), toggle_c,
                   ComponentConfig{}
                       .with_label("Toggle C")
                       .with_size(ComponentSize{pixels(446), pixels(42)})
@@ -413,7 +413,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
         "Green = automatic width; blue = fixed width reference.",
         "Green = parent outline; yellow underline = selection.",
         "Green = parent outline; yellow = on, gray = off."};
-    auto inspector = div(context, mk(entity, 8100), ComponentConfig{}
+    auto inspector = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(530), pixels(330)}).with_absolute_position(720, 374)
         .with_custom_background({38, 44, 55, 255}).with_corner_radius(10)
         .with_debug_name("repro_inspector"));
@@ -467,7 +467,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
           }));
       text(8112, "Expected width match", 904, 642, 330, 26, 16);
     }
-    div(context, mk(entity, 8120), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(680), pixels(520)}).with_absolute_position(16, 180)
         .with_background(Theme::Usage::None).with_ignore_pointer_events()
         .with_on_draw_fg([auto_id = auto_width.ent().id, fixed_id = fixed_width.ent().id,

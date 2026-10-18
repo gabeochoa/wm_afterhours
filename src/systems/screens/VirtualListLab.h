@@ -33,10 +33,10 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color cyan{119, 220, 222, 255}, ink{15, 22, 35, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
     UIStylingDefaults::get().set_grid_snapping(false);
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ink).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("vl_root"));
@@ -65,10 +65,10 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
     if (preset(10, "Start", 696, "vl_start")) jump = 0;
     if (preset(11, "Middle", 790, "vl_middle")) jump = kCount / 2;
     if (preset(12, "End", 884, "vl_end")) jump = kCount - 1;
-    text_input(context, mk(root.ent(), 13), index_text, box(986, 15, 144, 34)
+    text_input(context, mk(root.ent()), index_text, box(986, 15, 144, 34)
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background({34, 46, 65, 255})
         .with_border(muted, 1.f).with_placeholder("0 to 9999").with_debug_name("vl_index"));
-    if (button(context, mk(root.ent(), 14), box(1140, 15, 88, 34).with_label("Jump")
+    if (button(context, mk(root.ent()), box(1140, 15, 88, 34).with_label("Jump")
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background(cyan)
         .with_custom_text_color(ink).with_corner_radius(5 * s).with_debug_name("vl_jump"))) {
       size_t requested = 0;
@@ -80,7 +80,7 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
     if (jump) jump_status = fmt::format("Jump requested: row {:05}", *jump);
     text(15, jump_status, 736, 56, 492, 24, 18, cyan, "vl_jump_status");
     size_t built_rows = 0;
-    auto list = virtual_list(context, mk(root.ent(), 2), kCount, kRowHeight,
+    auto list = virtual_list(context, mk(root.ent()), kCount, kRowHeight,
         [&](size_t i, afterhours::Entity &row) {
           ++built_rows;
           auto content = div(context, mk(row, 0), ComponentConfig{}

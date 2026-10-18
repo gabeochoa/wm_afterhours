@@ -69,10 +69,10 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 1), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1160 * s), pixels(672 * s)})
         .with_absolute_position((context.screen_width - 1160 * s) / 2,
                                 (context.screen_height - 672 * s) / 2)
@@ -87,7 +87,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     const auto &heading_font = theme.get_font_config(current_language);
     label(0, get_sample(current_language).title, 0, 0, 1160, 42, 28 * heading_font.size_scale, heading_font.font_name);
     label(1, "Resize the menu preview and compare translated labels with their action icons.", 0, 46, 1160, 28, 20);
-    if (button(context, mk(root.ent(), 90), box(928, 0, 232, 40)
+    if (button(context, mk(root.ent()), box(928, 0, 232, 40)
         .with_label(compact_preview ? "Widen preview" : "Narrow preview")
         .with_font("AtkinsonMock", pixels(18 * s))
         .with_background(Theme::Usage::Secondary)
@@ -120,10 +120,10 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     const auto sample = get_sample(current_language);
     const float preview_width = compact_preview ? 300.f : 444.f;
     const float control_width = preview_width - 40;
-    div(context, mk(root.ent(), 20), box(0, 158, preview_width, 422)
+    div(context, mk(root.ent()), box(0, 158, preview_width, 422)
         .with_background(Theme::Usage::Surface).with_corner_radius(12 * s)
         .with_debug_name("language_preview"));
-    div(context, mk(root.ent(), 21), box(464, 158, 696, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
+    div(context, mk(root.ent()), box(464, 158, 696, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
     label(22, std::string("Current language: ") + english_names[selected], 20, 176, control_width, 28, 19);
     label(23, sample.greeting, 20, 210, control_width, 54, 32 * font.size_scale, font.font_name);
     label(24, "Localized menu controls", 20, 276, control_width, 24, 17);

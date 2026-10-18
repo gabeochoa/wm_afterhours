@@ -127,7 +127,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
         "Input L", "Input R", "Send", "Return"};
     auto &ec = afterhours::EntityHelper::get_default_collection();
 
-    div(context, mk(entity, 100), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({16, 22, 32, 255}).with_corner_radius(0)
         .with_debug_name("ei_canvas"));
@@ -137,7 +137,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
          48, 73, 1184, 29, 20, muted, "ei_sub");
 
     // ---- device list -------------------------------------------------------
-    div(context, mk(entity, 2), box(48, 120, 344, 510)
+    div(context, mk(entity), box(48, 120, 344, 510)
         .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("ei_listpanel"));
     text(3, fmt::format("Devices / {}", nodes.size()), 64, 135, 312, 33,
@@ -251,7 +251,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
     const size_t collection_size = static_cast<size_t>(std::count_if(
         ec.get_entities().begin(), ec.get_entities().end(),
         [](const auto &value) { return static_cast<bool>(value); }));
-    div(context, mk(entity, 160), box(416, 478, 816, 152)
+    div(context, mk(entity), box(416, 478, 816, 152)
         .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("ei_metrics_panel"));
     text(161, "Lookup work / 6 device queries / not elapsed time", 432, 488,
@@ -277,7 +277,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
     text(174, "Entity checks / linear scale", 432, 603, 242, 22, 15, muted, "ei_scan_units");
     text(175, "Handle resolves / same scale", 698, 603, 242, 22, 15, muted, "ei_index_units");
     text(176, "Demo + app entities", 964, 603, 242, 22, 15, muted, "ei_collection_units");
-    div(context, mk(entity, 180), box(48, 648, 1184, 44)
+    div(context, mk(entity), box(48, 648, 1184, 44)
         .with_custom_background(results_match ? afterhours::Color{28, 57, 47, 255}
                                              : afterhours::Color{84, 41, 44, 255})
         .with_corner_radius(8 * s).with_debug_name("ei_result_banner"));

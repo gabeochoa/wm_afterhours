@@ -64,17 +64,17 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
     };
     // Background
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(screen_w), pixels(screen_h)}).with_custom_background(bg_dark).with_corner_radius(0)
         .with_debug_name("bg"));
-    div(context, mk(entity, 1), box(0, 24, 1112, 92).with_custom_background({36, 43, 57, 255})
+    div(context, mk(entity), box(0, 24, 1112, 92).with_custom_background({36, 43, 57, 255})
         .with_corner_radius(12 * s));
     // Title
-    div(context, mk(entity, 2), box(20, 34, 860, 40).with_label("Declarative animations")
+    div(context, mk(entity), box(20, 34, 860, 40).with_label("Declarative animations")
         .with_font("AtkinsonMock", pixels(32 * s)).with_custom_text_color(text_light).with_ignore_pointer_events());
     // Subtitle
     label("Each tile declares a trigger and the properties it animates.", 20, 78, 860, 20, muted);
-    const bool replay_entry = button(context, mk(entity, 3), box(872, 45, 220, 44)
+    const bool replay_entry = button(context, mk(entity), box(872, 45, 220, 44)
         .with_label("Replay entry").with_font("AtkinsonMock", pixels(22 * s))
         .with_custom_background({60, 103, 173, 255}).with_custom_text_color(text_light).with_corner_radius(8 * s)
         .with_debug_name("replay_entry"));
@@ -97,7 +97,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     float btn1_x = center_x - spacing * 1.5f - button_size / 2.0f;
 
     auto hover = button(
-        context, mk(entity, 10),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Hover scale").with_debug_name("decl_0")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -114,7 +114,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BUTTON 2: Click Scale ==========
     float btn2_x = center_x - spacing * 0.5f - button_size / 2.0f;
 
-    auto click = button(context, mk(entity, 20),
+    auto click = button(context, mk(entity),
                ComponentConfig{}
                    .with_label("Click to scale")
                    .with_size(
@@ -132,7 +132,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BUTTON 3: Both Hover + Click ==========
     float btn3_x = center_x + spacing * 0.5f - button_size / 2.0f;
 
-    auto both = button(context, mk(entity, 30),
+    auto both = button(context, mk(entity),
                ComponentConfig{}
                    .with_label("Hover + click")
                    .with_size(
@@ -151,7 +151,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BUTTON 4: Appear Animation ==========
     float btn4_x = center_x + spacing * 1.5f - button_size / 2.0f;
 
-    auto appear = div(context, mk(entity, 40),
+    auto appear = div(context, mk(entity),
         ComponentConfig{}
             .with_label("Appear").with_debug_name("decl_3")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -170,7 +170,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== Translate X on hover ==========
     auto slide = button(
-        context, mk(entity, 50),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Slide").with_debug_name("decl_4")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -185,7 +185,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== Bounce on hover ==========
     auto bounce = button(
-        context, mk(entity, 60),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Bounce").with_debug_name("decl_5")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -200,7 +200,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== Fade on hover ==========
     auto fade = button(
-        context, mk(entity, 70),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Fade").with_debug_name("decl_6")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -214,7 +214,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with(um::on_hover({.opacity = 0.6f}, ease_out(0.1f))));
 
     // ========== Loop animation ==========
-    auto pulse = div(context, mk(entity, 80),
+    auto pulse = div(context, mk(entity),
         ComponentConfig{}
             .with_label("Pulse").with_debug_name("decl_7")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -235,7 +235,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== Slide then Rotate (translate_x + rotate) ==========
     auto slide_rotate = button(
-        context, mk(entity, 110),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Slide + rotate").with_debug_name("decl_8")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -251,7 +251,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== Rotate then Slide (rotate + translate_x) ==========
     auto rotate_slide = button(
-        context, mk(entity, 120),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Rotate + slide").with_debug_name("decl_9")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -267,7 +267,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== All combined: scale + translate + rotate ==========
     auto combined = button(
-        context, mk(entity, 130),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Scale + lift + rotate").with_debug_name("decl_10")
             .with_size(ComponentSize{pixels(button_size), pixels(button_height)})
@@ -316,7 +316,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
     label("Purple: mixed / orange: auto", 858, 506, 242, 16, muted);
     label("Scale, translate, then rotate.", 858, 541, 242, 17, text_light);
     label("Numbers give declaration order.", 858, 565, 242, 16, muted);
-    div(context, mk(entity, 100), box(0, 636, 1112, 62).with_custom_background({36, 43, 57, 255}).with_corner_radius(8 * s));
+    div(context, mk(entity), box(0, 636, 1112, 62).with_custom_background({36, 43, 57, 255}).with_corner_radius(8 * s));
     label("Hover tile configuration", 16, 637, 1100, 18, muted);
     label(".with(um::on_hover({.scale = 1.2f}, Spring::from_freq_decay(10.0f, 6.0f)))", 16, 663, 1100, 23, text_light, true);
   }

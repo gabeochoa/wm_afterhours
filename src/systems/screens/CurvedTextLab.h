@@ -108,7 +108,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
     }
     const float span_deg = headline_width / r * RAD2DEG;
     const float start = -90.f - (cw ? span_deg : -span_deg) / 2.f + spin_deg;
-    div(context, mk(root.ent(), id++),
+    div(context, mk(root.ent()),
         box(60, 150, 760, 410).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_stage")
             .with_on_draw_fg([headline, arc_font, headline_size, r, start, cw, accent,
@@ -140,7 +140,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
           60, 576, 900, 16, true, "curved_grapheme_count");
     const float grapheme_size = 24.f * s;
     const auto demo_font = fonts->get_font("AtkinsonMockBold");
-    div(context, mk(root.ent(), id++),
+    div(context, mk(root.ent()),
         box(860, 492, 360, 150).with_background(Theme::Usage::None).with_ignore_pointer_events()
             .with_debug_name("curved_grapheme_stage")
             .with_on_draw_fg([graphemes, demo_font, grapheme_size, accent](RectangleType rect) {
@@ -171,7 +171,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
       std::vector<std::string> language_names;
       for (const Language &l : LANGUAGES)
         language_names.emplace_back(l.name);
-      dropdown(context, mk(root.ent(), id++), language_names, language,
+      dropdown(context, mk(root.ent()), language_names, language,
                box(880, 240, 320, 44).with_font("AtkinsonMock", pixels(19 * s))
                    .with_corner_radius(8 * s)
                    .with_custom_background(afterhours::Color{44, 54, 74, 255})
@@ -179,7 +179,7 @@ struct CurvedTextLab : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("curved_language"));
     }
     label(fmt::format("Arc size: {:.0f}", radius()), 880, 300, 320, 16, true);
-    slider(context, mk(root.ent(), id++), arcSlider,
+    slider(context, mk(root.ent()), arcSlider,
            box(880, 328, 320, 32).with_debug_name("curved_arc_size"));
     if (control(clockwise ? "Direction: clockwise" : "Direction: counter", 880, 376, 240,
                 "curved_direction"))

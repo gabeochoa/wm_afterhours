@@ -31,10 +31,10 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
     const auto panel_b = afterhours::Color{28, 34, 50, 255};
     const auto panel_c = afterhours::Color{18, 21, 32, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(panel_c).with_corner_radius(0));
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("sp_root"));
@@ -66,7 +66,7 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
 
     // The limits go to the widget so it pins mid drag; clamping after the call
     // let the bar overshoot and snap back on alternate frames.
-    auto [sidebar, vbar, content] = hsplit_pane(context, mk(root.ent(), 2), sidebar_ratio,
+    auto [sidebar, vbar, content] = hsplit_pane(context, mk(root.ent()), sidebar_ratio,
         box(48, 84, 1180, 560).with_custom_background(panel_c).with_debug_name("sp_outer"), 0.15f, 0.55f);
     // restyle carries colour but not roundness -- roundness only lands
     // alongside an explicit corner set, so it is not worth passing here.
@@ -76,7 +76,7 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
         };
     vbar.ent().get<UIComponentDebug>().set("sp_vertical_divider");
     sidebar.restyle(context, ComponentConfig{}.with_custom_background(panel_a));
-    auto [preview, hbar, details] = vsplit_pane(context, mk(content.ent(), 0), preview_ratio,
+    auto [preview, hbar, details] = vsplit_pane(context, mk(content.ent()), preview_ratio,
         ComponentConfig{}.with_debug_name("sp_inner"), 0.2f, 0.85f);
     hbar.restyle(context, ComponentConfig{}.with_custom_background(bar));
     hbar.ent().addComponentIfMissing<HasOnDraw>().fg = [white](RectangleType r) {

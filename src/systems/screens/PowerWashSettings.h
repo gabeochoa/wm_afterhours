@@ -287,28 +287,28 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
 
-    auto root = div(context, mk(entity, 0),
+    auto root = div(context, mk(entity),
                     ComponentConfig{}.with_size({pixels(screen_w), pixels(screen_h)}).with_corner_radius(0)
                         .with_on_draw_bg([](RectangleType r) { draw_scene(r); })
                         .with_debug_name("pw_root"));
 
-    div(context, mk(root.ent(), 9), box(scale, 44, 56, 1192, 604).with_ignore_pointer_events()
+    div(context, mk(root.ent()), box(scale, 44, 56, 1192, 604).with_ignore_pointer_events()
         .with_on_draw_bg([](RectangleType r) {
           for (int i = 0; i < 7; ++i) {
             const float inset = static_cast<float>(i) * r.width / 596;
             afterhours::draw_rectangle({r.x + inset, r.y + inset, r.width - 2 * inset, r.height - 2 * inset}, {10, 30, 48, 12});
           }
         }));
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         box(scale, 56, 62, 1168, 576)
             .with_on_draw_bg([](RectangleType r) { draw_tablet(r); })
             .with_debug_name("pw_tablet"));
-    div(context, mk(root.ent(), 11),
+    div(context, mk(root.ent()),
         box(scale, 63, 69, 1154, 54)
             .with_custom_background(deep)
             .with_border(afterhours::Color{39, 83, 135, 255}, 1.f)
             .with_debug_name("pw_header"));
-    if (button(context, mk(root.ent(), 12),
+    if (button(context, mk(root.ent()),
                box(scale, 63, 70, 36, 38)
                    .with_on_draw_fg([this, scale](RectangleType r) {
                      const float x = r.x + r.width / 2;
@@ -323,7 +323,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("pw_close"))) {
       close_settings();
     }
-    div(context, mk(root.ent(), 13),
+    div(context, mk(root.ent()),
         box(scale, 107, 73, 160, 31)
             .with_label("SETTINGS")
             .with_font("ArchivoMockBold", pixels(23.f * scale))
@@ -341,18 +341,18 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(14, 107, 102, 270, 20, category_names[active_tab] + " settings", 17, muted);
 
     if (!settings_open) {
-      div(context, mk(root.ent(), 700),
+      div(context, mk(root.ent()),
           box(scale, 444, 274, 392, 132)
               .with_custom_background(afterhours::Color{9, 47, 103, 245})
               .with_border(afterhours::Color{108, 155, 239, 255}, 2.f)
               .with_debug_name("pw_closed_panel"));
-      div(context, mk(root.ent(), 701),
+      div(context, mk(root.ent()),
           box(scale, 486, 298, 308, 36)
               .with_label("Settings closed")
               .with_font("ArchivoMockBold", pixels(28.f * scale))
               .with_custom_text_color(white)
               .with_alignment(TextAlignment::Center));
-      if (button(context, mk(root.ent(), 702),
+      if (button(context, mk(root.ent()),
                  box(scale, 535, 348, 210, 38)
                      .with_label("Reopen settings")
                      .with_custom_background(afterhours::Color{53, 107, 193, 255})
@@ -473,18 +473,18 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(405, 725, 510, 461, 45, status, 21, muted, false, "pw_status");
     label(403, 861, 555, 337, 21, "FUTURLAB / POWERWASH SIMULATOR", 18, afterhours::Color{143, 172, 205, 255});
 
-    div(context, mk(root.ent(), 500),
+    div(context, mk(root.ent()),
         box(scale, 64, 579, 1152, 47)
             .with_custom_background(afterhours::Color{9, 47, 103, 255})
             .with_debug_name("pw_tabs"));
-    div(context, mk(root.ent(), 501),
+    div(context, mk(root.ent()),
         box(scale, 74, 589, 17, 23)
             .with_label("A")
             .with_custom_background(white)
             .with_font("ArchivoMockBold", pixels(22.f * scale))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
-    div(context, mk(root.ent(), 502),
+    div(context, mk(root.ent()),
         box(scale, 1192, 589, 17, 23)
             .with_label("D")
             .with_custom_background(white)
@@ -512,7 +512,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    div(context, mk(root.ent(), 599), box(scale, 56, 655, 1168, 57).with_custom_background(deep));
+    div(context, mk(root.ent()), box(scale, 56, 655, 1168, 57).with_custom_background(deep));
     const auto action = [&](int id, float x, float w, const std::string &key, const std::string &caption, const std::string &name) {
       const float key_width = key == "Enter" ? 61.f : key == "Esc" ? 44.f : 30.f;
       auto result = button(context, mk(root.ent(), id), box(scale, x, 662, w, 43).with_debug_name(name));

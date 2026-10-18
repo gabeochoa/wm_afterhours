@@ -18,7 +18,7 @@ struct LayoutPatterns : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Adaptive;
 
     auto root =
-        vstack(context, mk(entity, 0),
+        vstack(context, mk(entity),
                ComponentConfig{}
                    .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                    .with_custom_background(afterhours::Color{30, 34, 44, 255})
@@ -30,7 +30,7 @@ struct LayoutPatterns : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("pattern_root"));
 
     // 416 inner width fits three 120px boxes + 12px gaps + 16px padding/side.
-    auto row = hstack(context, mk(root.ent(), 1),
+    auto row = hstack(context, mk(root.ent()),
                       ComponentConfig{}
                           .with_size(ComponentSize{pixels(416), pixels(112)})
                           .with_skip_grid_snap()
@@ -101,7 +101,7 @@ struct LayoutPatterns : ScreenSystem<UIContext<InputAction>> {
           504, 398, notes_width, 88, 22, muted);
     label(41, "Measured fixture above; annotations remain outside its bounds.",
           504, 500, notes_width, 66, 21, muted);
-    div(context, mk(annotations.ent(), 50), box(40, 193, 416, 20)
+    div(context, mk(annotations.ent()), box(40, 193, 416, 20)
         .with_on_draw_fg([muted](RectangleType r) {
           const auto bracket = [&](float x, float width) {
             afterhours::draw_line_ex({x, r.y + 10}, {x + width, r.y + 10}, 1, muted);

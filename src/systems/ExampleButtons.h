@@ -28,7 +28,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     float component_height = 60.0f;
     float start_x = (screen_width - component_width) / 2.0f;
 
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Screen: buttons - Button Test Screen")
             .with_size(ComponentSize{pixels(screen_width * 0.6f), pixels(40.0f)})
@@ -41,7 +41,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
 
     float current_y = start_y;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Individual Buttons")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -54,7 +54,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     current_y += 40.0f;
 
     auto button_1_result = button(
-        context, mk(entity, 10),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button 1 (Clicks: " + std::to_string(button_1_clicks) + ")")
             .with_size(ComponentSize{pixels(component_width), pixels(component_height)})
@@ -72,7 +72,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     current_y += spacing;
 
     auto button_2_result = button(
-        context, mk(entity, 11),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Button 2 (Clicks: " + std::to_string(button_2_clicks) + ")")
             .with_size(ComponentSize{pixels(component_width), pixels(component_height)})
@@ -90,7 +90,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     current_y += spacing;
 
     auto button_3_result = button(
-        context, mk(entity, 12),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Small Button")
             .with_size(ComponentSize{pixels(component_width * 0.5f), pixels(component_height * 0.7f)})
@@ -107,7 +107,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing + 20.0f;
 
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Button Group (Row)")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -122,7 +122,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     std::vector<std::string> button_group_labels = {"Option A", "Option B", "Option C"};
 
     auto button_group_result = button_group(
-        context, mk(entity, 20), button_group_labels,
+        context, mk(entity), button_group_labels,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(component_width), pixels(component_height)})
             .with_absolute_position()
@@ -145,7 +145,7 @@ struct ExampleButtons : afterhours::System<UIContext<InputAction>> {
     }
     status_text += " (Total clicks: " + std::to_string(button_group_clicks) + ")";
 
-    div(context, mk(entity, 200),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(status_text)
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})

@@ -22,9 +22,9 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_custom_background({248,250,252,255}).with_corner_radius(0));
-    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1080*s),pixels(672*s)})
+    auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1080*s),pixels(672*s)})
         .with_absolute_position((context.screen_width-1080*s)/2,(context.screen_height-672*s)/2)
         .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("separators_root"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
@@ -62,7 +62,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     label(29,"Long label / fixed 140 px gap / blue accent",32,568,456,26,17,true);
     label(30,"Mixed separator examples",592,106,456,34,25);
     label(31,"Static navigation / 3 x 40 px dividers",592,150,456,28,19,true);
-    div(context,mk(root.ent(),32),box(592,188,456,64).with_custom_background({248,250,252,255})
+    div(context,mk(root.ent()),box(592,188,456,64).with_custom_background({248,250,252,255})
         .with_corner_radius(8*s).with_debug_name("nav_bg"));
     const std::array<std::string,4> names{"Home","Settings","Profile","Help"};
     const std::array<afterhours::Color,3> nav_colors{muted,colors[1],colors[3]};
@@ -80,7 +80,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
       stroke(70+i,592,y+34,346,4,colors[i],"colorbar_"+std::array<std::string,4>{"Blue","Green","Purple","Orange"}[i]);
     }
     label(80,"Grouping example: Contact details   |   Delivery address",0,632,790,28,19,true);
-    if(button(context,mk(root.ent(),81),box(816,630,264,36).with_label(guides?"Width guides: on":"Width guides: off")
+    if(button(context,mk(root.ent()),box(816,630,264,36).with_label(guides?"Width guides: on":"Width guides: off")
         .with_font("AtkinsonMock",pixels(18*s)).with_custom_background({227,235,246,255})
         .with_custom_text_color(ink).with_corner_radius(8*s).with_debug_name("separator_guides"))) guides=!guides;
   }

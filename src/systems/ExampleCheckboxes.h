@@ -28,7 +28,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
     float component_height = 50.0f;
     float start_x = (screen_width - component_width) / 2.0f;
 
-    div(context, mk(entity, 100),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Screen: checkboxes - Checkbox Test Screen")
             .with_size(
@@ -42,7 +42,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     float current_y = start_y;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Individual Checkboxes")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -54,7 +54,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += 40.0f;
 
-    checkbox(context, mk(entity, 10), checkbox_1,
+    checkbox(context, mk(entity), checkbox_1,
              ComponentConfig{}
                  .with_label("Unchecked by default")
                  .with_size(ComponentSize{pixels(component_width),
@@ -65,7 +65,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    checkbox(context, mk(entity, 11), checkbox_2,
+    checkbox(context, mk(entity), checkbox_2,
              ComponentConfig{}
                  .with_label("Checked by default")
                  .with_size(ComponentSize{pixels(component_width),
@@ -76,7 +76,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    checkbox(context, mk(entity, 12), checkbox_3,
+    checkbox(context, mk(entity), checkbox_3,
              ComponentConfig{}
                  .with_label("Another checkbox")
                  .with_size(ComponentSize{pixels(component_width),
@@ -87,7 +87,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing + 20.0f;
 
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Checkboxes Without Labels")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -99,7 +99,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += 40.0f;
 
-    div(context, mk(entity, 20),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Checkbox (no label) - Unchecked")
             .with_size(
@@ -111,7 +111,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_for_no_label_1"));
 
     checkbox_no_label(
-        context, mk(entity, 30), checkbox_no_label_1,
+        context, mk(entity), checkbox_no_label_1,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(component_width * 0.25f),
                                      pixels(component_height)})
@@ -121,7 +121,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing;
 
-    div(context, mk(entity, 21),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Checkbox (no label) - Checked")
             .with_size(
@@ -133,7 +133,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("label_for_no_label_2"));
 
     checkbox_no_label(
-        context, mk(entity, 31), checkbox_no_label_2,
+        context, mk(entity), checkbox_no_label_2,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(component_width * 0.25f),
                                      pixels(component_height)})
@@ -143,7 +143,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
 
     current_y += spacing + 20.0f;
 
-    div(context, mk(entity, 3),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Checkbox Group")
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})
@@ -159,7 +159,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
                                                     "Option C", "Option D"};
 
     checkbox_group(
-        context, mk(entity, 40), checkbox_group_values, group_labels,
+        context, mk(entity), checkbox_group_values, group_labels,
         std::make_pair(1, 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(component_width), pixels(200.0f)})
@@ -173,7 +173,7 @@ struct ExampleCheckboxes : afterhours::System<UIContext<InputAction>> {
     std::string group_status =
         "Selected: " + std::to_string(checkbox_group_values.count()) +
         "/4 (min: 1, max: 3)";
-    div(context, mk(entity, 200),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(group_status)
             .with_size(ComponentSize{pixels(component_width), pixels(30.0f)})

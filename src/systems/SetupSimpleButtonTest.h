@@ -20,7 +20,7 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
     float button_y = (screen_height - button_height) / 2.0f;
 
     auto button_result = button(
-        context, mk(entity, 0),
+        context, mk(entity),
         ComponentConfig{}
             .with_label("Click Me")
             .with_size(
@@ -40,7 +40,7 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
     float counter_height = 30.0f;
     std::string counter_text = "Clicks: " + std::to_string(button_click_count);
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(counter_text)
             .with_size(

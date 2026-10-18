@@ -29,7 +29,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
+    div(context, mk(entity), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({255, 245, 235, 255}).with_corner_radius(0).with_debug_name("bg"));
     const auto label = [&](int id, const std::string &text, float x, float y, float w, float h, float size, bool dim = false) {
       return div(context, mk(entity, id), box(x, y, w, h).with_label(text)
@@ -39,7 +39,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
     label(1, "Motion checkpoint", 80, 60, 700, 44, 32);
     label(2, "One button on the new core: appear, hover, press, focus, reversal, instant, teardown.", 80, 110, 1100, 30, 20, true);
 
-    auto btn = button(context, mk(entity, 10),
+    auto btn = button(context, mk(entity),
                       box(440, 300, 400, 80).with_label("Hover, press, focus me")
                           .with_custom_background(coral).with_font("AtkinsonMock", pixels(24 * s))
                           .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("motion_btn")
@@ -48,26 +48,26 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                           .with(um::on_hover({.scale = 1.05f, .translate_y = -4.f * s}))
                           .with(um::on_press({.scale = 0.92f})));
     if (btn) ++clicks;
-    button(context, mk(entity, 11),
+    button(context, mk(entity),
            box(880, 300, 200, 80).with_label("Corner pinned")
                .with_custom_background({100, 180, 200, 255}).with_font("AtkinsonMock", pixels(20 * s))
                .with_custom_text_color(ink).with_corner_radius(16 * s).with_debug_name("origin_btn")
                .with_origin(0.f, 0.f)
                .with(um::on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}})));
 
-    auto slab = div(context, mk(entity, 12),
+    auto slab = div(context, mk(entity),
                     box(80, 640, 320, 56).with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
                         .with_debug_name("slab").with(um::on_appear({.translate_x = 200.f * s}, motion::Spring::smooth())));
-    if (button(context, mk(slab.ent(), 0),
+    if (button(context, mk(slab.ent()),
                ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
                    .with_label("Child").with_custom_background({200, 170, 220, 255}).with_font("AtkinsonMock", pixels(18 * s))
                    .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("child_btn")))
       ++child_clicks;
 
-    auto scaled = div(context, mk(entity, 13),
+    auto scaled = div(context, mk(entity),
                       box(880, 600, 320, 56).with_custom_background({220, 232, 225, 255}).with_corner_radius(8 * s)
                           .with_debug_name("scaled_slab").with(um::on_state(true, {.scale = 1.25f}, motion::Spring::smooth())));
-    if (button(context, mk(scaled.ent(), 0),
+    if (button(context, mk(scaled.ent()),
                ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)
                    .with_label("Scaled").with_custom_background({170, 210, 190, 255}).with_font("AtkinsonMock", pixels(18 * s))
                    .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("scaled_child_btn")))
@@ -100,7 +100,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
     label(28, "child clicks: " + std::to_string(child_clicks), 500, 640, 400, 30, 22);
     label(29, "scaled clicks: " + std::to_string(scaled_clicks), 500, 676, 400, 30, 22);
     bool reduced = Settings::get().get_reduced_motion_enabled();
-    if (checkbox(context, mk(entity, 13), reduced,
+    if (checkbox(context, mk(entity), reduced,
                  box(880, 460, 320, 36).with_label("Reduced motion").with_font("AtkinsonMock", pixels(20 * s))
                      .with_custom_text_color(ink).with_debug_name("reduced_motion")))
       Settings::get().set_reduced_motion_enabled(reduced);

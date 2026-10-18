@@ -43,7 +43,7 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
          {"Window mode", "Borderless"}, {"Vertical sync", "On"},
          {"Render scale", "100%"}, {"Colour profile", "sRGB"}}, status);
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
-    if (button(context, mk(entity, 20), ComponentConfig{}
+    if (button(context, mk(entity), ComponentConfig{}
         .with_size({pixels(270 * s), pixels(44 * s)}).with_absolute_position(942 * s, 92 * s)
         .with_label(applied ? "Reset display demo" : "Review display changes").with_font("AtkinsonMock", pixels(21 * s))
         .with_debug_name("dc_review"))) {
@@ -53,7 +53,7 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     const bool confirming = open;
     auto confirmation = afterhours::modal::confirm(
-        context, mk(entity, 1), open, "Apply display changes?",
+        context, mk(entity), open, "Apply display changes?",
         "Resolution: 1920 x 1080  ->  2560 x 1440\n"
         "Refresh rate: 60 Hz  ->  120 Hz\n"
         "The display may go dark briefly. Confirm within 15 seconds,\n"
@@ -70,7 +70,7 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
     if (confirming && (confirmation.cancelled() || confirmation.dismissed())) status = "Kept 1920 x 1080 at 60 Hz";
     const bool previewing = preview;
     auto keep = afterhours::modal::confirm(
-        context, mk(entity, 2), preview, "Keep these display settings?",
+        context, mk(entity), preview, "Keep these display settings?",
         fmt::format("Preview: 2560 x 1440 at 120 Hz\nPrevious settings return in {} seconds.\n"
                     "Choose Keep to finish, or Revert to restore them now.", static_cast<int>(std::ceil(remaining))),
         "Keep display settings", "Revert now");

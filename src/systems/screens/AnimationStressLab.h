@@ -91,7 +91,7 @@ struct AnimationStressLab : ScreenSystem<UIContext<InputAction>> {
                       stats.fps, stats.avgMs, stats.p95Ms, stats.maxMs, count, count * 6),
           48, 66, 900, 16, true, "anim_stress_stats");
     label("Items per row", 950, 40, 140, 14, true);
-    slider(context, mk(root.ent(), id++), itemsSlider,
+    slider(context, mk(root.ent()), itemsSlider,
            box(950, 62, 220, 28).with_debug_name("anim_stress_items"));
     if (control(paused ? "Resume" : "Pause", 950, 100, 104, "anim_stress_pause"))
       paused = !paused;

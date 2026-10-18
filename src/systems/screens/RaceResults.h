@@ -150,7 +150,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
       for (size_t i = 0; i < portraits.size(); ++i)
         portraits[i] = load("portrait_" + std::to_string(i));
     }
-    auto root = div(context, mk(entity, 0),
+    auto root = div(context, mk(entity),
                     box(scale, 0, 0, 1280, 720)
                         .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
                         .with_on_draw_bg([this](RectangleType r) {
@@ -164,24 +164,24 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                               afterhours::Color{187, 236, 251, 255});
                         })
                         .with_debug_name("race_root"));
-    div(context, mk(root.ent(), 1),
+    div(context, mk(root.ent()),
         box(scale, 0, 0, 1280, 84)
             .with_on_draw_bg([](RectangleType r) { draw_header(r); })
             .with_debug_name("race_header"));
-    div(context, mk(root.ent(), 2),
+    div(context, mk(root.ent()),
         box(scale, 43, 20, 380, 56)
             .with_label("RACE RESULTS")
             .with_font("ArchivoMockBoldItalic", pixels(43.f * scale))
             .with_custom_text_color(dark_text)
             .with_letter_spacing(-2.f * scale)
             .with_debug_name("race_title"));
-    div(context, mk(root.ent(), 3),
+    div(context, mk(root.ent()),
         box(scale, 860, 10, 280, 34)
             .with_label("Rainbow Circuit")
             .with_font("ArchivoMockBold", pixels(25.f * scale))
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Right));
-    div(context, mk(root.ent(), 4),
+    div(context, mk(root.ent()),
         box(scale, 1150, 20, 94, 44)
             .with_label("Player 1")
             .with_custom_background(yellow)
@@ -200,33 +200,33 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 4; ++i)
       div(context, mk(root.ent(), 11 + i), box(scale, 1006 + static_cast<float>(i) * 28, 57, 20, 5)
           .with_custom_background(i < 3 ? yellow : blue_panel));
-    div(context, mk(root.ent(), 100),
+    div(context, mk(root.ent()),
         box(scale, 29, 113, 772, 480)
             .with_on_draw_bg([](RectangleType r) {
               draw_slanted(r, afterhours::Color{217, 237, 237, 238});
             })
             .with_debug_name("race_results_panel"));
-    div(context, mk(root.ent(), 101),
+    div(context, mk(root.ent()),
         box(scale, 54, 114, 747, 38)
             .with_custom_background(afterhours::Color{23, 82, 119, 255})
             .with_debug_name("race_table_header"));
-    div(context, mk(root.ent(), 102),
+    div(context, mk(root.ent()),
         box(scale, 72, 120, 70, 28)
             .with_label("POS.")
             .with_font("ArchivoMockBold", pixels(18.f * scale))
             .with_custom_text_color(white));
-    div(context, mk(root.ent(), 103),
+    div(context, mk(root.ent()),
         box(scale, 180, 120, 260, 28)
             .with_label("RACER")
             .with_font("ArchivoMockBold", pixels(18.f * scale))
             .with_custom_text_color(white));
-    div(context, mk(root.ent(), 104),
+    div(context, mk(root.ent()),
         box(scale, 552, 120, 128, 28)
             .with_label("Race time")
             .with_font("ArchivoMockBold", pixels(18.f * scale))
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Right));
-    div(context, mk(root.ent(), 105),
+    div(context, mk(root.ent()),
         box(scale, 682, 120, 99, 28)
             .with_label("Race points")
             .with_font("ArchivoMockBold", pixels(18.f * scale))
@@ -288,11 +288,11 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_ignore_pointer_events());
     }
 
-    div(context, mk(root.ent(), 800),
+    div(context, mk(root.ent()),
         box(scale, 816, 113, 421, 504)
             .with_custom_background(blue_panel)
             .with_debug_name("race_standings_panel"));
-    div(context, mk(root.ent(), 801),
+    div(context, mk(root.ent()),
         box(scale, 948, 136, 188, 78)
             .with_label("2nd")
             .with_font("ArchivoMockBoldItalic", pixels(76.f * scale))
@@ -301,7 +301,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                               5.f * scale)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("race_position"));
-    div(context, mk(root.ent(), 802),
+    div(context, mk(root.ent()),
         box(scale, 870, 231, 320, 38)
             .with_label("CUP STANDINGS")
             .with_font("ArchivoMockBoldItalic", pixels(28.f * scale))
@@ -334,34 +334,34 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     caption(854, "Player 1 / Blaze", 54, 600, 280, 30, 22, dark_text);
     caption(855, status, 344, 600, 455, 30, 21, dark_text);
     caption(856, "Demo continuation / final race", 1010, 632, 246, 26, 18, dark_text);
-    div(context, mk(root.ent(), 857), box(scale, 117, 215, 18, 22)
+    div(context, mk(root.ent()), box(scale, 117, 215, 18, 22)
         .with_label("1").with_font("ArchivoMockBold", pixels(16 * scale))
         .with_custom_background(teal).with_custom_text_color(white)
         .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
-    div(context, mk(root.ent(), 840),
+    div(context, mk(root.ent()),
         box(scale, 841, 487, 372, 2)
             .with_custom_background(afterhours::Color{190, 230, 236, 255}));
-    div(context, mk(root.ent(), 841),
+    div(context, mk(root.ent()),
         box(scale, 916, 494, 252, 30)
             .with_label("YOUR BEST LAP")
             .with_font("Archivo", pixels(18.f * scale))
             .with_letter_spacing(2.f * scale)
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Center));
-    div(context, mk(root.ent(), 842),
+    div(context, mk(root.ent()),
         box(scale, 920, 526, 245, 62)
             .with_label("0:48.220")
             .with_font("ArchivoMockBold", pixels(48.f * scale))
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Center));
-    div(context, mk(root.ent(), 843),
+    div(context, mk(root.ent()),
         box(scale, 866, 581, 330, 29)
             .with_label("No previous lap recorded")
             .with_font("ArchivoMockBold", pixels(18.f * scale))
             .with_custom_text_color(yellow)
             .with_alignment(TextAlignment::Center));
 
-    if (button(context, mk(root.ent(), 900),
+    if (button(context, mk(root.ent()),
                box(scale, 38, 665, 150, 48)
                    .with_label("< Back")
                    .with_on_draw_bg([](RectangleType r) { draw_slanted(r, {17, 112, 169, 255}); })
@@ -371,13 +371,13 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("race_back"))) {
       status = "Back";
     }
-    div(context, mk(root.ent(), 901),
+    div(context, mk(root.ent()),
         box(scale, 220, 684, 790, 28)
             .with_label("Up / Down: Racer     Enter: Next race     Esc: Back")
             .with_font("Archivo", pixels(19.f * scale))
             .with_custom_text_color(afterhours::Color{54, 105, 130, 255})
             .with_alignment(TextAlignment::Center).with_debug_name("race_status"));
-    if (button(context, mk(root.ent(), 902),
+    if (button(context, mk(root.ent()),
                box(scale, 1044, 664, 200, 54)
                    .with_label("NEXT RACE >")
                    .with_on_draw_bg([](RectangleType r) { draw_slanted(r, {255, 224, 55, 255}); })

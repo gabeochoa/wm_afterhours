@@ -46,14 +46,14 @@ struct WmDefaultsLab : ScreenSystem<UIContext<InputAction>> {
          16, 48, 1180, 28, 19);
 
     text(10, "Click activation (library default: Press)", 40, 112, 700, 30, 20);
-    if (button(context, mk(root.ent(), 11), ComponentConfig{}
+    if (button(context, mk(root.ent()), ComponentConfig{}
             .with_label("WM default (Release): " + std::to_string(release_clicks))
             .with_720p_size(320, 48)
             .with_absolute_position(40 * scale, 152 * scale)
             .with_font("AtkinsonMock", pixels(19 * scale)).with_background(Theme::Usage::Primary)
             .with_corner_radius(6 * scale).with_debug_name("wmd_release_btn")))
       ++release_clicks;
-    if (button(context, mk(root.ent(), 12), ComponentConfig{}
+    if (button(context, mk(root.ent()), ComponentConfig{}
             .with_label("Explicit Press opt-in: " + std::to_string(press_clicks))
             .with_720p_size(320, 48)
             .with_absolute_position(400 * scale, 152 * scale)
@@ -66,7 +66,7 @@ struct WmDefaultsLab : ScreenSystem<UIContext<InputAction>> {
          40, 214, 1100, 28, 17);
 
     text(20, "Focus ring (library: 3px at +4 inset)", 40, 272, 700, 30, 20);
-    checkbox(context, mk(root.ent(), 21), small_checked, ComponentConfig{}
+    checkbox(context, mk(root.ent()), small_checked, ComponentConfig{}
         .with_size({pixels(28 * scale), pixels(28 * scale)})
         .with_absolute_position(40 * scale, 314 * scale)
         .with_debug_name("wmd_small_checkbox"));
@@ -74,7 +74,7 @@ struct WmDefaultsLab : ScreenSystem<UIContext<InputAction>> {
          92, 318, 1000, 28, 17);
 
     text(30, "Text area rows (library: fixed 20px)", 40, 382, 700, 30, 20);
-    auto area = text_area(context, mk(root.ent(), 31), draft, ComponentConfig{}
+    auto area = text_area(context, mk(root.ent()), draft, ComponentConfig{}
         .with_size({pixels(560 * scale), pixels(118 * scale)})
         .with_absolute_position(40 * scale, 422 * scale)
         .with_font("AtkinsonMock", pixels(20 * scale))

@@ -55,7 +55,7 @@ struct ProfilerOverlay : afterhours::System<afterhours::ui::UIContext<InputActio
     const float width = static_cast<float>(Settings::get().get_screen_width());
     const float height = static_cast<float>(Settings::get().get_screen_height());
     if (!visible) {
-      if (button(context, mk(entity, 7100), ComponentConfig{}
+      if (button(context, mk(entity), ComponentConfig{}
           .with_label("Profiler" + suffix).with_size({pixels(200), pixels(32)})
           .with_absolute_position(width - 424, 8).with_render_layer(1500)
           .with_custom_background({22, 25, 32, 255}).with_custom_text_color({220, 228, 240, 255})
@@ -66,7 +66,7 @@ struct ProfilerOverlay : afterhours::System<afterhours::ui::UIContext<InputActio
     const auto previous_font = styling.default_font_name;
     styling.default_font_name = "AtkinsonMock";
     const float panel_height = std::min(720.f, height - 80.f);
-    auto panel = vstack(context, mk(entity, 7101), ComponentConfig{}
+    auto panel = vstack(context, mk(entity), ComponentConfig{}
         .with_size({pixels(std::min(1120.f, width - 32.f)), pixels(panel_height)})
         .with_absolute_position(16, 48).with_render_layer(1500)
         .with_background(Theme::Usage::Background).with_corner_radius(12)
@@ -78,9 +78,9 @@ struct ProfilerOverlay : afterhours::System<afterhours::ui::UIContext<InputActio
       return target.valid() && target.asE().has<UIComponent>() &&
              target.asE().get<UIComponent>().render_layer >= 2000;
     });
-    auto header = hstack(context, mk(panel.ent(), 0), ComponentConfig{}
+    auto header = hstack(context, mk(panel.ent()), ComponentConfig{}
         .with_size({percent(1), pixels(36)}).with_no_wrap().with_gap(pixels(12)));
-    div(context, mk(header.ent(), 0), ComponentConfig{}
+    div(context, mk(header.ent()), ComponentConfig{}
         .with_label("Live profiler / " + ScreenHUDState::current_screen_name)
         .with_size({expand(), pixels(36)}).with_font_size(24));
     const auto refresh_label = refresh_rates[refresh_rate_index] == 0
@@ -110,7 +110,7 @@ struct ProfilerOverlay : afterhours::System<afterhours::ui::UIContext<InputActio
     auto &fonts = *EntityHelper::get_singleton_cmp<FontManager>();
     const auto previous_active_font = fonts.active_font;
     fonts.set_active("AtkinsonMock");
-    profiler_panel(context, mk(panel.ent(), 2), collector, state, options,
+    profiler_panel(context, mk(panel.ent()), collector, state, options,
         ComponentConfig{}.with_size({percent(1), expand()}));
     fonts.set_active(previous_active_font);
     styling.default_font_name = previous_font;

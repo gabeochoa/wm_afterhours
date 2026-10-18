@@ -30,10 +30,10 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
     const float left = (context.screen_width - 1280 * s) / 2;
     const float top = (context.screen_height - 720 * s) / 2;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(theme.background).with_corner_radius(0));
-    auto root = div(context, mk(entity, 100), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("scroll_click_bg"));
@@ -53,9 +53,9 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
     text(0, "Scroll click verification", 48, 24, 1184, 48, 38, theme.font, "scroll_click_title", true);
     text(3, "After scrolling, the clicked row must match the reported button index.",
          48, 80, 1184, 30, 22, theme.font_muted);
-    div(context, mk(root.ent(), 4), box(48, 124, 1184, 546)
+    div(context, mk(root.ent()), box(48, 124, 1184, 546)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
-    bool reset = button(context, mk(root.ent(), 5), box(902, 144, 310, 44)
+    bool reset = button(context, mk(root.ent()), box(902, 144, 310, 44)
         .with_label("Reset scroll and result").with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
         .with_corner_radius(6 * s).with_debug_name("scroll_click_reset"));
@@ -66,7 +66,7 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Scroll container - 300px tall
-    auto scroll_area = vstack(context, mk(root.ent(), 2), box(64, 218, 810, 300)
+    auto scroll_area = vstack(context, mk(root.ent()), box(64, 218, 810, 300)
         .with_size({pixels(810 * s), pixels(300)})
         .with_background(Theme::Usage::Surface).with_border(theme.font_muted, 1.f)
         .with_overflow(Overflow::Scroll, Axis::Y).with_padding(Padding::all(pixels(12)))

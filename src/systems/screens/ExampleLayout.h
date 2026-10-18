@@ -38,11 +38,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
           .with_debug_name(name));
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({184, 205, 178, 255}).with_corner_radius(0)
         .with_debug_name("layout_canvas"));
-    div(context, mk(entity, 1), at(48, 24, 1184, 672)
+    div(context, mk(entity), at(48, 24, 1184, 672)
         .with_custom_background(theme.background).with_corner_radius(12 * s)
         .with_debug_name("layout_main"));
     text(2, "Layout System Demo", 72, 34, 1136, 43, 32, ink, "layout_title");
@@ -100,17 +100,17 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     text(23, fmt::format("Row: left to right. Item width 180 px; {:.0f} px side margins make {:.0f} px gaps.", margin, row_gap),
          72, 282, 1136, 27, 18, muted, "layout_row_description");
     // Separator between row demo and column demo
-    div(context, mk(entity, 24), at(72, 317, 1136, 1)
+    div(context, mk(entity), at(72, 317, 1136, 1)
         .with_custom_background({144, 165, 136, 255}).with_debug_name("section_separator_1"));
     text(30, "Column / stacked children", 72, 330, 850, 28, 23, ink, "layout_column_heading");
     text(31, "Parent frame", 1004, 334, 204, 24, 18, muted, "layout_parent_label");
     // Column layout demo - stacked items demonstration
-    auto col_container = hstack(context, mk(entity, 32), at(72, 364, 1136, 220)
+    auto col_container = hstack(context, mk(entity), at(72, 364, 1136, 220)
         .with_custom_background(theme.surface).with_corner_radius(10 * s)
         .with_padding(Padding::all(pixels(20 * s)))
         .with_justify_content(JustifyContent::Center).with_debug_name("col_demo_container"));
     // Column with stacked items - centered within container
-    auto column = vstack(context, mk(col_container.ent(), 0), ComponentConfig{}
+    auto column = vstack(context, mk(col_container.ent()), ComponentConfig{}
         .with_size({percent(.60f), percent(1)})
         .with_custom_background({226, 232, 221, 255})
         .with_padding(Padding::all(pixels(8 * s))).with_corner_radius(8 * s)
@@ -137,7 +137,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     const float column_gap = column_rects[1].y - top.y - top.height;
     const auto stack_bounds = column.cmp().rect();
     if (top.height > 0) {
-      div(context, mk(entity, 35), ComponentConfig{}
+      div(context, mk(entity), ComponentConfig{}
           .with_size({pixels(12 * s), pixels(column_gap)})
           .with_absolute_position(stack_bounds.x + stack_bounds.width + 12 * s, top.y + top.height)
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
@@ -154,7 +154,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     text(37, "Column: top to bottom. Each item is 95% of the stack's content width and 40 px high.",
          72, 590, 1136, 27, 18, muted, "layout_column_description");
     // Separator between column demo and description
-    div(context, mk(entity, 38), at(72, 624, 1136, 1)
+    div(context, mk(entity), at(72, 624, 1136, 1)
         .with_custom_background({144, 165, 136, 255}).with_debug_name("section_separator_2"));
     text(40, fmt::format("Sage Natural theme  /  Viewport {:.0f} x {:.0f}  /  Parent widths: row {:.0f} px, column {:.0f} px",
          context.screen_width, context.screen_height, row_container.cmp().rect().width, col_container.cmp().rect().width),

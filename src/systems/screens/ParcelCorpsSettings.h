@@ -239,11 +239,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_default_font("ArchivoMockBold", pixels(20 * scale));
     load_texture_if_needed();
     if (context.pressed(InputAction::MenuBack)) settings_open = false;
-    div(context, mk(entity, 1), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({39, 49, 46, 255}).with_corner_radius(0)
         .with_debug_name("parcel_canvas"));
-    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(entity), box(scale, 0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                 (context.screen_height - 720 * scale) / 2)
         .with_on_draw_bg([texture = town_texture](RectangleType r) {
@@ -260,22 +260,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_font("ArchivoMockBold", pixels(size * scale)).with_custom_text_color(color)
           .with_ignore_pointer_events().with_render_layer(1));
     };
-    div(context, mk(root.ent(), 1200), box(scale, 520, 34, 400, 108)
+    div(context, mk(root.ent()), box(scale, 520, 34, 400, 108)
         .with_custom_background(blue).with_corner_radius(12 * scale)
         .with_render_layer(1).with_debug_name("parcel_quest"));
     hud_text(1201, "Grow your delivery network", 536, 45, 318, 31, 24, white);
     hud_text(1202, "Sign up 4 businesses: 1 / 4", 536, 81, 356, 25, 20, white);
     hud_text(1203, "First business signed up", 558, 109, 334, 25, 18, white);
-    div(context, mk(root.ent(), 1204), box(scale, 864, 46, 42, 28)
+    div(context, mk(root.ent()), box(scale, 864, 46, 42, 28)
         .with_label("Lv 0").with_font("ArchivoMockBold", pixels(18 * scale))
         .with_custom_background({24, 54, 67, 255}).with_custom_text_color(white)
         .with_alignment(TextAlignment::Center).with_render_layer(1).with_debug_name("parcel_level"));
-    div(context, mk(root.ent(), 1205), box(scale, 538, 114, 13, 14)
+    div(context, mk(root.ent()), box(scale, 538, 114, 13, 14)
         .with_render_layer(1).with_on_draw_fg([scale](RectangleType r) {
           afterhours::draw_line_ex({r.x, r.y + 7 * scale}, {r.x + 4 * scale, r.y + 12 * scale}, 2 * scale, {230, 255, 238, 255});
           afterhours::draw_line_ex({r.x + 4 * scale, r.y + 12 * scale}, {r.x + 12 * scale, r.y}, 2 * scale, {230, 255, 238, 255});
         }));
-    div(context, mk(root.ent(), 1300), box(scale, 944, 34, 288, 212)
+    div(context, mk(root.ent()), box(scale, 944, 34, 288, 212)
         .with_custom_background({32, 56, 57, 245}).with_render_layer(1).with_debug_name("parcel_chat"));
     hud_text(1301, "LIVE · EDDCOATES", 960, 43, 258, 28, 20, white);
     hud_text(1302, "8 viewers · 10 messages", 960, 72, 258, 25, 17, muted);
@@ -293,16 +293,16 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     hud_text(1402, "mph", 1182, 625, 42, 27, 19, {227, 194, 174, 255});
     hud_text(1403, "GAMON", 1124, 656, 100, 24, 16, {227, 194, 174, 255});
     if (!settings_open) {
-      if (button(context, mk(root.ent(), 1501), box(scale, 48, 48, 224, 48)
+      if (button(context, mk(root.ent()), box(scale, 48, 48, 224, 48)
           .with_label("Open settings").with_font("ArchivoMockBold", pixels(23 * scale))
           .with_custom_background(phone_black).with_custom_text_color(white)
           .with_render_layer(10).with_debug_name("parcel_reopen"))) settings_open = true;
       return;
     }
-    div(context, mk(root.ent(), 5), box(scale, 0, 0, 1280, 720)
+    div(context, mk(root.ent()), box(scale, 0, 0, 1280, 720)
         .with_custom_background({10, 20, 24, 92}).with_render_layer(5)
         .with_ignore_pointer_events().with_debug_name("parcel_scene_dim"));
-    auto phone = div(context, mk(root.ent(), 6), box(scale, 0, 0, 1280, 720)
+    auto phone = div(context, mk(root.ent()), box(scale, 0, 0, 1280, 720)
         .with_render_layer(10).with_debug_name("parcel_phone_layer"));
     const auto text = [&](int id, const std::string &label, float x, float y,
                           float w, float h, float size, afterhours::Color color,
@@ -312,10 +312,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_letter_spacing(0).with_ignore_pointer_events().with_alignment(alignment)
           .with_debug_name(debug));
     };
-    div(context, mk(phone.ent(), 10), box(scale, 40, 26, 440, 674)
+    div(context, mk(phone.ent()), box(scale, 40, 26, 440, 674)
         .with_on_draw_bg([](RectangleType r) { draw_phone(r); }).with_debug_name("parcel_phone"));
     text(11, "23:45", 68, 66, 84, 25, 19, white);
-    div(context, mk(phone.ent(), 12), box(scale, 356, 67, 84, 18)
+    div(context, mk(phone.ent()), box(scale, 356, 67, 84, 18)
         .with_debug_name("parcel_signal_battery").with_on_draw_fg([scale, this](RectangleType r) {
           for (int i = 0; i < 4; ++i) {
             const float h = 5 + static_cast<float>(i) * 4;
@@ -360,7 +360,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background(white).with_corner_radius(10 * scale).with_ignore_pointer_events());
       text(id + 2, value ? "On" : "Off", 345, y + 6, 38, 26, 18, white, debug + "_state", TextAlignment::Right);
     };
-    auto language = button(context, mk(phone.ent(), 1000), box(scale, 68, 174, 384, 38)
+    auto language = button(context, mk(phone.ent()), box(scale, 68, 174, 384, 38)
         .with_custom_background(row_dark).with_border(separator, scale).with_debug_name("parcel_language_row"));
     if (language) language_idx = (language_idx + 1) % static_cast<int>(languages.size());
     icon(1001, 174, Icon::Language, green);

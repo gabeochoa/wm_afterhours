@@ -321,7 +321,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18.f * scale));
 
-    auto root = div(context, mk(entity, 0),
+    auto root = div(context, mk(entity),
                     box(scale, 0, 0, 1280, 720)
                         .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
                         .with_custom_background(afterhours::Color{237, 242, 249, 255})
@@ -384,7 +384,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     text(738, "Demo mode", 299, 63, 100, 24, 14, blue, TextAlignment::Right, "tn_demo");
     text(34, hero_title(), 93, 90, 306, 64, 25, ink, TextAlignment::Left,
          "tn_hero", "AtkinsonMockBold");
-    if (button(context, mk(root.ent(), 35),
+    if (button(context, mk(root.ent()),
                box(scale, 93, 157, 306, 44)
                    .with_label(connect_label())
                    .with_font("AtkinsonMockBold", pixels(18.f * scale))
@@ -398,7 +398,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     }
     text(36, std::string("Connect to ") + servers[server_idx].place,
          93, 205, 306, 22, 16, muted, TextAlignment::Center, "tn_quick_place");
-    auto search = text_input(context, mk(root.ent(), 40), search_query,
+    auto search = text_input(context, mk(root.ent()), search_query,
                              box(scale, 93, 236, 306, 38)
                                  .with_font("AtkinsonMock", pixels(17.f * scale))
                                  .with_placeholder("Search locations")
@@ -412,7 +412,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       local_status = search_query.empty() ? "Showing all 6 locations" :
                                             "Search filter applied locally";
     }
-    div(context, mk(root.ent(), 41),
+    div(context, mk(root.ent()),
         box(scale, 107, 248, 13, 13)
             .with_on_draw_fg([](RectangleType r) {
               afterhours::draw_circle_lines(static_cast<int>(r.x + 5.f), static_cast<int>(r.y + 5.f),
@@ -488,7 +488,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("tn_map"));
     text(201, "VPN locations", 449, 27, 240, 36, 26, ink,
          TextAlignment::Left, "tn_map_label");
-    if (button(context, mk(root.ent(), 202),
+    if (button(context, mk(root.ent()),
                box(scale, 1119, 24, 130, 38)
                    .with_label("Account")
                    .with_font("AtkinsonMockBold", pixels(17.f * scale))
@@ -501,7 +501,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       details_title = "Demo account";
       details_body = "No account is signed in. This local preview does not contact a VPN provider.";
     }
-    div(context, mk(root.ent(), 203),
+    div(context, mk(root.ent()),
         box(scale, 437, 141, 825, 390)
             .with_on_draw_fg([texture = map_texture, selected = server_idx](RectangleType r) {
               paint(texture, r);
@@ -563,7 +563,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     text(234, "Demo connection", 625, 657, 300, 22, 14, muted);
     text(235, link == Link::Up ? selected_route() : "Not connected", 625, 685, 300, 24,
          18, ink, TextAlignment::Left, "tn_route_value");
-    if (button(context, mk(root.ent(), 236), box(scale, 1022, 670, 226, 36)
+    if (button(context, mk(root.ent()), box(scale, 1022, 670, 226, 36)
         .with_label("View diagnostics  >").with_font("AtkinsonMock", pixels(18 * scale))
         .with_custom_text_color(blue).with_custom_background(afterhours::Color{0, 0, 0, 0})
         .with_debug_name("tn_diagnostics"))) {
@@ -574,7 +574,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     }
     text(739, "Lowest latency: Reykjavik / 14 ms", 93, 649, 306, 22, 14, muted);
     text(237, local_status, 93, 675, 306, 38, 14, muted, TextAlignment::Left, "tn_local_status");
-    auto details = afterhours::modal::info(context, mk(entity, 790), show_details,
+    auto details = afterhours::modal::info(context, mk(entity), show_details,
         details_title, details_body, "Close");
     if (details) {
       const std::array<float, 1> widths{120};

@@ -33,7 +33,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position((left + x) * scale, (top + y) * scale)
           .with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    auto root = div(context, mk(entity, 0), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({18, 25, 37, 255}).with_corner_radius(0).with_debug_name("fw_root"));
     const auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
@@ -42,11 +42,11 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("Archivo", pixels(size * scale)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), 1), box(0, 24, 1144, 98)
+    div(context, mk(root.ent()), box(0, 24, 1144, 98)
         .with_custom_background({32, 44, 62, 255}).with_corner_radius(12 * scale));
     label(2, "Font weight", 20, 34, 800, 44, 34, white, "fw_title");
     label(3, "Archivo Narrow / identical text at 22px / native loaded faces", 20, 82, 1104, 30, 21, muted);
-    if (button(context, mk(root.ent(), 4), box(946, 42, 178, 40)
+    if (button(context, mk(root.ent()), box(946, 42, 178, 40)
         .with_label(show_guides ? "Bounds: on" : "Bounds: off").with_font("Archivo", pixels(22 * scale))
         .with_custom_text_color(white).with_custom_background({46, 68, 100, 255})
         .with_corner_radius(7 * scale).with_debug_name("fw_guides"))) show_guides = !show_guides;
@@ -98,7 +98,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("fw_numbers_" + std::to_string(row.number)));
       if (show_guides) numbers.ent().addComponentIfMissing<HasOnDraw>().fg = guide;
     }
-    div(context, mk(root.ent(), 70), box(8, 186, 16, 294)
+    div(context, mk(root.ent()), box(8, 186, 16, 294)
         .with_ignore_pointer_events().with_on_draw_fg([scale, accent](RectangleType r) {
           const float x = r.x + 6 * scale;
           afterhours::draw_line_ex({x, r.y}, {x, r.y + 256 * scale}, scale, accent);
@@ -106,13 +106,13 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
             afterhours::draw_line_ex({x - 3 * scale, r.y + i * 64 * scale},
                                      {x + 3 * scale, r.y + i * 64 * scale}, scale, accent);
         }));
-    div(context, mk(root.ent(), 71), box(198, 190, 12, 90)
+    div(context, mk(root.ent()), box(198, 190, 12, 90)
         .with_ignore_pointer_events().with_on_draw_fg([scale, accent](RectangleType r) {
           afterhours::draw_line_ex({r.x + r.width, r.y}, {r.x, r.y}, scale, accent);
           afterhours::draw_line_ex({r.x, r.y}, {r.x, r.y + r.height}, scale, accent);
           afterhours::draw_line_ex({r.x, r.y + r.height}, {r.x + r.width, r.y + r.height}, scale, accent);
         }));
-    div(context, mk(root.ent(), 72), box(858, 138, 286, 356)
+    div(context, mk(root.ent()), box(858, 138, 286, 356)
         .with_custom_background({29, 42, 61, 255}).with_corner_radius(10 * scale).with_debug_name("fw_closeup"));
     label(73, "500 / 600 close-up", 874, 151, 254, 32, 24, white);
     for (int i = 0; i < 2; ++i) {
@@ -129,17 +129,17 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // The case that motivated the request: a heavier run has to sit next to a
     // regular one on the same row and still line up.
-    div(context, mk(root.ent(), 80), box(0, 522, 1144, 150)
+    div(context, mk(root.ent()), box(0, 522, 1144, 150)
         .with_custom_background({27, 38, 55, 255}).with_corner_radius(10 * scale));
     label(81, "Mixed weights on one baseline", 20, 536, 1104, 34, 26, white);
-    auto mixed = div(context, mk(root.ent(), 82), box(20, 578, 1104, 32)
+    auto mixed = div(context, mk(root.ent()), box(20, 578, 1104, 32)
         .with_flex_direction(FlexDirection::Row).with_transparent_bg().with_debug_name("fw_mixed"));
-    div(context, mk(mixed.ent(), 0), ComponentConfig{}
+    div(context, mk(mixed.ent()), ComponentConfig{}
         .with_size({pixels(68 * scale), percent(1.f)}).with_label("theme.h")
         .with_font("Archivo", pixels(18 * scale)).with_font_weight(afterhours::colors::FontWeight::SemiBold)
         .with_custom_text_color(white).with_background(Theme::Usage::None).with_alignment(TextAlignment::Left)
         .with_debug_name("fw_mixed_bold"));
-    div(context, mk(mixed.ent(), 1), ComponentConfig{}
+    div(context, mk(mixed.ent()), ComponentConfig{}
         .with_size({expand(), percent(1.f)}).with_label("src/ui")
         .with_font("Archivo", pixels(18 * scale)).with_custom_text_color(muted)
         .with_background(Theme::Usage::None).with_alignment(TextAlignment::Left).with_debug_name("fw_mixed_regular"));

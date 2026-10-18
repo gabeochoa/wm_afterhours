@@ -89,7 +89,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_corner_radius(0).with_debug_name("casual_canvas")
         .with_on_draw_bg([texture = art[0]](RectangleType r) { paint(texture, r); }));
-    auto root = div(context, mk(canvas.ent(), 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(canvas.ent()), box(scale, 0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                 (context.screen_height - 720 * scale) / 2)
         .with_debug_name("casual_root"));
@@ -124,7 +124,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           }).with_debug_name(name));
     };
 
-    div(context, mk(root.ent(), 1), box(scale, 1068, 28, 184, 52)
+    div(context, mk(root.ent()), box(scale, 1068, 28, 184, 52)
         .with_custom_background({255, 240, 207, 255}).with_corner_radius(26 * scale)
         .with_border({217, 176, 101, 255}, 3 * scale).with_ignore_pointer_events()
         .with_on_draw_fg([scale](RectangleType r) {
@@ -136,9 +136,9 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }));
     label(root.ent(), 2, 1115, 31, 130, 44, std::to_string(progress.coins) + " +", 24, brown, "casual_coins");
     if (settings_open) {
-      div(context, mk(root.ent(), 3), box(scale, 0, 0, 1280, 720)
+      div(context, mk(root.ent()), box(scale, 0, 0, 1280, 720)
           .with_custom_background({6, 22, 12, 194}).with_ignore_pointer_events());
-      auto board = div(context, mk(root.ent(), 4), box(scale, 170, 46, 940, 627)
+      auto board = div(context, mk(root.ent()), box(scale, 170, 46, 940, 627)
           .with_debug_name("casual_board")
           .with_on_draw_bg([texture = art[1], scale](RectangleType r) {
             paint(texture, {r.x - scale, r.y - scale, 942 * scale, 640 * scale});
@@ -179,7 +179,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
       label(board.ent(), 44, 72, 290, 280, 32, "NOTIFICATIONS", 23, cream);
       label(board.ent(), 45, 72, 320, 280, 23, notifications_on ? "ON" : "OFF", 16, cream, "casual_notifications_state");
-      div(context, mk(board.ent(), 46), box(scale, 367, 305, 64, 30)
+      div(context, mk(board.ent()), box(scale, 367, 305, 64, 30)
           .with_custom_background(notifications_on ? afterhours::Color{91, 176, 45, 255} : afterhours::Color{35, 112, 145, 255})
           .with_corner_radius(15 * scale).with_border({255, 248, 230, 220}, scale).with_ignore_pointer_events()
           .with_on_draw_fg([scale, enabled = notifications_on](RectangleType r) {
@@ -192,17 +192,17 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       label(board.ent(), 49, 484, 267, 396, 27, "HELP & ABOUT", 18, brown);
       if (action(board.ent(), 22, "CREDITS", 484, 305, 190, 57, "casual_credits", 24)) open(Dialog::Credits);
       if (action(board.ent(), 24, "SUPPORT", 690, 305, 190, 57, "casual_support", 24)) open(Dialog::Support);
-      if (button(context, mk(board.ent(), 25), box(scale, 484, 387, 396, 44)
+      if (button(context, mk(board.ent()), box(scale, 484, 387, 396, 44)
           .with_label("TERMS & PRIVACY").with_font("FredokaMockBold", pixels(25 * scale))
           .with_custom_text_color(brown).with_alignment(TextAlignment::Center)
           .with_custom_hover_bg({255, 237, 199, 255}).with_corner_radius(10 * scale)
           .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_terms"))) open(Dialog::Terms);
-      div(context, mk(board.ent(), 50), box(scale, 569, 425, 226, 1)
+      div(context, mk(board.ent()), box(scale, 569, 425, 226, 1)
           .with_custom_background({137, 85, 62, 120}).with_ignore_pointer_events());
-      if (button(context, mk(board.ent(), 26), box(scale, 61, 453, 819, 126)
+      if (button(context, mk(board.ent()), box(scale, 61, 453, 819, 126)
           .with_custom_hover_bg({255, 237, 199, 70}).with_corner_radius(12 * scale)
           .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_about"))) open(Dialog::About);
-      div(context, mk(board.ent(), 51), box(scale, 77, 458, 750, 25).with_label("ABOUT  /  OPEN DETAILS")
+      div(context, mk(board.ent()), box(scale, 77, 458, 750, 25).with_label("ABOUT  /  OPEN DETAILS")
           .with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color(brown)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
       constexpr std::array<const char *, 3> metadata_labels{"Build", "Version", "Player ID"};
@@ -231,7 +231,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     constexpr std::array<const char *, 6> titles{
         "About", "Language", "Credits", "Support", "Terms and privacy", "Save / load progress"};
-    auto modal = afterhours::modal(context, mk(entity, 500), dialog_open,
+    auto modal = afterhours::modal(context, mk(entity), dialog_open,
         afterhours::ModalConfig{}.with_size(pixels(650 * scale), pixels(440 * scale))
             .with_show_close_button(false).with_closed_by(afterhours::ClosedBy::CloseRequest));
     if (!modal) return;

@@ -51,7 +51,7 @@ struct ChartLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
           .with_custom_background({49, 64, 88, 255}).with_custom_text_color(white)
           .with_corner_radius(7 * s).with_debug_name(name);
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 94)
+    div(context, mk(root.ent()), box(left, 24, 1144, 94)
         .with_custom_background({35, 43, 57, 255}).with_corner_radius(12 * s));
     label("Frame timing chart", 20, 34, 1104, 42, 34, white);
     label("Synthetic demo data. Compare samples, edge cases, and two timing series.", 20, 79, 1104, 28, 21, muted);
@@ -70,7 +70,7 @@ struct ChartLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       }
       control_x += widths[static_cast<size_t>(i)] + 12;
     }
-    if (button(context, mk(root.ent(), id++), control(20, 184, 160, live ? "Pause live" : "Start live", "chart_live"))) live = !live;
+    if (button(context, mk(root.ent()), control(20, 184, 160, live ? "Pause live" : "Start live", "chart_live"))) live = !live;
     label(live ? "Live on" : "Live off", 198, 188, 160, 28, 22, live ? update_color : muted, "chart_live_status");
     label("Preset: " + std::string(labels[static_cast<size_t>(dataset)]), 378, 188, 430, 28, 20, white, "chart_preset");
     if (button(context, mk(root.ent(), id++), control(846, 184, 278,
@@ -142,7 +142,7 @@ struct ChartLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                 plot.x / s - left + plot.width / s * static_cast<float>(fraction) - 30,
                 (plot.y + plot.height) / s - top + 4, 82, 25, 19, muted);
       }
-      div(context, mk(root.ent(), id++), box(left, 244, 1144, 312)
+      div(context, mk(root.ent()), box(left, 244, 1144, 312)
           .with_ignore_pointer_events().with_on_draw_fg([series, displayed_index, position, plot, s, label_size,
                                                          bounds, budget = budget_visible, update_color, render_color](RectangleType rect) {
             const float legend_y = rect.y + 16 * s;

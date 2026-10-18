@@ -236,7 +236,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       raylib::SetTextureFilter(scene, raylib::TEXTURE_FILTER_BILINEAR);
     }
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(entity),
             box(scale, 0, 0, 1280, 720)
                 .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
                 .with_on_draw_bg([this](RectangleType r) {
@@ -252,13 +252,13 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (afterhours::input::is_key_pressed(raylib::KEY_ESCAPE))
       settings_open = !settings_open;
     if (!settings_open) {
-      div(context, mk(root.ent(), 1200),
+      div(context, mk(root.ent()),
           box(scale, 390, 250, 500, 70)
               .with_label("Settings closed")
               .with_font("AtkinsonMock", pixels(34.f * scale))
               .with_custom_text_color(white)
               .with_alignment(TextAlignment::Center));
-      if (button(context, mk(root.ent(), 1201),
+      if (button(context, mk(root.ent()),
                  box(scale, 490, 355, 300, 60)
                      .with_label("Return to settings")
                      .with_custom_background(green)
@@ -270,18 +270,18 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         box(scale, 0, 0, 1280, 50)
             .with_custom_background(darker)
             .with_debug_name("sports_tabs"));
-    div(context, mk(root.ent(), 11),
+    div(context, mk(root.ent()),
         box(scale, 30, 11, 48, 30)
             .with_label("LB")
             .with_custom_background(white)
             .with_font("AtkinsonMockBold", pixels(17.f * scale))
             .with_custom_text_color(green_dark)
             .with_alignment(TextAlignment::Center));
-    div(context, mk(root.ent(), 12),
+    div(context, mk(root.ent()),
         box(scale, 672, 11, 48, 30)
             .with_label("RB")
             .with_custom_background(white)
@@ -315,9 +315,9 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    div(context, mk(root.ent(), 100),
+    div(context, mk(root.ent()),
         box(scale, 34, 128, 572, 510).with_debug_name("sports_settings"));
-    div(context, mk(root.ent(), 101),
+    div(context, mk(root.ent()),
         box(scale, 34, 115, 300, 30)
             .with_label(heading())
             .with_font("AtkinsonMockBold", pixels(22.f * scale))
@@ -418,26 +418,26 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       }
     }
-    div(context, mk(root.ent(), 950),
+    div(context, mk(root.ent()),
         box(scale, 620, 124, 2, 498)
             .with_custom_background(afterhours::Color{159, 174, 189, 110})
             .with_debug_name("sports_divider"));
     const auto &selected = current[selected_row];
-    div(context, mk(root.ent(), 1000),
+    div(context, mk(root.ent()),
         box(scale, 680, 110, 530, 400).with_debug_name("sports_help"));
-    div(context, mk(root.ent(), 1001),
+    div(context, mk(root.ent()),
         box(scale, 680, 110, 530, 44)
             .with_label(selected.label)
             .with_font("AtkinsonMockBold", pixels(32.f * scale))
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Left));
-    div(context, mk(root.ent(), 1002),
+    div(context, mk(root.ent()),
         box(scale, 680, 168, 510, 106)
             .with_label(description_for(selected))
             .with_font("AtkinsonMock", pixels(22.f * scale))
             .with_custom_text_color(white)
             .with_text_overflow(TextOverflow::Wrap));
-    div(context, mk(root.ent(), 1003),
+    div(context, mk(root.ent()),
         box(scale, 680, 288, 510, 34)
             .with_label("Default: " +
                         value_for(initial_settings[active_tab][selected_row]))
@@ -460,22 +460,22 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto maximum = selected;
       minimum.slider_value = 0;
       maximum.slider_value = 100;
-      div(context, mk(root.ent(), 1007), box(scale, 680, 419, 220, 26)
+      div(context, mk(root.ent()), box(scale, 680, 419, 220, 26)
           .with_label(value_for(minimum)).with_font("AtkinsonMock", pixels(18 * scale))
           .with_custom_text_color(white));
-      div(context, mk(root.ent(), 1008), box(scale, 970, 419, 220, 26)
+      div(context, mk(root.ent()), box(scale, 970, 419, 220, 26)
           .with_label(value_for(maximum)).with_font("AtkinsonMock", pixels(18 * scale))
           .with_alignment(TextAlignment::Right).with_custom_text_color(white));
     }
-    div(context, mk(root.ent(), 1005), box(scale, 680, 467, 510, 32)
+    div(context, mk(root.ent()), box(scale, 680, 467, 510, 32)
         .with_label("Settings preview / changes stay local")
         .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(muted));
 
-    div(context, mk(root.ent(), 1100),
+    div(context, mk(root.ent()),
         box(scale, 0, 673, 1280, 47)
             .with_custom_background(afterhours::Color{32, 45, 54, 255})
             .with_debug_name("sports_footer"));
-    if (button(context, mk(root.ent(), 1101),
+    if (button(context, mk(root.ent()),
                box(scale, 880, 681, 270, 32)
                    .with_label("[Y] Reset " + tabs[active_tab])
                    .with_font("AtkinsonMockBold", pixels(23.f * scale))
@@ -484,7 +484,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("sports_reset"))) {
       reset_current();
     }
-    if (button(context, mk(root.ent(), 1102),
+    if (button(context, mk(root.ent()),
                box(scale, 1154, 681, 108, 32)
                    .with_label("[B] Back")
                    .with_font("AtkinsonMockBold", pixels(23.f * scale))
@@ -494,7 +494,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       status = "Back";
       settings_open = false;
     }
-    div(context, mk(root.ent(), 1103),
+    div(context, mk(root.ent()),
         box(scale, 34, 684, 800, 28)
             .with_label(status)
             .with_font("AtkinsonMockBold", pixels(21.f * scale))

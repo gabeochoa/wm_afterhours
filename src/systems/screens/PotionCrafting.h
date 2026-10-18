@@ -182,7 +182,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     };
     text(2, 32, 22, 700, 24, "THE ART OF ALCHEMY", 18, muted);
     text(3, 32, 47, 850, 49, "Alchemist's Workshop", 43, ink, "potion_title");
-    div(context, mk(root.ent(), 4), box(1052, 27, 196, 63).with_custom_background(paper).with_border(rule, 1));
+    div(context, mk(root.ent()), box(1052, 27, 196, 63).with_custom_background(paper).with_border(rule, 1));
     text(5, 1064, 39, 66, 37, "Gold", 22, muted);
     text(8, 1130, 37, 106, 41, "2,450", 32, ink, "potion_gold", TextAlignment::Right);
     line(6, 24, 103, 1232, 1, rule);
@@ -279,7 +279,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             }));
       }
       text(232, 328, 552, 536, 27, std::to_string(active.seconds) + " s recipe / Instant demo / Makes 1 potion", 21, muted, "", TextAlignment::Center);
-      if (button(context, mk(root.ent(), eid(230)), box(448, 586, 296, 49)
+      if (button(context, mk(root.ent()), box(448, 586, 296, 49)
           .with_label(available ? "Brew potion" : "Missing ingredients").with_font("Garamond", pixels(29 * scale))
           .with_custom_background(available ? olive : afterhours::Color{105, 82, 48, 255})
           .with_border(ink, 1).with_custom_text_color({255, 246, 216, 255})

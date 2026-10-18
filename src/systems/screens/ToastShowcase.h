@@ -38,9 +38,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    div(context, mk(entity, 0), ComponentConfig{}.with_size({screen_pct(1), screen_pct(1)})
+    div(context, mk(entity), ComponentConfig{}.with_size({screen_pct(1), screen_pct(1)})
         .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("toast_bg"));
-    auto root = div(context, mk(entity, 1), at(0, 0, 1280, 720)
+    auto root = div(context, mk(entity), at(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2)
         .with_debug_name("toast_main"));
     auto text = [&](int id, const std::string &caption, float x, float y, float w,
@@ -143,7 +143,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
           }
         }));
     const std::vector<std::string> positions{"Top left", "Top right", "Bottom left", "Bottom right", "Bottom center"};
-    if (stepper(context, mk(root.ent(), 73), positions, position_index,
+    if (stepper(context, mk(root.ent()), positions, position_index,
         at(948, 344, 268, 40).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
             .with_debug_name("toast_position")))

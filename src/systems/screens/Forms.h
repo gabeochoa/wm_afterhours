@@ -74,17 +74,17 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
           .with_debug_name(name));
     };
-    div(context, mk(entity, 0), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({14, 22, 33, 255}).with_corner_radius(0)
         .with_debug_name("forms_bg"));
     text(1, "Form Components", 48, 20, 1184, 44, 34, ink, "forms_title");
     text(2, "Change the controls to see the preview respond. Settings apply to this scene.",
          48, 70, 1184, 28, 20, muted, "forms_subtitle");
-    div(context, mk(entity, 3), at(48, 110, 564, 390)
+    div(context, mk(entity), at(48, 110, 564, 390)
         .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("left_column"));
-    div(context, mk(entity, 4), at(636, 110, 596, 390)
+    div(context, mk(entity), at(636, 110, 596, 390)
         .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("right_column"));
     text(5, "Sliders", 68, 120, 524, 31, 24, ink, "forms_sliders_heading");
@@ -146,19 +146,19 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     text(62, fmt::format("{}%", static_cast<int>(volume_slider * 100)),
          512, 401, 80, 25, 19, ink, "forms_audio_value");
     // Progress bar showing volume value (dynamic)
-    progress_bar(context, mk(entity, 63), volume_slider,
+    progress_bar(context, mk(entity), volume_slider,
         at(68, 428, 524, 8).with_corner_radius(4 * s)
             .with_debug_name("volume_progress"), ProgressBarLabelStyle::None);
     text(64, "Level Progress / custom range", 68, 450, 420, 25, 19, muted, "forms_level_label");
     text(65, "75/100", 506, 450, 86, 25, 19, ink, "forms_level_value");
     // Progress bar with custom range
-    progress_bar(context, mk(entity, 66), 75.f,
+    progress_bar(context, mk(entity), 75.f,
         at(68, 478, 524, 8).with_corner_radius(4 * s)
             .with_debug_name("level_progress"), ProgressBarLabelStyle::None, 0.f, 100.f);
     text(70, "Checkboxes", 660, 120, 268, 31, 24, ink, "forms_checkboxes_heading");
     text(74, fmt::format("Music {} / effects {}", enable_music ? "on" : "off", enable_sfx ? "on" : "off"),
          940, 125, 268, 26, 17, muted, "forms_audio_state");
-    auto options = vstack(context, mk(entity, 71), at(660, 164, 548, 290)
+    auto options = vstack(context, mk(entity), at(660, 164, 548, 290)
         .with_background(Theme::Usage::None).with_no_wrap()
         .with_overflow(Overflow::Scroll, Axis::Y)
         .with_debug_name("forms_options"));
@@ -234,7 +234,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     bool disabled_value = true;
     checkbox_row(16, "Disabled", "forms_disabled", disabled_value, true);
     group(17, "Language");
-    dropdown(context, mk(options.ent(), 18), languages, language_index,
+    dropdown(context, mk(options.ent()), languages, language_index,
         ComponentConfig{}.with_size({pixels(524 * s), pixels(40 * s)})
             .with_font("AtkinsonMock", pixels(20 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
@@ -246,13 +246,13 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     const std::string status = "Volume: " + std::to_string(static_cast<int>(volume_slider * 100)) +
         "% | Resolution: " + resolutions[resolution_index] +
         " | Quality: " + quality_options[quality_index];
-    div(context, mk(entity, 80), at(48, 516, 564, 186)
+    div(context, mk(entity), at(48, 516, 564, 186)
         .with_custom_background(panel).with_corner_radius(10 * s)
         .with_debug_name("forms_status_panel"));
     text(81, "Live preview", 64, 522, 200, 28, 22, ink, "forms_status_heading");
     text(82, bloom_effect ? "Bloom on" : "Bloom off", 432, 522, 160, 28,
          17, muted, "forms_preview_bloom");
-    div(context, mk(entity, 88), at(64, 554, 532, 136)
+    div(context, mk(entity), at(64, 554, 532, 136)
         .with_corner_radius(0).with_debug_name("forms_preview")
         .with_custom_background({10, 17, 27, 255})
         .with_on_draw_fg([this, s](RectangleType r) {
@@ -320,20 +320,20 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
            274, 522, 152, 28, 17, muted, "forms_preview_fps");
     if (subtitles) {
       const std::array<const char *, 6> captions{"Follow the light", "Sigue la luz", "Suivez la lumiere", "Folge dem Licht", "光を追いかけて", "빛을 따라가세요"};
-      div(context, mk(entity, 97), at(194, 660, 280, 24).with_label(captions[language_index])
+      div(context, mk(entity), at(194, 660, 280, 24).with_label(captions[language_index])
           .with_font(language_index == 4 ? "Sazanami" : language_index == 5 ? "NotoSansKR" : "AtkinsonMock", pixels(17 * s))
           .with_custom_background({10, 17, 27, 230}).with_custom_text_color(ink)
           .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
           .with_debug_name("forms_preview_subtitle"));
     }
-    div(context, mk(entity, 90), at(636, 516, 596, 186)
+    div(context, mk(entity), at(636, 516, 596, 186)
         .with_custom_background(panel).with_corner_radius(10 * s)
         .with_debug_name("clipboard_row"));
-    dropdown(context, mk(entity, 84), resolutions, resolution_index,
+    dropdown(context, mk(entity), resolutions, resolution_index,
         at(652, 526, 198, 34).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
             .with_debug_name("forms_resolution"));
-    dropdown(context, mk(entity, 86), quality_options, quality_index,
+    dropdown(context, mk(entity), quality_options, quality_index,
         at(866, 526, 140, 34).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
             .with_debug_name("forms_quality"));
@@ -342,7 +342,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     text(91, "Copy saves the summary as text.", 652, 568, 560, 23, 18, muted, "forms_clipboard_copy_help");
     text(92, "Paste reads text; it does not apply settings.", 652, 594, 560, 23, 17, muted, "forms_clipboard_paste_help");
     // Copy button - copies current status to clipboard
-    if (button(context, mk(entity, 93), at(652, 650, 162, 36)
+    if (button(context, mk(entity), at(652, 650, 162, 36)
         .with_label("Copy Status").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({85, 181, 176, 255}).with_custom_text_color({12, 30, 38, 255})
         .with_corner_radius(6 * s).with_debug_name("copy_btn"))) {
@@ -350,7 +350,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
       clipboard_display = "Copied!";
     }
     // Paste button - reads from clipboard
-    if (button(context, mk(entity, 94), at(826, 650, 128, 36)
+    if (button(context, mk(entity), at(826, 650, 128, 36)
         .with_label("Paste").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({48, 71, 93, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * s).with_debug_name("paste_btn"))) {
@@ -360,7 +360,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     text(95, "Clipboard result / read only", 974, 618, 238, 25, 15, muted, "forms_clipboard_label");
     const std::string display_text = clipboard_display.length() > 140
         ? clipboard_display.substr(0, 137) + "..." : clipboard_display;
-    div(context, mk(entity, 96), at(974, 650, 242, 36)
+    div(context, mk(entity), at(974, 650, 242, 36)
         .with_label(display_text).with_font("AtkinsonMock", pixels(16 * s))
         .with_custom_background({14, 25, 38, 255}).with_custom_text_color(ink)
         .with_text_overflow(TextOverflow::Ellipsis).with_text_inset(6 * s)

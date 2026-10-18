@@ -252,11 +252,11 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       status = "Selected " + kart_names[selected_kart];
     }
 
-    auto background = div(context, mk(entity, 0), ComponentConfig{}
+    auto background = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(deep_blue).with_corner_radius(0).with_debug_name("kart_root"));
     auto root =
-        div(context, mk(background.ent(), 0),
+        div(context, mk(background.ent()),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
                 .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                         (context.screen_height - 720 * scale) / 2)
@@ -284,7 +284,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
          TextAlignment::Left);
     text(2, "Grand Prix · Mushroom Cup", 44.f, 51.f, 660.f, 27.f, 23.f,
          navy, TextAlignment::Left);
-    div(context, mk(root.ent(), 3),
+    div(context, mk(root.ent()),
         box(scale, 1198.f, 27.f, 32.f, 32.f)
             .with_label("P1")
             .with_font("ArchivoMockBold", pixels(22.f * scale))
@@ -393,7 +393,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
            box(scale, 648, 253, 592, 171).with_ignore_pointer_events().with_debug_name("kart_preview"));
     text(172, characters[selected_character].name + " / " + kart_names[selected_kart],
          648, 431, 592, 39, 32, white, TextAlignment::Center, "ArchivoMockBold", "kart_preview_identity");
-    div(context, mk(root.ent(), 180), box(scale, 662, 477, 578, 166)
+    div(context, mk(root.ent()), box(scale, 662, 477, 578, 166)
         .with_custom_background(afterhours::Color{0, 47, 86, 230})
         .with_debug_name("kart_stats"));
     text(181, "Driver ratings / 0-10", 680, 482, 542, 27, 22, white);

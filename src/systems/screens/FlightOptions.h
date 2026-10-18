@@ -154,7 +154,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(context.screen_width), pixels(context.screen_height)}).with_corner_radius(0)
         .with_debug_name("flight_root")
         .with_on_draw_bg([texture = airspace](RectangleType r) { paint(texture, r); }));
-    auto content = div(context, mk(root.ent(), 0), ComponentConfig{}
+    auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position((context.screen_width - 1280 * scale) / 2,
                                 (context.screen_height - 720 * scale) / 2)
@@ -177,7 +177,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     label(1, "OPTIONS", 92, 55, 380, 48, 40, bright, "flight_title", true);
     label(6, "FLIGHT CONFIGURATION", 94, 105, 560, 28, 20, cyan);
     if (!options_open) {
-      div(context, mk(content.ent(), 7), box(scale, 76, 196, 660, 224)
+      div(context, mk(content.ent()), box(scale, 76, 196, 660, 224)
           .with_custom_background({3, 18, 34, 235}));
       label(2, "OPTIONS CLOSED", 100, 220, 590, 42, 30, bright);
       label(3, status, 100, 270, 590, 44, 23, cyan, "flight_status");
@@ -188,19 +188,19 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
       return;
     }
-    div(context, mk(content.ent(), 8), box(scale, 76, 136, 272, 426)
+    div(context, mk(content.ent()), box(scale, 76, 136, 272, 426)
         .with_custom_background({3, 18, 34, 225}).with_debug_name("flight_navigation"));
-    div(context, mk(content.ent(), 9), box(scale, 384, 136, 456, 426)
+    div(context, mk(content.ent()), box(scale, 384, 136, 456, 426)
         .with_custom_background({3, 18, 34, 235}).with_debug_name("flight_settings"));
-    div(context, mk(content.ent(), 10), box(scale, 868, 136, 324, 426)
+    div(context, mk(content.ent()), box(scale, 868, 136, 324, 426)
         .with_custom_background({5, 24, 44, 235}).with_border({78, 124, 151, 255}, scale)
         .with_debug_name("flight_preview"));
     const auto category_y = [](size_t i) {
       return 164.f + static_cast<float>(i) * 38 + (i >= 5 ? 24 : 0) + (i >= 7 ? 24 : 0);
     };
-    div(context, mk(content.ent(), 5), box(scale, 86, category_y(active_tab), 252, 34)
+    div(context, mk(content.ent()), box(scale, 86, category_y(active_tab), 252, 34)
         .with_custom_background({109, 93, 53, 105}).with_ignore_pointer_events());
-    div(context, mk(content.ent(), 11), box(scale, 86, category_y(active_tab) + 2, 4, 30)
+    div(context, mk(content.ent()), box(scale, 86, category_y(active_tab) + 2, 4, 30)
         .with_custom_background(gold).with_ignore_pointer_events());
     label(12, "INPUT", 102, 139, 224, 23, 16, muted);
     label(13, "DISPLAY", 102, 353, 224, 23, 16, muted);

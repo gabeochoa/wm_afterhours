@@ -42,7 +42,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
     auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("cg_canvas"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1144, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1144, 720)
         .with_absolute_position(left, top).with_debug_name("cg_root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size = 18.f,
@@ -60,9 +60,9 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
           .with_auto_text_color(true).with_alignment(TextAlignment::Center)
           .with_corner_radius(8 * s).with_click_activation(mode).with_debug_name(name));
     };
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 72)
+    div(context, mk(root.ent()), box(0, 24, 1144, 72)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
-    div(context, mk(root.ent(), 1), box(20, 28, 1088, 39)
+    div(context, mk(root.ent()), box(20, 28, 1088, 39)
         .with_label("Component configuration examples").with_font("AtkinsonMockBold", pixels(32 * s))
         .with_custom_text_color(theme.font).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
     label(root.ent(), 2, "Compare requested settings with visible output. Measurements use 720p design pixels unless marked screen px.",
@@ -134,9 +134,9 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
     {
       auto p = panel(first.ent(), 2, "clip_children / hidden", "cg_panel_clip");
       label(p.ent(), 1, "4 source rows / viewport 76px", 18, 40, 332, 25, 18);
-      div(context, mk(p.ent(), 2), box(18, 78, 188, 80).with_ignore_pointer_events()
+      div(context, mk(p.ent()), box(18, 78, 188, 80).with_ignore_pointer_events()
           .with_on_draw_fg([cyan, s](RectangleType r) { afterhours::draw_rectangle_rounded_lines_ex(r, 0, 4, s, cyan); }));
-      auto clip = vstack(context, mk(p.ent(), 3), box(20, 80, 184, 76)
+      auto clip = vstack(context, mk(p.ent()), box(20, 80, 184, 76)
           .with_custom_background({30, 34, 46, 255}).with_clip_children(true)
           .with_corner_radius(8 * s).with_no_wrap().with_debug_name("cg_clip"));
       for (int i = 0; i < 4; ++i) {
@@ -162,7 +162,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       const float phase = marquee * s;
       const float dash = 10 * s;
       const float gap = 7 * s;
-      div(context, mk(p.ent(), 3), box(20, 77, 328, 106).with_label("selection")
+      div(context, mk(p.ent()), box(20, 77, 328, 106).with_label("selection")
           .with_font("AtkinsonMock", pixels(24 * s)).with_custom_text_color({210, 220, 240, 255})
           .with_alignment(TextAlignment::Center)
           .with_on_draw_bg([](RectangleType r) { afterhours::draw_rectangle(r, {38, 44, 60, 255}); })
@@ -180,7 +180,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
     }
     {
       auto p = panel(second.ent(), 1, "text / inset / wrap", "cg_panel_text");
-      div(context, mk(p.ent(), 1), box(20, 43, 328, 29).with_label("Theme accent text")
+      div(context, mk(p.ent()), box(20, 43, 328, 29).with_label("Theme accent text")
           .with_custom_background(specimen_bg).with_text_color(Theme::Usage::Accent).with_auto_text_color(false)
           .with_font("AtkinsonMock", pixels(18 * s)).with_debug_name("cg_text_color"));
       label(p.ent(), 2, fmt::format("Theme accent text / #{:02X}{:02X}{:02X}", theme.accent.r, theme.accent.g, theme.accent.b),
@@ -201,7 +201,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       label(p.ent(), 30, "Gold = requested; cyan = drawn 5 screen px", 16, 163, 336, 22, 15, "cg_inset_status");
       label(p.ent(), 31, "Child layout wrap", 16, 189, 164, 23, 17);
       label(p.ent(), 32, "Text overflow wrap", 188, 189, 164, 23, 17);
-      auto wrap = hstack(context, mk(p.ent(), 33), box(20, 218, 156, 54).with_wrap()
+      auto wrap = hstack(context, mk(p.ent()), box(20, 218, 156, 54).with_wrap()
           .with_custom_background(specimen_bg).with_debug_name("cg_flex_wrap"));
       for (int i = 0; i < 2; ++i)
         div(context, mk(wrap.ent(), i), ComponentConfig{}
@@ -209,7 +209,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(theme.font)
             .with_custom_background({56, 62, 82, 255}).with_corner_radius(0)
             .with_debug_name("cg_wrap_child_" + std::to_string(i)));
-      div(context, mk(p.ent(), 34), box(192, 218, 156, 54).with_label("Narrow text wraps onto two lines.")
+      div(context, mk(p.ent()), box(192, 218, 156, 54).with_label("Narrow text wraps onto two lines.")
           .with_font("AtkinsonMock", pixels(16 * s)).with_custom_text_color(theme.font)
           .with_custom_background(specimen_bg).with_text_overflow(TextOverflow::Wrap).with_debug_name("cg_text_wrap"));
     }
@@ -231,13 +231,13 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       auto children_probe = probe;
       children_probe.with_size({children(), children()});
       const auto without_tree = measure_config(children_probe, 328 * s);
-      div(context, mk(p.ent(), 5), probe.with_absolute_position(20 * s, 165 * s)
+      div(context, mk(p.ent()), probe.with_absolute_position(20 * s, 165 * s)
           .with_custom_background({46, 62, 52, 255}).with_corner_radius(0).with_debug_name("cg_probe"));
       label(p.ent(), 6, fmt::format("Text {:.0f}x{:.0f} / children {:.0f}x{:.0f} screen px", measured.size.x,
             measured.size.y, without_tree.size.x, without_tree.size.y), 16, 187, 336, 20, 16, "cg_measure");
       label(p.ent(), 7, "Text uses the label; children needs a tree.", 16, 207, 336, 20, 16);
       label(p.ent(), 8, "Tab selects all / arrow keys edit text", 16, 228, 336, 20, 16);
-      text_input(context, mk(p.ent(), 9), field, box(20, 250, 328, 32)
+      text_input(context, mk(p.ent()), field, box(20, 250, 328, 32)
           .with_font("AtkinsonMock", pixels(17 * s))
           .with_consumes_directional_input(true).with_corner_radius(6 * s).with_debug_name("cg_field"));
     }

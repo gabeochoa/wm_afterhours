@@ -22,9 +22,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
           .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+    div(context,mk(entity),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
         .with_custom_background(bg).with_corner_radius(0));
-    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1160*s),pixels(656*s)})
+    auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1160*s),pixels(656*s)})
         .with_absolute_position((context.screen_width-1160*s)/2,(context.screen_height-656*s)/2)
         .with_custom_background(panel).with_corner_radius(12*s).with_debug_name("main_panel"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,
@@ -44,7 +44,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(colors_page==(i==1)?bg:cream).with_corner_radius(6*s)
           .with_debug_name("text_page_"+std::to_string(i)))) colors_page=i==1;
     }
-    if(button(context,mk(root.ent(),3),box(850,76,278,40).with_label(guides?"Bounds guides: on":"Bounds guides: off")
+    if(button(context,mk(root.ent()),box(850,76,278,40).with_label(guides?"Bounds guides: on":"Bounds guides: off")
         .with_font("AtkinsonMock",pixels(19*s)).with_custom_background({64,57,49,255})
         .with_custom_text_color(cream).with_debug_name("text_guides"))) guides=!guides;
     if(!colors_page) {

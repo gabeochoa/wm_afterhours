@@ -164,8 +164,8 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     overlay_style.panel.with_font("AtkinsonMock", pixels(20.f * scale))
         .with_debug_name("terminal_overlay");
     overlay_style.autocomplete = autocomplete_style;
-    afterhours::terminal::overlay(ctx, mk(entity, 7), console, terminal_overlay, overlay_style);
-    afterhours::terminal::panel(ctx, mk(entity, 4), console, ComponentConfig{}
+    afterhours::terminal::overlay(ctx, mk(entity), console, terminal_overlay, overlay_style);
+    afterhours::terminal::panel(ctx, mk(entity), console, ComponentConfig{}
         .with_hidden(terminal_overlay.is_open())
         .with_size({pixels(1184.f * scale), pixels(436.f * scale)})
         .with_absolute_position(left, 196.f * scale)

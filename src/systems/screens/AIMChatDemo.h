@@ -126,7 +126,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   }
   void title(UIContext<InputAction> &c, afterhours::Entity &p, const std::string &text,
              float w, bool conversation) {
-    div(c, mk(p, 900), box(5, 5, w - 10, 25)
+    div(c, mk(p), box(5, 5, w - 10, 25)
         .with_on_draw_bg([active = conversation || !chat_open](RectangleType r) {
           raylib::DrawRectangleGradientH(static_cast<int>(r.x), static_cast<int>(r.y),
               static_cast<int>(r.width), static_cast<int>(r.height), active ? raylib::Color{0, 0, 128, 255} : raylib::Color{100, 105, 112, 255},
@@ -183,7 +183,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     label(c, root.ent(), 6, "Messenger", 29, 284, 90, 19, 12, white);
     if (buddy_open) build_buddy(c, root.ent());
     if (chat_open) build_chat(c, root.ent());
-    div(c, mk(root.ent(), 500), box(0, 687, 1280, 33).with_custom_background({195, 195, 195, 255})
+    div(c, mk(root.ent()), box(0, 687, 1280, 33).with_custom_background({195, 195, 195, 255})
         .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, false, s); }));
     if (action(c, root.ent(), 501, "Start", 4, 691, 78, 26, "aim_start")) dialog = Dialog::Start;
     if (action(c, root.ent(), 502, buddies[selected].name + (selected == 3 ? " - Chat Room" : " - Instant Message"), 88, 691, 253, 25, "aim_restore_chat", chat_open)) chat_open = true;
@@ -199,14 +199,14 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     if (action(c, p, 0, "My AIM", 10, 33, 61, 23, "aim_my_menu", false, false, true)) dialog = Dialog::Fonts;
     if (action(c, p, 1, "People", 75, 33, 60, 23, "aim_people_menu", false, false, true)) { choose(selected_buddy); dialog = Dialog::People; }
     if (action(c, p, 2, "Help", 141, 33, 45, 23, "aim_help", false, false, true)) dialog = Dialog::Help;
-    div(c, mk(p, 3), box(5, 56, 287, 90).with_custom_background({226, 220, 202, 255}));
+    div(c, mk(p), box(5, 56, 287, 90).with_custom_background({226, 220, 202, 255}));
     image(c, p, 4, 0, 21, 65, 68, 76);
     label(c, p, 5, "AOL Instant", 94, 70, 190, 28, 20, {32, 41, 127, 255}, "", true);
     label(c, p, 6, "Messenger", 94, 93, 190, 26, 20, {32, 41, 127, 255}, "", true);
     label(c, p, 7, my_name, 94, 122, 180, 20, 12, ink);
     if (action(c, p, 8, "Buddy List", 10, 158, 92, 25, "aim_list", !setup)) setup = false;
     if (action(c, p, 9, "List Setup", 104, 158, 93, 25, "aim_setup", setup)) { choose(selected_buddy); setup = true; }
-    div(c, mk(p, 10), box(10, 183, 277, 224).with_custom_background(white)
+    div(c, mk(p), box(10, 183, 277, 224).with_custom_background(white)
         .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, true, s); }));
     if (setup) label(c, p, 11, "Select a buddy to manage", 20, 193, 252, 24, 13, ink);
     else group(c, p, 0, "Buddies", "3/8 online", 193);
@@ -243,9 +243,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
         else { choose(selected_buddy); setup = !setup; }
       }
     if (action(c, p, 50, away ? "Away - be right back" : "I'm Available", 12, 465, 273, 30, "aim_availability", true)) away = !away;
-    div(c, mk(p, 54), box(259, 469, 20, 22).with_ignore_pointer_events()
+    div(c, mk(p), box(259, 469, 20, 22).with_ignore_pointer_events()
         .with_on_draw_fg([s = scale, color = ink](RectangleType r) { draw_glyph(r, Glyph::Down, s, color); }));
-    div(c, mk(p, 51), box(12, 521, 273, 32).with_custom_background({23, 66, 162, 255}));
+    div(c, mk(p), box(12, 521, 273, 32).with_custom_background({23, 66, 162, 255}));
     label(c, p, 52, "AOL", 24, 522, 72, 30, 24, white, "", true);
     label(c, p, 53, "You've got a friend.", 102, 526, 174, 22, 12, white);
   }
@@ -272,7 +272,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   void build_chat(UIContext<InputAction> &c, afterhours::Entity &root) {
     const float x = maximized ? 225 : 493, y = maximized ? 30 : 90;
     const float w = maximized ? 1020 : 636, h = maximized ? 630 : 551;
-    auto window = div(c, mk(root, 200), box(x, y, w, h).with_custom_background(face)
+    auto window = div(c, mk(root), box(x, y, w, h).with_custom_background(face)
         .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, false, s); }).with_debug_name("aim_window"));
     auto &p = window.ent(); auto &buddy = buddies[selected];
     title(c, p, buddy.name + (selected == 3 ? " - Chat Room" : " - Instant Message"), w, true);
@@ -285,7 +285,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     label(c, p, 12, selected == 3 ? "Local chat room" : buddy.blocked ? "Blocked" : "Available", 82, 94, 186, 20, 11, ink, "aim_buddy_status");
     div(c, mk(p, 13), box(73, 101, 7, 7).with_custom_background(buddy.blocked ? afterhours::Color{160, 160, 160, 255} : afterhours::Color{0, 140, 0, 255}).with_roundness(1));
     if (selected != 3) label(c, p, 14, fmt::format("Warning level: {}%", buddy.warning), 228, 94, 200, 20, 11, {75, 75, 75, 255}, "aim_warning_level");
-    auto history = vstack(c, mk(p, 20), box(12, 121, w - 24, h - (show_log ? 397 : 336))
+    auto history = vstack(c, mk(p), box(12, 121, w - 24, h - (show_log ? 397 : 336))
         .with_custom_background(white).with_padding(Padding{.top = pixels(9 * scale), .left = pixels(8 * scale),
               .bottom = pixels(8 * scale), .right = pixels(8 * scale)})
         .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, true, s); })
@@ -307,7 +307,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
           .with_margin(Margin{.bottom = pixels(3 * scale)}).with_background(Theme::Usage::None)
           .with_ignore_pointer_events());
     }
-    div(c, mk(history.ent(), 2001), ComponentConfig{}.with_size({percent(1), pixels(32 * scale)})
+    div(c, mk(history.ent()), ComponentConfig{}.with_size({percent(1), pixels(32 * scale)})
         .with_label(buddy.messages.empty() ? "Local conversation. Messages stay in this demo." : "Last message received at 2:02 PM.")
         .with_font("AtkinsonMock", h720(15)).with_custom_text_color({88, 88, 88, 255})
         .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
@@ -318,7 +318,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     }
     if (show_log) {
       label(c, p, 2002, "Developer log sample", 12, h - 275, w - 24, 24, 12, ink);
-      auto pasted = div(c, mk(p, 2000), box(12, h - 248, w - 24, 27).with_custom_background({244, 243, 235, 255})
+      auto pasted = div(c, mk(p), box(12, h - 248, w - 24, 27).with_custom_background({244, 243, 235, 255})
           .with_overflow(dialog == Dialog::None ? Overflow::Scroll : Overflow::Hidden, Axis::X).with_debug_name("pasted_log"));
       if (pasted.ent().has<HasScrollView>()) {
         auto &scroll = pasted.ent().get<HasScrollView>();
@@ -348,7 +348,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                "aim_demo_log", show_log, false, true)) show_log = !show_log;
     label(c, p, 37, "Send to: " + buddy.name, 16, h - 184, w - 30, 20, 12, ink);
     const std::string replacement = replace_composer ? message_input : std::string{};
-    auto composer = afterhours::text_input::text_area(c, mk(p, 40), message_input,
+    auto composer = afterhours::text_input::text_area(c, mk(p), message_input,
         box(12, h - 164, w - 24, 79).with_custom_background(white)
         .with_custom_text_color(message_colors[color]).with_border({128, 128, 128, 255}, scale)
         .with_font(bold ? "AtkinsonMockBold" : "AtkinsonMock", h720(text_size * 1.25f))
@@ -364,11 +364,11 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             21, h - 158, w - 44, 27, 15, {98, 98, 98, 255}, "aim_placeholder", false, 10);
     if (selected != 3 && action(c, p, 50, "Warn", 14, h - 79, 70, 39, "warn_btn")) dialog = Dialog::Warn;
     if (selected != 3 && action(c, p, 51, buddy.blocked ? "Unblock" : "Block", 92, h - 79, 70, 39, "block_btn")) dialog = Dialog::Block;
-    div(c, mk(p, 54), box(w - 91, h - 81, 74, 43).with_ignore_pointer_events()
+    div(c, mk(p), box(w - 91, h - 81, 74, 43).with_ignore_pointer_events()
         .with_on_draw_fg([s = scale, color = ink](RectangleType r) { raylib::DrawRectangleLinesEx(r, s, color); }));
     if (action(c, p, 52, "Send", w - 89, h - 79, 70, 39, "aim_send", false,
                buddy.blocked || dialog != Dialog::None)) send_message(composer.ent());
-    div(c, mk(p, 55), box(17, h - 23, 7, 7).with_custom_background({0, 140, 0, 255}).with_ignore_pointer_events());
+    div(c, mk(p), box(17, h - 23, 7, 7).with_custom_background({0, 140, 0, 255}).with_ignore_pointer_events());
     label(c, p, 53, "Direct Connection Established (local demo)", 28, h - 31, w - 42, 22, 12, ink, "aim_connection");
   }
 
@@ -391,7 +391,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     default: break;
     }
     bool open = dialog != Dialog::None;
-    auto panel = afterhours::modal(c, mk(root, 701), open, afterhours::ModalConfig{}
+    auto panel = afterhours::modal(c, mk(root), open, afterhours::ModalConfig{}
         .with_backdrop_color({0, 0, 0, 65}).with_render_layer(11)
         .with_show_close_button(false)
         .with_panel(box(405, 232, 470, menu ? 242 : 256)
@@ -400,7 +400,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("aim_dialog")));
     if (!open) { dialog = Dialog::None; return; }
     auto &p = panel.ent();
-    div(c, mk(p, 0), box(5, 5, 460, 27).with_custom_background(blue));
+    div(c, mk(p), box(5, 5, 460, 27).with_custom_background(blue));
     label(c, p, 1, heading, 13, 8, 429, 24, 14, white, "aim_dialog_title", true);
     if (menu) {
       std::array<std::string, 3> options;
@@ -421,7 +421,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
         }
       return;
     }
-    div(c, mk(p, 2), box(25, 52, 420, 126).with_label(body).with_font("AtkinsonMock", h720(17.5f))
+    div(c, mk(p), box(25, 52, 420, 126).with_label(body).with_font("AtkinsonMock", h720(17.5f))
         .with_text_overflow(TextOverflow::Wrap).with_custom_text_color(ink).with_ignore_pointer_events());
     const bool confirmation = dialog == Dialog::Warn || dialog == Dialog::Block || dialog == Dialog::Clear;
     std::string primary = "OK";

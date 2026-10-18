@@ -211,7 +211,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1), ComponentConfig{}
         .with_size({pixels(screen_w), pixels(screen_h)}).with_corner_radius(0)
         .with_on_draw_bg([](RectangleType r) { draw_background(r); }).with_debug_name("bk_canvas"));
-    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(entity), box(scale, 0, 0, 1280, 720)
         .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
         .with_debug_name("bk_root"));
     const auto text = [&](int id, std::string label, float x, float y, float w, float h,
@@ -235,7 +235,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color muted{92, 104, 117, 255};
     const afterhours::Color line{218, 224, 229, 255};
 
-    div(context, mk(root.ent(), 1),
+    div(context, mk(root.ent()),
         box(scale, 0, 0, 1280, 28)
             .with_on_draw_bg([](RectangleType r) { draw_menubar(r); })
             .with_debug_name("bk_menubar"));
@@ -246,11 +246,11 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(4, "Sat 2:03 PM", 1120, 4, 136, 22, 15, afterhours::Color{28, 39, 39, 255},
          TextAlignment::Right, "bk_menu_time");
 
-    div(context, mk(root.ent(), 10),
+    div(context, mk(root.ent()),
         box(scale, 90, 65, 1100, 622)
             .with_on_draw_bg([](RectangleType r) { draw_window(r); })
             .with_debug_name("bk_window"));
-    div(context, mk(root.ent(), 11),
+    div(context, mk(root.ent()),
         box(scale, 90, 65, 1100, 35)
             .with_on_draw_bg([](RectangleType r) { draw_titlebar(r); })
             .with_debug_name("bk_titlebar"));
@@ -259,14 +259,14 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
 
     panel(20, 90, 100, 1100, 76, afterhours::Color{255, 255, 255, 255}, "bk_nav");
     panel(21, 90, 175, 1100, 1, line);
-    div(context, mk(root.ent(), 22), box(scale, 126, 117, 24, 42)
+    div(context, mk(root.ent()), box(scale, 126, 117, 24, 42)
                                       .with_on_draw_bg([](RectangleType r) { draw_brand_mark(r); }));
     text(23, "offsite", 166, 112, 200, 37, 32, red, TextAlignment::Left,
          "bk_brand", "AtkinsonMockBold");
     text(24, "COMPUTER BACKUP", 166, 148, 210, 22, 15, muted, TextAlignment::Left,
          "bk_brand_sub", "AtkinsonMock");
 
-    if (button(context, mk(root.ent(), 30),
+    if (button(context, mk(root.ent()),
                box(scale, 816, 100, 106, 76)
                    .with_label("Overview")
                    .with_font("AtkinsonMock", pixels(18.f * scale))
@@ -277,7 +277,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
       action_status = "Overview";
     }
     panel(31, 816, 172, 106, 3, red);
-    if (button(context, mk(root.ent(), 32),
+    if (button(context, mk(root.ent()),
                box(scale, 944, 100, 98, 76)
                    .with_label("Settings")
                    .with_font("AtkinsonMock", pixels(18.f * scale))
@@ -287,7 +287,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("bk_tab_settings"))) {
       action_status = "Settings selected";
     }
-    if (button(context, mk(root.ent(), 33),
+    if (button(context, mk(root.ent()),
                box(scale, 1056, 100, 116, 76)
                    .with_label("Restore files")
                    .with_font("AtkinsonMock", pixels(18.f * scale))
@@ -304,15 +304,15 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     panel(41, 786, 176, 1, 474, afterhours::Color{229, 229, 229, 255});
     panel(42, 787, 176, 403, 474, afterhours::Color{248, 249, 250, 255}, "bk_aside");
 
-    div(context, mk(root.ent(), 50), box(scale, 117, 200, 52, 38)
+    div(context, mk(root.ent()), box(scale, 117, 200, 52, 38)
         .with_on_draw_fg([](RectangleType r) { draw_computer(r); }));
     text(51, "MacBook Pro", 180, 194, 330, 30, 25, ink, TextAlignment::Left, "bk_device", "AtkinsonMockBold");
     text(52, "Personal Backup · 2 TB plan", 180, 225, 380, 26, 18, mid, TextAlignment::Left, "bk_plan_line");
     panel(53, 642, 204, 112, 32, {231, 244, 235, 255}, "bk_health_badge");
     text(54, "Healthy", 668, 207, 78, 26, 18, {44, 113, 75, 255}, TextAlignment::Left, "bk_health");
-    div(context, mk(root.ent(), 55), box(scale, 651, 216, 8, 8)
+    div(context, mk(root.ent()), box(scale, 651, 216, 8, 8)
         .with_on_draw_fg([](RectangleType r) { afterhours::draw_circle(static_cast<int>(r.x + r.width / 2), static_cast<int>(r.y + r.height / 2), r.width / 2, {44, 113, 75, 255}); }));
-    div(context, mk(root.ent(), 60), box(scale, 126, 260, 132, 132)
+    div(context, mk(root.ent()), box(scale, 126, 260, 132, 132)
         .with_on_draw_fg([value = overall](RectangleType r) { draw_ring(r, value); }).with_debug_name("bk_ring"));
     text(61, fmt::format("{:.0f}%", overall * 100), 140, 299, 104, 40, 34, ink, TextAlignment::Center, "bk_ring_pct");
     text(63, "COMPLETE", 140, 339, 104, 23, 15, mid, TextAlignment::Center, "bk_ring_caption");
@@ -320,7 +320,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(65, fmt::format("{:.0f} GB of {:.0f} GB uploaded", total_uploaded_gb(), total_gb()),
          286, 304, 466, 28, 21, ink, TextAlignment::Left, "bk_bytes");
     text(66, fmt::format("{} of 5 folders complete", complete_count()), 286, 335, 300, 26, 18, mid, TextAlignment::Left, "bk_folders_done");
-    auto pause_button = button(context, mk(root.ent(), 67), box(scale, 286, 365, 196, 34)
+    auto pause_button = button(context, mk(root.ent()), box(scale, 286, 365, 196, 34)
         .with_label(paused ? "Resume backup" : "Pause backup")
         .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(ink)
         .with_custom_background({235, 239, 242, 255}).with_corner_radius(4 * scale)
@@ -347,7 +347,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(81, "Progress", 290, 452, 200, 25, 16, mid);
     text(83, "State", 530, 452, 116, 25, 16, mid);
     text(84, "Size", 664, 452, 90, 25, 16, mid, TextAlignment::Right);
-    auto rescan = button(context, mk(root.ent(), 82), box(scale, 644, 365, 110, 34)
+    auto rescan = button(context, mk(root.ent()), box(scale, 644, 365, 110, 34)
         .with_label("Rescan").with_font("AtkinsonMock", pixels(18 * scale))
         .with_custom_text_color(red).with_custom_background({245, 238, 235, 255})
         .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
@@ -417,7 +417,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     selector(204, retentions, retention_idx, 281, "bk_retention", "Keep file versions: ");
     text(205, "Bandwidth limit", 815, 327, 232, 28, 19, ink, TextAlignment::Left, "bk_bandwidth_label");
     text(206, fmt::format("{:.0f}%", bandwidth * 100), 1072, 327, 90, 28, 19, red, TextAlignment::Right, "bk_bandwidth_pct");
-    auto bandwidth_slider = slider(context, mk(root.ent(), 207), bandwidth,
+    auto bandwidth_slider = slider(context, mk(root.ent()), bandwidth,
         box(scale, 826, 359, 326, 32).with_custom_background({0, 0, 0, 0})
             .with_on_draw_fg([value = bandwidth, scale](RectangleType r) {
               const float width = std::max(0.f, r.width - 6.f);
@@ -462,9 +462,9 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     panel(220, 815, 532, 347, 1, line);
     text(221, "ACCOUNT STORAGE", 815, 541, 347, 25, 16, mid, TextAlignment::Left, "bk_account_hdr", "AtkinsonMockBold");
     text(222, "787 GB of 2 TB · 39.4% used", 815, 568, 347, 27, 20, ink, TextAlignment::Left, "bk_plan");
-    div(context, mk(root.ent(), 223), box(scale, 815, 601, 347, 8)
+    div(context, mk(root.ent()), box(scale, 815, 601, 347, 8)
         .with_on_draw_fg([](RectangleType r) { draw_storage(r); }).with_debug_name("bk_storage"));
-    if (button(context, mk(root.ent(), 224), box(scale, 815, 614, 240, 30)
+    if (button(context, mk(root.ent()), box(scale, 815, 614, 240, 30)
         .with_label("Manage account  >").with_font("AtkinsonMock", pixels(18 * scale))
         .with_custom_text_color(red).with_alignment(TextAlignment::Left)
         .with_debug_name("bk_manage"))) {
@@ -474,13 +474,13 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     }
     panel(240, 90, 650, 1100, 37, {250, 250, 250, 255}, "bk_footer");
     panel(241, 90, 650, 1100, 1, line);
-    div(context, mk(root.ent(), 242), box(scale, 111, 659, 16, 18)
+    div(context, mk(root.ent()), box(scale, 111, 659, 16, 18)
         .with_on_draw_fg([scale](RectangleType r) {
           afterhours::draw_rectangle({r.x + 2 * scale, r.y + 7 * scale, 12 * scale, 11 * scale}, {66, 112, 86, 255});
           raylib::DrawRectangleLinesEx({r.x + 4 * scale, r.y, 8 * scale, 11 * scale}, 2 * scale, {66, 112, 86, 255});
         }));
     text(243, "Encrypted backup preview · no files are uploaded", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
-    if (button(context, mk(root.ent(), 244), box(scale, 1144, 653, 34, 31)
+    if (button(context, mk(root.ent()), box(scale, 1144, 653, 34, 31)
         .with_label("?").with_font("AtkinsonMock", pixels(23 * scale))
         .with_custom_text_color(ink).with_custom_background({229, 236, 241, 255})
         .with_corner_radius(5 * scale).with_alignment(TextAlignment::Center).with_debug_name("bk_help"))) {
@@ -500,15 +500,15 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
       detail_title = "Backup help";
       detail_text = "Pause stops the preview. Rescan replays folder discovery. The bandwidth slider sets the simulated transfer cap; no files leave this application.";
     }
-    if (auto dialog = afterhours::modal(context, mk(entity, 900), detail_open,
+    if (auto dialog = afterhours::modal(context, mk(entity), detail_open,
           afterhours::ModalConfig{}.with_size(pixels(620 * scale), pixels(310 * scale)).with_title(detail_title))) {
       dialog_presentation::style_title(dialog.ent());
       dialog.ent().get<UIComponentDebug>().set("bk_detail_panel");
-      div(context, mk(dialog.ent(), 0), ComponentConfig{}
+      div(context, mk(dialog.ent()), ComponentConfig{}
           .with_size({percent(1), pixels(150 * scale)}).with_label(detail_text)
           .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
           .with_text_overflow(TextOverflow::Wrap).with_render_layer(1001));
-      if (button(context, mk(dialog.ent(), 1), ComponentConfig{}
+      if (button(context, mk(dialog.ent()), ComponentConfig{}
           .with_size({pixels(140 * scale), pixels(40 * scale)}).with_label("Close")
           .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_text_color(ink)
           .with_custom_background({229, 236, 241, 255}).with_render_layer(1001)

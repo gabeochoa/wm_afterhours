@@ -92,7 +92,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(0, 24, 1144, 96)
+    div(context, mk(root.ent()), box(0, 24, 1144, 96)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     // Title
     label("Interactive animations", 24, 35, 1096, 42, 34, text_light);
@@ -144,7 +144,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         .with_corner_radius(8 * s).with_debug_name("interactive_preview"))) {
       for (size_t i = 0; i < keys.size(); ++i) animate_button_press(i, true);
     }
-    if (button(context, mk(root.ent(), id++), box(296, 564, 180, 42)
+    if (button(context, mk(root.ent()), box(296, 564, 180, 42)
         .with_label("Reset counts").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light)
         .with_corner_radius(8 * s).with_debug_name("interactive_reset"))) {

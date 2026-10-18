@@ -105,7 +105,7 @@ struct TransparentControlsLab
             x + 4, 548, 352, 34, 23, ink,
             "transparent_count_" + std::to_string(i), true);
     }
-    if (button(context, mk(root.ent(), id++), box(904, 610, 240, 52)
+    if (button(context, mk(root.ent()), box(904, 610, 240, 52)
         .with_label("Reset count").with_font("AtkinsonMock", pixels(22 * s))
         .with_custom_background(ink).with_custom_text_color(white)
         .with_corner_radius(8 * s).with_debug_name("transparent_reset")))

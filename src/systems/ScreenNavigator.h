@@ -60,11 +60,11 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
     }
     const float height = static_cast<float>(Settings::get().get_screen_height());
     const float row_height = ROW_H * height / 720.f;
-    div(context, mk(entity, 90), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({screen_pct(1), screen_pct(1)}).with_absolute_position(0, 0)
         .with_custom_background({13, 16, 22, 255}).with_corner_radius(0)
         .with_render_layer(layer).with_debug_name("nav_backdrop"));
-    auto panel = vstack(context, mk(entity, 0), ComponentConfig{}
+    auto panel = vstack(context, mk(entity), ComponentConfig{}
         .with_size({pixels(WIDTH), pixels(height)})
         .with_absolute_position(0, 0).with_custom_background({22, 25, 32, 255})
         .with_corner_radius(0).with_padding(Padding::all(pixels(12)))
@@ -76,7 +76,7 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
           .with_render_layer(layer));
     };
     label(0, "Screens / search and browse", 32);
-    if (button(context, mk(entity, 92), ComponentConfig{}
+    if (button(context, mk(entity), ComponentConfig{}
         .with_label("Close").with_size({pixels(64), pixels(28)})
         .with_absolute_position(WIDTH - 76, 12).with_font_size(16)
         .with_custom_background({38, 43, 54, 255}).with_custom_text_color({220, 228, 240, 255})
@@ -85,7 +85,7 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
       return;
     }
     const auto old_query = tree.query;
-    auto filter = text_input(context, mk(panel.ent(), 1), tree.query, ComponentConfig{}
+    auto filter = text_input(context, mk(panel.ent()), tree.query, ComponentConfig{}
         .with_size({percent(1), pixels(36)}).with_placeholder("Search names, categories, descriptions")
         .with_custom_background({38, 43, 54, 255}).with_auto_text_color(false)
         .with_custom_text_color({220, 228, 240, 255}).with_font_size(16)
@@ -106,13 +106,13 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
     if (tree.rows.empty()) { label(3, "No matching screens", 40); return; }
     const auto &selected = tree.rows[tree.cursor];
     const std::string detail = selected.header() ? selected.label : tree.entries[selected.entry].description;
-    div(context, mk(entity, 91), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_label(selected.label + "\n\n" + detail + "\n\nEnter opens / current screen marked *")
         .with_size({pixels(std::max(0.f, static_cast<float>(Settings::get().get_screen_width()) - WIDTH - 48)), pixels(250)})
         .with_absolute_position(WIDTH + 24, 80).with_font_size(24)
         .with_custom_text_color({220, 228, 240, 255}).with_render_layer(layer)
         .with_debug_name("nav_details"));
-    auto list = virtual_list(context, mk(panel.ent(), 4), tree.rows.size(), row_height,
+    auto list = virtual_list(context, mk(panel.ent()), tree.rows.size(), row_height,
         [&](std::size_t i, afterhours::Entity &row_entity) {
           const auto row = tree.rows[i];
           const bool current = !row.header() && tree.entries[row.entry].screen_index == current_index;

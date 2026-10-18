@@ -43,10 +43,10 @@ struct LayoutAcidTest : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_transparent_bg()
           .with_corner_radius(0).with_skip_grid_snap(true);
     };
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1280, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1280, 720)
         .with_absolute_position((context.screen_width - 1280 * s) / 2,
                                 (context.screen_height - 720 * s) / 2).with_debug_name("acid_root"));
     const auto label = [&](int id, const std::string &value, float x, float y,
@@ -60,18 +60,18 @@ struct LayoutAcidTest : ScreenSystem<UIContext<InputAction>> {
     label(1, "A smile is a layout test.", 56, 30, 1140, 54, 38, ink);
     label(2, "Both faces should match. Red gaps or pink edges mean something is wrong.",
           56, 92, 1168, 32, 22, muted);
-    if (button(context, mk(root.ent(), 3), box(936, 146, 288, 44)
+    if (button(context, mk(root.ent()), box(936, 146, 288, 44)
         .with_label(broken ? "Restore correct layout" : "Show broken layout")
         .with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background(broken ? afterhours::Color{139, 54, 68, 255} : afterhours::Color{36, 71, 82, 255})
         .with_custom_text_color(ink).with_corner_radius(8 * s).with_debug_name("acid_toggle"))) broken = !broken;
     label(4, "Live layout", 128, 166, 380, 38, 28, ink);
     label(5, "Reference", 768, 166, 380, 38, 28, ink);
-    div(context, mk(root.ent(), 6), box(104, 216, 336, 336)
+    div(context, mk(root.ent()), box(104, 216, 336, 336)
         .with_custom_background({28, 40, 56, 255}).with_corner_radius(12 * s));
-    div(context, mk(root.ent(), 7), box(744, 216, 336, 336)
+    div(context, mk(root.ent()), box(744, 216, 336, 336)
         .with_custom_background({28, 40, 56, 255}).with_corner_radius(12 * s));
-    auto board = vstack(context, mk(root.ent(), 10), box(128, 240, 288, 288)
+    auto board = vstack(context, mk(root.ent()), box(128, 240, 288, 288)
         .with_custom_background({210, 39, 65, 255})
         .with_overflow(broken ? Overflow::Visible : Overflow::Hidden)
         .with_no_wrap().with_gap(pixels(broken ? 3 * s : 0))
@@ -92,7 +92,7 @@ struct LayoutAcidTest : ScreenSystem<UIContext<InputAction>> {
             .with_skip_grid_snap(true).with_ignore_pointer_events()
             .with_debug_name("acid_cell_" + std::to_string(row_index) + "_" + std::to_string(col)));
     }
-    div(context, mk(root.ent(), 11), box(768, 240, 288, 288)
+    div(context, mk(root.ent()), box(768, 240, 288, 288)
         .with_on_draw_fg([pattern = picture](RectangleType r) {
           const float cell = r.width / 12;
           for (size_t y = 0; y < pattern.size(); ++y)

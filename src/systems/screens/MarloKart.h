@@ -538,7 +538,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   }
   ElementResult page(UIContext<InputAction> &c, afterhours::Entity &e,
                      const std::string &name, int background = 0) {
-    div(c, mk(e, 9900), ComponentConfig{}
+    div(c, mk(e), ComponentConfig{}
         .with_size({pixels(c.screen_width), pixels(c.screen_height)})
         .with_custom_background(ink).with_corner_radius(0).with_debug_name("mk_canvas"));
     auto root = div(c, mk(e), box(0, 0, 1280, 720)
@@ -917,9 +917,9 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
 
   void build_title(afterhours::Entity &entity, UIContext<InputAction> &c) {
     auto root = page(c, entity, "mk_title_page", -1);
-    div(c, mk(root.ent(), 950), box(0, 0, 1280, 720).with_ignore_pointer_events()
+    div(c, mk(root.ent()), box(0, 0, 1280, 720).with_ignore_pointer_events()
         .with_on_draw_bg([](RectangleType r) { title_scenery(r); }));
-    auto logo = div(c, mk(root.ent(), 0), box(66, 42, 530, 240)
+    auto logo = div(c, mk(root.ent()), box(66, 42, 530, 240)
         .with_styled_label({{"MARLO ", white}, {"KART", gold}})
         .with_font("FredokaMockBold", pixels(112 * scale))
         .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
@@ -928,7 +928,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     logo.ent().addComponentIfMissing<HasUIModifiers>().rotation = -4.f;
     label(c, root.ent(), 1, "AFTERHOURS GRAND PRIX", 77, 288, 500, 36, 22, white,
           "", TextAlignment::Left, "FredokaMockBold");
-    div(c, mk(root.ent(), 23), box(618, 194, 636, 444).with_ignore_pointer_events()
+    div(c, mk(root.ent()), box(618, 194, 636, 444).with_ignore_pointer_events()
         .with_on_draw_fg([color = drivers[driver_idx].color](RectangleType r) { title_kart(r, color); })
         .with_debug_name("mk_title_kart"));
     label(c, root.ent(), 24, fmt::format("{} / {}", drivers[driver_idx].name, karts[kart_idx].name),
@@ -1063,7 +1063,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   void build_race(afterhours::Entity &entity, UIContext<InputAction> &c) {
     auto root = page(c, entity, "mk_race_page", 1);
     const Racer &me = racers[0];
-    div(c, mk(root.ent(), 1), box(0, 0, 1280, 654).with_ignore_pointer_events()
+    div(c, mk(root.ent()), box(0, 0, 1280, 654).with_ignore_pointer_events()
         .with_on_draw_fg([progress = me.prog, curve = track_shape().is_corner(me.prog)](RectangleType r) {
           const float s = r.width / 1280.f;
           for (float y = 299; y < 654; y += 2) {
@@ -1164,7 +1164,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
       }
     } else if (countdown > 0) {
       const int n = static_cast<int>(std::ceil(countdown - .6f));
-      div(c, mk(root.ent(), 302), box(499, 174, 282, 165)
+      div(c, mk(root.ent()), box(499, 174, 282, 165)
           .with_label(n <= 0 ? "GO!" : std::to_string(n)).with_font("FredokaMockBold", pixels(120 * scale))
           .with_alignment(TextAlignment::Center).with_custom_text_color(n <= 0 ? white : gold)
           .with_text_stroke(ink, 4 * scale).with_text_shadow(ink, 3 * scale, 5 * scale)

@@ -90,12 +90,12 @@ struct BlendModeLab : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), id++), box(left, 24, 1144, 92)
+    div(context, mk(root.ent()), box(left, 24, 1144, 92)
         .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     label("Blend modes", 24, 34, 460, 42, 34, white, "bml_title");
     label("Identical inputs. Four modes. Two ways to batch.", 24, 80, 668, 26, 20, muted);
     label(fmt::format("Blend-state changes: {} / full frame", last_frame_transitions), 580, 34, 540, 32, 23, white, "bml_transitions");
-    if (button(context, mk(root.ent(), id++), box(left + 814, 76, 306, 30)
+    if (button(context, mk(root.ent()), box(left + 814, 76, 306, 30)
         .with_label(prepare_rgb ? "Premultiply RGB: on" : "Premultiply RGB: off")
         .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(white)
         .with_custom_background(prepare_rgb ? afterhours::Color{62, 104, 173, 255} : afterhours::Color{51, 65, 89, 255})

@@ -81,7 +81,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     };
     label(0, 0, 24, 1144, 44, "Stepper Showcase", 36, ink);
     label(1, 0, 78, 865, 56, "Both variants cycle through a finite list. Every arrow wraps from the last option to the first.", 23, muted);
-    if (button(context, mk(root.ent(), 2), box(904, 83, 240, 44).with_label("Restore defaults")
+    if (button(context, mk(root.ent()), box(904, 83, 240, 44).with_label("Restore defaults")
         .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_background(field)
         .with_custom_text_color(ink).with_corner_radius(6 * scale).with_debug_name("step_reset"))) {
       resolution_idx = 2;
@@ -144,16 +144,16 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     specimen(3, 3, "Difficulty", difficulties, difficulty_idx, 1, "step_difficulty");
     specimen(4, 4, "Framerate", framerates, framerate_idx, 1, "step_framerate");
     const auto names = card_names();
-    ElementResult selector = stepper(context, mk(root.ent(), 110), names, card_idx,
+    ElementResult selector = stepper(context, mk(root.ent()), names, card_idx,
         box(612, 229, 512, 53).with_font("AtkinsonMock", pixels(23 * scale))
             .with_custom_background(field).with_custom_text_color(ink).with_debug_name("step_class"), 3);
     style_stepper(selector, "step_class", true);
     const auto &card = cards[card_idx];
     const afterhours::Color card_ink = card_idx >= 2 ? afterhours::Color{12, 27, 18, 255} : afterhours::Color{255, 255, 255, 255};
-    div(context, mk(root.ent(), 120), box(612, 313, 512, 242).with_custom_background(card.color)
+    div(context, mk(root.ent()), box(612, 313, 512, 242).with_custom_background(card.color)
         .with_corner_radius(9 * scale).with_debug_name("card"));
-    div(context, mk(root.ent(), 121), box(837, 285, 62, 28).with_custom_background(card.color).with_ignore_pointer_events());
-    div(context, mk(root.ent(), 122), box(640, 343, 64, 64).with_ignore_pointer_events()
+    div(context, mk(root.ent()), box(837, 285, 62, 28).with_custom_background(card.color).with_ignore_pointer_events());
+    div(context, mk(root.ent()), box(640, 343, 64, 64).with_ignore_pointer_events()
         .with_on_draw_fg([selected = card_idx, card_ink](RectangleType r) {
           const auto point = [r](float x, float y) { return raylib::Vector2{r.x + x * r.width, r.y + y * r.height}; };
           const float stroke = r.width / 16;

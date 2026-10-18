@@ -55,7 +55,7 @@ struct AlphaBlendRepro : ScreenSystem<UIContext<InputAction>> {
     label("Alpha blend / two ways to draw the same wash", 0, 26, 1168, 42, 34, white, "ab_title");
     label("Low opacity reveals the text. At full opacity, the overlay must hide it completely.",
           0, 76, 1168, 28, 22, muted, "ab_expectation");
-    div(context, mk(root.ent(), id++), box(left, 118, 24, 24).with_custom_background(blue));
+    div(context, mk(root.ent()), box(left, 118, 24, 24).with_custom_background(blue));
     label("Overlay RGB 90, 150, 255", 34, 116, 290, 28, 19, white, "ab_overlay_color");
     label("Backing #181D2A", 360, 116, 240, 28, 19, muted, "ab_backing");
     label("Text #EBF0FA", 664, 116, 230, 28, 19, muted, "ab_foreground");

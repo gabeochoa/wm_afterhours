@@ -141,7 +141,7 @@ inline void draw_context(afterhours::ui::UIContext<InputAction> &context,
   text("HARBOUR STUDIO", 28, 18, 620, 36, 26);
   text(section, 264, 86, 936, 42, 32);
   text("Workspace", 28, 96, 190, 32, 21);
-  div(context, mk(entity, id++), box(20, 146, 206, 44)
+  div(context, mk(entity), box(20, 146, 206, 44)
       .with_custom_background({49, 69, 101, 255}).with_corner_radius(8 * s));
   text(section, 30, 151, 190, 34, 23);
   text("Preferences", 30, 218, 190, 32, 21);

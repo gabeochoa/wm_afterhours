@@ -39,10 +39,10 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color muted{182, 194, 217, 255};
     const afterhours::Color white{242, 244, 250, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background({10, 12, 18, 255}).with_corner_radius(0));
-    auto root = div(context, mk(entity, 0), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("text_input_root"));
@@ -66,8 +66,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     text(1, "Create profile", 48, 20, 1184, 48, 38, white, "text_input_title", true);
     // Subtitle
     text(2, "Try native account inputs. This demo stores values only in memory.", 48, 78, 1184, 30, 22, muted);
-    div(context, mk(root.ent(), 3), box(48, 124, 572, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("card"));
-    div(context, mk(root.ent(), 4), box(644, 124, 588, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("input_states"));
+    div(context, mk(root.ent()), box(48, 124, 572, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("card"));
+    div(context, mk(root.ent()), box(644, 124, 588, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("input_states"));
     text(5, "All profile fields are optional. No format validation.", 72, 137, 524, 26, 18, muted);
     const auto field = [&](int id, const char *label, const char *placeholder, std::string &value,
                            float label_y, float input_y, const char *debug) {
@@ -80,7 +80,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       status_message = "Email: " + profile.email;
     text(6, "Example: name@example.com", 72, 339, 524, 25, 17, muted);
     text(7, "New password / optional", 72, 379, 524, 28, 20, white);
-    auto pw_row = div(context, mk(root.ent(), 8), box(72, 407, 524, 44)
+    auto pw_row = div(context, mk(root.ent()), box(72, 407, 524, 44)
         .with_custom_background(field_bg).with_border(field_border, 1.f).with_debug_name("pw_row"));
     auto pw_cfg = box(0, 0, 412, 44).with_font("AtkinsonMock", pixels(22 * s))
         .with_placeholder("Enter a demo password").without_border().with_debug_name("Password_input");
@@ -88,8 +88,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     // masking alone does not do this.
     if (!show_password)
       pw_cfg.with_mask_char('*').with_copy_disabled().with_cut_disabled();
-    if (text_input(context, mk(pw_row.ent(), 0), profile.password, pw_cfg)) status_message = "Password changed";
-    if (button(context, mk(pw_row.ent(), 1), box(412, 0, 112, 44)
+    if (text_input(context, mk(pw_row.ent()), profile.password, pw_cfg)) status_message = "Password changed";
+    if (button(context, mk(pw_row.ent()), box(412, 0, 112, 44)
         .with_label(show_password ? "Hide" : "Show").with_alignment(TextAlignment::Center)
         .with_custom_background({73, 82, 108, 255}).with_custom_text_color(white)
         .with_font("AtkinsonMock", pixels(20 * s)).with_debug_name("pw_toggle"))) show_password = !show_password;
@@ -102,12 +102,12 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     // Search
     text(10, "Input states demo", 668, 137, 540, 34, 28, white, "", true);
     text(11, "Search demo profiles", 668, 180, 540, 28, 20, white);
-    div(context, mk(root.ent(), 12), box(668, 213, 36, 44).with_custom_background(field_bg)
+    div(context, mk(root.ent()), box(668, 213, 36, 44).with_custom_background(field_bg)
         .with_on_draw_fg([s, muted](RectangleType r) {
           raylib::DrawCircleLines(static_cast<int>(r.x + 15 * s), static_cast<int>(r.y + 19 * s), 7 * s, muted);
           raylib::DrawLineEx({r.x + 20 * s, r.y + 24 * s}, {r.x + 27 * s, r.y + 31 * s}, 2 * s, muted);
         }));
-    if (text_input(context, mk(root.ent(), 13), search_query,
+    if (text_input(context, mk(root.ent()), search_query,
         input_config(704, 213, 504, "Type a name to filter", "Search_input"))) status_message = "Search: " + search_query;
     std::string folded = search_query;
     std::transform(folded.begin(), folded.end(), folded.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
@@ -123,18 +123,18 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     text(14, matches.empty() ? "No matching demo profiles" : matches, 668, 266, 540, 26, 18, muted, "search_results");
     // Readonly field
     text(15, "Account identifier / read-only", 668, 316, 540, 28, 20, white);
-    text_input(context, mk(root.ent(), 16), readonly_text,
+    text_input(context, mk(root.ent()), readonly_text,
         input_config(668, 347, 540, "", "Readonly_input").with_readonly());
     text(17, "You can select and copy this fixed demo value.", 668, 400, 540, 26, 18, muted);
     // Disabled field
     text(18, "Workspace / disabled", 668, 449, 540, 28, 20, white);
-    text_input(context, mk(root.ent(), 19), disabled_text,
+    text_input(context, mk(root.ent()), disabled_text,
         input_config(668, 480, 540, "", "Disabled_input").with_disabled(true));
     text(20, "Disabled fixture: keyboard and pointer editing are off.", 668, 533, 540, 26, 18, muted);
     text(21, "Field borders are square for a consistent join.", 668, 585, 540, 26, 18, muted);
     text(22, profile == saved_profile ? "No unsaved profile changes" : "Unsaved demo profile changes",
          72, 575, 524, 26, 18, muted, "profile_changes");
-    if (button(context, mk(root.ent(), 30), box(344, 618, 118, 40).with_label("Cancel")
+    if (button(context, mk(root.ent()), box(344, 618, 118, 40).with_label("Cancel")
         .with_font("AtkinsonMock", pixels(21 * s)).with_custom_background(card_bg)
         .with_custom_text_color(white).with_border(field_border, 1.f).with_debug_name("btn_cancel"))) {
       profile = saved_profile;
@@ -142,13 +142,13 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       show_password = false;
       status_message = "Restored saved demo profile";
     }
-    if (button(context, mk(root.ent(), 31), box(478, 618, 118, 40).with_label("Save demo")
+    if (button(context, mk(root.ent()), box(478, 618, 118, 40).with_label("Save demo")
         .with_font("AtkinsonMock", pixels(21 * s)).with_custom_background(theme.accent)
         .with_custom_text_color(theme.darkfont).with_debug_name("btn_save"))) {
       saved_profile = profile;
       status_message = "Saved: " + profile.username + " / " + profile.email;
     }
-    div(context, mk(root.ent(), 32), box(668, 624, 540, 30).with_label(status_message.empty() ? "Demo form / ready" : status_message)
+    div(context, mk(root.ent()), box(668, 624, 540, 30).with_label(status_message.empty() ? "Demo form / ready" : status_message)
         .with_font("AtkinsonMock", pixels(19 * s)).with_alignment(TextAlignment::Left)
         .with_custom_text_color(white).with_text_overflow(TextOverflow::Ellipsis).with_debug_name("status_bar"));
     text(33, "Tab: next field / Shift+Tab: previous / Ctrl or Cmd: A all, C copy, V paste, X cut (except hidden password)",

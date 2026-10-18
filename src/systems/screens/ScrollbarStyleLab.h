@@ -24,7 +24,7 @@ struct ScrollbarStyleLab : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
     const afterhours::Color ink{231, 239, 251, 255}, muted{174, 190, 214, 255};
-    auto root = div(context, mk(entity, 0), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2)
         .with_background(Theme::Usage::Background).with_debug_name("sbs_root"));
@@ -89,8 +89,8 @@ struct ScrollbarStyleLab : ScreenSystem<UIContext<InputAction>> {
     }
     pending_fraction.reset();
     label(110, "Track = full range / Thumb = visible fraction / Wheel scrolling stays independent", 16, 682, 996, 28, 18, true);
-    div(context, mk(root.ent(), 111), box(1040, 682, 6, 26).with_custom_background(muted));
-    div(context, mk(root.ent(), 112), box(1072, 682, 14, 26).with_custom_background(muted));
+    div(context, mk(root.ent()), box(1040, 682, 6, 26).with_custom_background(muted));
+    div(context, mk(root.ent()), box(1072, 682, 14, 26).with_custom_background(muted));
     label(113, "6px / 14px", 1104, 682, 160, 28, 18, true);
   }
 };

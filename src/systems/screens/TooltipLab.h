@@ -39,12 +39,12 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
     };
     text(0, "Tooltip placement lab", 16, 0, 630, 44, 30, "ttl_title");
     text(1, "Hover a trigger. Default delay: 400 ms / instant: 0 ms.", 16, 48, 1080, 28, 19);
-    if (button(context, mk(root.ent(), 2), at(16, 203, 214, 36)
+    if (button(context, mk(root.ent()), at(16, 203, 214, 36)
         .with_label(show_bounds ? "Hide edge guide" : "Show edge guide")
         .with_font("AtkinsonMock", pixels(18 * scale)).with_background(Theme::Usage::Surface)
         .with_debug_name("ttl_bounds"))) show_bounds = !show_bounds;
     if (show_bounds)
-      div(context, mk(entity, 90), ComponentConfig{}
+      div(context, mk(entity), ComponentConfig{}
           .with_size({pixels(context.screen_width - 4), pixels(context.screen_height - 4)})
           .with_absolute_position(2, 2).with_custom_background(afterhours::colors::transparent()).with_corner_radius(0)
           .with_border(theme.accent, 1).with_render_layer(20).with_ignore_pointer_events().with_debug_name("ttl_edge_guide"));
@@ -112,7 +112,7 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
           .with_label(spot.caption).with_font("AtkinsonMock", pixels(16 * scale))
           .with_custom_text_color(theme.font_muted).with_ignore_pointer_events());
     }
-    div(context, mk(root.ent(), 41), at(16, 257, 420, 328)
+    div(context, mk(root.ent()), at(16, 257, 420, 328)
         .with_custom_background(theme.surface).with_corner_radius(8 * scale));
     text(42, "Expected placement", 32, 269, 388, 30, 22);
     const char *rows[] = {

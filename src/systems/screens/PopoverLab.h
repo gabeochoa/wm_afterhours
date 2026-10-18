@@ -46,11 +46,11 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     const auto cyan = afterhours::Color{154, 192, 245, 255};
     const auto ink = afterhours::Color{15, 22, 36, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
-    div(context, mk(entity, 900), ComponentConfig{}
+    div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_absolute_position(0, 0).with_custom_background(ink).with_corner_radius(0)
         .with_ignore_pointer_events());
-    auto root = div(context, mk(entity, 901), ComponentConfig{}
+    auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * s), pixels(720 * s)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
         .with_debug_name("pv_root"));
@@ -87,21 +87,21 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     text(7, "Choose a branch", 430, 64, 340, 26, 18, muted, "pv_initial");
     text(8, "Trigger", 942, 24, 100, 28, 18, cyan);
     text(9, "Popover", 1100, 24, 132, 28, 18, white);
-    div(context, mk(root.ent(), 80), box(918, 31, 16, 16).with_custom_background(cyan));
-    div(context, mk(root.ent(), 81), box(1076, 31, 16, 16).with_custom_background(panel));
+    div(context, mk(root.ent()), box(918, 31, 16, 16).with_custom_background(cyan));
+    div(context, mk(root.ent()), box(1076, 31, 16, 16).with_custom_background(panel));
 
-    auto trigger = button(context, mk(root.ent(), 2), control(48, 96, 240, 36)
+    auto trigger = button(context, mk(root.ent()), control(48, 96, 240, 36)
         .with_label("Commit options").with_debug_name("pv_trigger"));
     if (trigger) below_open = !below_open;
     const RectangleType anchor = trigger.ent().get<UIComponent>().rect();
-    if (auto pop = popover(context, mk(root.ent(), 3), anchor, below_open,
+    if (auto pop = popover(context, mk(root.ent()), anchor, below_open,
                            overlay::Placement::Below, floating(320, 216, "pv_panel"))) {
       pop.ent().get<UIComponentDebug>().set("pv_live_commit");
       // A vstack inside, for the padding: the panel itself has none.
-      auto body = vstack(context, mk(pop.ent(), 0), ComponentConfig{}
+      auto body = vstack(context, mk(pop.ent()), ComponentConfig{}
           .with_size({percent(1.f), percent(1.f)}).with_padding(Padding::all(pixels(12 * s)))
           .with_transparent_bg().with_debug_name("pv_body"));
-      div(context, mk(body.ent(), 0), row(34).with_label("Commit preferences")
+      div(context, mk(body.ent()), row(34).with_label("Commit preferences")
           .with_alignment(TextAlignment::Left).with_custom_text_color(white)
           .with_transparent_bg().with_debug_name("pv_caption"));
       // A checkbox inside is the point: focusing it must NOT dismiss the panel,
@@ -125,7 +125,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
       };
       option(1, amend, "Amend previous commit", "pv_amend");
       option(2, sign_off, "Include sign-off", "pv_signoff");
-      if (button(context, mk(body.ent(), 3), row(44).with_label("Commit demo")
+      if (button(context, mk(body.ent()), row(44).with_label("Commit demo")
           .with_custom_background(cyan).with_custom_text_color(ink)
           .with_margin(Margin{.top = pixels(8 * s)}).with_debug_name("pv_commit"))) {
         status = fmt::format("Demo commit: {} / sign-off {}", amend ? "amend previous" : "new commit", sign_off ? "included" : "omitted");
@@ -134,7 +134,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     }
 
     static constexpr const char *BRANCHES[4] = {"main", "release/2.4", "fix/tab-focus", "spike/indexing"};
-    auto pinned = button(context, mk(root.ent(), 10), control(430, 96, 320, 36)
+    auto pinned = button(context, mk(root.ent()), control(430, 96, 320, 36)
         .with_label(fmt::format("Branch: {}", BRANCHES[current_branch])).with_debug_name("pv_trigger_pinned"));
     if (pinned) pinned_open = !pinned_open;
     const RectangleType pin_anchor = pinned.ent().get<UIComponent>().rect();
@@ -164,7 +164,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    div(context, mk(root.ent(), 20), box(812, 96, 420, 260).with_custom_background(panel).with_debug_name("pv_notes"));
+    div(context, mk(root.ent()), box(812, 96, 420, 260).with_custom_background(panel).with_debug_name("pv_notes"));
     text(21, "Use controls inside", 828, 108, 388, 34, 27, white, "pv_note_0", true);
     text(22, "Change options without dismissing", 828, 152, 388, 27, 20, muted);
     text(23, "the panel. Move focus outside to close.", 828, 181, 388, 27, 20, muted);
@@ -223,15 +223,15 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     text(60, "Last action", 48, 596, 138, 28, 19, cyan);
     text(61, status, 194, 596, 1038, 28, 20, white, "pv_status");
     text(62, "Below requested / Above when the bottom edge leaves no room", 384, 650, 848, 30, 20, muted);
-    auto low = button(context, mk(entity, 904), control(48, 648, 250, 36)
+    auto low = button(context, mk(entity), control(48, 648, 250, 36)
         .with_absolute_position(left + 48 * s, context.screen_height - 72 * s)
         .with_label("Bottom-edge flip").with_debug_name("pv_trigger_low"));
     if (low) flip_open = !flip_open;
     const RectangleType low_anchor = low.ent().get<UIComponent>().rect();
-    if (auto pop = popover(context, mk(root.ent(), 5), low_anchor, flip_open,
+    if (auto pop = popover(context, mk(root.ent()), low_anchor, flip_open,
                            overlay::Placement::Below, floating(320, 120, "pv_panel_low"))) {
       pop.ent().get<UIComponentDebug>().set("pv_live_low");
-      div(context, mk(pop.ent(), 0), ComponentConfig{}
+      div(context, mk(pop.ent()), ComponentConfig{}
           .with_size({percent(1.f), percent(1.f)})
           .with_label("Below requested\nFlipped above the trigger")
           .with_alignment(TextAlignment::Center).with_custom_text_color(white)

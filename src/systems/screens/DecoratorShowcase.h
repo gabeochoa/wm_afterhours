@@ -41,10 +41,10 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+    auto canvas = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("decorators_canvas"));
-    auto root = div(context, mk(canvas.ent(), 0), box(0, 0, 1144, 720)
+    auto root = div(context, mk(canvas.ent()), box(0, 0, 1144, 720)
         .with_absolute_position(left, top).with_debug_name("root"));
     const auto label = [&](afterhours::Entity &parent, int id, const std::string &value,
                            float x, float y, float w, float h, float size, C color,
@@ -61,12 +61,12 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent(), 0), box(0, 24, 1144, 80)
+    div(context, mk(root.ent()), box(0, 24, 1144, 80)
         .with_custom_background(theme.surface).with_corner_radius(12 * s));
     label(root.ent(), 1, "UI decorators", 20, 29, 724, 38, 34, theme.font, "", true);
     label(root.ent(), 2, "Add corner brackets, grid lines and quote bars to existing components.",
           20, 72, 1104, 25, 19, theme.font_muted);
-    if (button(context, mk(root.ent(), 3), box(878, 37, 246, 34)
+    if (button(context, mk(root.ent()), box(878, 37, 246, 34)
         .with_label(show_measurements ? "Hide measurements" : "Show measurements")
         .with_font("AtkinsonMock", pixels(18 * s)).with_background(Theme::Usage::Primary)
         .with_auto_text_color(true).with_corner_radius(8 * s).with_alignment(TextAlignment::Center)
@@ -111,9 +111,9 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       label(panel.ent(), 13, "47%", 218, 49, 92, 44, 34, amber, "hull_integrity", true);
     }
     {
-      auto panel = div(context, mk(root.ent(), 32), panel_config(12, 536, 56, {12, 22, 16, 255}, {30, 55, 35, 255}, "bracket_panel_3"))
+      auto panel = div(context, mk(root.ent()), panel_config(12, 536, 56, {12, 22, 16, 255}, {30, 55, 35, 255}, "bracket_panel_3"))
           .decorate(with_brackets(context, green, 10 * s, 2 * s));
-      div(context, mk(panel.ent(), 10), box(108, 22, 12, 12).with_custom_background(green)
+      div(context, mk(panel.ent()), box(108, 22, 12, 12).with_custom_background(green)
           .with_corner_radius(6 * s).with_debug_name("status_dot"));
       label(panel.ent(), 11, "ONLINE", 128, 12, 140, 32, 24, green);
     }

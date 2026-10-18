@@ -66,7 +66,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Background
-    div(context, mk(entity, 0),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{px(screen_width), px(screen_height)})
             .with_custom_background(bg_slate)
@@ -79,7 +79,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     float panel_x = (screen_width - panel_w) / 2.0f;
     float panel_y = (screen_height - panel_h) / 2.0f;
 
-    div(context, mk(entity, 1),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{px(panel_w), px(panel_h)})
             .with_absolute_position(px(panel_x), px(panel_y))
@@ -90,7 +90,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("main_panel"));
 
     // Header - use same roundness as container and match its top edge
-    div(context, mk(entity, 2),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Accessibility Features")
             .with_size(ComponentSize{px(panel_w), px(55)})
@@ -110,7 +110,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color status_color =
         theme_is_accessible ? accent_green : accent_amber;
 
-    div(context, mk(entity, 3),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(status_text)
             .with_size(ComponentSize{px(440), px(38)})
@@ -123,7 +123,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_corner_radius(8.f * context.screen_height / 720.f)
             .with_alignment(TextAlignment::Center));
 
-    div(context, mk(entity, 5),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(
                 "Slate demo theme: 2 checked pairs (text/background, dark "
@@ -136,7 +136,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Separator between status badge and content columns
-    div(context, mk(entity, 4),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{px(panel_w - 60.f), px(1)})
             .with_absolute_position(px(panel_x + 30.f), px(status_y + 74.0f))
@@ -150,7 +150,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     float right_x = panel_x + 50.0f + col_w;
 
     // Left column header
-    div(context, mk(entity, 10),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Manual foreground colors")
             .with_size(ComponentSize{px(col_w), px(32)})
@@ -165,7 +165,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color demo_bg_light = {225, 225, 235, 255};
     afterhours::Color demo_bg_dark = {45, 50, 65, 255};
 
-    if (button(context, mk(entity, 11),
+    if (button(context, mk(entity),
                ComponentConfig{}
                    .with_label(fmt::format(
                        "Manual dark text  {}  |  {:.1f}:1",
@@ -182,7 +182,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                    .with_rounded_corners(RoundedCorners())))
       selected_sample = "Manual dark foreground on a light background.";
 
-    if (button(context, mk(entity, 12),
+    if (button(context, mk(entity),
                ComponentConfig{}
                    .with_label(fmt::format("Manual light text  {}  |  {:.1f}:1",
                                            hex(theme.font),
@@ -198,7 +198,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
       selected_sample = "Manual light foreground on a dark background.";
 
     // Note about the issue
-    div(context, mk(entity, 13),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Text colors above were chosen manually.")
             .with_size(ComponentSize{px(col_w), px(28)})
@@ -208,7 +208,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Right column header
-    div(context, mk(entity, 20),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Automatic foreground colors")
             .with_size(ComponentSize{px(col_w), px(32)})
@@ -220,7 +220,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Right column - with auto text color
-    if (button(context, mk(entity, 21),
+    if (button(context, mk(entity),
                ComponentConfig{}
                    .with_label(fmt::format(
                        "Auto {}  |  {:.1f}:1",
@@ -238,7 +238,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                    .with_rounded_corners(RoundedCorners())))
       selected_sample = "Automatic foreground on a light background.";
 
-    if (button(context, mk(entity, 22),
+    if (button(context, mk(entity),
                ComponentConfig{}
                    .with_label(fmt::format(
                        "Auto {}  |  {:.1f}:1",
@@ -258,7 +258,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
       selected_sample = "Automatic foreground on a dark background.";
 
     // Note about the solution
-    div(context, mk(entity, 23),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Chooses the foreground with higher contrast.")
             .with_size(ComponentSize{px(col_w), px(28)})
@@ -268,7 +268,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Separator between columns section and color showcase
-    div(context, mk(entity, 24),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{px(panel_w - 60.f), px(1)})
             .with_absolute_position(px(panel_x + 30.f), px(content_y + 195.0f))
@@ -278,7 +278,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Color showcase section
     float showcase_y = content_y + 210.0f;
 
-    div(context, mk(entity, 30),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label("Light backgrounds / increasing luminance / background "
                         "above foreground")
@@ -357,7 +357,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                 return afterhours::colors::luminance(a) <
                        afterhours::colors::luminance(b);
               });
-    div(context, mk(entity, 31),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(
                 "Dark backgrounds / increasing luminance; rows are independent")
@@ -401,7 +401,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Footer info
-    div(context, mk(entity, 60),
+    div(context, mk(entity),
         ComponentConfig{}
             .with_label(selected_sample)
             .with_size(ComponentSize{px(panel_w - 60), px(32)})
