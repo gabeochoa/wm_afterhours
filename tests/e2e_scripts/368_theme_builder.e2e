@@ -78,3 +78,43 @@ expect_no_ui color_preset_1
 click_ui tb_chip_error
 wait 0.3
 expect_text "Inspected: Error #C03947"
+
+# Links: Primary follows Accent; the inspector names the link.
+click_ui tb_link_primary
+wait 0.3
+click_ui tb_link_target_accent
+wait 0.3
+expect_no_ui tb_link_target_accent
+click_ui tb_preview_save
+wait 0.3
+expect_text "Inspected: Primary -> Accent #FF0000"
+# Following, not copying: Accent changes, Primary follows.
+# No palette to close: a linked row shows its resolved color, not a swatch.
+click_ui tb_swatch_accent
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "00FF00"
+wait 0.3
+click_ui tb_swatch_accent
+wait 0.3
+click_ui tb_preview_save
+wait 0.3
+expect_text "Inspected: Primary -> Accent #00FF00"
+# Cycle prevention: Accent cannot follow Primary while Primary follows Accent.
+click_ui tb_link_accent
+wait 0.3
+expect_no_ui tb_link_target_primary
+click_ui tb_link_accent
+wait 0.3
+# Unlink restores Primary's own color.
+click_ui tb_link_primary
+wait 0.3
+expect_text "Unlink"
+click_ui tb_link_unlink_primary
+wait 0.3
+expect_no_ui tb_link_unlink_primary
+click_ui tb_preview_save
+wait 0.3
+expect_text "Inspected: Primary #2E7D6B"

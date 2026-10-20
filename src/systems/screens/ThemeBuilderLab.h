@@ -5,9 +5,10 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/color_swatch.h>
+#include <optional>
 
-// Theme builder lab: token table + live preview + inspector.
-// Token links, undo/redo, export/import are later pieces.
+// Theme builder lab: token table + live preview + inspector + links.
+// Undo/redo, export/import are later pieces.
 struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   struct TokenRow {
     Theme::Usage usage;
@@ -34,6 +35,16 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
 
   Theme edited;
   bool open[kTokenCount] = {};
+  // Token index this token follows, or nothing for an independent color.
+  // The swatch edits the independent color; the resolved color below is
+  // what the preview shows, so unlinking restores the token's own color.
+  std::optional<int> link[kTokenCount] = {};
+  // One shared link picker (a second popover panel breaks later clicks):
+  // the row whose picker is open, and its anchor rect (stored per frame).
+  int link_picker_for = -1;
+  bool link_picker_open = false;
+  RectangleType link_anchor[kTokenCount];
+  bool link_picker_press_began_while_open = false;
   // Token index the inspector last jumped to, or -1 before any click.
   int inspected = -1;
   // Sliders are 0..1 fractions; derived into the theme below each frame,
@@ -50,9 +61,22 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
 
-    edited.panel_corner_radius = radius01 * 24.f;
-    edited.focus_ring_thickness = ring01 * 6.f;
-    ctx.set_theme(edited);
+    Theme resolved = edited;
+    resolved.panel_corner_radius = radius01 * 24.f;
+    resolved.focus_ring_thickness = ring01 * 6.f;
+    for (int i = 0; i < kTokenCount; i++) {
+      if (link[i]) {
+        int cur = i;
+        bool seen[kTokenCount] = {};
+        while (link[cur] && !seen[cur]) {
+          seen[cur] = true;
+          cur = *link[cur];
+        }
+        resolved.color_ref(kTokens[i].usage) =
+            edited.color_ref(kTokens[cur].usage);
+      }
+    }
+    ctx.set_theme(resolved);
     ctx.scaling_mode = ScalingMode::Proportional;
 
     const auto layout = [](float w, float h) {
@@ -110,8 +134,21 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                             .with_transparent_bg()
                             .with_debug_name("tb_table"));
     bool was_open[kTokenCount] = {};
+    bool was_link_picker_open = link_picker_open;
     for (int i = 0; i < kTokenCount; i++)
       was_open[i] = open[i];
+    // Linking from -> to cycles if to's chain reaches from.
+    const auto can_link = [&](int from, int to) {
+      bool seen[kTokenCount] = {};
+      int cur = to;
+      while (cur >= 0 && !seen[cur]) {
+        if (cur == from)
+          return false;
+        seen[cur] = true;
+        cur = link[cur].value_or(-1);
+      }
+      return true;
+    };
     const auto token_column = [&](afterhours::Entity &col, int begin,
                                   int end) {
       int child = 0;
@@ -135,24 +172,71 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                                     .with_gap(w1280(8))
                                     .with_no_wrap()
                                     .with_transparent_bg());
-        div(ctx, mk(token_row.ent(), 0),
+        auto left = vstack(ctx, mk(token_row.ent(), 0),
+                           ComponentConfig{}
+                               .with_size({w1280(110), children()})
+                               .with_gap(h720(2))
+                               .with_transparent_bg());
+        div(ctx, mk(left.ent(), 0),
             layout(110, 28)
                 .with_label(token.name)
                 .with_font_size(FontSize::Small)
                 .with_custom_text_color(inspected == i ? chrome_highlight
                                                        : chrome_text)
                 .with_transparent_bg());
-        color_swatch_presets(
-            ctx, mk(token_row.ent(), 1), edited.color_ref(token.usage),
-            open[i], default_color_presets(),
-            ComponentConfig{}
-                .with_size({expand(), h720(28)})
-                // TODO: reevaluate — the button inset is charged on
-                // both sides, so only a narrow font fits the label.
-                .with_font("AtkinsonMock", FontSize::Small)
-                .with_custom_background(swatch_bg)
-                .with_custom_text_color(chrome_text)
-                .with_debug_name(std::string("tb_swatch_") + token.debug));
+        const std::string link_label =
+            link[i] ? fmt::format("-> {}", kTokens[*link[i]].name) : "Link...";
+        auto link_button = button(ctx, mk(left.ent(), 1),
+                                  ComponentConfig{}
+                                      .with_size({w1280(110), h720(24)})
+                                      .with_label(link_label)
+                                      .with_font("AtkinsonMock",
+                                                 FontSize::Small)
+                                      .with_custom_background(swatch_bg)
+                                      .with_custom_text_color(chrome_text)
+                                      .with_debug_name(std::string("tb_link_") +
+                                                       token.debug));
+        link_anchor[i] =
+            link_button.ent().template get<UIComponent>().rect();
+        if (ctx.mouse.just_pressed && link_picker_open &&
+            link_picker_for == i &&
+            is_mouse_inside(ctx.mouse.pos, link_anchor[i]))
+          link_picker_press_began_while_open = true;
+        const bool toggle_link =
+            link_button && !link_picker_press_began_while_open;
+        if (toggle_link) {
+          if (link_picker_open && link_picker_for == i) {
+            link_picker_open = false;
+            link_picker_for = -1;
+          } else {
+            link_picker_for = i;
+            link_picker_open = true;
+          }
+        }
+        if (link[i]) {
+          const Color c = resolved.color_ref(token.usage);
+          div(ctx, mk(token_row.ent(), 1),
+              ComponentConfig{}
+                  .with_size({expand(), h720(28)})
+                  .with_label(fmt::format("#{}",
+                                          colors::to_hex_string(c, c.a < 255)))
+                  .with_font("AtkinsonMock", FontSize::Small)
+                  .with_custom_text_color(chrome_text)
+                  .with_transparent_bg()
+                  .with_debug_name(std::string("tb_resolved_") + token.debug));
+        } else {
+          color_swatch_presets(
+              ctx, mk(token_row.ent(), 1), edited.color_ref(token.usage),
+              open[i], default_color_presets(),
+              ComponentConfig{}
+                  .with_size({expand(), h720(28)})
+                  // TODO: reevaluate — the button inset is charged on
+                  // both sides, so only a narrow font fits the label.
+                  .with_font("AtkinsonMock", FontSize::Small)
+                  .with_custom_background(swatch_bg)
+                  .with_custom_text_color(chrome_text)
+                  .with_debug_name(std::string("tb_swatch_") + token.debug));
+        }
       }
       return child;
     };
@@ -166,14 +250,92 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                            .with_gap(h720(3))
                            .with_transparent_bg());
     int col1_child = token_column(col1.ent(), 8, kTokenCount);
-    // One palette open at a time, like the colour-swatch lab: a newly
-    // opened row closes the rest on the next frame.
-    for (int i = 0; i < kTokenCount; i++) {
-      if (open[i] && !was_open[i]) {
-        for (int j = 0; j < kTokenCount; j++)
-          if (j != i)
-            open[j] = false;
-        break;
+    // One palette or link picker open at a time, like the colour-swatch
+    // lab: a newly opened row closes the rest on the next frame.
+    if (link_picker_open && !was_link_picker_open) {
+      for (int j = 0; j < kTokenCount; j++)
+        open[j] = false;
+    } else {
+      for (int i = 0; i < kTokenCount; i++) {
+        if (open[i] && !was_open[i]) {
+          link_picker_open = false;
+          link_picker_for = -1;
+          for (int j = 0; j < kTokenCount; j++)
+            if (j != i)
+              open[j] = false;
+          break;
+        }
+      }
+    }
+    // Clear after every row has checked it: an earlier row would clear
+    // the flag before the active row's toggle check runs.
+    if (ctx.mouse.just_released)
+      link_picker_press_began_while_open = false;
+    const int picker_for = link_picker_for;
+    int picker_option_count = 1;
+    if (picker_for >= 0) {
+      picker_option_count = link[picker_for] ? 1 : 0;
+      for (int j = 0; j < kTokenCount; j++)
+        if (can_link(picker_for, j))
+          picker_option_count++;
+      if (picker_option_count == 0)
+        picker_option_count = 1;
+    }
+    auto picker_config = ComponentConfig{}
+                             .with_size({pixels(220.f),
+                                         pixels(picker_option_count * 24.f)})
+                             .with_border(ctx.theme.from_usage(
+                                              Theme::Usage::Secondary),
+                                          1.f)
+                             .with_corner_radius(4.f)
+                             .with_render_layer(1);
+    if (auto pop = popover(ctx, mk(table.ent(), 2),
+                           picker_for >= 0 ? link_anchor[picker_for]
+                                           : RectangleType{},
+                           link_picker_open, overlay::Placement::Below,
+                           picker_config)) {
+      auto body = vstack(ctx, mk(pop.ent(), 0),
+                         ComponentConfig{}
+                             .with_size({pixels(218.f), children()})
+                             .with_transparent_bg());
+      const TokenRow &picker_token = kTokens[picker_for];
+      int option = 0;
+      if (link[picker_for]) {
+        if (button(ctx, mk(body.ent(), option++),
+                   ComponentConfig{}
+                       .with_size({pixels(218.f), h720(24)})
+                       .with_label("Unlink")
+                       .with_font_size(FontSize::Small)
+                       .with_debug_name(std::string("tb_link_unlink_") +
+                                        picker_token.debug))) {
+          link[picker_for].reset();
+          link_picker_open = false;
+          link_picker_for = -1;
+        }
+      }
+      for (int j = 0; j < kTokenCount; j++) {
+        if (!can_link(picker_for, j))
+          continue;
+        if (button(ctx, mk(body.ent(), option++),
+                   ComponentConfig{}
+                       .with_size({pixels(218.f), h720(24)})
+                       .with_label(fmt::format("Follow {}", kTokens[j].name))
+                       .with_font_size(FontSize::Small)
+                       .with_debug_name(std::string("tb_link_target_") +
+                                        kTokens[j].debug))) {
+          link[picker_for] = j;
+          link_picker_open = false;
+          link_picker_for = -1;
+        }
+      }
+      if (option == 0) {
+        div(ctx, mk(body.ent(), option++),
+            ComponentConfig{}
+                .with_size({pixels(218.f), h720(24)})
+                .with_label("No link targets")
+                .with_font_size(FontSize::Small)
+                .with_custom_text_color(chrome_muted)
+                .with_transparent_bg());
       }
     }
 
@@ -245,9 +407,14 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     std::string inspected_text = "Inspected: none.";
     if (inspected >= 0 && inspected < kTokenCount) {
       const TokenRow &token = kTokens[inspected];
-      const Color c = edited.color_ref(token.usage);
-      inspected_text = fmt::format("Inspected: {} #{}", token.name,
-                                   colors::to_hex_string(c, c.a < 255));
+      const Color c = resolved.color_ref(token.usage);
+      if (link[inspected])
+        inspected_text = fmt::format("Inspected: {} -> {} #{}", token.name,
+                                     kTokens[*link[inspected]].name,
+                                     colors::to_hex_string(c, c.a < 255));
+      else
+        inspected_text = fmt::format("Inspected: {} #{}", token.name,
+                                     colors::to_hex_string(c, c.a < 255));
     }
     div(ctx, mk(col1.ent()),
         layout(400, 20)
@@ -415,10 +582,12 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(FontSize::Small)
             .with_label(fmt::format(
                 "Accent #{} · Focus #{} · Primary #{}",
-                colors::to_hex_string(edited.accent, edited.accent.a < 255),
-                colors::to_hex_string(edited.focus, edited.focus.a < 255),
-                colors::to_hex_string(edited.primary,
-                                      edited.primary.a < 255)))
+                colors::to_hex_string(resolved.accent,
+                                       resolved.accent.a < 255),
+                colors::to_hex_string(resolved.focus,
+                                       resolved.focus.a < 255),
+                colors::to_hex_string(resolved.primary,
+                                      resolved.primary.a < 255)))
             .with_text_color(Theme::Usage::FontMuted)
             .with_transparent_bg()
             .with_debug_name("tb_preview_tokens"));
@@ -427,6 +596,8 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     // Innermost first; inspecting never consumes the click.
     const auto inspect = [&](int idx) {
       inspected = idx;
+      link_picker_open = false;
+      link_picker_for = -1;
       for (int j = 0; j < kTokenCount; j++)
         open[j] = (j == idx);
     };
