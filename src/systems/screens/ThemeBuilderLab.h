@@ -6,9 +6,10 @@
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/color_swatch.h>
 #include <optional>
+#include <vector>
 
 // Theme builder lab: token table + live preview + inspector + links.
-// Undo/redo, export/import are later pieces.
+// Undo/redo over edits; export/import is a later piece.
 struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   struct TokenRow {
     Theme::Usage usage;
@@ -55,11 +56,57 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   bool preview_notifications = true;
   float preview_volume = 0.6f;
 
+  struct ThemeSnapshot {
+    afterhours::Color color[kTokenCount];
+    float radius01;
+    float ring01;
+    std::optional<int> link[kTokenCount];
+  };
+  std::vector<ThemeSnapshot> undo_stack;
+  std::vector<ThemeSnapshot> redo_stack;
+  bool history_gesture_open = false;
+
+  ThemeSnapshot theme_snapshot() {
+    ThemeSnapshot s{};
+    s.radius01 = radius01;
+    s.ring01 = ring01;
+    for (int i = 0; i < kTokenCount; i++) {
+      s.color[i] = edited.color_ref(kTokens[i].usage);
+      s.link[i] = link[i];
+    }
+    return s;
+  }
+  void apply_snapshot(const ThemeSnapshot &s) {
+    for (int i = 0; i < kTokenCount; i++) {
+      edited.color_ref(kTokens[i].usage) = s.color[i];
+      link[i] = s.link[i];
+    }
+    radius01 = s.radius01;
+    ring01 = s.ring01;
+  }
+  static bool snapshots_equal(const ThemeSnapshot &a,
+                              const ThemeSnapshot &b) {
+    if (a.radius01 != b.radius01 || a.ring01 != b.ring01)
+      return false;
+    for (int i = 0; i < kTokenCount; i++) {
+      const afterhours::Color &x = a.color[i];
+      const afterhours::Color &y = b.color[i];
+      if (x.r != y.r || x.g != y.g || x.b != y.b || x.a != y.a)
+        return false;
+      if (a.link[i] != b.link[i])
+        return false;
+    }
+    return true;
+  }
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &ctx, float) override {
     using namespace afterhours;
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+
+    const ThemeSnapshot frame_start = theme_snapshot();
+    bool history_suppressed = false;
 
     Theme resolved = edited;
     resolved.panel_corner_radius = radius01 * 24.f;
@@ -106,13 +153,48 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                          layout(1232, 56)
                              .with_gap(h720(4))
                              .with_transparent_bg());
-    div(ctx, mk(header.ent()),
-        layout(1232, 32)
+    auto title_row = hstack(ctx, mk(header.ent()),
+                              layout(1232, 32)
+                                  .with_gap(w1280(8))
+                                  .with_no_wrap()
+                                  .with_transparent_bg());
+    div(ctx, mk(title_row.ent()),
+        layout(996, 32)
             .with_label("Theme builder")
             .with_font_size(FontSize::Large)
             .with_font_weight(colors::FontWeight::Bold)
             .with_custom_text_color(chrome_text)
             .with_transparent_bg());
+    if (button(ctx, mk(title_row.ent()),
+               ComponentConfig{}
+                   .with_size({w1280(110), h720(32)})
+                   .with_label("Undo")
+                   .with_font("AtkinsonMock", FontSize::Small)
+                   .with_custom_background(swatch_bg)
+                   .with_custom_text_color(chrome_text)
+                   .with_disabled(undo_stack.empty())
+                   .with_debug_name("tb_undo"))) {
+      redo_stack.push_back(theme_snapshot());
+      apply_snapshot(undo_stack.back());
+      undo_stack.pop_back();
+      history_suppressed = true;
+      history_gesture_open = false;
+    }
+    if (button(ctx, mk(title_row.ent()),
+               ComponentConfig{}
+                   .with_size({w1280(110), h720(32)})
+                   .with_label("Redo")
+                   .with_font("AtkinsonMock", FontSize::Small)
+                   .with_custom_background(swatch_bg)
+                   .with_custom_text_color(chrome_text)
+                   .with_disabled(redo_stack.empty())
+                   .with_debug_name("tb_redo"))) {
+      undo_stack.push_back(theme_snapshot());
+      apply_snapshot(redo_stack.back());
+      redo_stack.pop_back();
+      history_suppressed = true;
+      history_gesture_open = false;
+    }
     div(ctx, mk(header.ent()),
         layout(1232, 20)
             .with_label("Edit every theme token and watch the preview follow.")
@@ -639,6 +721,22 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
         inspect_usage(Theme::Usage::Surface);
       else if (inside(preview))
         inspect_usage(Theme::Usage::Background);
+    }
+    // History: edits on consecutive frames are one gesture (a slider
+    // drag, a typed hex), so one undo step reverts the whole gesture.
+    if (!history_suppressed) {
+      const ThemeSnapshot frame_end = theme_snapshot();
+      if (!snapshots_equal(frame_start, frame_end)) {
+        if (!history_gesture_open) {
+          undo_stack.push_back(frame_start);
+          if (undo_stack.size() > 100)
+            undo_stack.erase(undo_stack.begin());
+          redo_stack.clear();
+          history_gesture_open = true;
+        }
+      } else {
+        history_gesture_open = false;
+      }
     }
   }
 };

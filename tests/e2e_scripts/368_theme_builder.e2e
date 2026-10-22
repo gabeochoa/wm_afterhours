@@ -118,3 +118,62 @@ expect_no_ui tb_link_unlink_primary
 click_ui tb_preview_save
 wait 0.3
 expect_text "Inspected: Primary #2E7D6B"
+
+# Undo/redo: consecutive-frame edits are one gesture, one undo step.
+set_slider tb_radius_slider 1.0
+wait 0.3
+expect_text "24px"
+click_ui tb_undo
+wait 0.3
+expect_text "12px"
+click_ui tb_redo
+wait 0.3
+expect_text "24px"
+set_slider tb_radius_slider 0.5
+wait 0.3
+expect_text "12px"
+
+# Links undo/redo: undo unlinks, redo re-links.
+click_ui tb_link_primary
+wait 0.3
+click_ui tb_link_target_accent
+wait 0.3
+expect_text "Inspected: Primary -> Accent #00FF00"
+click_ui tb_undo
+wait 0.3
+expect_text "Inspected: Primary #2E7D6B"
+click_ui tb_redo
+wait 0.3
+expect_text "Inspected: Primary -> Accent #00FF00"
+
+# Hex undo/redo: a typed hex is one gesture, one undo step.
+click_ui tb_swatch_accent
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "0000FF"
+wait 0.3
+expect_text "Accent #0000FF"
+click_ui tb_swatch_accent
+wait 0.3
+click_ui tb_undo
+wait 0.3
+expect_text "Accent #00FF00"
+click_ui tb_redo
+wait 0.3
+expect_text "Accent #0000FF"
+
+# Two undos walk back two edits; two redos reapply them in order.
+click_ui tb_undo
+wait 0.3
+expect_text "Inspected: Primary -> Accent #00FF00"
+click_ui tb_undo
+wait 0.3
+expect_text "Inspected: Primary #2E7D6B"
+click_ui tb_redo
+wait 0.3
+expect_text "Inspected: Primary -> Accent #00FF00"
+click_ui tb_redo
+wait 0.3
+expect_text "Inspected: Primary -> Accent #0000FF"
