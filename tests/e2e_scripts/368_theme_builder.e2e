@@ -177,3 +177,62 @@ expect_text "Inspected: Primary -> Accent #00FF00"
 click_ui tb_redo
 wait 0.3
 expect_text "Inspected: Primary -> Accent #0000FF"
+
+# Export/import: the file is the flattened theme (links baked in).
+# The path field takes any path; the status names the file only.
+click_ui tb_file_path
+wait 0.2
+select_all
+type "/tmp/theme_builder_e2e.theme"
+wait 0.3
+click_ui tb_export
+wait 0.3
+expect_text "Exported theme_builder_e2e.theme"
+
+# Change state, then prove a missing file fails without touching it.
+set_slider tb_radius_slider 1.0
+wait 0.3
+expect_text "24px"
+click_ui tb_swatch_accent
+wait 0.3
+click_ui color_hex_field
+wait 0.2
+select_all
+type "FF0000"
+wait 0.3
+expect_text "Inspected: Primary -> Accent #FF0000"
+click_ui tb_swatch_accent
+wait 0.3
+click_ui tb_file_path
+wait 0.2
+select_all
+type "/tmp/does_not_exist_12345.theme"
+wait 0.3
+click_ui tb_import
+wait 0.3
+expect_text "Import failed: could not open does_not_exist_12345.theme"
+expect_text "24px"
+expect_text "Inspected: Primary -> Accent #FF0000"
+
+# Import the exported file: radius, colors, and flattened links return.
+click_ui tb_file_path
+wait 0.2
+select_all
+type "/tmp/theme_builder_e2e.theme"
+wait 0.3
+click_ui tb_import
+wait 0.3
+expect_text "Imported theme_builder_e2e.theme"
+expect_text "12px"
+expect_text "Inspected: Primary #0000FF"
+expect_text "Accent #0000FF"
+
+# Import is one undo step: undo restores the pre-import state.
+click_ui tb_undo
+wait 0.3
+expect_text "24px"
+expect_text "Inspected: Primary -> Accent #FF0000"
+click_ui tb_redo
+wait 0.3
+expect_text "12px"
+expect_text "Inspected: Primary #0000FF"

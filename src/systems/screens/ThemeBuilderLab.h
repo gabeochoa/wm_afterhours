@@ -5,11 +5,12 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/color_swatch.h>
+#include <afterhours/src/plugins/ui/theme_io.h>
 #include <optional>
 #include <vector>
 
 // Theme builder lab: token table + live preview + inspector + links.
-// Undo/redo over edits; export/import is a later piece.
+// Undo/redo over edits; export/import as a .theme file.
 struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   struct TokenRow {
     Theme::Usage usage;
@@ -55,6 +56,10 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   std::string preview_name = "Weekend workshop";
   bool preview_notifications = true;
   float preview_volume = 0.6f;
+
+  std::string export_path;
+  bool export_path_set = false;
+  std::string file_status = "Export or import a .theme file.";
 
   struct ThemeSnapshot {
     afterhours::Color color[kTokenCount];
@@ -107,6 +112,13 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
 
     const ThemeSnapshot frame_start = theme_snapshot();
     bool history_suppressed = false;
+    if (!export_path_set) {
+      export_path_set = true;
+      const auto dir = files::get_save_path();
+      export_path = dir.empty()
+                        ? "theme_builder_export.theme"
+                        : (dir / "theme_builder_export.theme").string();
+    }
 
     Theme resolved = edited;
     resolved.panel_corner_radius = radius01 * 24.f;
@@ -446,10 +458,29 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
               .with_font_size(FontSize::Small)
               .with_custom_text_color(chrome_text)
               .with_transparent_bg());
-      slider(ctx, mk(shape.ent(), 1), value,
-             ComponentConfig{}
-                 .with_size({expand(), h720(28)})
-                 .with_debug_name(slider_debug));
+      // A slider holds its own state and overwrites the caller's value
+      // every frame, so an outside edit (undo, import) must be pushed
+      // back into the held state or the next frame undoes it. Same
+      // pattern as the swatch channel sliders: only when the slider
+      // itself did not change this frame.
+      const float desired = value;
+      auto slider_result = slider(ctx, mk(shape.ent(), 1), value,
+                                  ComponentConfig{}
+                                      .with_size({expand(), h720(28)})
+                                      .with_debug_name(slider_debug));
+      if (!static_cast<bool>(slider_result)) {
+        value = desired;
+        if (slider_result.ent().template has<UIComponent>()) {
+          for (const EntityID child_id :
+               slider_result.ent().template get<UIComponent>().children) {
+            Entity &child =
+                UICollectionHolder::getEntityForIDEnforce(child_id);
+            if (child.template has<HasSliderState>())
+              child.template get<HasSliderState>().value =
+                  std::clamp(desired, 0.f, 1.f);
+          }
+        }
+      }
       div(ctx, mk(shape.ent(), 2),
           layout(80, 28)
               .with_label(readout)
@@ -504,6 +535,77 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(chrome_text)
             .with_transparent_bg()
             .with_debug_name("tb_inspected"));
+
+    // ---- theme file: export flattens links into a plain theme ----
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label("Theme file")
+            .with_font_weight(colors::FontWeight::Bold)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg()
+            .with_debug_name("tb_category_file"));
+    ui::imm::text_input(ctx, mk(col1.ent()), export_path,
+                        layout(400, 32)
+                            .with_debug_name("tb_file_path"));
+    auto file_row = hstack(ctx, mk(col1.ent()),
+                           layout(400, 32)
+                               .with_gap(w1280(8))
+                               .with_no_wrap()
+                               .with_transparent_bg());
+    if (button(ctx, mk(file_row.ent()),
+               ComponentConfig{}
+                   .with_size({w1280(196), h720(32)})
+                   .with_label("Export")
+                   .with_font("AtkinsonMock", FontSize::Small)
+                   .with_custom_background(swatch_bg)
+                   .with_custom_text_color(chrome_text)
+                   .with_debug_name("tb_export"))) {
+      Theme to_save = edited;
+      for (int i = 0; i < kTokenCount; i++)
+        to_save.color_ref(kTokens[i].usage) =
+            resolved.color_ref(kTokens[i].usage);
+      to_save.panel_corner_radius = radius01 * 24.f;
+      to_save.focus_ring_thickness = ring01 * 6.f;
+      const std::string name =
+          std::filesystem::path(export_path).filename().string();
+      file_status =
+          theme_io::save(to_save, export_path)
+              ? fmt::format("Exported {}", name)
+              : fmt::format("Export failed: {}", name);
+    }
+    if (button(ctx, mk(file_row.ent()),
+               ComponentConfig{}
+                   .with_size({w1280(196), h720(32)})
+                   .with_label("Import")
+                   .with_font("AtkinsonMock", FontSize::Small)
+                   .with_custom_background(swatch_bg)
+                   .with_custom_text_color(chrome_text)
+                   .with_debug_name("tb_import"))) {
+      const std::string name =
+          std::filesystem::path(export_path).filename().string();
+      if (const auto text = files::read_string(export_path)) {
+        Theme incoming = edited;
+        const auto result = theme_io::read_into(*text, incoming);
+        edited = incoming;
+        radius01 = std::clamp(incoming.panel_corner_radius / 24.f, 0.f, 1.f);
+        ring01 = std::clamp(incoming.focus_ring_thickness / 6.f, 0.f, 1.f);
+        for (int i = 0; i < kTokenCount; i++)
+          link[i].reset();
+        file_status =
+            result.errors == 0
+                ? fmt::format("Imported {}", name)
+                : fmt::format("Imported {} with {} bad lines", name,
+                              result.errors);
+      } else {
+        file_status = fmt::format("Import failed: could not open {}", name);
+      }
+    }
+    div(ctx, mk(col1.ent()),
+        layout(400, 20)
+            .with_label(file_status)
+            .with_custom_text_color(chrome_text)
+            .with_transparent_bg()
+            .with_debug_name("tb_file_status"));
 
     // ---- live preview: a typical settings page, usages only ----
     auto preview_col = vstack(ctx, mk(main.ent()),
