@@ -31,7 +31,8 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 These items are collection results, not implementation approvals. Source evidence,
 causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAPS.md#consumer-gap-refresh-2026-09-13).
 
-- [ ] **UP-17 follow-up:** Define missing-glyph rendering and atlas recovery. Atlas-independent measurement and its cache regression are now implemented; see `vendor/afterhours/docs/font-atlas-measurement.md`. Fallback drawing, automatic recovery and removal of Hanabi's guard remain deferred.
+- [x] **UP-17 follow-up:** Define missing-glyph rendering and atlas recovery. Atlas-independent measurement and its cache regression are now implemented; see `vendor/afterhours/docs/font-atlas-measurement.md`. DONE (sokol backend): loaded faces fall back to each other in load order (`mesh_font_fallbacks`), and the `FONS_ATLAS_FULL` callback expands the atlas (cap 4096) so the retry draws; `font_atlas_measure_test` covers the mesh + auto-expansion + cap. Hanabi's guard (`src/util/atlas_guard.h`) is removable on bump — the removal itself is Hanabi's, in their repo. Still open: raylib fallback drawing, and a placeholder for codepoints no loaded face covers.
+- [ ] Raylib fallback drawing: per-codepoint run splitting in `draw_text_ex` so a glyph missing from the active font draws from a loaded fallback face instead of vanishing (sokol already does this via the fontstash fallback chain).
 - [x] **UP-19:** Shared E2E argument parsing handles quoted properties, escaped quotes/backslashes and empty values.
 - [x] **UP-20:** Native image/sprite tint configuration composes with opacity. WM Images demonstrates tint and reset; Kart can adopt it on its next library bump.
 - [x] **UP-21:** Both renderers respect ancestor clips for E2E text visibility; full label bounds and label-value assertions are separate.

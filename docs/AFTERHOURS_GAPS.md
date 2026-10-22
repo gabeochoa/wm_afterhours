@@ -103,7 +103,7 @@ Compared with afterhours `d90db15`; source review only. UP-13/14/15/16 later lan
 
 Sokol measurement formerly packed glyphs and silently skipped advances when the atlas filled, poisoning both caches. Hanabi's `src/util/atlas_guard.h` cannot detect every plausible partial width. `c93e10e` fixes measurement with atlas-independent `fonsTextAdvance`; the six-check failing regression now passes. No new cache or public result type was needed.
 
-Missing-glyph drawing, automatic recovery and general error reporting remain deferred. Keep Hanabi's guard. See [measurement evidence](../vendor/afterhours/docs/font-atlas-measurement.md).
+Fallback drawing and automatic recovery are implemented for the sokol backend: loaded faces fall back to each other in load order, and the `FONS_ATLAS_FULL` callback expands the atlas (cap 4096) so the retry draws. Hanabi's guard is removable on bump to this version (the removal itself is Hanabi's). Still open: raylib fallback drawing (needs per-codepoint run splitting in `draw_text_ex`), and a visible placeholder for codepoints no loaded face covers. See [measurement evidence](../vendor/afterhours/docs/font-atlas-measurement.md).
 
 ### UP-18: Actual Cmd/Super injection — implemented
 
