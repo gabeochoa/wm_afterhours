@@ -27,10 +27,12 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     auto root=div(context,mk(entity),ComponentConfig{}.with_size({pixels(1080*s),pixels(672*s)})
         .with_absolute_position((context.screen_width-1080*s)/2,(context.screen_height-672*s)/2)
         .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("separators_root"));
-    const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
-      return div(context,mk(root.ent(),id),box(x,y,w,h).with_label(text)
+    const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false,const std::string &debug_name="") {
+      auto cfg=box(x,y,w,h).with_label(text)
           .with_font("AtkinsonMock",pixels(size*s)).with_custom_text_color(dim?muted:ink)
-          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
+          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events();
+      if(!debug_name.empty()) cfg.with_debug_name(debug_name);
+      return div(context,mk(root.ent(),id),cfg);
     };
     const auto stroke=[&](int id,float x,float y,float w,float h,afterhours::Color color,const std::string &name="") {
       return div(context,mk(root.ent(),id),box(x,y,w,h).with_custom_background(color).with_debug_name(name).with_ignore_pointer_events());
@@ -57,7 +59,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     stroke(24,290,468,198,3,line);
     label(25,"Fixed 60 px label gap",32,486,456,26,17,true);
     stroke(26,32,540,158,3,colors[0],"settings_line1");
-    label(27,"Settings",205,526,110,30,21);
+    label(27,"Settings",205,526,110,30,21,false,"settings_labeled");
     stroke(28,330,540,158,3,colors[0]);
     label(29,"Long label / fixed 140 px gap / blue accent",32,568,456,26,17,true);
     label(30,"Mixed separator examples",592,106,456,34,25);

@@ -7,7 +7,7 @@ assert_ui left_card_bg w=520 h=526 x=100 y=112
 assert_ui right_card_bg w=520 h=526 x=660 y=112
 assert_ui nav_bg w=456 h=64
 assert_ui_text "Home" w=86 h=30
-assert_ui_text "Settings" w=110 h=30
+assert_ui settings_labeled w=110 h=30
 assert_ui vsep_0 w=3 h=40
 assert_ui vsep_1 w=3 h=40
 assert_ui vsep_2 w=3 h=40
