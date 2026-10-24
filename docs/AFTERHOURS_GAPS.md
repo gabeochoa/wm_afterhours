@@ -527,3 +527,457 @@ Do not remove consumer workarounds merely because a similar feature exists. Hana
 atlas and keyboard-focus policies need consumer-specific checks. Query early-outs,
 variable-row virtualization, right-click injection, viewport transforms, tooltips,
 grids and native modal dismissal already exist; old missing-feature claims are stale.
+
+## Collected from sibling projects, 2026-10-26
+
+One-line each; full writeups stay in the source file. Items are as-reported from
+each project's gap file (triage date/pin noted per project) and not all
+re-verified against current source; the header caveat applies. Items verified
+already fixed upstream are omitted, not re-filed: dance `--headless` wiring and
+`fixed_dt`/`sim_steps`; kart `--screenshot-dir`, `--e2e-speed`, `opacity_pct`
+alpha scaling, dim-aware `resolve_gap`, `apply_overrides` forwarding;
+cartographer shared command pack (rejected, see above), settings path override
+(`set_path_override` exists), `mk_next`; mailboy `set_path_override` claim
+(false — the API exists); floatinghotel `text_area` placeholder, font-coverage
+helpers (both backends record cmap now), per-side borders (9eb0796), font tiers
+(UP-22); hanabi #457 quoted args and #59 space values (UP-19), #256/#562
+Super injection (UP-18). Puffin (`hanabi/puffin_gaps.md`) is a Hanabi-vs-Puffin
+product-feature comparison, not library gaps, so it is excluded.
+
+### Ranked by breadth — which help the most projects
+
+Counted over the 7 sibling source projects. A project counts if it has ≥1
+collected ask in the theme. Themes are workstreams, not single fixes; the
+per-project sections below stay the detail.
+
+**4 projects**
+- E2E assertions — Hanabi, Cartographer, Floatinghotel, Dance. Colour /
+  absent / scroll-offset / clipboard assertions (#61/#308/#483, #104, #408,
+  #456); `assert_ui` matching any element with a label (#73);
+  `expect_focus` / `expect_hovered`; click-by-label that fails when covered;
+  quoted property values; styled-span joining; clipped-row matching;
+  hidden-widget assertions; retrying asserts; sokol capture recording so
+  `expect_drawn` works there.
+- GPU + font resource lifetime — Hanabi, Floatinghotel, Kart, Cartographer.
+  Destroy-free timing, max texture dimension, GPU bytes held, font catalog /
+  collection faces / unload cap / cache generation; atlas never emptied;
+  staging-texture leak; retained texture components surviving a texture-free
+  widget; invalid headless default font; glyph-packing failure reporting.
+- Layout sizing / overflow — Hanabi, Floatinghotel, Kart, Cartographer.
+  Flex-grow, unpadded-element screen fraction, baseline alignment, rows /
+  controls shrinking below labels, expanding controls warning early,
+  checkbox overflow, `with_padding` doing nothing on a label-only button.
+- Focus ring — Hanabi, Floatinghotel, Cartographer, Kart. No
+  `:focus-visible`, three outlines instead of one, one app-wide offset, ring
+  drawn regardless of movement; keyboard-only rings not exposed;
+  per-component opt-out and styling; `disable_rounded_corners` yielding a
+  rounded ring.
+
+**3 projects**
+- Background jobs + frame-safe delivery — MyNameChef (AH-09), Floatinghotel
+  (U1), Hanabi (#580, #587, #546). Owned workers, cancellation, ECS-thread
+  delivery, generation-checked refs, frame-wake contract.
+- E2E runner reliability — Hanabi (#39, #40, #223, #591), Cartographer
+  (unknown-handler across managers, unread injected press), Floatinghotel
+  (host-refresh wait times out without failing).
+- E2E input injection — Hanabi (#285, #50, #54, #172, #230, #232, #407, #60,
+  #526, #405), Mailboy (gamepad), Cartographer (`mouse_down` press edge).
+- Logging + host contracts — Dance (crash recursion, `log_file`,
+  `log_once_per`, provider replacement), Mailboy (statement-safe macros,
+  host-macro list), Cartographer (include-order docs).
+- Rendering primitives — Hanabi (#13, #15, #78, #80, #81, #92, #102, #107,
+  #110, #111, #327, #86, #101, #375), Floatinghotel (styled-label ellipsis
+  / weighted runs / wrapped inset, nominal font pixels, tree chevrons),
+  Cartographer (gradient fill + line primitive at imm level).
+- Text + text input — Hanabi (#51, #62, #105, #56, #57, #65, #67, #257,
+  #258, #259, #264, #305, #306, #590), Floatinghotel (text-area quirks,
+  rich text in a single label, U9 normalization), Cartographer (label
+  word-wrap).
+
+**2 projects**
+- Scroll anchors / restoration — Hanabi (#30a, #476), Floatinghotel (U7).
+- Read-only selection — Hanabi (#37), Floatinghotel (U8).
+- Cache / memory budgets + attribution — Floatinghotel (U3), Hanabi (#585,
+  #586, #589).
+- Focus-scoped shortcuts — Floatinghotel (U5), Cartographer (shortcut
+  ownership, unconsumed actions, raw handlers).
+- Text measurement / introspection — Hanabi (#74, #116, #135, #146, #224,
+  #286), Floatinghotel (label-fit probes, layout snapshots, reading
+  positions, font metadata).
+- Frame / host contract — Hanabi (#541–#545, #547–#549, #374, #595, #597),
+  Floatinghotel (sokol pacing, startup wait, native/dock resize).
+- Slider — Cartographer (track/fill/knob), Kart (label overflow, colors).
+- Absolute positioning — Hanabi (#93, #97, #222), Cartographer (absolute
+  child of a button + translate).
+- Layers / transforms / clipping — Hanabi (#63, #64), Cartographer
+  (`with_rotation`, clip-path, layers, nested render textures).
+- Validation / diagnostics — Hanabi (#53), Cartographer (`mk()` conflict
+  diagnostics, validation-log throttle).
+- Platform integration — Hanabi (#16, #36, #32a, #33a), Floatinghotel
+  (macOS menu, tab keyboard injection, dock verification).
+
+Everything else helps one project; see the per-project sections below.
+
+### MyNameChef — AH-01..AH-14 (101-issue review, 2026-09-23, against 12a4571)
+
+- AH-01: RAII collection binding plus collection-bound system execution, so
+  worlds, nested scopes and exception restore stay aligned without raw pointers.
+- AH-02: session reset contract — generation token plus reset/dispose callbacks
+  for systems and caches, so loaders/latches do not outlive their operation.
+- AH-03: simulation driver with init/ready/running/finished/failed states, fixed
+  step, speed multiplier, pauseable group, resettable accumulator, `run_until`.
+- AH-04: ordered event phases and deferred mutation helpers; cascaded events
+  drain before completion with a work limit that errors instead of looping.
+- AH-05: canonical snapshots with caller-supplied stable identities, ordering,
+  deterministic encoding/hash and field-level diff helpers.
+- AH-06: versioned, reusable state codecs with a shared envelope, migrations,
+  typed decode errors and checksum verification before use.
+- AH-07: staged world restoration — validate in a candidate world, discardable
+  on failure, commit only when the whole payload is accepted.
+- AH-08: world-owned, serializable deterministic RNG service with named streams
+  and full consumed-state save/restore.
+- AH-09: general async task service — owned workers, cancellation, ECS-thread
+  delivery, generation-checked entity refs. See also U1, hanabi #580/#587.
+- AH-10: result-returning `write_atomic` (unique temp sibling, checked
+  write/flush/close/replace) plus confined path resolution; use in settings.
+- AH-11: injectable file roots before any test initialization, plus a scoped
+  temp-dir test fixture with deterministic cleanup.
+- AH-12: unified headless runtime contract — logic-only backend, synthetic input,
+  supplied resolution, CPU text measurement, no window/audio/GL init.
+- AH-13: machine-readable test result/discovery contract (JSON/JUnit, test IDs,
+  skips with reasons, empty-discovery policy, exit-code semantics).
+- AH-14: documented, tested minimal consumer builds and headless integration
+  examples (pure ECS, graphical UI, logic-only tests, offscreen).
+
+### Endless Dance Chaos — bump a2f125d → d1d7f0e; bot playtests
+
+- `builtin_profile::enable()` installs a provider that can only return empty
+  when profiling is compiled out; `dump_profile` now fails loudly instead of
+  printing `Top 0`, but `enable()` still does not warn at install time.
+- `crash::report()` logs through `log_error`; a host whose `log_error` asserts
+  recurses signal handler → assert → abort → handler. Use a non-re-entering
+  path or document a non-aborting `log_error` requirement.
+- `log_file.h` hooks `log_sink_fn`, but only afterhours' own logging calls the
+  sink; under `AFTER_HOURS_REPLACE_LOGGING` host logs bypass it entirely.
+- `log_once_per` is defined only when logging is not replaced, yet
+  `window_manager.h` calls it; document the required host shim shape.
+- `builtin_profile::enable()` silently replaces a custom provider; warn or
+  preserve instead of discarding it.
+- The SOKOL_IMPL TU must include two afterhours headers (`image_decode.h`,
+  `capture_impl.h`); the requirement lives only in header comments.
+- Custom `assert_*` E2E commands fail on first evaluation; only `expect_text`
+  retries. Offer a retrying-assert helper so apps stop re-deriving `eventually_`.
+- Not filed (verified closed): `--headless` `RunConfig` wiring,
+  `fixed_dt`/`sim_steps`, `wait` batch-boundary resolution (already above).
+
+### Mailboy
+
+- Gamepad injection is missing: e2e `test_input` injects keys/mouse/wheel/pinch
+  only; gamepad buttons/axes bypass the injector. Add queued gamepad
+  press/axis state.
+- `translation.h` includes fmt before any `<cstdlib>`; fmt 11.2's `format.h`
+  uses unqualified `::malloc`/`::free`, so a TU reaching fmt without a prior
+  `<cstdlib>`/`<iostream>` fails on newer clang. Include `<cstdlib>` first.
+- Document the full required host-macro list (`RectangleType`, `Vector2Type`,
+  `TextureType`, `ColorType`, `FontType`, `Vector3Type`) in one place, or
+  provide raylib defaults; the failure today is a cryptic type error. Also
+  cartographer's include-order docs ask.
+- Document that replacement logging macros must be statement-safe
+  (`do/while(0)`); `crash_handler.h` uses `log_error` in brace-less `if/else`.
+- Not filed: zig/LLVM 21 miscompile (toolchain, root-caused, app-fixed),
+  `set_path_override` claim (false), fmt/json vendor bumps (not afterhours).
+
+### Cartographer
+
+- E2E: built-in menu-flow commands (`click_btn`, `expect_label`,
+  `expect_app_state`, `set_volume`, `check_volume`) and built-in commands for
+  the `terminal::Console` plugin.
+- E2E: `register_unknown_handler` fails commands its own manager does not
+  consume on the first frame, so with several managers it rejects commands
+  meant for another one. Distinct from the rejected automatic-registry ask.
+- E2E: built-in click-by-label that hit-tests at the element's centre and fails
+  when another element is on top or the element is not rendered.
+- E2E: `expect_focus` / `expect_no_focus`, `expect_hovered`.
+- E2E: `mouse_down` sets `press_frames = 0`, so the press edge exists only
+  for systems after the handler; use the one-frame survival window that
+  `simulate_mouse_press` already uses.
+- E2E: report an injected press that no system read; today the step passes
+  silently whether the click did anything or not.
+- E2E: a screenshot stalls its frame ~0.6s at 2560×1440 and the stall lands in
+  the next frame's dt; capture needs a fixed-dt mode.
+- UI: structured `mk()` ID-conflict diagnostics with a suggested fix and
+  nearby hierarchy context.
+- UI: a switch to disable or throttle noisy per-frame validation logs.
+- UI: a built-in contrast checker returning a ratio for a text/background pair.
+- UI: configurable minimum target sizes plus optional auto-padding enforcement.
+- Components: value pill, tab control (active indicator, paper-tab variant),
+  compact settings list (dividers, label/value alignment), divider,
+  `with_720p_size(w, h)` convenience, typed theme-palette accessor.
+- Tooltip: keyboard-focus support (only `hot_id` is walked); per-tooltip corner
+  radius/visual overrides (`RenderTooltip` reads the whole context theme);
+  a placement setter (`component_init.h` hardcodes Below); refresh/remove
+  tooltip config on immediate rebuilds (`addComponentIfMissing` ignores
+  changes and leaves cleared tooltips attached).
+- Layout: single-side `Margin`/`Padding` constructors (`Margin::left(...)`,
+  `Padding::horizontal(...)`).
+- Transforms: `with_rotation(deg)` on `ComponentConfig` plus rotated layout,
+  hit testing and focus rings; a keyframe/timeline helper (offset keyframes,
+  per-segment easing, reversible playback); an "inert while fading" flag
+  (opacity-0 elements still take clicks/focus); clip-path / non-rectangular
+  clip; an offscreen layer helper with premultiplied-alpha-correct
+  compositing; nested render textures.
+- Drawing APIs: `Effect` vec3/matrix/vertex-shader support; a matrix compose
+  helper; a pixel/image sampling helper; per-draw filter on imm sprites; a
+  shared presentation path for menu/pause/loading screens; frame recording
+  with fixed-dt playback; an incremental loader with a per-frame budget;
+  `Library::load` should check `contains` before parsing (double-load leak);
+  gradient fill and a line primitive at imm component level.
+- Focus: per-component focus-ring opt-out (only theme-wide thickness 0
+  today); focus-ring styling (offset, rounded corners, spread halo, hover
+  offset, transition); a debug-name `is_hot` / `is_focus_visible` query
+  readable from render systems; choosing the initial focus ("no initial
+  focus" / "focus this first"); an automatic `Grab` should keep the previous
+  `focus_modality` instead of lighting a ring without user input.
+- Settings journal: an absolute child of a button does not land at
+  `with_translate` relative to the button box; `with_padding` on a label-only
+  button does nothing (warning does not mention buttons);
+  labels cannot word-wrap (only text areas have `with_word_wrap`); chamfered
+  corners; `with_icon` is fixed at 60% of button height with no override, is
+  always a start-aligned flex child, and works only on `button`;
+  `FontManager::load_font` should report glyph-packing failures instead of
+  leaving only a raylib warning.
+- Settings plugin: JSON comment-preserving writes or an official JSON5
+  output mode. Path override is covered by `set_path_override`, not filed.
+- Input: distinct axis held values vs activation edges (a held trigger stays
+  in `inputs_pressed`); virtual-controller availability plus persistent axis
+  injection in E2E.
+- Slider: track/fill/knob styling — the handle takes the track background,
+  with no fill segment or knob size.
+
+### Kart — re-triaged 2026-08-29 against fc4d625
+
+- `GetFontDefault()` returns an invalid font in headless mode; `font_helper.h`
+  and `utilities.h` load it into `DEFAULT_FONT`/`SYMBOL_FONT` with no
+  headless branch.
+- Checkbox internal layout overflow: `checkbox_row` children are often taller
+  than the row, producing `checkbox label extends outside parent`.
+- `imm::slider` with a label overflows its parent unconditionally (label at
+  0.5 + background at ~1.0 of the parent width); the track/handle colors are
+  also not overridable per call site.
+- `disable_rounded_corners()` yields a rounded focus ring: the all-zero bitset
+  means `HasRoundedCorners` never attaches, so `focus_ring_for` falls back to
+  the theme radius. Attach whenever the corners value is present.
+- Warn when a new built-in E2E handler starts consuming a command the consumer
+  already handles (kart's duplicate `disable_animations` was silently
+  shadowed); or let `register_builtin_handlers` take an opt-out set.
+
+### Hanabi — triaged at 1ac6db2; full table in `hanabi/afterhours_gaps_index.md`
+
+- Focus ring: no `:focus-visible` (library rule is "after any interaction");
+  the ring is three outlines, not one; its offset is one app-wide number; it
+  is drawn regardless of whether focus moved. #83/#265/#266/#267, #72 fixed.
+- Every click on a `HasClickListener` moves keyboard focus to it; there is no
+  activate-without-focus. #592.
+- Text: read-only text is not selectable (#37, see also U8); no way to ask
+  where a piece of text landed (#51, still open); styled spans lose a
+  monospace block's columns (#62); the placeholder colour is a frame-wide
+  global (#105); no way to ask how much of a string fits in a width (#116);
+  `wrap_text` costs O(words) measures and O(words) strings (#135).
+- Text input: a new `text_input` cannot be focused programmatically (#56);
+  `text_input` blurs itself on Escape (#57); padding derives from field
+  height (#65); multi-line is a different widget, not a mode (#67); no
+  delete-to-line-start action (#257); `expect_input_text` cannot see a
+  multiline field (#258); the script parser has no `\n` escape (#259);
+  `default_keymap()` is not macOS-correct (#264); `text_area` re-wraps every
+  frame bypassing `TextMeasureCache` (#305); `with_auto_grow` will not return
+  its row count (#306).
+- Layout: no flex-grow to pin a trailing element right (#18); grid snapping
+  quantizes child positions (#71); an unpadded element silently gets a
+  fraction of the screen (#76); a row cannot baseline-align its children
+  (#88); an absolute child can only be placed from the leading edge (#93),
+  cannot be `percent()`-sized (#97), and is still counted in its parent's
+  flow (#222); `Dim::Percent` ignores the child's own margin (#276).
+- Layout introspection: the resolved layout tree cannot be walked (#74);
+  nothing reports the size of the tree just built (#146); a scroll view is
+  addressable only by debug name (#147); a widget cannot know its own
+  position on the frame built (#286, still open); nothing says how tall a
+  child would be (#224).
+- Identity: identity is the slot, so state re-points at another row (#171);
+  an entity created this frame is not findable by id (#70); an imm subtree
+  built twice from one call site collides unless the caller salts `otherID`
+  (#596); closed popovers still resolve and retain a UI entity (#525);
+  a popover dismisses before its body runs when focus leaves the panel, so a
+  row press is lost (#599); no deactivate hook for conditional systems (#581);
+  two view trees in one window is not a notion the library has (#335); tab
+  order cannot be scoped, so Tab walks out of a split pane (#336).
+- Rendering: `draw_texture_pro` has no alpha blending (#13); low-alpha
+  `with_custom_background` renders opaque (#15); a container cannot draw over
+  its own children (#63); no window-level chrome / render layers (#64);
+  `draw_circle_v` truncates its centre to whole pixels (#78); every box
+  rasterizes 1px bigger and 1px up-left (#80); per-corner rounding bits are
+  named for the opposite corner (#81); primitives are not antialiased, MSAA
+  is hardcoded off (#92); `on_draw_fg` gets a scaled rect and no scale
+  (#102); a selected row's fill is the row's own background box (#107); a
+  hover highlight is the hit rectangle (#111); nothing rounds a widget's
+  origin (#110); no draw-only element — a decorative mark costs an entity
+  (#327); a capture emits pixels and no geometry (#86); no supersampled
+  capture (#101).
+- GPU/fonts: destroying a GPU object does not free it until next frame (#212);
+  `load_texture` has no max dimension (#125); nothing says how many GPU bytes
+  are held (#126); no installed-font catalog (#571); path-only font loading
+  cannot select collection faces (#572); loaded font IDs cannot be unloaded
+  and cap at sixteen (#577); font replacement has no cache generation (#579).
+- E2E runner: a single-script run never fails (#39); the last command's
+  result is never observed (#40); no worked example of an e2e host loop (#41);
+  no wall-clock wait — a worker holding real seconds cannot be awaited (#591,
+  extends #223); the script deadline is seconds fed by the host's `dt` (#223).
+- E2E assertions: a script can assert a rect and a string, never a colour
+  (#61/#308/#483); a script cannot assert an element is absent (#104);
+  `assert_ui` matches any element with that label (#73); `assert_ui` cannot
+  see a scroll offset, though `dump_ui_node` prints one (#408); no clipboard
+  assertion despite exposed clipboard reads (#456).
+- E2E input: every element-addressed input command is a click (#285);
+  `check_single_action_impl` ignores the injected reader (#54); graphics-layer
+  key reads bypass the injector (#50); input injection needs the e2e plugin
+  compiled in (#172); `mouse.pos` is NaN until the first mouse event (#230);
+  a coordinate test cannot state its own precondition (#232); an injected
+  wheel event is delivered on two frames, so a script cannot spell one notch
+  (#407); sokol's drag-and-drop cannot be turned on (#60); synthetic
+  right-click misses direct button polling (#526); trackpad and wheel arrive
+  as the same float, so one `scroll_speed` cannot serve both (#405).
+- E2E resize: no way to drive a live window resize from the library or its
+  runner (#594); the macOS backend paints a live-resize step on the next
+  display-link tick, so applied sizes go unpainted (#595); the Metal pointer
+  is letterboxed against an app-owned resolution the library never refreshes,
+  while the draw path is not letterboxed (#597).
+- Frame/host contract: Metal ignores `RunConfig::target_fps` (#541, see also
+  floatinghotel sokol pacing); no event-triggered request-frame primitive
+  (#542); clear, emit, layout, input and draw are indivisible (#543); no
+  public non-consuming input-activity snapshot (#544); window exposure and
+  backing changes are hidden from the host (#545); futures and SSE have no
+  frame-wake contract (#546); timers cannot publish their next visual deadline
+  (#547); `dt` is callback time, not admitted-frame time (#548); no headless
+  cadence harness for the production host loop (#549).
+- Background work/memory: no cancellable background-job primitive (#580, see
+  U1/AH-09); no frame-safe mailbox for background completions (#587, see
+  AH-09); no memory-pressure/cache-purge event (#586); no retained-byte
+  attribution by system/component (#585, see U3); no per-system CPU
+  accounting seam (#589).
+- Crashes/visual: `set_window_size` tears down the render target mid-pass and
+  aborts the process (#374); a focused `text_input`'s border loses its top
+  edge to the field's own clip (#375); no atomic scroll-to-end operation
+  (#476); a wrong layout is corrected silently, then warned about forever
+  (#53); button variants drop per-widget text inset (#590).
+- Platform/misc: no OS appearance (light/dark) query (#16); no app cache dir
+  distinct from the config dir (#36); a container cannot report hover unless
+  clickable (#38); widget callbacks outlive their frame, with no imm
+  `on_submit` (#45); `ctx.theme` is one global read at render time (#90);
+  no scroll-anchor / preserve-position-on-prepend (#30a, see U7); scroll is a
+  raw wheel-delta add with no smoothing (#30b); `get_resource_path` resolves
+  from CWD, not the exe (#32a); no menu bar, notifications, hotkey or
+  Spotlight (#33a, see floatinghotel macOS menu); text editing has no
+  imperative native-responder command surface (#565); modifier release state
+  has no Super slot (#568; UP-18 covered injection, release-slot state
+  unconfirmed).
+- Animation: no property tween / animation helper (#2); no per-item stagger /
+  delay (#AN-8); no exit/leaving animation (#AN-9); no one-shot
+  state-change trigger (#AN-10); no shimmer / gradient-mask primitive
+  (#AN-11); no colour input of any kind (#58).
+- Perf: `ComponentConfig` is copied three times on the way in (#181); the
+  focusable set is a `std::set` rebuilt every frame (#183); a component is
+  two cache misses to write four bytes (#160); the first draws cost 5-8x
+  with no pre-warm (#155); a scroll view clamps against children that are
+  not there (#163).
+
+### Floatinghotel — `floatinghotel/docs/afterhours-gaps.md`
+
+- Draw capture on sokol: only circle and triangle call `capture::record`
+  (2 sites vs raylib 11, none 12), so `expect_drawn` / `dump_draws` are
+  still mostly no-ops on sokol.
+- `text_area` lines overflow their own field (`text_area_line` wider than
+  the field, height 0) — still the containment-check noise.
+- Sokol atlas fills and is never emptied: UP-17 added expansion (cap 4096)
+  and fallback drawing; the atlas still never shrinks or empties.
+- `capture_impl.h` leaks one staging texture per screenshot in non-ARC
+  builds; release `staged` after `getBytes:`, or document the ARC
+  requirement. Headless sokol also has no autorelease pool per frame.
+- Windowed startup waits on sokol_app: the first frame waits for the
+  display link; draw once in `DidFinishLaunching`. `load_font_from_file`
+  reads the file per call with no dedupe and no `load_font_from_memory`.
+- Rich text in a single label: one label is one text colour today; a styled
+  spans API for a filename + path on one row is asked (verify against the
+  existing styled-label runs).
+- Still open vendor bugs: `tab_container()` renders at screen-absolute
+  position, ignoring parent bounds; `toggle_switch()` siblings consume
+  extra layout space; `text_input()` requires host-defined
+  `InputAction::TextBackspace/Delete/Home/End` enum values.
+- E2E: target lookup needs a render checkpoint after cached view
+  transitions; property assertions do not parse quoted values; text matching
+  does not join adjacent styled spans; E2E/JSON coordinates stop at the
+  nearest scroll ancestor; grid-snapped placement can exceed the scrollable
+  extent. Text assertions matching clipped rows may be covered by UP-21 —
+  re-check before implementing.
+- Retained texture components survive a texture-free immediate widget;
+  safe retirement of an already-rendered texture is still open. See U4.
+- Sokol frame pacing does not honor the requested frame rate. See hanabi #541.
+- Virtual lists: metrics mix physical and logical pixels in Adaptive mode;
+  tab order follows creation order instead of visual order; no visible-range
+  exposure for incremental loading; keyed lists do not preserve viewport and
+  focus through updates.
+- Keyboard-only focus rings are not exposed. See hanabi #83 family.
+- Text-area quirks: line widths are scaled twice at increased zoom; line
+  height reads the raw Size value; text areas ignore a custom background.
+- Shrink/overflow: small-window sidebar rows shrink below their labels;
+  fixed sidebar controls shrink below their children; expanding
+  immediate-mode controls can warn before the next layout pass; empty button
+  padding and default card rounding.
+- Styled labels: bypass ellipsis truncation; weighted runs draw small;
+  wrapped labels disagree with their drawing inset.
+- Dumps/insets: UI dumps omit computed spacing; immediate plain labels ignore
+  the configured text inset; toast sizing and scrollbar layering; tree
+  chevrons cannot rely on the current font atlas; nominal font pixels do not
+  give browser-equivalent type size; font metadata is duplicated across
+  label and layout components; divider hit area and visible thickness share
+  one rectangle.
+- macOS menu integration; tab keyboard injection bypass; wheel input ignores
+  ancestor scrolling and clipping; modal centering mixes physical resolution
+  and scaled pixels; escape dismissal needs one owner across temporary
+  controls; native resize invalidation needs a drawable before returning to
+  AppKit; a post-build phase for actions that replace rendered models; search
+  disclosure controls need drawn chevrons; search snippets expose missing
+  font fallback and styled-label padding.
+- The same file holds ~60 further journey-note items (lines 1641–2729:
+  focus restoration, virtualized readers, clipboard/dock/modal edge cases,
+  scroll anchoring, text normalization follow-ups) — see the source file;
+  not individually ported here.
+- U1. Bounded background jobs with cancellation and foreground capacity:
+  optional jobs utility returning accepted/rejected/cancelled/completed/
+  failed, with bounded queues, priority reservation, nonblocking polling,
+  and shutdown that drains must-complete work. See AH-09, hanabi #580/#587.
+- U2. File-change subscriptions for asset and document reload: multiple
+  roots, owned subscription, bounded queue reporting rescan on dropped
+  events, explicit unsupported/startup-failure results.
+- U3. A reusable cache with a byte budget and observable ownership: key
+  type plus cost function, oversize rejection, eviction behavior, hits /
+  misses / evictions / accounted bytes. See hanabi #585.
+- U4. Public CPU image decoding and render-thread texture upload: a
+  `DecodedImage` owner plus a public texture-from-pixels operation, so
+  hosts stop reaching into Metal-specific detail namespaces. Upload half
+  overlaps Puzzle's UP-08 mutable upload; decode half is distinct.
+- U5. Focus-scoped shortcut routing over the existing input actions: offer
+  a chord to the focused control, then its scopes, then the application
+  scope; one dispatch per frame. See cartographer shortcut ownership.
+- U6. Focus return that survives rebuilt controls and closed scopes: a
+  focus-return token with collection/scope/logical-control identity plus a
+  host resolver, an explicit fallback, and a nested-overlay stack. The
+  modal's token today is a raw entity ID.
+- U7. Logical scroll anchors resolved after matching layout readiness:
+  opaque item key, position within the item, viewport alignment fraction,
+  explicit applied/unavailable/cancelled results; user scrolling cancels.
+  See hanabi #30a.
+- U8. Read-only selection over a virtualized text source: a text-source
+  adapter with stable positions, bounded range reads and source-to-display
+  mappings, so selection survives rows leaving the viewport. See hanabi #37.
+- U9. Optional text normalization at file and clipboard boundaries:
+  byte-stream decoding returning valid UTF-8, the selected encoding and
+  malformed-input status, with retained partial code units across chunks.
