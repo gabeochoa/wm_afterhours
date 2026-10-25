@@ -97,19 +97,32 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
               item.get<afterhours::HasColor>().set({39, 52, 68, 255});
             continue;
           }
+          // Shortcuts are children of the row, not siblings on the list
+          // (afterhours 6ccb397 moved them so they scroll with the row),
+          // so rename them from inside the row.
+          for (const auto sub_id : item_cmp.children) {
+            auto &sub = UICollectionHolder::getEntityForIDEnforce(sub_id);
+            if (sub.get<UIComponentDebug>().name_value != "menu_shortcut")
+              continue;
+            auto &sub_label = sub.get<HasLabel>();
+            sub_label.is_disabled = false;
+            sub_label.set_explicit_text_color({187, 211, 226, 255});
+            sub_label.text_inset = Vector2Type{0, 0};
+            sub.get<UIComponent>().set_desired_width(pixels(130 * scale));
+            // Absolute children are offset by the parent's left padding in
+            // compute_rect_bounds, so subtract the row's padding to land
+            // at the popup-relative x the showcase lays out from.
+            // computed_padd is last frame's value (0 on the first frame,
+            // then settles), so this is one frame off on frame one.
+            sub.get<UIComponent>().absolute_pos_x =
+                206 * scale - item_cmp.computed_padd[Axis::left];
+            if (sub.has<afterhours::HasColor>())
+              sub.get<afterhours::HasColor>().set({0, 0, 0, 0});
+            sub.get<UIComponentDebug>().set("menu_" + name + "_shortcut_" +
+                                            std::to_string(shortcut_index++));
+          }
           auto &item_label = item.get<HasLabel>();
           item_label.letter_spacing = 0;
-          if (original_name == "menu_shortcut") {
-            item_label.is_disabled = false;
-            item_label.set_explicit_text_color({187, 211, 226, 255});
-            item_label.text_inset = Vector2Type{0, 0};
-            item_cmp.set_desired_width(pixels(130 * scale));
-            item_cmp.absolute_pos_x = 206 * scale;
-            if (item.has<afterhours::HasColor>())
-              item.get<afterhours::HasColor>().set({0, 0, 0, 0});
-            debug.set("menu_" + name + "_shortcut_" + std::to_string(shortcut_index++));
-            continue;
-          }
           const bool disabled = item_label.is_disabled;
           item_label.text_x_offset = 14 * scale;
           item_label.is_disabled = false;
