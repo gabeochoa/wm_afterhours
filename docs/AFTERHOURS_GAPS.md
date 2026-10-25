@@ -1004,11 +1004,14 @@ adding any item: would three or more games use it.
   `draw_text_with_shadow`. Replaces magic offsets in pong `RenderScore` /
   `RenderFPS` / menu (`GAME_W / 2 - 140`, `-190`, ...). Would have fixed
   pong's FPS-inset and menu-shadow screenshot issues with one-line calls.
+  Landed upstream: afterhours `d6c0488`, covered by `text_alignment_test`
+  (15/15).
 - Input mapping DSL: builder/table for action bindings. Replaces pong
   `get_mapping()` (~57 -> ~20). Keep the syntax readable; it must stay a
   plain mapping underneath.
 - Synth beep: `synth::beep(freq, seconds)` with attack/release envelope.
-  Replaces pong `make_beep` (~28 -> ~4).
+  Replaces pong `make_beep` (~28 -> ~4). Landed upstream: afterhours
+  `f58ba61`, covered by `synth_beep_test` (1/1).
 - Font with fallback: a font handle that degrades to the default font
   automatically. Replaces pong `draw_game_text` + `font_ready` global
   (~13 -> ~3).
