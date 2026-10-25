@@ -17,7 +17,7 @@ assert_ui category_tabs x=60 y=111 w=1160 h=38
 assert_ui vertical_0 w=104 h=168
 assert_ui vertical_0_0 x=68 y=278 w=75 h=30
 assert_ui vertical_0_1 y=318
-assert_ui vertical_1_0 y=322
+assert_ui vertical_1_0 y=320
 assert_ui horizontal_0 w=104 h=76
 assert_ui horizontal_0_0 w=20
 assert_ui self_0 y=578
