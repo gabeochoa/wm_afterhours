@@ -1,0 +1,6 @@
+{
+  "overrides": {
+    "curved_text_stress_lab_720p": 0.5
+  },
+  "_note": "curved_text_stress_lab renders live wall-clock stage timings (measure/layout/draw EMAs) in one label row, so its pixels differ run to run even though the layout is identical — verified: all differing pixels fall in that one label strip. 0.5% is ~2x the observed 0.19-0.24% range."
+}
