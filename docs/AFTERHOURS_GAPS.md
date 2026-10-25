@@ -542,7 +542,9 @@ cartographer shared command pack (rejected, see above), settings path override
 helpers (both backends record cmap now), per-side borders (9eb0796), font tiers
 (UP-22); hanabi #457 quoted args and #59 space values (UP-19), #256/#562
 Super injection (UP-18). Puffin (`hanabi/puffin_gaps.md`) is a Hanabi-vs-Puffin
-product-feature comparison, not library gaps, so it is excluded.
+product-feature comparison, not library gaps, so it is excluded. Pong (below)
+was collected after the breadth ranking; its items are not folded into the
+ranked counts.
 
 ### Ranked by breadth — which help the most projects
 
@@ -981,3 +983,53 @@ Everything else helps one project; see the per-project sections below.
 - U9. Optional text normalization at file and clipboard boundaries:
   byte-stream decoding returning valid UTF-8, the selected encoding and
   malformed-input status, with retained partial code units across chunks.
+
+### Pong — `pong-afterhours/afterhours_gaps.md` (2026-10-25, `e1c959f`)
+
+Pong is the smallest example of how to use afterhours: a 562-line
+`main.cpp` plus 426 lines of E2E support, of which ~200 lines are actual
+game logic — the rest is scaffolding afterhours could absorb. Bar for
+adding any item: would three or more games use it.
+
+- App runner: one call owning window init, dt clamp, letterbox present,
+  pause gating, teardown. Replaces most of pong `main()` (~144 lines ->
+  ~45). Open design decision: callbacks/lambdas vs subclass-and-override.
+  That choice sets the shape of every future game.
+- E2E setup helper: one call for parse args, handler registration order,
+  runner tick + merge, screenshot capture, results/exit code. Replaces
+  pong's `src/e2e_integration.h` (~137 -> ~25). Pieces already exist
+  (`parse_e2e_args`, `configure_runner`, `register_all_handlers`); the
+  per-game wiring does not.
+- Text layout: `draw_text_centered`, `draw_text_right_aligned`,
+  `draw_text_with_shadow`. Replaces magic offsets in pong `RenderScore` /
+  `RenderFPS` / menu (`GAME_W / 2 - 140`, `-190`, ...). Would have fixed
+  pong's FPS-inset and menu-shadow screenshot issues with one-line calls.
+- Input mapping DSL: builder/table for action bindings. Replaces pong
+  `get_mapping()` (~57 -> ~20). Keep the syntax readable; it must stay a
+  plain mapping underneath.
+- Synth beep: `synth::beep(freq, seconds)` with attack/release envelope.
+  Replaces pong `make_beep` (~28 -> ~4).
+- Font with fallback: a font handle that degrades to the default font
+  automatically. Replaces pong `draw_game_text` + `font_ready` global
+  (~13 -> ~3).
+- Standard `Transform` / `HasVelocity`: shared components in a common
+  header. Replaces pong's structs (~24 -> ~5). Must keep `prev` (pong's
+  swept collision uses it), or pong keeps its own `Transform`.
+- Letterbox helper — withdrawn, not a gap: resize / scale / pillarbox /
+  letterbox are already supported via `window_manager::content_viewport`
+  (see afterhours `docs/letterboxing.md`). Pong was re-deriving the
+  present dest math instead of calling `content_viewport`. No new helper.
+- Input-collector base: an `InputSystem<...>` base that injects the
+  collector. Replaces repeated `inpc` + `once()` in pong `ImpulseBall` /
+  `ImpulsePaddle` (~12 -> ~4).
+- E2E command lambdas: `testing::command("name", handler)`. Replaces
+  struct-per-command boilerplate in pong `src/e2e_commands.h` (~289 ->
+  ~200). Structs may be clearer in an example; weigh readability before
+  adding.
+- Suggested order in the source file: text layout helpers (smallest, zero
+  design risk), E2E setup helper (biggest per-line win), input mapping
+  DSL (densest boilerplate left), App runner (biggest overall win, but
+  needs the callbacks-vs-subclass decision first).
+- Not filed (explicitly not gaps in the source file): collision, scoring,
+  win condition, pause semantics, serve rules. Absorbing them would leave
+  the example with nothing to teach.
