@@ -3,7 +3,7 @@ resize 1280 720
 wait 0.3
 assert_within_parents
 expect_text "Theme color pairs pass AA contrast"
-expect_text "2 checked pairs"
+expect_text "4 checked pairs"
 expect_text "Light backgrounds / increasing luminance"
 click_ui color_0
 wait 0.2

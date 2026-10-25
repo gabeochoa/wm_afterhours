@@ -34,14 +34,18 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     // Set up theme for auto-text-color demonstration
     // darkfont must be a dark color so auto_text_color has a proper choice
-    // for light backgrounds. surface is set to a light tone so that
-    // validate_accessibility() passes (darkfont on surface >= 4.5:1).
+    // for light backgrounds. validate_accessibility() checks the auto
+    // foreground on both surfaces AND font_muted on both surfaces, so the
+    // two surfaces must share a luminance family: one muted color cannot
+    // read on a dark background and a light surface at once (muted on the
+    // old light surface was 1.44:1). surface is panel_dark, which muted
+    // reads 6.0:1 on.
     Theme theme;
     theme.font = text_white;
     theme.darkfont = afterhours::Color{25, 30, 40, 255};
     theme.font_muted = text_muted;
     theme.background = bg_slate;
-    theme.surface = afterhours::Color{210, 215, 225, 255};
+    theme.surface = panel_dark;
     theme.primary = accent_green;
     theme.secondary = afterhours::Color{100, 120, 160, 255};
     theme.accent = accent_amber;
@@ -126,9 +130,9 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity),
         ComponentConfig{}
             .with_label(
-                "Slate demo theme: 2 checked pairs (text/background, dark "
-                "text/surface) | AA normal text >= 4.5:1 | 22px reference "
-                "samples")
+                "Slate demo theme: 4 checked pairs (text + muted on "
+                "background + surface) | AA normal text >= 4.5:1 | 22px "
+                "reference samples")
             .with_size({px(panel_w - 60.f), px(28)})
             .with_absolute_position(px(panel_x + 30.f), px(status_y + 40.f))
             .with_font("AtkinsonMock", h720(20.f))
