@@ -185,11 +185,14 @@ struct CurvedTextStressLab : ScreenSystem<UIContext<InputAction>> {
               glyphsLastFrame = glyphs;
             }));
 
-    label("Spin forces layout every frame. Width cache removes per-glyph font measuring; layout "
-          "cache (spin off) reuses placements and leaves draw as the only stage. Draw includes a "
-          "per-glyph measure for centring, so it is the floor.",
-          48, 640, 1180, 15, true);
-    label(paused ? "paused" : "running", 48, 668, 200, 15, true, "curved_stress_state");
+    // Two lines: the full note is ~210 chars and overflowed the 1180px
+    // box on one line, clipping mid-word at the right edge.
+    label("Spin forces layout every frame. Width cache removes per-glyph font measuring;",
+          48, 636, 1180, 15, true);
+    label("layout cache (spin off) reuses placements and leaves draw as the only stage. Draw "
+          "includes a per-glyph measure for centring, so it is the floor.",
+          48, 656, 1180, 15, true);
+    label(paused ? "paused" : "running", 48, 680, 200, 15, true, "curved_stress_state");
   }
 };
 
