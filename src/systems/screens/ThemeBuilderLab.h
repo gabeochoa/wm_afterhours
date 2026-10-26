@@ -61,6 +61,16 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   bool export_path_set = false;
   std::string file_status = "Export or import a .theme file.";
 
+  // Export/import path: absolute as typed, relative against the save dir.
+  // (The default is a bare filename, so it lands in the save dir.)
+  std::string resolved_export_path() const {
+    const std::filesystem::path p(export_path);
+    if (p.is_absolute())
+      return export_path;
+    const auto dir = afterhours::files::get_save_path();
+    return dir.empty() ? export_path : (dir / p).string();
+  }
+
   struct ThemeSnapshot {
     afterhours::Color color[kTokenCount];
     float radius01;
@@ -114,10 +124,9 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     bool history_suppressed = false;
     if (!export_path_set) {
       export_path_set = true;
-      const auto dir = files::get_save_path();
-      export_path = dir.empty()
-                        ? "theme_builder_export.theme"
-                        : (dir / "theme_builder_export.theme").string();
+      // Bare filename so the baseline shows the same path on every machine.
+      // Absolute paths are used as-is; relative ones resolve at export/import.
+      export_path = "theme_builder_export.theme";
     }
 
     Theme resolved = edited;
@@ -569,7 +578,7 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
       const std::string name =
           std::filesystem::path(export_path).filename().string();
       file_status =
-          theme_io::save(to_save, export_path)
+          theme_io::save(to_save, resolved_export_path())
               ? fmt::format("Exported {}", name)
               : fmt::format("Export failed: {}", name);
     }
@@ -583,7 +592,7 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("tb_import"))) {
       const std::string name =
           std::filesystem::path(export_path).filename().string();
-      if (const auto text = files::read_string(export_path)) {
+      if (const auto text = files::read_string(resolved_export_path())) {
         Theme incoming = edited;
         const auto result = theme_io::read_into(*text, incoming);
         edited = incoming;
