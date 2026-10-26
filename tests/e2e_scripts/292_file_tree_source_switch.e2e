@@ -7,7 +7,10 @@ click_ui source_btn
 wait 0.3
 expect_text "All files"
 expect_no_text "6 folders / 12 files in project"
-expect_text "makefile"
+# "makefile" sits below the fold in the real 586-file listing; the old
+# check only passed via the Project view it raced into. The count label
+# is the real scan's own proof it loaded.
+expect_text "files loaded"
 click_ui source_btn
 wait 0.3
 expect_text "Project sources"

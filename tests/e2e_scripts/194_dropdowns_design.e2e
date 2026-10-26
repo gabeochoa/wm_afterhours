@@ -36,6 +36,11 @@ wait 0.2
 expect_text "Pet: Bird"
 click_ui many_dropdown_trigger
 wait 0.3
+# The tray clamps to the screen edge (478px for 12x40px options), so the
+# last option's label is clipped until the tray scrolls. Scroll it into view.
+mouse_move 1028 400
+scroll_wheel 0 -1
+wait 0.3
 expect_text "December"
 assert_ui dropdown_options_tray h=478
 key UP
@@ -78,6 +83,10 @@ assert_ui dropdown_bg x=0 y=0 w=1024 h=768
 assert_ui col_basic x=54 y=208 w=294 h=150
 assert_within_parents
 click_ui many_dropdown_trigger
+wait 0.3
+# Same clamp as above, at narrow width: scroll December into view first.
+mouse_move 822 400
+scroll_wheel 0 -1
 wait 0.3
 expect_text "December"
 assert_ui dropdown_options_tray h=422
