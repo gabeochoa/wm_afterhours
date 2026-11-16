@@ -137,7 +137,9 @@ Config measurement now uses the selected mode, and text-area wrapping uses the s
 
 ## UI, layout and validation
 
-### Overflow mode changes retain scroll state
+### Overflow mode changes retain scroll state (fixed)
+
+Fixed: `component_init.h` removes a config-owned `HasScrollView` on mode change; manually installed state is preserved.
 
 `component_init.h` adds `HasScrollView` but does not remove it on Auto/Scroll → Hidden/Visible. In `adaptive_scaling`, zoom 300%, scroll, then return to 50% leaves a scrollbar. WM removes stale state. Define config-owned cleanup without deleting manually installed state; test transitions and clamping.
 
@@ -145,11 +147,15 @@ Config measurement now uses the selected mode, and text-area wrapping uses the s
 
 Fixed. `AnimHandle::sequence()` initialized the target and duration but assumed the existing easing was suitable. Fresh tracks used Linear; reused tracks inherited their last easing. It now copies the first segment's easing too. At 0.5s the WM scale sequence reaches 1.118056 instead of 0.958333. Tests cover fresh/replayed tracks, mixed-easing loops and appended sequences; WM uses `.sequence()`.
 
-### Declarative animation timing depends on frame rate
+### Declarative animation timing depends on frame rate (fixed)
+
+Fixed (stale): `apply_animations()` is gone — the declarative system was replaced by `motion`; re-verify against `motion::Track` if the concern recurs.
 
 `apply_animations()` clamps dt to 5ms, so 60 frames advance only 0.3s. The assumption that clamping prevents stalls breaks ordinary durations. Consume the full elapsed time, using bounded substeps if needed; compare 60/120/240Hz.
 
-### Declarative triggers share one track per property
+### Declarative triggers share one track per property (fixed)
+
+Fixed (stale): the old trigger/track system is gone — replaced by `motion`; re-verify against `motion::Track` if the concern recurs.
 
 Hover and click definitions share one property track and `triggered` bit; an inactive definition can reverse the active one. WM uses separate properties. Define composition or precedence and test concurrent triggers and interruption.
 
@@ -157,7 +163,9 @@ Hover and click definitions share one property track and `triggered` bit; an ina
 
 Idle wheel scrolling is fixed; unchanged rebuilds no longer reveal the caret. The rest closed with the text_area parity pass: focusing the returned wrapper focuses the field (parent-focus acceptance, verified by E2E 355 using `focus_ui` on the wrapper); auto-grow now resolves both the line height and the h720 vertical padding at the current resolution (five 30px rows at 1080p get their 162px). Floatinghotel's pixel-line-height workaround is no longer needed.
 
-### Bracket decorations add padding to an already padded rectangle
+### Bracket decorations add padding to an already padded rectangle (fixed)
+
+Fixed: `with_brackets` accounts for padding and border (`ui_decorators.h`), so brackets sit at the visual outer edge.
 
 `with_brackets` expands a rectangle that already includes padding. WM moves padding to a child. Use one bounds contract for paint, decoration and interaction; test a padded filled panel.
 
@@ -197,7 +205,9 @@ Composite preview styling is fixed by drawing the source subtree with restored g
 
 `TreeViewConfig` has no accessory/row renderer. WM walks descendants to replace textual disclosure marks and add icons/guides/size columns. Expose a supported renderer without child-order assumptions; retain native selection, expansion and keyboard behavior.
 
-### Bare nine-slice borders do not enter native rendering
+### Bare nine-slice borders do not enter native rendering (fixed)
+
+Fixed: the `rendering.h` renderability gates recognize `HasNineSliceBorder` directly; border-only divs render.
 
 The renderability gates in `rendering.h` omit `HasNineSliceBorder`; border-only divs remain blank. Transparent `HasColor` is WM's workaround. Recognize border visuals directly in both renderers; assert pixels, not only layout.
 
@@ -236,6 +246,8 @@ Numbered page i+1 is used as a zero-based index; Previous subtracts twice. `icon
 ### Tooltip presentation is hardcoded
 
 Font inheritance and accurate measured wrapping/placement were fixed in the default-theme pass. Caller control of font size, padding and trigger gap is done: `with_tooltip_font_size`, `with_tooltip_padding` and `with_tooltip_gap` on ComponentConfig feed HasTooltip/TooltipState and RenderTooltip (defaults unchanged: styling font, 8 padding, 4 gap). Border-only guides also need recognized renderability without transparent HasColor.
+
+Verified 2026-10-26: caller control is done (APIs exist); border-only guide renderability not directly re-verified (may be covered by the nine-slice fix).
 
 ### A div's own label ignores the container alignment properties
 
@@ -347,23 +359,33 @@ The input collector exposes only `inputs()`, `inputs_pressed()` and `inputs_pres
 
 Deduped from the six 2026-10-06 `todo-*.md` audits (animation-vocabulary, apple-design, break-ui, find-animation-opportunities, improve-animations, review-animations; 1,179 raw items). Only defects verified against current code (`65d5292`) with a local fix are filed here. Items that change a default, add API, or retune taste are held pending decision and are deliberately not filed. Paths are relative to `vendor/afterhours/src/` unless noted. Five WM-local defects went to `todo.md` instead.
 
-### No way to disable clipboard operations per field; masked clicks corrupt the caret
+### No way to disable clipboard operations per field; masked clicks corrupt the caret (fixed)
+
+Fixed: `with_copy/cut/paste_disabled()` opt-outs exist and are enforced; masked click indices convert codepoint→byte.
 
 `plugins/ui/text_input/component.h` and the shared `utils.h` edit path always allowed Copy/Cut/Paste, with no per-field way to opt out; separately, masked click handling stored the masked string's codepoint index as a real byte offset, so clicking in `contraseña` lands inside `ñ` and the next keystroke writes invalid UTF-8. Wanted: opt-in `with_copy_disabled()`, `with_cut_disabled()`, and `with_paste_disabled()` (all allowed by default; masking alone must not change clipboard behavior), enforced on every keyboard and imperative edit path; convert masked codepoint indices to byte offsets. Check: a masked field copies by default; with copy/cut disabled, Cmd+C/X leaves the clipboard and text unchanged; with paste disabled, Cmd+V leaves the text unchanged; clicking after a masked multibyte char then typing produces valid UTF-8 with the char inserted at that codepoint.
 
-### Stale caller indices read out of bounds across immediate containers
+### Stale caller indices read out of bounds across immediate containers (fixed)
+
+Fixed: entry/use clamps in dropdown/tab/grid/resolution, with `log_error` on mismatch.
 
 Shrinking the option/tab/label set (or a saved setting from a bigger monitor) indexes unchecked: `navigation_bar` (`plugins/ui/imm_containers.h:306`, `set_current_index` at `plugins/ui/components.h:220` never clamps), `dropdown` (`imm_containers.h:114`, seeded unclamped `:45`), `tab_container` (no clamp at entry, unclamped index returned at `imm_containers.h:436`), `radio_group` (`plugins/ui/imm_controls.h:469`), `grid` (`plugins/ui/grid.h:157` when `col >= col_widths.size()`), saved resolution (`plugins/window_manager.h:393`). Wanted: clamp at entry/use in each, `log_error` on mismatch (grid: fall back to `expand()`; resolution: fall back to `current_index()`). Check: build each with N=3, select last, rebuild with N=1 — no OOB/ASan hit, selection clamps to 0, returned index is in range.
 
 ### Empty containers divide by zero
 
+Verified 2026-10-26: stepper helpers return 0 on `total==0` (but still assert in debug builds); `button_group` empty-label division is still unguarded.
+
 `button_group` with no labels divides by `labels.size()` (`plugins/ui/imm_controls.h:129,137`); stepper index helpers do `% total` / `total-1` with `total==0` (`plugins/ui/imm_primitives.h:32-38`, SIGFPE / SIZE_MAX). Wanted: early-return/return 0 when empty. Check: empty `button_group` and `total==0` stepper next/prev run without crash and return 0/no-op.
 
-### Text measurement memo: UB on bad sizes, hash-only hits return wrong sizes
+### Text measurement memo: UB on bad sizes, hash-only hits return wrong sizes (fixed)
+
+Fixed: `quantise` guards non-finite sizes; lookup verifies the stored key, not just the hash.
 
 `src/measure_memo.h:65` casts `size*64.f` to `uint64_t` (UB for negative/NaN font sizes from bad scale math), and lookup returns on hash alone (`:73`), so a collision serves another string's measured size. Adjacent to the fixed wrap-memo entry, which covers keys/generations, not this. Wanted: guard `!(size > 0)`, verify the stored text (or a second hash) on hit. Check: measuring at size NaN/-1 returns 0 without UB; two engineered colliding strings each measure to their own width.
 
-### Arena exhaustion emits a text command with a null string
+### Arena exhaustion emits a text command with a null string (fixed)
+
+Fixed: null allocation logs `log_arena_exhausted` and skips the command.
 
 `plugins/ui/render_primitives.h:440` may get `nullptr` from `create_array_uninitialized`, yet the command is still emitted with `text = text_copy` (`:458`) and drawing calls strlen on null. Wanted: skip the command and `log_error` when allocation fails. Check: exhaust the arena with a 50KB label — no null deref, an error is logged once.
 
@@ -375,7 +397,9 @@ Shrinking the option/tab/label set (or a saved setting from a bigger monitor) in
 
 `plugins/ui/tree_view.h:59-60` invokes `get_id`/`get_label` unchecked; a default `TreeViewConfig` throws `bad_function_call`. Wanted: assert/`log_error` at entry and bail. Check: `tree_view` with an empty config logs once and does not throw.
 
-### Translation lookup throws on translator typos and missing English
+### Translation lookup throws on translator typos and missing English (fixed)
+
+Fixed: format failures are caught and logged; missing English falls back instead of throwing.
 
 `plugins/translation.h:100` lets `fmt::vformat` escape on a malformed format/missing param, and `:137` does `translations.at(Language::English)` which throws when the map has no English. Wanted: catch, `log_error` with the key, return the raw string / empty fallback. Check: `"{count} item{s"` and a no-English map render the raw text and log, no exception escapes UI build.
 
@@ -391,15 +415,21 @@ Shrinking the option/tab/label set (or a saved setting from a bigger monitor) in
 
 Host-side per-frame normalization (uppercase/digits-only) hits `plugins/ui/text_input/component.h:117-122` (via the per-frame init_state callback), resetting caret=end each keystroke, leaving a stale selection anchor, and undo restores replaced text. Wanted: on external replace, clamp caret, clear selection, clear undo. Check: typing mid-string with an uppercasing host keeps the caret after the typed char; undo does not resurrect pre-replacement text.
 
-### Theme files bypass the Builder clamps (nan/0/5 accepted)
+### Theme files bypass the Builder clamps (nan/0/5 accepted) (fixed)
+
+Fixed: loader rejects non-finite values and applies per-field Builder clamps.
 
 `plugins/ui/theme_io.h:242` assigns parsed floats directly (`stof` accepts nan/inf at `:132`), so `ui_scale = 0`, `disabled_opacity = 5`, `roundness = nan` load verbatim. Wanted: reject non-finite values and apply the per-field Builder clamps on load. Check: loading that theme yields clamped finite values (scale > 0, opacity ≤ 1) and logs the rejected fields.
 
-### Layout inspector queries the wrong collection (never finds UI)
+### Layout inspector queries the wrong collection (never finds UI) (fixed)
+
+Fixed: lookup via `getEntityForID`; panel uses `screen_width`/`screen_height`.
 
 `plugins/ui/layout_inspector.h:69` runs a default `EntityQuery` but UI entities live in `UICollectionHolder`, so every pick reports "Component not found"; `:94` also reads nonexistent `context->screen_bounds`. Wanted: look up via `getEntityForID`, use `screen_width`/`screen_height`. Check: picking any visible widget in the inspector shows that component.
 
 ### Slider reports the wrong value four ways
+
+Verified 2026-10-26: (4) percent labels use `std::lround` (command handler + slider-state recompute); (1) keyboard branch, (2) grab offset, (3) NaN/0-width not re-verified.
 
 (1) Enter/Space on a focused slider jumps it to the mouse: `HandleDrags` fires the drag callback on `WidgetPress` (`plugins/ui/systems.h:1243-1248`) and the slider callback reads mouse position (`plugins/ui/imm_value.h:200-201`) — delete the keyboard branch (arrows already work via `HasLeftRightListener`). (2) Grabbing jumps: value maps `(mx-rx)/w` (`:201`) but the 25%-wide handle is drawn at `v*0.75w` (`:219-220`) — store a grab offset and map over `w - handle_w` (handle redesign stays a separate decision). (3) A 0-width track divides to NaN which clamp passes through (`:168`), permanently NaN; an unclamped/NaN `owned_value` (`:161`, ctor `components.h:124`) draws the handle past the track — early-out on `width <= 0`, `isfinite`-guard, clamp on init/read. (4) Percent label truncates (`:45,48,67`: 0.29 → "28%") — use `std::lround`. Check: keyboard Enter leaves the value unchanged; grabbing the handle's left edge doesn't move the value; 0-width then restored slider and `owned_value=1.5/NaN` recover to a finite in-range value; 0.29 labels "29%".
 
@@ -477,7 +507,11 @@ Scale honours `mods.origin` (`plugins/ui/components.h:322`, set by `with_origin`
 
 ### Caret blink uses a hard-coded frame time and blinks under reduced motion
 
-`plugins/ui/text_input/text_area.h:390` calls `update_blink(state, 0.016f)` (~3Hz blink at 200fps; text_input already uses `ctx.dt` at `component.h:312-313`), and `update_blink` itself (`plugins/ui/text_input/utils.h:161-166`) has no reduced/instant gate. Wanted: pass `ctx.dt`; return steady-visible when `motion::is_instant()`. Check: blink period in seconds matches at 60/200fps; under reduced/instant the caret is steady.
+`plugins/ui/text_input/text_area.h:390` calls `update_blink(state, 0.016f)` (~3Hz blink at 200fps; text_input already uses `ctx.dt` at `component.h:312-313`), and `update_blink` itself (`plugins/ui/text_input/utils.h:161-166`) has no reduced/instant gate.
+
+Verified 2026-10-26: text_input blink advances by `dt`; the text_area `0.016f` call and reduced/instant gate not re-verified.
+
+Wanted: pass `ctx.dt`; return steady-visible when `motion::is_instant()`. Check: blink period in seconds matches at 60/200fps; under reduced/instant the caret is steady.
 
 ### Tray key-repeat drops the remainder
 
@@ -1014,7 +1048,8 @@ adding any item: would three or more games use it.
   `f58ba61`, covered by `synth_beep_test` (1/1).
 - Font with fallback: a font handle that degrades to the default font
   automatically. Replaces pong `draw_game_text` + `font_ready` global
-  (~13 -> ~3).
+  (~13 -> ~3). Fixed: `font_or_fallback` / `get_active_font` degrade to
+  the default font automatically.
 - Standard `Transform` / `HasVelocity`: shared components in a common
   header. Replaces pong's structs (~24 -> ~5). Must keep `prev` (pong's
   swept collision uses it), or pong keeps its own `Transform`.
