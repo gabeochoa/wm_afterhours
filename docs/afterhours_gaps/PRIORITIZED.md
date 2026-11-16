@@ -1,5 +1,7 @@
 # Afterhours gaps, prioritized
 
+Current work on these gaps (open PRs, decisions, what is left): [STATUS.md](STATUS.md).
+
 These are the afterhours gaps reported by 12 consumer projects, merged into clusters and ranked by how many projects each would help. Sources (verbatim copies): [hanabi](hanabi.md), [hanabi index](hanabi-index.md), [floatinghotel](floatinghotel.md), [pumpkin-beachball](pumpkin-beachball.md) with [online docs](pumpkin-beachball-online-docs.md) and [online notes](pumpkin-beachball-online-notes.md), [pong-afterhours](pong-afterhours.md), [MyNameChef](MyNameChef.md), [endless-dance-chaos](endless-dance-chaos.md), [mailboy](mailboy.md), [voice_ah](voice_ah.md), [wordproc](wordproc.md), [kart-afterhours](kart-afterhours.md), [cartographer](cartographer.md) with [requests](cartographer-requests.md), and wm_afterhours's own [AFTERHOURS_GAPS.md](../AFTERHOURS_GAPS.md). When AFTERHOURS_GAPS.md restates another project's gap, only that project is counted.
 Checked against afterhours e9d5f67 on 2026-11-15. Tier 1–2 status was grepped in `vendor/afterhours/src`; Tier 3–4 status is as reported.
 Clusters: Tier 1: 6, Tier 2: 36, Tier 3: 40, Tier 4: 200, Likely fixed: 66 (grouped), Unsure: 22.

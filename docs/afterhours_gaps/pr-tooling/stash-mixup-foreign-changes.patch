@@ -1,0 +1,138 @@
+diff --git a/src/backends/raylib/drawing_helpers.h b/src/backends/raylib/drawing_helpers.h
+index 4658b4c..ee0afda 100644
+--- a/src/backends/raylib/drawing_helpers.h
++++ b/src/backends/raylib/drawing_helpers.h
+@@ -194,13 +194,6 @@ inline void draw_text_ex(const raylib::Font font, const char *content,
+                       spacing, color);
+ }
+ 
+-namespace detail {
+-inline std::optional<raylib::Font> &default_font_override() {
+-  static std::optional<raylib::Font> font;
+-  return font;
+-}
+-} // namespace detail
+-
+ inline void draw_text(const char *content, const float x, const float y,
+                       const float font_size, const Color color) {
+   if (!content) return;
+@@ -569,20 +562,6 @@ inline void set_mouse_cursor(int cursor_id) {
+   raylib::SetMouseCursor(cursor_id);
+ }
+ 
+-// The face for text drawn without one: get_default_font(), get_unset_font(),
+-// draw_text and the library's debug overlays. Unset, it is raylib's built-in
+-// pixel font. Set it before the UI plugin loads its fonts so imm's default
+-// and unset fonts pick it up too. The caller keeps the font loaded.
+-inline void set_default_font(raylib::Font font) {
+-  detail::default_font_override() = font;
+-}
+-inline void clear_default_font() { detail::default_font_override().reset(); }
+-
+-inline raylib::Font get_default_font() {
+-  return detail::default_font_override().value_or(raylib::GetFontDefault());
+-}
+-inline raylib::Font get_unset_font() { return get_default_font(); }
+-
+ inline graphics::RenderTextureType load_render_texture(int w, int h) {
+   return raylib::LoadRenderTexture(w, h);
+ }
+diff --git a/src/backends/raylib/font_helper.h b/src/backends/raylib/font_helper.h
+index 22aa602..9fe039a 100644
+--- a/src/backends/raylib/font_helper.h
++++ b/src/backends/raylib/font_helper.h
+@@ -2,6 +2,7 @@
+ #pragma once
+ 
+ #include <map>
++#include <optional>
+ #include <vector>
+ 
+ #include "../../font_coverage.h"
+@@ -20,6 +21,27 @@ namespace afterhours {
+ using Font = raylib::Font;
+ using vec2 = raylib::Vector2;
+ 
++namespace detail {
++inline std::optional<raylib::Font> &default_font_override() {
++  static std::optional<raylib::Font> font;
++  return font;
++}
++} // namespace detail
++
++// The face for text drawn without one: get_default_font(), get_unset_font(),
++// draw_text and the library's debug overlays. Unset, it is raylib's built-in
++// pixel font. Set it before the UI plugin loads its fonts so imm's default
++// and unset fonts pick it up too. The caller keeps the font loaded.
++inline void set_default_font(raylib::Font font) {
++  detail::default_font_override() = font;
++}
++inline void clear_default_font() { detail::default_font_override().reset(); }
++
++inline raylib::Font get_default_font() {
++  return detail::default_font_override().value_or(raylib::GetFontDefault());
++}
++inline raylib::Font get_unset_font() { return get_default_font(); }
++
+ // Passing nullptr asks raylib for its default set, which is 95 ASCII glyphs.
+ // So an arrow, a chevron, a checkmark or an ellipsis drew nothing at all, and
+ // both floatinghotel and hanabi shipped invisible UI furniture before noticing.
+@@ -241,7 +263,7 @@ load_font_from_file_with_codepoints(const char *file, int *codepoints,
+               "count={}",
+               file ? file : "null", codepoints ? "valid" : "null",
+               codepoint_count);
+-    return raylib::GetFontDefault();
++    return get_default_font();
+   }
+   raylib::Font font = raylib::LoadFontEx(file, size, codepoints, codepoint_count);
+   // See load_font_from_file: no GL context means no texture.
+@@ -300,7 +322,7 @@ inline raylib::Font load_font_for_string(const std::string &content,
+                                          int size = 96) {
+   if (content.empty() || font_filename.empty()) {
+     log_warn("Empty content or font filename passed to load_font_for_string");
+-    return raylib::GetFontDefault();
++    return get_default_font();
+   }
+ 
+   int codepointCount = 0;
+@@ -308,7 +330,7 @@ inline raylib::Font load_font_for_string(const std::string &content,
+ 
+   if (!codepoints || codepointCount <= 0) {
+     log_warn("Failed to extract codepoints from string");
+-    return raylib::GetFontDefault();
++    return get_default_font();
+   }
+ 
+   int codepointNoDupsCounts = 0;
+@@ -319,7 +341,7 @@ inline raylib::Font load_font_for_string(const std::string &content,
+ 
+   if (!codepointsNoDups || codepointNoDupsCounts <= 0) {
+     log_warn("Failed to process codepoints for font loading");
+-    return raylib::GetFontDefault();
++    return get_default_font();
+   }
+ 
+   raylib::Font font = raylib::LoadFontEx(
+diff --git a/src/plugins/input_system.h b/src/plugins/input_system.h
+index 794ddaa..6ba8205 100644
+--- a/src/plugins/input_system.h
++++ b/src/plugins/input_system.h
+@@ -12,6 +12,7 @@
+ #include "../core/key_codes.h"
+ #include "../core/system.h"
+ #include "../developer.h"
++#include "../drawing_helpers.h"
+ #include "../gestures_macos.h"
+ #include "window_manager.h"
+ 
+@@ -191,7 +192,9 @@ struct input : developer::Plugin {
+ 
+     static void draw_text(const std::string &text, const int x, const int y,
+                           const int fontSize) {
+-        raylib::DrawText(text.c_str(), x, y, fontSize, raylib::RED);
++        ::afterhours::draw_text(text.c_str(), static_cast<float>(x),
++                                static_cast<float>(y),
++                                static_cast<float>(fontSize), raylib::RED);
+     }
+ 
+     static void set_gamepad_mappings(const std::string &data) {

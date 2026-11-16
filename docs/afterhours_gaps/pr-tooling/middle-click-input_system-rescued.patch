@@ -1,0 +1,15 @@
+diff --git a/src/plugins/input_system.h b/src/plugins/input_system.h
+index 794ddaa..653cac4 100644
+--- a/src/plugins/input_system.h
++++ b/src/plugins/input_system.h
+@@ -89,6 +89,10 @@ struct input : developer::Plugin {
+             testing::input_injector::detail::mouse.active) {
+             return testing::input_injector::detail::mouse.right_down;
+         }
++        if (button == 2 && testing::test_input::detail::test_mode &&
++            testing::input_injector::detail::mouse.active) {
++            return testing::input_injector::detail::mouse.middle_down;
++        }
+ #endif
+         return raylib::IsMouseButtonDown(button);
+     }
