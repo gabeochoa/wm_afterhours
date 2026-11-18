@@ -10,7 +10,7 @@ Snapshot 2026-11-16, before a machine restart. PRs are open against gabeochoa/af
 4. **Full suite:** `make test` was run once with #78 to #86 combined. The only failures were `settings_save_test` (fixed in #82) and `config_size_test` (already failing on main, fixed in #87). Later PRs ran only their own tests and the existing tests for the code they touch. Run the full suite before merging a batch.
 5. **Your unpushed local commit** `eab28aa` (DPI mouse fix) on ~/p/afterhours main is not in any PR. Every branch is based on origin/main.
 
-## Open PRs (72)
+## Open PRs (91, 17 merged 2026-11-17)
 
 | PR | Branch | Base | Title |
 |---|---|---|---|
@@ -86,6 +86,25 @@ Snapshot 2026-11-16, before a machine restart. PRs are open against gabeochoa/af
 | #147 | `gap/takes-focus` | main | ui: with_takes_focus(false) clicks without moving keyboard focus |
 | #148 | `gap/consumer-builds` | main | docs: minimal consumer builds and which one a test suite wants |
 | #149 | `gap/field-arrows` | main | text_input: the field owns Up and Down while focused |
+| #150 | `gap/input-remap` | main | input: remapping for the non-layered input map |
+| #151 | `gap/click-count` | main | ui: click_count in MousePointerState and is_double_click |
+| #152 | `gap/harness-spellings` | main | e2e: --key=value spellings and --e2e-timeout |
+| #153 | `gap/terminal-commands` | main | e2e: expect_terminal_* commands |
+| #154 | `gap/profiling-warn` | main | e2e: warn when profiling is compiled out or a provider is replaced |
+| #155 | `gap/point-in-element` | main | e2e: expect_point_in asserts a point lies inside a named element |
+| #156 | `gap/toast-fade` | main | toast: add HasOpacity at schedule time so toasts fade |
+| #157 | `gap/pagination-index` | main | ui: pagination Previous and page buttons land on the right page |
+| #158 | `gap/text-area-readonly` | main | text_area: honour readonly and disabled from config |
+| #159 | `gap/ease-scroll-instant` | main | ui: ease_scroll snaps under instant motion |
+| #160 | `gap/dropdown-x` | main | ui: dropdown tray clamps at the right edge too |
+| #161 | `gap/virtual-overscan` | main | ui: with_virtual_list_overscan makes the virtual-list window configurable |
+| #162 | `gap/percent-margin` | main | autolayout: charge Dim::Percent sizes their own margin |
+| #163 | `gap/particle-drag` | main | particles: drag no longer flips sign at low fps |
+| #164 | `gap/staging-texture-leak` | main | capture: release the staging texture after readback |
+| #165 | `gap/translation-4byte` | main | translation: load 4-byte UTF-8 glyphs in load_cjk_fonts |
+| #166 | `gap/letter-spacing-zero` | main | ui: explicit zero letter spacing clears inherited spacing |
+| #167 | `gap/load-font-size` | main | ui: load_font_with_codepoints takes an explicit load size |
+| #168 | `gap/monospace-cell` | main | ui: add monospace cell-advance measurement |
 
 ## Waiting on a decision (19)
 
@@ -115,12 +134,24 @@ Each note in [decisions/](decisions/) has the problem, options, a recommendation
 
 ## In progress
 
-- `gap/input-remap`: **WIP, pushed, no PR.** Remapping (`set_binding`/`clear_binding`) for the non-layered input map. Stopped mid-item and untested.
-- Input triage items marked "pr" but not started: the click-count (double-click) gesture.
+- Input queue done: `gap/input-remap` is [#150](https://github.com/gabeochoa/afterhours/pull/150) and the click-count gesture is `gap/click-count` [#151](https://github.com/gabeochoa/afterhours/pull/151). Both are based on origin/main and wait on review like the rest.
+- E2E batch done: [#152](https://github.com/gabeochoa/afterhours/pull/152) harness-spellings, [#153](https://github.com/gabeochoa/afterhours/pull/153) terminal-commands, [#154](https://github.com/gabeochoa/afterhours/pull/154) profiling-warn, [#155](https://github.com/gabeochoa/afterhours/pull/155) point-in-element. Left in [triage/triage-e2e.md](triage/triage-e2e.md): modifier-reader (touches `input_system.h`, best after #150 merges) and test-reset-focus (touches `UIContext`, best after #151 merges).
+- Review pass on #152 to #164 (2026-11-16): merge-ready #152, #153, #154, #155, #156, #157, #159, #160, #164; nits fixed and pushed on #161 (VIRTUAL_LIST_OVERSCAN_DEFAULT, pool slack scales with overscan) and #163 (drag exp hoisted out of the particle loop), both merge-ready. Held as todos: #158 (verify wm + WM demo screen for readonly/disabled; should disabled opacity 0.5 be configurable; constexpr-if helpers) and #162 (run wm suite/screenshots, confirm no visual change, before merging).
+- Merged 2026-11-17 after Gabe's approval pass: #140, #141, #143, #144, #148, #150, #152, #153, #154, #155, #156, #157, #159, #160, #161, #163, #164. CHANGELOG/tests-Makefile union conflicts resolved per PR (keep both sides). Full suite on merged main (6eb6f9e, /tmp/ah-merged-check): `nice -n 10 make -j1 test` in tests/ exited 0, all checks passed.
+- Merged 2026-11-17 (second approval pass): #79, #80, #81, #82, #83, #84, #85, #86, #135, #136, #137, #138, #139, #142, #165, #166, #167, #168. Nits first: #86 gamepad names now map through the named constants (pharmasea-style explicit pairs), #139 comment shortened. One bad union: tests/config_size_test.cpp conflict markers reached main; fixed in 08b2461 (kExpectedSize 1552, verified 1/1) and a marker scan found no other file affected. Full suite on 08b2461: `nice -n 10 make -j1 test` exited 0, all checks passed.
+- Merged 2026-11-17 (third pass): #114, #115, #116, #117, #118, #119, #122, #123, #124, #126, and #125 into its stack base gap/e2e-command-shape. Todos noted at approval: #116 chord matching memory/CPU (approved anyway), #118 consider moving text measurement into its own file, #124/.#145/#147 disabled-family design pass.
+- Merged 2026-11-17 (fourth pass): #87, #88 (+#104), #91, #92 (+#121), #93, #94 (+#127), #95 (+#125), #97. Library suite on fe908c3: exit 0. Two union fixes on main: duplicated kExpectedSize and sokol font-loader braces. Open with Gabe comments answered: #90 (wm gate running), #145/#146/#149/#151/#158 (replies posted), #147 fix pushed (tab order now respects takes_focus). #78, #89, #99 have no comments yet.
+- Regressions from the merge batches, found by the wm test set (both open, awaiting approval): #169 disabled controls block clicks (from #124; script 220), #170 headless font atlas + textureless-draw guard (from #105; DrawTextEx segfault). With both vendored, wm E2E has zero segfaults and 220 passes; 31 validate_screen failures remain, all baseline drift (0.3-4.5%) from merged text changes — regenerate baselines on the wm bump after reviewing.
+
+
+
+
+- Todo from #141 approval: file the remaining raylib-backend rendering options (vs sokol run/headless) as gap todos for later.
+
 
 ## Tier 4 triage
 
-Only input has been triaged: [triage/triage-input.md](triage/triage-input.md). Of 25 gaps, 8 are worth a PR, 7 need a decision, 8 are app-specific and 2 are already fixed. #137, #142, #145, #147 and #149 came out of it. ui-widgets (39), ui-layout (26), rendering (25), text (18), ecs-core (13), e2e (12), networking (11), platform (10) and the smaller areas haven't been triaged.
+Input, e2e and ui-widgets have been triaged: [triage/triage-input.md](triage/triage-input.md), [triage/triage-e2e.md](triage/triage-e2e.md) and [triage/triage-ui-widgets.md](triage/triage-ui-widgets.md). Input: of 25 gaps, 8 are worth a PR, 7 need a decision, 8 are app-specific and 2 are already fixed; #137, #142, #145, #147, #149, #150 and #151 came out of it. E2E: of 12 gaps, 6 are worth a PR, 5 need a decision and 1 is already fixed; #152 to #155 came out of it. UI-widgets: of 39 gaps, 25 are worth a PR, 8 need a decision, 3 are app-specific and 3 are already fixed; [#156](https://github.com/gabeochoa/afterhours/pull/156) toast-fade, [#157](https://github.com/gabeochoa/afterhours/pull/157) pagination-index and [#158](https://github.com/gabeochoa/afterhours/pull/158) text-area-readonly are open, next are ease-scroll-instant and dropdown-x (caret-blink waits on #158, same file). [triage/triage-ui-layout.md](triage/triage-ui-layout.md): of 26 gaps, 13 are worth a PR and 13 need a decision; [#161](https://github.com/gabeochoa/afterhours/pull/161) virtual-overscan and [#162](https://github.com/gabeochoa/afterhours/pull/162) percent-margin are open. [triage/triage-rendering.md](triage/triage-rendering.md): of 25 gaps, 14 are worth a PR, 9 need a decision, 1 is app-specific and 1 is already fixed; [#163](https://github.com/gabeochoa/afterhours/pull/163) particle-drag and [#164](https://github.com/gabeochoa/afterhours/pull/164) staging-texture-leak are open. [triage/triage-text.md](triage/triage-text.md): of 18 gaps, 11 are worth a PR and 7 need a decision; #165 to #168 are open. Held ready: `gap/styled-ellipsis` (complete, tests pass) waits on a sequencing call: ship standalone off main with its run-level ellipsize_runs, or rebase onto #88 gap/textfit if that merges first. [triage/triage-ecs-core.md](triage/triage-ecs-core.md): of 13 gaps, 5 are worth a PR, 7 need a decision and 1 is app-specific. [triage/triage-networking.md](triage/triage-networking.md): all 11 belong to afterhours-online or the game, not afterhours core (3 pr there, 7 decide, 1 app-specific). platform (10) and the smaller areas haven't been triaged.
 
 ## Not started
 
