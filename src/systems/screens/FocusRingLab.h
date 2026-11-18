@@ -102,6 +102,34 @@ struct FocusRingLab : ScreenSystem<UIContext<InputAction>> {
          40, 480, 1100, 30, 19, "frl_readout");
     text(61, "Custom widgets resolve the same ring via ui::focus_ring_for(context, entity, component).",
          40, 524, 1100, 28, 17);
+
+    text(70, "Contrast edges: theme.focus_ring_contrast. Same 2px ring, drawn by the focus painter.",
+         40, 560, 1150, 28, 19, "frl_contrast_title");
+    auto contrast_box = [&](int id, float x, bool edges, const std::string &name) {
+      auto box = button(context, mk(root.ent(), id), ComponentConfig{}
+          .with_label("Save").with_size({pixels(300 * scale), pixels(76 * scale)})
+          .with_absolute_position(x * scale, 592 * scale)
+          .with_font("AtkinsonMock", pixels(19 * scale)).with_background(Theme::Usage::Primary)
+          .with_corner_radius(6 * scale).with_debug_name(name)
+          .with_ignore_pointer_events()
+          .with_on_draw_fg([edges](RectangleType r) {
+            FocusRing ring;
+            ring.rect = r;
+            ring.thickness = 2.f;
+            ring.roundness = 0.08f;
+            ring.corners = std::bitset<4>{}.set();
+            ring.color = {149, 169, 192, 255};
+            ring.contrast = {0, 0, 0, 180};
+            ring.contrast_edges = edges;
+            ::afterhours::ui::detail::draw_focus_paint(
+                ::afterhours::ui::detail::FocusPaint{ring, -1, 0, 0, 0.f, std::nullopt});
+          }));
+      (void)box;
+    };
+    contrast_box(80, 40, true, "frl_contrast_on");
+    contrast_box(81, 400, false, "frl_contrast_off");
+    text(82, "on (default): hairlines inside and out", 40, 672, 350, 22, 15);
+    text(83, "off: single outline only", 400, 672, 350, 22, 15);
   }
 };
 

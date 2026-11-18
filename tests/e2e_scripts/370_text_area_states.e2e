@@ -1,0 +1,27 @@
+# Feature: text_area editable / readonly / disabled (#158)
+# Readonly focuses and selects but never edits; disabled takes no focus.
+
+goto_screen text_area_states_lab
+wait 0.5
+
+expect_input_text tas_editable "edit me"
+expect_input_text tas_readonly "read only, select me"
+expect_input_text tas_disabled "disabled, no focus"
+
+# Editable takes typing
+focus_ui tas_editable
+wait 0.2
+type "!"
+wait 0.2
+expect_input_text tas_editable "edit me!"
+
+# Readonly blocks typing and backspace but keeps its text
+focus_ui tas_readonly
+wait 0.2
+type "nope"
+wait 0.2
+key BACKSPACE
+wait 0.2
+expect_input_text tas_readonly "read only, select me"
+
+screenshot text_area_states
