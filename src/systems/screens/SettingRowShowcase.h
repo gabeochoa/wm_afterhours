@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "DialogPresentation.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -59,31 +60,18 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     toggle(11,"Sound Effects",sound_effects,194,"setting_sound");
     toggle(12,"Vibration",vibration,248,"setting_vibration");
     label(3,"OPTIONS / Language: 5 choices / Graphics quality: 4 choices",32,314,1016,26,19,true);
-    const auto style_options=[&](ElementResult row,const std::string &name) {
-      for(auto id:row.cmp().children) {
-        auto &control=UICollectionHolder::getEntityForIDEnforce(id);
-        if(!control.has<HasStepperState>()) continue;
-        int direction=0;
-        for(auto arrow_id:control.get<UIComponent>().children) {
-          auto &arrow=UICollectionHolder::getEntityForIDEnforce(arrow_id);
-          if(!arrow.has<HasClickListener>()) continue;
-          const bool previous=direction++==0;
-          arrow.get<UIComponent>().set_desired_width(pixels(44*s));
-          arrow.get<HasLabel>().label.clear();
-          arrow.addComponentIfMissing<UIComponentDebug>(name).set(name+(previous?"_previous":"_next"));
-          arrow.addComponentIfMissing<afterhours::HasColor>(afterhours::Color{47,64,86,255}).set({47,64,86,255});
-          arrow.addComponentIfMissing<HasOnDraw>().fg=[s,previous,ink](RectangleType r) {
-            const float dir=previous?-1.f:1.f,cx=r.x+r.width/2,cy=r.y+r.height/2;
-            afterhours::draw_line_ex({cx-dir*4*s,cy-8*s},{cx+dir*4*s,cy},2*s,ink);
-            afterhours::draw_line_ex({cx+dir*4*s,cy},{cx-dir*4*s,cy+8*s},2*s,ink);
-          };
-        }
-      }
-    };
-    style_options(setting_row(context,mk(root.ent()),row_config("Language",SettingRowControlType::Stepper,"setting_language",380),
-        std::make_pair(&language_idx,languages),box(32,348,1016,48).with_font("AtkinsonMock",pixels(22*s))),"setting_language");
-    style_options(setting_row(context,mk(root.ent()),row_config("Graphics quality",SettingRowControlType::Stepper,"setting_quality",380),
-        std::make_pair(&quality_idx,quality_options),box(32,402,1016,48).with_font("AtkinsonMock",pixels(22*s))),"setting_quality");
+    // Stepper arrow restyling lives in DialogPresentation.h (the one place
+    // tree-walk restyling is allowed); see dialog_presentation::style_stepper_arrows.
+    dialog_presentation::style_stepper_arrows(
+        setting_row(context,mk(root.ent()),row_config("Language",SettingRowControlType::Stepper,"setting_language",380),
+            std::make_pair(&language_idx,languages),box(32,348,1016,48).with_font("AtkinsonMock",pixels(22*s))),
+        "setting_language",
+        dialog_presentation::StepperArrowStyle{.scale=s,.ink=ink,.background={47,64,86,255}});
+    dialog_presentation::style_stepper_arrows(
+        setting_row(context,mk(root.ent()),row_config("Graphics quality",SettingRowControlType::Stepper,"setting_quality",380),
+            std::make_pair(&quality_idx,quality_options),box(32,402,1016,48).with_font("AtkinsonMock",pixels(22*s))),
+        "setting_quality",
+        dialog_presentation::StepperArrowStyle{.scale=s,.ink=ink,.background={47,64,86,255}});
     label(4,"VOLUME / 0% to 100%",32,466,1016,26,19,true);
     const auto volume=[&](int id,const std::string &title,float &value,float y,const std::string &name) {
       label(id,title,32,y,384,44,22);
