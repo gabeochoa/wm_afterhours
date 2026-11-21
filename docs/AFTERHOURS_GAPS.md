@@ -1276,3 +1276,91 @@ snapshot interpolation and send pacing (Pumpkin Q, Pharmasea G-P2),
 the typed-packet codec, handshake-server, per-peer RTT, endpoint
 parser and connect-attempt helpers (Pumpkin ON-1…ON-6, now
 OG-18…OG-23), DNS naming, distribution artifacts, and the Steam seam.
+Pumpkin's `notes/afterhours-online-gaps.md` is an older subset
+(OG-01…OG-15) of the same tracker; the `docs/` copy wins.
+
+### Puzzle — `armchair_coach/puzzle/design/docs/afterhours_gaps.md` (missed nested path)
+
+Open as of 2026-09-07; items 1–4 and 13 already fixed upstream and
+omitted, and the source notes 14, 16, 17 and 21 landed upstream after
+its last pass. The UP-07/UP-08 references above are this project.
+
+- 5/6: no player-findable file path (`files::get_documents_path()`,
+  plus `files::reveal(path)`), blocked by `platform_folders.h`
+  carrying non-inline definitions that allow only one include site.
+- 7/8 (urgent, own file `afterhours_urgent_perf_regression.md`):
+  `capture::record` builds a `std::string` per draw while disabled,
+  and `warn_on_missing_glyphs` re-decodes every string per draw —
+  together ~1.7–2.1x on the node/wire renderers.
+- 9: no `SystemManager` profiling hook, so library systems are
+  invisible to `dump_profile`; Puzzle offers its 517-line profiler
+  upstream. Same instrumentation point Cartographer's profiling asks
+  and the crash handler below want.
+- 10: no rectangle algebra (pad/cut/align over `RectangleType`); a
+  224-line header with 613 uses in this consumer alone.
+- 11: the letterbox transform is private to `input_system`, duplicated
+  per consumer, absent on sokol, and has no inverse; expose
+  `content_viewport()` plus both point maps to both backends. Extends
+  the withdrawn Pong letterbox note: presenting is covered, mapping
+  points both ways is not.
+- 12: no blend-mode API or transition counting; per-blit blend pairs
+  cost 3.8 ms/frame of batch flushes for 0.005 ms of blits.
+- 14: the UI plugin costs 37% of a frame with no visible UI —
+  singleton-only systems still iterate every entity, `std::bitset`
+  access is four calls at `-Og`, `has_child_of` scans 128 slots, and
+  retired entities iterate until cleanup. Same root as Cartographer's
+  valley performance asks.
+- 15: `logging.h` cannot write to a file; a shipped build's log is
+  unrecoverable, and pre-init lines need a capped buffer. ~30-line
+  sink offered upstream.
+- 16: `VALIDATE` ships as a no-op function that still evaluates its
+  arguments in release; ship the macro form instead.
+- 17: nothing catches a crash, including the library's own deliberate
+  `abort()`s; wants an opt-in `crash::install(report_path)` writing
+  signal, backtrace, current system and log tail.
+- 18: wrapper holes push consumers back to raw raylib — the whole
+  CPU-side Image family (43 sites here), `StopSound`/`IsSoundPlaying`
+  (see Voice_ah), borderless/window-state queries, a test-aware
+  `get_key_pressed()`, `distance_sq` hidden by the `Vector2Type`
+  guard, `action_pressed` conveniences, and no public setter behind
+  e2e's right-button hold.
+- 19: `build_font_atlas` hardcodes the row packer and 1px padding
+  that overflow large atlases (the library's own 556-codepoint
+  default is the worst case), and a hardcoded bilinear filter;
+  wants padding/pack-method/filter as defaulted parameters.
+- 20: `setting_row` unconditionally overwrites the caller's font
+  size and label font, and applies a margin after the overrides
+  merge, so restyling cannot reach the text.
+- 21: the imm render pass clears `capture`, so only UI draws survive
+  for `expect_drawn`; clear on a frame boundary (or add `mark()`)
+  so world/document draws are assertable too.
+- 22: `terminal::Console` history cannot be reset (`clear()` clears
+  output only), so history leaks across e2e scripts and documents;
+  wants `clear_history()` and a public record-without-execute step.
+- Design constraint on all of the above, worth adopting as library
+  policy: opt-in and free when off — at most one predictable branch,
+  ideally compiled out, because consumers develop at `-Og`.
+
+Companion file `afterhours-focus-gaps.md` (2026-08-10): the D33–D36
+focus-ring/hover/tabbing fixes were patched into Puzzle's vendored
+tree and should be checked on the next bump rather than re-filed.
+Still needing a maintainer decision: hover cannot reach tray
+children (split `can_be_focused` structurally, not via the public
+skip flag), no scroll-into-view for keyboard focus, and no focus
+groups (arrows scoped to a group, Tab between groups).
+
+### Wordproc — `wordproc/docs/afterhours-gaps.md` (2026-09-14, against c5cfd35)
+
+- Platform: Emscripten stack reporting in `crash_handler`, backend
+  registration/capture selected by platform instead of shared Metal
+  hooks, `RunConfig::display` honoured by sokol's `run()`, a truly
+  asynchronous native-dialog completion path, and atomic writes with
+  unique temp files, fsync, and a streaming writer.
+- Input/UI: injected right-button pressed edges in e2e (see Puzzle
+  18), exact-modifier chord matching with a specificity rule,
+  horizontal dropdown placement (X currently translated by zero),
+  menu-row theme/hover/padding inheritance, and checked/radio menu
+  items with bounded scrolling for long menus.
+- Tests: sokol draw-capture hooks so `expect_drawn` works on Metal,
+  and harness argument compatibility (`--test-script=path`,
+  `--e2e-timeout` spellings).
