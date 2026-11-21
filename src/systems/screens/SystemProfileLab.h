@@ -92,7 +92,6 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       node.get<UIComponent>().enable_font("AtkinsonMock", pixels(size * scale), true);
       if (!node.has<HasLabel>()) return;
       auto &text = node.get<HasLabel>();
-      text.font_name = "AtkinsonMock";
       text.explicit_text_color = color;
       text.text_inset = afterhours::Vector2Type{0, 0};
       text.text_x_offset = 8 * scale;
