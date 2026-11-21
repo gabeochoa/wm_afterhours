@@ -1224,6 +1224,39 @@ not filed here. The library asks:
   neighbour/cost provider, and a parity example.
 - G-P14: an allocator/arena-backed way to materialize query results
   (or document the scratch-vector pattern as the intended one).
+- G-P15: a data-bound layer over the imm suite — form rows from value
+  pointers (`form.slider("Volume", data.master_volume)`), data-bound
+  lists, a menu/settings shell, and a bridge for rect-based UIs to
+  migrate screen-by-screen (~3,912 hand-rolled lines in this game).
+- G-P16: a settings + key-remapping service: a versioned store
+  (`.version(n).migrate(old, fn)`) so adding a field stops breaking
+  saves, plus a press-any-key remap widget with conflict UI.
+- G-P17: prefab/component-bundle authoring — named bundles with
+  spawn-with-overrides (`prefabs::define("ice_machine", ...)`),
+  composing with per-component serialize order (~1,719 lines of
+  `make_*` functions here).
+- G-P18: a save-game versioning/migration envelope (current version,
+  ordered migration chain, header-only preview, Ok/Migrated/Corrupt/
+  TooNew), since saves and network snapshots share the blob.
+- G-P19: one attachment relation (sockets, type filters, pose
+  inheritance, single-parent invariant, detach on cleanup) instead
+  of per-pair held-item/furniture/rope bookkeeping (~450 lines).
+- G-P20: a `TriggerVolume` family (entrant counting, phases,
+  validation hook, progress rendering) with multiplayer entrant
+  semantics solved once; distinct from G-P11's countdown timer.
+- G-P21: an NPC queue utility (join/advance/at-front callback);
+  state machines stay game-side, the line skeleton does not (~300
+  lines per game with a queue).
+- G-P22: a `WorldLabel` component (text, icon, billboarding,
+  distance fade) for nameplates, order bubbles and debug labels.
+- G-P23: a tile-grid procgen toolkit (`wfc`, ASCII `stamp`,
+  reachability `validate`) with engine-guaranteed determinism.
+- G-P24: a live ECS debug inspector (world picking, component
+  browse/edit, watch list) on the existing layout-inspector and
+  profiling pieces.
+- Deliberately not filed by Pharmasea: drink recipes, customer
+  decision policy, FSM conversions, economy, map content, network
+  packets/authority, tutorial content, minigame scoring, intro art.
 
 ### Pumpkin Beachball — rendering review and audits (`pumpkin-beachball/AFTERHOURS_GAPS.md`)
 
