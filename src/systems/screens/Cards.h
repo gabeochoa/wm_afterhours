@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "../shapes.h"
 #include <afterhours/ah.h>
 #include <algorithm>
 #include <array>
@@ -34,9 +35,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-    auto root = div(context, mk(entity), ComponentConfig{}
+    auto root = div(context, mk(entity), shapes::page_bg(theme)
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("cards_bg"));
+        .with_debug_name("cards_bg"));
     auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1144.f * s), pixels(720.f * s)})
         .with_absolute_position(left, top).with_background(Theme::Usage::None)
@@ -59,8 +60,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::None).with_alignment(TextAlignment::Left)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    auto header = div(context, mk(content.ent()), box(0, 24, 1144, 80)
-        .with_background(Theme::Usage::Primary).with_corner_radius(12 * s));
+    auto header = div(context, mk(content.ent()), shapes::header_bar(theme)
+        .with_size({pixels(1144.f * s), pixels(80.f * s)})
+        .with_absolute_position(0.f, 24.f * s).with_corner_radius(12 * s));
     const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.darkfont);
     // Title - larger font for better visibility
     label(header.ent(), "Cards & Panels Gallery", 20, 8, 870, 40, 33, header_ink, "cards_title");
@@ -102,7 +104,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 2: Nested cards
     label(content.ent(), "Nested cards and transparent panels", 0, 350, 900, 28, 25, theme.font);
     auto panels = div(context, mk(content.ent(), id++), box(0, 386, 1144, 170).with_debug_name("row2_nested"));
-    auto nested = vstack(context, mk(panels.ent(), id++), box(0, 0, 556, 170)
+    auto nested = vstack(context, mk(panels.ent(), id++), shapes::card(theme)
+        .with_size({pixels(556.f * s), pixels(170.f * s)})
+        .with_absolute_position(0.f, 0.f)
         .with_background(Theme::Usage::Surface).with_corner_radius(6 * s)
         .with_border(card_border, 2 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
