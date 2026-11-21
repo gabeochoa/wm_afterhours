@@ -5,6 +5,33 @@ and closure checks. Source-only findings need reproduction before implementation
 old line numbers describe the reviewed snapshot. Completed fixes are summarized
 in [history](history.md). Consumer source paths are relative to `~/p/`.
 
+## Who uses afterhours (one line each, `~/p/` checkouts)
+
+So a gap's "also hits" can be judged at a glance. Apps that are not
+games are marked as such; the `template` skeleton and the library
+itself are not listed.
+
+- `pong-afterhours` — minimal Pong; the smallest example of the ECS plus input/window plugins.
+- `tetr-afterhours` — falling-block puzzler.
+- `kart-afterhours` ("Cart Chaos") — kart racer with track select and round rules.
+- `pumpkin-beachball` — Slime Volleyball-style game, pumpkins vs beachball, with online multiplayer.
+- `mailboy` — first-person on-rails package delivery through a 90s office, roguelike runs.
+- `pharmasea` ("Pub Panic!") — multiplayer pub: serve drink orders against the clock.
+- `MyNameChef` — cooking game on the supermarket template, with a battle server.
+- `prime_pressure` — typing warehouse-boxing game in the Cook Serve Delicious mould.
+- `cartographer` — first-person 3D valley: explore, survey, journal, and a museum of found models.
+- `cartographer-rf-footsteps` / `cartographer-rf-swim-sound` — Cartographer forks for footstep and swim-sound work.
+- `armchair_coach/puzzle` ("Broadcast Operator") — Zachtronics-style broadcast-director node-graph puzzle.
+- `endless-dance-chaos` — Mini Metro-style music-festival management ("tower defense, but the towers are bathrooms").
+- `break-ross` — incremental game about pretending to drive the Street View car.
+- `pixels` — incremental pixel-mining: shoot balls into 50,000 mineable pixels, hunt the golden one.
+- `voice_ah` — (toy/app) type a line, pick a voice, hear synthesized mumble speech.
+- `webhelper` — (prototype/app) be a spider/fly on a fake browser screen, nudging the human through tasks.
+- `floatinghotel` — (app) review-first Git client for reading and commenting on agent-written diffs.
+- `hanabi` — (app) native desktop client for AI assistant conversations.
+- `wordproc` — (app) word processor (Sokol/Metal, plus an Emscripten web build).
+- `wm_afterhours` — (this repo) the UI lab/showcase hosting the example screens these gaps are tried in.
+
 ## Scrollbars over modal overlays — fixed
 
 I assumed modal layers covered every background visual and modal input gates covered every control. Scrollbars instead drew in a final pass above all layers; wheel and thumb handlers bypassed the input gate, including text-area wheel input.
