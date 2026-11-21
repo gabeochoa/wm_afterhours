@@ -6,6 +6,8 @@
     },
     "fullscreen_enabled": false,
     "post_processing_enabled": true,
+    "project": "wm_afterhours",
+    "reduced_motion_enabled": false,
     "resolution": {
         "height": 720,
         "width": 1280

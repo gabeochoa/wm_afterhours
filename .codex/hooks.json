@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/gabeochoa/p/wm_afterhours/.codex/hooks/clang-format-on-save.sh'",
+            "statusMessage": "Formatting C++ with clang-format..."
+          }
+        ]
+      }
+    ]
+  }
+}
