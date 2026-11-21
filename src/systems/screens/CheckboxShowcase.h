@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "../screen_scaffold.h"
 #include <afterhours/ah.h>
 #include <algorithm>
 #include <array>
@@ -45,42 +46,35 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     const auto theme = afterhours::ui::theme_presets::neon_dark();
-    context.set_theme(theme);
-    context.scaling_mode = ScalingMode::Proportional;
-    const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
+    auto scr = begin_screen(context, entity, theme,
+                            {.ink = afterhours::Color{236, 242, 251, 255},
+                             .muted = afterhours::Color{182, 197, 219, 255}});
+    const float s = scr.s;
     if (s <= 0.f) return;
     const float left = (context.screen_width - 1144 * s) / 2.f;
     const float top = (context.screen_height - 720 * s) / 2.f;
-    const afterhours::Color ink{236, 242, 251, 255};
-    const afterhours::Color muted{182, 197, 219, 255};
-    const auto box = [s](float x, float y, float w, float h) {
-      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
-          .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
-    };
-    // Root - full screen centering container
-    auto root = div(context, mk(entity), ComponentConfig{}
-        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("bg"));
-    auto content = div(context, mk(root.ent()), ComponentConfig{}
+    const afterhours::Color ink = scr.ink;
+    const afterhours::Color muted = scr.muted;
+    auto content = div(context, mk(scr.root.ent()), ComponentConfig{}
         .with_size({pixels(1144 * s), pixels(720 * s)}).with_absolute_position(left, top)
         .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("card"));
     int id = 0;
     const auto label = [&](afterhours::Entity &parent, const std::string &text,
                            float x, float y, float w, float h, float size,
                            const std::string &name = "", bool subdued = false) {
-      return div(context, mk(parent, id++), box(x, y, w, h).with_label(text)
+      return div(context, mk(parent, id++), scr.layout(x, y, w, h).with_label(text)
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(subdued ? muted : ink)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
     const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled) {
-      div(context, mk(parent, id++), box(x, y, 22, 22).with_ignore_pointer_events()
+      div(context, mk(parent, id++), scr.layout(x, y, 22, 22).with_ignore_pointer_events()
           .with_border(disabled ? afterhours::colors::darken(ink, .5f) : ink, pixels(2 * s)));
     };
     const auto check_row = [&](afterhours::Entity &parent, bool &value, const std::string &text,
                                float y, afterhours::Color background, const std::string &name,
                                bool disabled = false, const std::string &lock_reason = "") {
       const auto changed = checkbox(context, mk(parent, id++), value,
-          box(20, y, 516, 44).with_label("").with_custom_background(background)
+          scr.layout(20, y, 516, 44).with_label("").with_custom_background(background)
               .with_alignment(TextAlignment::Left).with_text_inset(14 * s, 0)
               .with_custom_text_color(ink).with_corner_radius(6 * s)
               .with_font("AtkinsonMock", pixels(23 * s)).with_disabled(disabled)
@@ -93,23 +87,23 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
       return static_cast<bool>(changed);
     };
 
-    auto header = div(context, mk(content.ent()), box(0, 24, 1144, 88)
+    auto header = div(context, mk(content.ent()), scr.layout(0, 24, 1144, 88)
         .with_custom_background({30, 42, 62, 255}).with_corner_radius(12 * s));
     // Title
     label(header.ent(), "Checkbox Components", 20, 8, 850, 40, 33, "checkbox_title");
     label(header.ent(), "Neon Dark / square marks, independent states, and group limits", 20, 52, 740, 26, 20, "", true);
-    if (button(context, mk(header.ent()), box(914, 10, 210, 36)
+    if (button(context, mk(header.ent()), scr.layout(914, 10, 210, 36)
         .with_label("Reset demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
         .with_corner_radius(7 * s).with_debug_name("checkbox_reset"))) reset();
     label(header.ent(), "Last: " + last_change, 774, 52, 350, 26, 18, "checkbox_feedback", true);
 
     // ========== LEFT COLUMN ==========
-    auto left_col = div(context, mk(content.ent()), box(0, 132, 556, 568)
+    auto left_col = div(context, mk(content.ent()), scr.layout(0, 132, 556, 568)
         .with_background(Theme::Usage::Surface).with_corner_radius(12 * s).with_debug_name("left_col"));
     label(left_col.ent(), "Individual controls", 20, 12, 516, 33, 27);
     label(left_col.ent(), "Theme roles", 20, 54, 300, 27, 23);
-    if (button(context, mk(left_col.ent()), box(366, 52, 170, 30)
+    if (button(context, mk(left_col.ent()), scr.layout(366, 52, 170, 30)
         .with_label("Match checked").with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * s).with_debug_name("checkbox_match_roles"))) {
@@ -127,7 +121,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < box_values.size(); ++i) {
       const float x = 20 + static_cast<float>(i) * 129;
       label(left_col.ent(), std::to_string(i + 1) + " / " + role_names[i], x, 282, 120, 23, 17, "", true);
-      if (checkbox(context, mk(left_col.ent(), id++), *box_values[i], box(x + 38, 311, 44, 44)
+      if (checkbox(context, mk(left_col.ent(), id++), *box_values[i], scr.layout(x + 38, 311, 44, 44)
           .with_label("").with_background(box_roles[i]).with_corner_radius(3 * s)
           .with_custom_text_color(ink).with_font("AtkinsonMock", pixels(23 * s))
           .with_click_activation(ClickActivationMode::Release).with_debug_name("nl_option_" + std::to_string(i + 1))))
@@ -144,11 +138,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
           (disabled_unchecked ? "checked" : "unchecked"), 20, 535, 516, 25, 19, "disabled_values", true);
 
     // ========== RIGHT COLUMN ==========
-    auto right_col = div(context, mk(content.ent(), id++), box(588, 132, 556, 568)
+    auto right_col = div(context, mk(content.ent(), id++), scr.layout(588, 132, 556, 568)
         .with_background(Theme::Usage::Surface).with_corner_radius(12 * s).with_debug_name("right_col"));
     label(right_col.ent(), "Grouped preferences", 20, 12, 516, 33, 27);
     label(right_col.ent(), "News preferences", 20, 54, 344, 27, 23);
-    auto multi_count = div(context, mk(right_col.ent(), id++), box(374, 51, 162, 31)
+    auto multi_count = div(context, mk(right_col.ent(), id++), scr.layout(374, 51, 162, 31)
         .with_custom_background({40, 57, 80, 255}).with_corner_radius(6 * s));
     label(multi_count.ent(), std::to_string(options_group.count()) + " of 4 selected", 8, 2, 146, 27, 20, "options_count");
     const std::array<const char *, 4> option_names{"Product updates", "Security alerts", "Tips and guides", "Event reminders"};
@@ -159,7 +153,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                     theme.primary, option_debug[i])) options_group.set(i, value);
     }
     label(right_col.ent(), "Delivery channels", 20, 314, 330, 28, 23);
-    auto limit_count = div(context, mk(right_col.ent(), id++), box(374, 311, 162, 31)
+    auto limit_count = div(context, mk(right_col.ent(), id++), scr.layout(374, 311, 162, 31)
         .with_custom_background({40, 57, 80, 255}).with_corner_radius(6 * s));
     label(limit_count.ent(), std::to_string(min_max_group.count()) + " selected", 8, 2, 146, 27, 20, "channels_count");
     label(right_col.ent(), "Min 1, max 2 / Secondary fill marks this group", 20, 346, 516, 26, 19, "channel_rules", true);
