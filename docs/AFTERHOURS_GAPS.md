@@ -1071,3 +1071,208 @@ adding any item: would three or more games use it.
 - Not filed (explicitly not gaps in the source file): collision, scoring,
   win condition, pause semantics, serve rules. Absorbing them would leave
   the example with nothing to teach.
+
+## Collected from sibling projects, 2026-11-20 (second collection)
+
+Same rules as the 2026-10-26 collection: one line each, full writeups stay
+in the source file, as-reported and not all re-verified. New this round:
+Cartographer's November 2026 audits, Pharmasea, Pumpkin Beachball and
+Voice_ah. `cartographer-rf-footsteps/` and `cartographer-rf-swim-sound/`
+hold byte-identical copies of Cartographer's file, so they are not
+collected twice. Re-checked with no new library asks: Hanabi (file dated
+2026-09-30, already collected above), Endless Dance Chaos, Mailboy,
+MyNameChef, Pong and Floatinghotel. Kart's file (re-triaged 2026-08-29)
+is now stale the other way: `--screenshot-dir`, `--e2e-speed`,
+`opacity_pct` alpha scaling, dim-aware gap resolution, absolute-x
+resolution and `apply_overrides` forwarding all check out as fixed in
+the current vendored tree, so they stay omitted; its still-open items
+are the Kart section above.
+
+### Cartographer — November 2026 update (`cartographer/docs/AFTERHOURS_GAPS.md`)
+
+Shipped since the section above was written, per the source file:
+shared E2E command packs (`register_shared_handlers`), `click_label`,
+`expect_focus` / `expect_hovered`, the `mouse_down` press-edge fix,
+`wait_until`, the `SystemBase::should_run` const-overload forward,
+`set_default_font`, `Frustum` from a view-projection matrix, `Lod`
+squared-distance update, platform text-edit commands for hand-drawn
+fields, keyed `InstanceBatcher` groups, and the `Library::load`
+name check. Still missing from that batch: an `InstanceBatcher` drain
+that hands groups over without drawing, and a breaking-change callout
+for serial E2E dispatch (commands now time out in managers that never
+registered them).
+
+New asks, biggest first:
+
+- 3D world: a `character3d` controller (ground query, slopes, step-up,
+  mantle, ladders), a `collision3d` world (AABB/OBB/cylinder/mesh/
+  heightfield shapes, broadphase, raycast/overlap/push-out, material
+  id on hits), a shared `Heightfield` sampler with tiled mesh building,
+  chunked `InstanceField` LOD with scatter, `ProximityPool` for
+  player-centred entity pools, and steering helpers over terrain.
+- Rendering: `SceneLights` broadcasting sun/ambient/fog/point lights
+  to every registered shader with a GLSL `#include` for the shared
+  chunks, a directional `ShadowMap` pass plus blob shadows, a
+  `time_of_day` plugin feeding it, `RenderView` (camera, target,
+  frustum, LOD scale) with a world post-process chain, water surfaces
+  with floating objects, and `house_of_cards` atlas mode (one instanced
+  call for unique far models), an eye-position instead of a whole
+  camera, and a caller-owned instance buffer.
+- Positional audio: a camera listener with `play_at(name, position)`,
+  per-sound falloff/range/voice cap, sound aliases for overlap, and
+  looping ambient sources tied to entities. See also Voice_ah below.
+- Loading/levels: a model library that shares textures by hash, reads
+  glTF header bounds and loads deferred under a frame budget; a
+  `level` plugin (typed entity registry, folder loader, write-back);
+  level-scoped entities/caches with unload and test-reset hooks.
+- Editor: an `editor3d` plugin (picking, gizmos, dirty set, undo via
+  `CommandHistory`, save hook, E2E commands) and a standalone
+  `bug_note(dir)` playtest helper (text, screenshot, build id, context).
+- App/ECS ergonomics: `app_states` (one gated manager instead of one
+  manager per state), a small `State<E>` with enter/exit hooks, a
+  `Reveal` open/close helper, `run_if(in_state(...))` gating, generic
+  `expect_state`/`set_state` E2E commands, enums saved by name,
+  `get_unique<A, B>()`, one-call singleton add/register, named system
+  groups, a settings field table generating JSON plus generic
+  `set_setting`/`expect_setting`, `register_expect_flag`, and an
+  input focus stack so overlays stop hand-rolling input gates.
+- Performance defaults (valley pass, 8.7k entities): per-component
+  membership lists so systems/queries stop scanning every entity, a
+  component generation counter, cached singleton handles, a spatial
+  index with a static/dynamic split, persistent instance buffers as
+  the only easy instanced path, interned asset handles instead of
+  per-frame string hashing, a shader uniform cache, and the E2E runner
+  keeping its own pending-command list.
+- Profiling: nested zones, an overlay with flamegraph export, GPU
+  timers, render counters (draws, buffer creates, binds), entities
+  visited per system, machine-readable `dump_profile --json` with a
+  diff tool, spike capture, allocation counts, instructions-retired
+  per frame, per-call vs per-frame zone averages, and windowed stats
+  via `reset_profile`.
+- E2E: `expect_screenshot` baselines with a tolerant diff honouring
+  `--update-baselines`, script headers (`# spawn:`/`# timeout:`/
+  `# flags:`/`# requires:`/`# batch:`) with a shipped parallel runner,
+  per-process temp settings/saves in test mode, 3D player/camera/
+  raycast commands (with the controller/collision plugins),
+  `expect_screen_luma`, window-size commands, and blocking multi-frame
+  commands the runner waits on.
+- Smaller items: audio buses with ambience routing, settings presets
+  that flip to Custom, live-reloadable `tunable<T>` values, capturing
+  any view to an image off the main thread, fonts loaded at the
+  display's pixel size, interior lighting zones, skeletal animation,
+  closed captions driven by `sound_system`, window min-size/centre/
+  fit helpers with deferred resize, and the `files.cpp` Windows guard
+  superseded by `config.h` (define the none backend instead of
+  undefining raylib).
+
+### Pharmasea — onboarding audit (`pharmasea/AFTERHOURS_GAPS.md`)
+
+Most of this file is `[ADAPTER]`/`[VERIFY]` work in Pharmasea itself
+(threading, seed, handshake, codec, save proof) and is deliberately
+not filed here. The library asks:
+
+- Watch list, already tracked in the afterhours-online backlog below:
+  the ECS/session adapter decision (G-P1), snapshot buffer/pacing
+  helpers (G-P2), the DNS/IPv6 endpoint contract (G-P3), a pre-accept
+  admission hook (G-P4), CI-built GNS distribution artifacts (G-P5)
+  and the Steam bootstrap split (G-P6).
+- G-P7: a reusable intro/loading plugin (scene-sequence runner, themed
+  logo/engine cards, a loading scene fed by external progress).
+- G-P8: instancing helpers around `InstanceBatcher` — per-instance
+  tint, a `DrawModelEx`-equivalent transform guarantee, batcher-owned
+  default shader, a render-pass flush hook, and an explicit guarantee
+  that instanced cleanup leaves the VAO safe to mix with plain draws.
+- G-P9: reference wiring for E2E `--time-scale` (substep, don't scale
+  dt), so each consumer stops rediscovering the two failure modes.
+- G-P10: a usable default font in headless raylib mode, plus a
+  headless-safe font-load helper; text drawn before fonts load
+  currently segfaults inside raylib. Same family as Kart's headless
+  font item above.
+- G-P11: a countdown form of `timer::HasTimer` with a serialization
+  hook (or document it as ephemeral-only).
+- G-P12: make `RngStream` bit-stable across STLs (specified seed hash
+  and draws instead of `std::hash`/`std::uniform_*_distribution`);
+  the `RandomEngine` name also collides with consumers' own.
+- G-P13: a `pathfinding` serialization hook, a pluggable grid
+  neighbour/cost provider, and a parity example.
+- G-P14: an allocator/arena-backed way to materialize query results
+  (or document the scratch-vector pattern as the intended one).
+
+### Pumpkin Beachball — rendering review and audits (`pumpkin-beachball/AFTERHOURS_GAPS.md`)
+
+The ranked screenshot findings are game-side and mostly fixed in the
+game; the library items (letters are the source file's):
+
+- A: a failed screenshot capture should fail E2E (or be spelled
+  optional); the NONE stage currently passes with no screenshots.
+- B: `measure_text` returns {0,0} in the NONE backend while the
+  same-named platform method estimates; give the free function the
+  deterministic estimate so headless layout tests mean something.
+- C: normalize `draw_triangle` winding so NONE and raylib agree.
+- D: a `texture_is_usable()` capability query and a metadata-only
+  image-size query (games currently duplicate PNG aspect tables for
+  headless clamps).
+- E: a first-class deterministic-render signal (`testing::is_e2e()`)
+  plus `wait_seconds` (sim time headless, wall time windowed); FPS
+  and frame counts are currently neither.
+- F/T: expose the presented frame (size, letterbox, screen-to-logical
+  point map) and a `present_logical` helper; offer presented-frame
+  capture alongside canvas capture.
+- G/L: a raw-draw text-field helper (state + update over the char
+  queue, clipboard paste) for games that don't adopt the UI system.
+- H: a cross-backend local date/time helper.
+- I: always-available trailing-window frame-rate statistics.
+- J: `draw_text_fitted` / ellipsize helpers for the raw text API.
+- K: a header-only list-menu navigation helper for raw-draw games.
+- M: a shipped multi-process E2E runner (spawn, free ports,
+  `wait_for_log`, unified failure tails). Same ask as Pharmasea G-M4.
+- N: `RunConfig.fixed_dt` with an accumulator and max-steps clamp.
+- O: gamepad stick-edge helpers and E2E gamepad injection. Same ask
+  as Mailboy/Cartographer above.
+- P: a header-only string-to-string settings file with no JSON
+  dependency for small games.
+- Q: afterhours-online `SnapshotBuffer<T>` and a wall-clock
+  `RateGate`; see the online backlog below (OG-05).
+- R/S: Windows/strict-compiler portability — guard `<cxxabi.h>` with
+  `__has_include`, and spell concept placeholders with `std::declval`
+  instead of compound literals. Both fixed in Pumpkin's vendored
+  tree; still need upstreaming.
+- U: typed-arg accessors and a `require_state()` helper for E2E
+  command definitions (one game's command file is 719 lines).
+- V–Z: juice/steering/collision helpers — horizontal-velocity
+  approach, projectile-intercept and braking-arrival, a `ReadyLobby`
+  ready-up helper, squash/shadow/offscreen-marker helpers, and swept
+  ellipse collision math in a `physics2d` header.
+
+### Voice_ah — 2026-10-24 (`voice_ah/AFTERHOURS_GAPS.md`)
+
+Predates the last collection but was missed; collected now.
+
+- Popups need a reserved overlay band: `render_layer` is one global
+  sort key, a dropdown tray only gets `+1`, and a later `text_area`
+  (box +1, lines +2, cursor +10) paints over the open list. Suggested:
+  tray at `render_layer + OVERLAY_BASE` (the drag overlay already
+  uses 1000) or a second popup pass. Workaround in game: layer 20.
+- Procedural audio (every sound is synthesized at runtime):
+  `load_sound_from_samples(span, rate, channels)` instead of raw
+  `raylib::Wave` fields (Mailboy hand-rolled the same thing);
+  `StopSound`/`SetSoundPitch`/`SetSoundPan`/`PauseSound` wrappers;
+  `SoundLibrary::add(name, SoundType)` for generated sounds; a raw
+  `AudioStream` callback wrapper; a playback-position query;
+  `graphics::Config::audio` or an RAII device guard so `ui::run`
+  covers audio; backend-independent `export_wav`; a one-time warning
+  (longer term sokol_audio) when the stub backends silently drop
+  sound; and a record device so tests can assert what played.
+
+### afterhours-online backlog (by reference)
+
+The plugin's own trackers stay the source of truth and are not copied:
+`pumpkin-beachball/docs/afterhours-online-gaps.md` (OG-01…OG-23) and
+`afterhours-online/docs/gaps.md` (items 1–12). Status per Pharmasea's
+audit: OG-01…OG-03 (terminal disconnect events, capacity rejection,
+disconnect reasons/stats) landed upstream 2026-11-05. Still open and
+asked for by more than one game: the ECS/session layer decision,
+snapshot interpolation and send pacing (Pumpkin Q, Pharmasea G-P2),
+the typed-packet codec, handshake-server, per-peer RTT, endpoint
+parser and connect-attempt helpers (Pumpkin ON-1…ON-6, now
+OG-18…OG-23), DNS naming, distribution artifacts, and the Steam seam.
