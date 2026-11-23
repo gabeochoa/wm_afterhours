@@ -105,7 +105,6 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
       child.addComponentIfMissing<UIComponentDebug>(debug).set(debug);
       if (child.has<HasLabel>()) {
         auto &label = child.get<HasLabel>();
-        label.font_name = "AtkinsonMock";
         label.explicit_text_color = selected ? ink : white;
       }
     };
