@@ -1,0 +1,9 @@
+goto_screen active_tab_styles
+resize 1280 720
+wait 0.3
+expect_text "Where the tides meet"
+click_ui tab_2 under=notebook_tabs
+expect_text "Reeds at low water"
+click_ui tab_0 under=default_tabs
+expect_text "Wind above the cliffs"
+assert_within_parents
