@@ -17,7 +17,6 @@ inline void style_title(afterhours::Entity &panel) {
       auto &title = UICollectionHolder::getEntityForIDEnforce(child_id);
       if (!title.has<UIComponentDebug>() || title.get<UIComponentDebug>().name() != "modal_title") continue;
       title.get<UIComponent>().font_name = font;
-      title.get<HasLabel>().font_name = font;
       return;
     }
     return;
@@ -33,6 +32,7 @@ inline void style(UIContext<InputAction> &context, afterhours::Entity &root,
   const float height = body_height + 160;
   panel.desired[Axis::X] = pixels(width * scale);
   panel.desired[Axis::Y] = pixels(height * scale);
+  panel.absolute_offset_is_size = false;
   panel.absolute_pos_x = (context.screen_width - width * scale) / 2;
   panel.absolute_pos_y = (context.screen_height - height * scale) / 2;
   for (auto axis : {Axis::left, Axis::right, Axis::top, Axis::bottom})
@@ -49,11 +49,9 @@ inline void style(UIContext<InputAction> &context, afterhours::Entity &root,
     if (node.has<UIComponentDebug>()) name = node.get<UIComponentDebug>().name();
     if (node.has<HasLabel>()) {
       auto &label = node.get<HasLabel>();
-      label.font_name = font;
       label.explicit_text_color = afterhours::Color{235, 241, 250, 255};
       if (name == "modal_title") {
         cmp.enable_font(heading_font, pixels(32 * scale), true);
-        label.font_name = heading_font;
       }
     }
     if (name == "modal_header") {

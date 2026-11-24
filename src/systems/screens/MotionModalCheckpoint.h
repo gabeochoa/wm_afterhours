@@ -31,7 +31,7 @@ struct MotionModalCheckpoint : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity), ComponentConfig{}.with_size({pixels(context.screen_width), pixels(context.screen_height)})
         .with_custom_background({255, 245, 235, 255}).with_corner_radius(0).with_debug_name("bg"));
     const auto label = [&](int id, const std::string &text, float x, float y) {
-      return div(context, mk(entity, id), box(x, y, 500, 30).with_label(text)
+      return div(context, mk(entity, id), box(x, y, 760, 30).with_label(text)
           .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
           .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
     };

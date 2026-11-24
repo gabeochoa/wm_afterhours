@@ -339,7 +339,6 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
           auto &caption = text.asE().get<HasLabel>();
           caption.label = entry->name;
           caption.text_overflow = TextOverflow::Ellipsis;
-          caption.font_name = entry->is_directory ? "AtkinsonMockBold" : "AtkinsonMock";
           auto &text_cmp = text.asE().get<UIComponent>();
           text_cmp.desired_margin[Axis::left] = pixels(46 * s);
           text_cmp.desired_margin[Axis::right] = pixels(88 * s);

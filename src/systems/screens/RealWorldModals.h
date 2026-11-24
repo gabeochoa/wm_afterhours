@@ -141,7 +141,6 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
           auto &title = UICollectionHolder::getEntityForIDEnforce(child_id);
           if (!title.has<UIComponentDebug>() || title.get<UIComponentDebug>().name() != "modal_title") continue;
           title.get<UIComponent>().enable_font("AtkinsonMockBold", pixels(28 * s), true);
-          title.get<HasLabel>().font_name = "AtkinsonMockBold";
         }
       }
     };

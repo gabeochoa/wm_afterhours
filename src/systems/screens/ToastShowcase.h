@@ -21,6 +21,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     using toast = afterhours::toast;
+    toast::MAX_VISIBLE = 5;
     const auto notices = afterhours::EntityQuery().whereHasComponent<toast::Toast>().gen();
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;

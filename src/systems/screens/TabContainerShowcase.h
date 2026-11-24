@@ -68,7 +68,6 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       auto &tab = UICollectionHolder::getEntityForIDEnforce(child_id);
       const auto font = tab_index == active_tab ? "AtkinsonMockBold" : "AtkinsonMock";
       tab.get<UIComponent>().enable_font(font, pixels(27 * scale), true);
-      tab.get<HasLabel>().font_name = font;
       ++tab_index;
     }
     const std::array<const char *, 4> titles{"Profile details", "Audio sample", "Display sample", "Long label sample"};
