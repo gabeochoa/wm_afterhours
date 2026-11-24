@@ -11,10 +11,10 @@ expect_text "shader: ok"
 expect_text "open: no"
 expect_text "motion: settled"
 click_ui bend_btn
-mouse_move 20 20
+expect_text "motion: in flight"
 screenshot transition_bend_opening
 expect_text "open: yes"
-expect_text "motion: in flight"
+mouse_move 20 20
 wait 1.5
 expect_text "motion: settled"
 screenshot transition_bend_open
