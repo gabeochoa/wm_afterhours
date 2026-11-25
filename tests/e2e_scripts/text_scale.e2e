@@ -1,0 +1,15 @@
+goto_screen text_scale
+resize 1280 720
+wait 0.3
+expect_text "Global text scale"
+expect_text "Current text_scale: 1.25x"
+click_ui ts_scale_3
+wait 0.2
+expect_text "Current text_scale: 1.5x"
+click_ui ts_scale_0
+wait 0.2
+expect_text "Current text_scale: 0.85x"
+click_ui ts_apply
+wait 0.2
+expect_text "Apply (1)"
+assert_within_parents
