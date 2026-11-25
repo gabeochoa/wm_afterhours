@@ -3,7 +3,7 @@ resize 1280 720
 wait 0.4
 expect_text "Toast Notifications"
 expect_text "Simulated action feedback"
-expect_text "No item is deleted"
+expect_text "Press Sample deletion to delete 1 item"
 expect_text "Coral / #FF7F50"
 expect_text "Notifications sent: 0"
 expect_text "Active count: 0"
@@ -56,7 +56,7 @@ wait 0.2
 click_ui btn_undo
 wait 0.2
 expect_text "Notifications sent: 13"
-expect_text "Deletion feedback / no undo action"
+expect_text "1 item deleted"
 screenshot toasts_design_simulated_feedback
 click_ui toast_clear
 wait 0.2

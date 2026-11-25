@@ -5,10 +5,10 @@ expect_text "Meters & Gauges"
 expect_text "HP / Health"
 expect_text "MP / Mana"
 expect_text "XP / Experience"
-expect_text "65.00%"
-expect_text "39.00%"
-expect_text "84.50%"
-expect_text "29.25%"
+expect_text "65%"
+expect_text "39%"
+expect_text "84%"
+expect_text "29%"
 expect_text "Paired bars / Health + Shield"
 expect_no_text "Stacked Bars"
 expect_text "Independent meters, not a shared total."
@@ -34,26 +34,26 @@ wait 0.1
 click_ui mg_restart
 wait 0.2
 expect_text "Resume"
-assert_ui mg_anim_value text=0.00%
+assert_ui mg_anim_value text=0%
 wait 0.2
-assert_ui mg_anim_value text=0.00%
+assert_ui mg_anim_value text=0%
 set_slider mg_slider_input 0.5
 wait 0.2
-assert_ui mg_hp_value text=50.00%
-assert_ui mg_mp_value text=30.00%
-assert_ui mg_xp_value text=65.00%
-assert_ui mg_shield_value text=22.50%
+assert_ui mg_hp_value text=50%
+assert_ui mg_mp_value text=30%
+assert_ui mg_xp_value text=65%
+assert_ui mg_shield_value text=22%
 assert_ui mg_gauge_25_label text=25%
 assert_ui mg_gauge_50_label text=50%
 assert_ui mg_gauge_90_label text=90%
-assert_ui mg_anim_value text=0.00%
+assert_ui mg_anim_value text=0%
 screenshot meters_gauges_control_half
 set_slider mg_slider_input 0
 wait 0.2
-assert_ui mg_hp_value text=0.00%
-assert_ui mg_mp_value text=0.00%
-assert_ui mg_xp_value text=0.00%
-assert_ui mg_shield_value text=0.00%
+assert_ui mg_hp_value text=0%
+assert_ui mg_mp_value text=0%
+assert_ui mg_xp_value text=0%
+assert_ui mg_shield_value text=0%
 assert_within_parents
 screenshot meters_gauges_control_empty
 set_slider mg_slider_input 1
@@ -61,18 +61,18 @@ wait 0.2
 focus_element mg_slider
 key RIGHT
 wait 0.2
-assert_ui mg_hp_value text=100.00%
-assert_ui mg_mp_value text=60.00%
-assert_ui mg_xp_value text=100.00%
-assert_ui mg_shield_value text=45.00%
+assert_ui mg_hp_value text=100%
+assert_ui mg_mp_value text=60%
+assert_ui mg_xp_value text=100%
+assert_ui mg_shield_value text=45%
 focus_element mg_slider
 key LEFT
 wait 0.2
-assert_ui mg_control_value text=99.00%
-assert_ui mg_hp_value text=99.00%
-assert_ui mg_mp_value text=59.40%
-assert_ui mg_shield_value text=44.55%
-assert_ui mg_xp_value text=100.00%
+assert_ui mg_control_value text=99%
+assert_ui mg_hp_value text=99%
+assert_ui mg_mp_value text=59%
+assert_ui mg_shield_value text=45%
+assert_ui mg_xp_value text=100%
 assert_within_parents
 screenshot meters_gauges_control_full
 click_ui mg_pause

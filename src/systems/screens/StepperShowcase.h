@@ -83,7 +83,8 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     label(1, 0, 78, 865, 56, "Both variants cycle through a finite list. Every arrow wraps from the last option to the first.", 23, muted);
     if (button(context, mk(root.ent()), box(904, 83, 240, 44).with_label("Restore defaults")
         .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_background(field)
-        .with_custom_text_color(ink).with_corner_radius(6 * scale).with_debug_name("step_reset"))) {
+        .with_custom_text_color(ink).with_border({92, 112, 140, 255}, 1)
+        .with_corner_radius(6 * scale).with_debug_name("step_reset"))) {
       resolution_idx = 2;
       quality_idx = difficulty_idx = framerate_idx = 1;
       language_idx = card_idx = 0;
@@ -129,10 +130,10 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     };
     const auto specimen = [&](int id, int row, const std::string &title, const std::vector<std::string> &options,
                                size_t &index, size_t default_index, const std::string &name) {
-      const float y = 229 + static_cast<float>(row) * 79;
+      const float y = 229 + static_cast<float>(row) * 83;
       label(30 + id, 20, y + 4, 162, 35, title, 23, ink);
       ElementResult result = stepper(context, mk(root.ent(), 100 + id), options, index,
-          box(190, y, 342, 45).with_custom_background(field).with_border({92, 112, 140, 255}, 1)
+          box(190, y, 342, 45).with_custom_background(field)
               .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_text_color(ink).with_debug_name(name));
       style_stepper(result, name, false);
       label(50 + id, 190, y + 49, 342, 25, fmt::format("{} / {}  |  {}", index + 1, options.size(),
@@ -152,7 +153,8 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color card_ink = card_idx >= 2 ? afterhours::Color{12, 27, 18, 255} : afterhours::Color{255, 255, 255, 255};
     div(context, mk(root.ent()), box(612, 313, 512, 242).with_custom_background(card.color)
         .with_corner_radius(9 * scale).with_debug_name("card"));
-    div(context, mk(root.ent()), box(837, 285, 62, 28).with_custom_background(card.color).with_ignore_pointer_events());
+    div(context, mk(root.ent()), box(837, 285, 62, 28).with_custom_background(card.color)
+        .with_corner_radius(6 * scale).with_ignore_pointer_events());
     div(context, mk(root.ent()), box(640, 343, 64, 64).with_ignore_pointer_events()
         .with_on_draw_fg([selected = card_idx, card_ink](RectangleType r) {
           const auto point = [r](float x, float y) { return raylib::Vector2{r.x + x * r.width, r.y + y * r.height}; };
@@ -179,9 +181,9 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_rectangle({r.x + r.width * .38f, r.y + r.height * .08f, r.width * .24f, r.height * .84f}, card_ink);
           afterhours::draw_rectangle({r.x + r.width * .08f, r.y + r.height * .38f, r.width * .84f, r.height * .24f}, card_ink);
         }));
-    label(123, 728, 340, 368, 47, card.title, 35, card_ink, "step_card_title");
-    label(124, 728, 395, 368, 108, card.description, 25, card_ink, "step_card_description");
-    label(125, 632, 514, 472, 30, "Selected class / " + std::to_string(card_idx + 1) + " of 4", 22, card_ink);
+    label(123, 716, 340, 368, 47, card.title, 35, card_ink, "step_card_title");
+    label(124, 716, 378, 368, 108, card.description, 25, card_ink, "step_card_description");
+    label(125, 640, 462, 472, 30, "Selected class / " + std::to_string(card_idx + 1) + " of 4", 22, card_ink);
     label(126, 612, 572, 512, 34, fmt::format("{} accent / #{:02X}{:02X}{:02X}", card.title, card.color.r, card.color.g, card.color.b), 22, ink);
     label(127, 612, 618, 512, 40, "Center segment shows the selected class. Neighbors show the previous and next class.", 20, muted);
     label(130, 0, 686, 1144, 29, "Click an arrow, or Tab to an arrow and press Enter. Every selector wraps; Restore defaults resets all six.", 21, muted);

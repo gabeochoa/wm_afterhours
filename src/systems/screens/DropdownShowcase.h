@@ -94,6 +94,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_dropdown_indicators(markers ? " [+]" : "", markers ? " [-]" : "")
           .with_debug_name(name).with_render_layer(10);
       if (custom) cfg.with_border({240, 223, 192, 255}, 2 * s);
+      if (disabled) cfg.with_custom_background({36, 47, 65, 255}).with_border({66, 81, 104, 255}, 1 * s);
       if (labeled) cfg.with_label("Pet");
       ElementResult result = dropdown(context, mk(root.ent(), id), options, selected, cfg);
       auto &outer = result.ent();
@@ -107,13 +108,13 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
         if (debug == "dropdown_label") {
           cmp.desired[Axis::X] = pixels(84 * s);
           node.get<HasLabel>().alignment = TextAlignment::Left;
-          node.get<HasLabel>().text_x_offset = 10 * s;
+          node.get<HasLabel>().text_x_offset = 12 * s;
           node.get<afterhours::HasColor>().set({36, 47, 65, 255});
           continue;
         }
         if (debug != "option 1") continue;
-        node.get<HasLabel>().alignment = TextAlignment::Left;
-        node.get<HasLabel>().text_x_offset = 12 * s;
+        node.get<HasLabel>().alignment = markers ? TextAlignment::Right : TextAlignment::Left;
+        node.get<HasLabel>().text_x_offset = markers ? -12 * s : 12 * s;
         if (labeled) cmp.desired[Axis::X] = pixels((w - 84) * s);
         node.addComponentIfMissing<UIComponentDebug>(name + "_trigger").set(name + "_trigger");
         if (disabled) node.removeComponentIfExists<HasClickListener>();
@@ -147,8 +148,8 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     label(69, "Read-only example; selection is fixed", 404, 494, 336, 28, 19, muted);
     label(70, "Default", 792, 455, 162, 24, 18, muted);
     label(71, "Custom", 966, 455, 162, 24, 18, muted);
-    label(72, "#DAB475 fill / #F0DFC0 border", 792, 484, 336, 24, 18, ink);
-    label(73, "2px requested border / 12px corners", 792, 510, 336, 24, 17, muted);
+    label(72, "#DAB475 fill / #F0DFC0 border", 792, 478, 336, 24, 18, ink);
+    label(73, "2px requested border / 12px corners", 792, 502, 336, 24, 17, muted);
 
     // Status bar
     div(context, mk(root.ent(), 80), box(left, 558, 1144, 138)
@@ -161,6 +162,8 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     label(86, "Disabled: " + disabled_options[disabled_idx], 276, 651, 244, 28, 21, ink);
     label(87, "Gemstone: " + styled_options[styled_idx], 532, 651, 244, 28, 21, ink);
     label(88, "Placement: below, flip, then clamp", 808, 568, 320, 28, 18, muted);
+    label(89, "Below", 824, 672, 80, 16, 15, muted);
+    label(90, "Flipped", 984, 672, 80, 16, 15, muted);
     div(context, mk(root.ent()), box(left + 824, 608, 286, 63)
         .with_ignore_pointer_events().with_on_draw_fg([s](RectangleType r) {
           const afterhours::Color line{138, 169, 210, 255};

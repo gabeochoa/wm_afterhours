@@ -188,6 +188,13 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                        static_cast<double>(bytes) / (1024.0 * 1024.0 * 1024.0));
   }
 
+  static std::string relative_label(const std::string &path) {
+    const std::string root = project_root();
+    if (path == root) return "wm_afterhours/";
+    if (path.rfind(root + "/", 0) == 0) return "wm_afterhours/" + path.substr(root.size() + 1);
+    return path;
+  }
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
@@ -234,19 +241,26 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_label(text).with_font("AtkinsonMock", pixels(20 * s))
           .with_background(Theme::Usage::Secondary).with_custom_text_color(theme.font)
           .with_corner_radius(6 * s).with_disabled(disabled).with_debug_name(name));
-      if (id != 10 && id != 12) return result;
+      if (id != 10 && id != 12 && id != 13) return result;
       result.ent().get<HasLabel>().text_x_offset = 5 * s; // halved: centered labels now shift by the full offset (#471)
       result.ent().addComponentIfMissing<HasOnDraw>().fg = [id, s, theme](RectangleType r) {
-        const float px = r.x + 12 * s;
         const float py = r.y + r.height / 2;
         if (id == 10) {
+          const float px = r.x + 12 * s;
           raylib::DrawLineEx({px, py}, {px + 7 * s, py - 7 * s}, 1.5f * s, theme.font);
           raylib::DrawLineEx({px + 7 * s, py - 7 * s}, {px + 14 * s, py}, 1.5f * s, theme.font);
           raylib::DrawRectangleLinesEx({px + 3 * s, py, 8 * s, 8 * s}, s, theme.font);
           return;
         }
-        raylib::DrawRing({px + 7 * s, py}, 5 * s, 6.5f * s, 40, 320, 24, theme.font);
-        raylib::DrawLineEx({px + 12 * s, py - 5 * s}, {px + 13 * s, py + 1 * s}, 2 * s, theme.font);
+        if (id == 12) {
+          const float px = r.x + 12 * s;
+          raylib::DrawRing({px + 7 * s, py}, 5 * s, 6.5f * s, 40, 320, 24, theme.font);
+          raylib::DrawLineEx({px + 12 * s, py - 5 * s}, {px + 13 * s, py + 1 * s}, 2 * s, theme.font);
+          return;
+        }
+        const float px = r.x + r.width - 14 * s;
+        raylib::DrawLineEx({px, py - 5 * s}, {px + 5 * s, py}, 1.5f * s, theme.font);
+        raylib::DrawLineEx({px + 5 * s, py}, {px, py + 5 * s}, 1.5f * s, theme.font);
       };
       return result;
     };
@@ -260,18 +274,17 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       if (!parent.empty()) current_root = parent;
       needs_refresh = true;
     }
-    if (control(12, "Refresh", 248, 128, "refresh_btn")) needs_refresh = true;
+    if (control(12, "Refresh", 220, 128, "refresh_btn")) needs_refresh = true;
     if (control(13, use_real_fs ? "All files" : "Project sources", 958, 178, "source_btn")) {
       use_real_fs = !use_real_fs;
       current_root = use_real_fs ? std::filesystem::current_path().string() : project_root();
       needs_refresh = true;
       seeded_expansion = false;
     }
-    label(41, "Switch data source at right", 656, 68, 290, 30, 17, true);
-    label(2, current_root, 24, 116, 1112, 30, 21, true)
+    label(2, relative_label(current_root), 24, 116, 1112, 30, 21, true)
         .ent().addComponentIfMissing<UIComponentDebug>("path_label").set("path_label");
     label(42, "Name", 24, 156, 400, 26, 18, true);
-    label(43, "Size", 420, 156, 104, 26, 18, true);
+    label(43, "Size", 410, 156, 104, 26, 18, true).ent().get<HasLabel>().alignment = TextAlignment::Right;
     label(44, "Source preview", 548, 156, 560, 26, 18, true);
     if (needs_refresh) {
       cached_roots = use_real_fs ? scan_directory(current_root) : synthetic_tree();
@@ -362,7 +375,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                   raylib::DrawRectangleRec({r.x + 22 * s, middle - 8 * s, 8 * s, 4 * s}, {196, 161, 98, 255});
                   return;
                 }
-                raylib::DrawRectangleLinesEx({r.x + 25 * s, middle - 8 * s, 12 * s, 16 * s}, 1 * s, theme.font_muted);
+                raylib::DrawRectangleRoundedLinesEx({r.x + 25 * s, middle - 8 * s, 12 * s, 16 * s}, .25f, 8, 1 * s, theme.font_muted);
               }));
           if (entry->is_directory) continue;
           div(context, mk(row, 301), box(388 - 20 * static_cast<float>(depth), 0, 102, 23)
@@ -378,8 +391,8 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background({17, 24, 36, 255}).with_corner_radius(8 * s));
     label(51, selected ? selected->name : "No selection", 552, 194, 572, 34, 23);
     label(52, selected ? (selected->is_directory ? "Expand or collapse with Enter" : format_size(selected->file_size))
-                       : "Select a file to read its source", 552, 230, 572, 26, 17, true);
-    label(54, selected ? selected->path : current_root, 552, 260, 572, 28, 16, true)
+                       : "No file selected", 552, 230, 572, 26, 17, true);
+    label(54, selected ? relative_label(selected->path) : relative_label(current_root), 552, 260, 572, 28, 16, true)
         .ent().addComponentIfMissing<UIComponentDebug>("file_preview_path").set("file_preview_path");
     auto preview = virtual_list(context, mk(root.ent(), 56), preview_lines.size(), 24 * s,
         [&](size_t index, afterhours::Entity &row) {

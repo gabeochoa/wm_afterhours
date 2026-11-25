@@ -72,11 +72,11 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(alignment).with_ignore_pointer_events().with_debug_name(name));
     };
     const auto percent_text = [](float value) {
-      return fmt::format("{:.2f}%", value * 100);
+      return fmt::format("{:.0f}%", value * 100);
     };
     const auto panel_at = [&](int id, float x, float y, float w, float h, const std::string &name) {
       div(context, mk(root.ent(), id), box(x, y, w, h).with_custom_background(panel)
-          .with_corner_radius(10 * scale).with_debug_name(name));
+          .with_border({46, 62, 88, 255}, 1.f).with_corner_radius(10 * scale).with_debug_name(name));
     };
     const auto meter = [&](int id, float value, afterhours::Color color, float x, float y,
                            float width, const std::string &name) {
@@ -134,11 +134,11 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     label(55, "Circular companion", 860, 242, 264, 28, 21, ink);
     label(56, "0-100-0% / 6s loop", 860, 275, 264, 25, 20, muted);
     label(57, "3 seconds each way", 860, 305, 264, 25, 20, muted);
-    if (button(context, mk(root.ent()), box(860, 337, 126, 32)
+    if (button(context, mk(root.ent()), box(860, 333, 126, 32)
         .with_label(anim_paused ? "Resume" : "Pause").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background({47, 72, 103, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * scale).with_debug_name("mg_pause"))) anim_paused = !anim_paused;
-    if (button(context, mk(root.ent()), box(998, 337, 126, 32)
+    if (button(context, mk(root.ent()), box(998, 333, 126, 32)
         .with_label("Restart").with_font("AtkinsonMock", pixels(20 * scale))
         .with_custom_background({47, 72, 103, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * scale).with_debug_name("mg_restart"))) {
@@ -165,8 +165,8 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             x + 10, 518, 84, 34, 25, ink, std::string(gauge_ids[i]) + "_label", TextAlignment::Center);
       label(90 + static_cast<int>(i), gauge_names[i], x, 594, 104, 30, 22, ink, "", TextAlignment::Center);
     }
-    label(100, "Red: low / Gold: half / Green: high", 746, 638, 378, 25, 18, muted);
-    label(101, "Color names these fixtures; no live thresholds.", 746, 666, 378, 21, 17, muted);
+    label(100, "Red: low / Gold: half / Green: high", 746, 628, 378, 25, 18, muted);
+    label(101, "Color names these fixtures; no live thresholds.", 746, 656, 378, 21, 17, muted);
 
     // =================================================================
     // Row 5: Interactive Slider
@@ -194,9 +194,9 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
       };
     }
     label(114, percent_text(control_value), 552, 544, 130, 36, 28, ink, "mg_control_value", TextAlignment::Right);
-    label(115, "0%", 20, 653, 98, 26, 20, muted);
-    label(116, "100%", 578, 653, 104, 26, 20, muted, "", TextAlignment::Right);
-    label(120, "Native progress bars + circular progress + slider / animation and fixed gauges stay independent", 0, 696, 1144, 23, 18, muted);
+    label(115, "0%", 30, 653, 98, 26, 20, muted);
+    label(116, "100%", 568, 653, 104, 26, 20, muted, "", TextAlignment::Right);
+    label(120, "Native progress bars + circular progress + slider / animation and fixed gauges stay independent", 0, 694, 1144, 18, 18, muted);
   }
 };
 

@@ -6,7 +6,7 @@ expect_text "Project sources"
 expect_text "6 folders / 12 files in project"
 expect_text "Name"
 expect_text "Size"
-expect_text "Select a file to read its source"
+expect_text "No file selected"
 expect_text "makefile"
 assert_within_parents
 assert_ui main_container x=60 y=28 w=1160 h=664

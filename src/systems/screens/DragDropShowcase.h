@@ -175,7 +175,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
           0, 102, 1136, 25, 18);
     if (action(4, "Reset board", 1000, 25, 160, "board_reset", dragging)) reset_board();
     label(root.ent(), 5, fmt::format("{} of 8 completed", done_items.size()),
-          868, 69, 292, 26, 20, true, "board_progress");
+          868, 69, 292, 26, 20, true, "board_progress").ent().get<HasLabel>().alignment = TextAlignment::Right;
 
     int selected_column = 0;
     int selected_index = 0;
@@ -219,10 +219,12 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_corner_radius(8 * s).with_debug_name("count_" + std::to_string(col)));
       const auto page_button = [&](int id, const std::string &text, float bx,
                                    bool disabled, const std::string &name) {
+        const bool off = dragging || disabled;
         return button(context, mk(column.ent(), id), box(bx, 388, 60, 28).with_label(text)
             .with_font("AtkinsonMock", pixels(18 * s)).with_alignment(TextAlignment::Center)
-            .with_background(Theme::Usage::Secondary).with_custom_text_color(theme.font)
-            .with_corner_radius(6 * s).with_disabled(dragging || disabled).with_debug_name(name));
+            .with_background(Theme::Usage::Secondary)
+            .with_custom_text_color(off ? afterhours::Color{180, 194, 214, 255} : theme.font)
+            .with_corner_radius(4 * s).with_disabled(off).with_debug_name(name));
       };
       if (page_button(5, "Up", 232, first_visible[col] == 0, "page_up_" + std::to_string(col)))
         --first_visible[col];
@@ -245,7 +247,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background({40, 49, 66, 255}).with_corner_radius(8 * s)
             .with_border({77, 93, 118, 255}, 1.f).with_label(card.title)
             .with_font("AtkinsonMock", pixels(23 * s)).with_custom_text_color(theme.font)
-            .with_alignment(TextAlignment::Center).with_skip_tabbing(true)
+            .with_alignment(TextAlignment::Left).with_text_inset(38 * s, 0).with_skip_tabbing(true)
             .with_debug_name("task_" + std::to_string(card.id)));
         div(context, mk(card_ui.ent(), 0), box(0, 12, 3, 72).with_custom_background(card.color).with_ignore_pointer_events());
         label(card_ui.ent(), 1, fmt::format("SPR-{:02d} / {}", card.id, card.type), 16, 8, 228, 23, 16);
@@ -253,7 +255,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(card_ui.ent(), 3), box(281, 62, 34, 26).with_label(card.assignee)
             .with_font("AtkinsonMock", pixels(16 * s)).with_alignment(TextAlignment::Center)
             .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
-            .with_corner_radius(7 * s).with_ignore_pointer_events());
+            .with_corner_radius(8 * s).with_ignore_pointer_events());
         div(context, mk(card_ui.ent(), 4), box(14, 40, 14, 17).with_ignore_pointer_events()
             .with_on_draw_fg([s](RectangleType r) {
               for (int row = 0; row < 3; ++row)
@@ -266,23 +268,23 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
           fmt::format("Rows {}-{} of {}", first_visible[col] + 1, visible_end, items.size()),
           26, cue_y, items.empty() ? 322.f : 202.f, 22, 16, false, "visible_rows_" + std::to_string(col));
     }
-    div(context, mk(root.ent()), box(0, 580, 1160, 76).with_custom_background(theme.surface).with_corner_radius(12 * s));
-    label(root.ent(), 8, "Move task", 12, 585, 152, 26, 18, true);
+    div(context, mk(root.ent()), box(0, 580, 1160, 76).with_custom_background(theme.surface).with_corner_radius(12 * s).with_border({66, 80, 103, 255}, 1.f));
+    label(root.ent(), 8, "Move task", 12, 588, 152, 26, 18, true);
     label(root.ent(), 13, fmt::format("Row {} of {}", selected_index + 1, column_data(selected_column).size()),
-          152, 585, 132, 26, 16, false, "selected_position");
-    if (action(14, "Earlier", 292, 582, 82, "task_earlier", dragging || selected_index == 0, 28))
+          152, 588, 132, 26, 16, false, "selected_position");
+    if (action(14, "Earlier", 292, 587, 82, "task_earlier", dragging || selected_index == 0, 28))
       move_card(selected_column, selected_index, selected_column, selected_index - 1);
-    if (action(15, "Later", 382, 582, 82, "task_later", dragging || selected_index + 1 >= static_cast<int>(column_data(selected_column).size()), 28))
+    if (action(15, "Later", 382, 587, 82, "task_later", dragging || selected_index + 1 >= static_cast<int>(column_data(selected_column).size()), 28))
       move_card(selected_column, selected_index, selected_column, selected_index + 1);
-    label(root.ent(), 9, fmt::format("SPR-{:02d} / {}", selected_task, selected_title), 12, 613, 450, 32, 20, true, "selected_task");
-    if (action(10, "<", 468, 604, 42, "previous_task", dragging)) selected_task = selected_task == 1 ? 8 : selected_task - 1;
-    if (action(11, ">", 518, 604, 42, "next_task", dragging)) selected_task = selected_task == 8 ? 1 : selected_task + 1;
-    label(root.ent(), 12, "Move to", 580, 586, 180, 23, 16);
+    if (action(10, "<", 468, 582, 42, "previous_task", dragging)) selected_task = selected_task == 1 ? 8 : selected_task - 1;
+    if (action(11, ">", 518, 582, 42, "next_task", dragging)) selected_task = selected_task == 8 ? 1 : selected_task + 1;
+    label(root.ent(), 12, "Move to", 580, 590, 180, 23, 16);
     for (int col = 0; col < 3; ++col) {
-      if (!action(20 + col, column_names[col], 586 + col * 184.f, 609, 172,
+      if (!action(20 + col, column_names[col], 586 + col * 184.f, 582, 172,
                   "move_to_" + std::to_string(col), dragging || selected_column == col)) continue;
       move_card(selected_column, selected_index, col, static_cast<int>(column_data(col).size()));
     }
+    label(root.ent(), 9, fmt::format("SPR-{:02d} / {}", selected_task, selected_title), 12, 622, 450, 30, 20, true, "selected_task");
     std::string status = last_move;
     if (dragging) {
       status = "Dragging / release in a column to move. The gap marks the insertion position.";
