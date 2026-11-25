@@ -137,7 +137,8 @@ nlohmann::json snapshot(bool include_elements) {
       if (state.was_open_last_frame && panel.valid() &&
           panel->has<UIComponent>()) {
         auto entry = describe(panel.asE(), *context);
-        entry["restore_focus"] = state.restore_focus;
+        auto target = UICollectionHolder::resolve(state.restore_focus);
+        entry["restore_focus"] = target.valid() ? target.asE().id : -1;
         entry["kind"] = "menu_or_popover";
         data["popups"].push_back(entry);
       }
@@ -184,7 +185,8 @@ nlohmann::json snapshot(bool include_elements) {
       auto entry = describe(opt.asE(), *context);
       const auto &m = opt->get<modal::Modal>();
       entry["title"] = m.title;
-      entry["restore_focus"] = m.previously_focused_element;
+      auto target = UICollectionHolder::resolve(m.previously_focused_element);
+      entry["restore_focus"] = target.valid() ? target.asE().id : -1;
       data["modals"].push_back(entry);
     }
   }

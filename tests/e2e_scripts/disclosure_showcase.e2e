@@ -1,0 +1,19 @@
+goto_screen disclosure_showcase
+resize 1280 720
+wait 0.3
+expect_text "Disclosure sections"
+expect_text "1280 x 720"
+expect_no_text "Master"
+click_ui disclosure_header under=disc_audio
+wait 0.2
+expect_text "Master"
+expect_text "Toggles: 1"
+click_ui disclosure_header under=disc_display
+wait 0.2
+expect_no_text "1280 x 720"
+expect_text "Toggles: 2"
+click_ui disclosure_header under=disc_locked
+wait 0.2
+expect_no_text "Debug"
+expect_text "Toggles: 2"
+assert_within_parents
