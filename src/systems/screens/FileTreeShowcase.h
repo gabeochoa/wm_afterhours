@@ -235,7 +235,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_background(Theme::Usage::Secondary).with_custom_text_color(theme.font)
           .with_corner_radius(6 * s).with_disabled(disabled).with_debug_name(name));
       if (id != 10 && id != 12) return result;
-      result.ent().get<HasLabel>().text_x_offset = 10 * s;
+      result.ent().get<HasLabel>().text_x_offset = 5 * s; // halved: centered labels now shift by the full offset (#471)
       result.ent().addComponentIfMissing<HasOnDraw>().fg = [id, s, theme](RectangleType r) {
         const float px = r.x + 12 * s;
         const float py = r.y + r.height / 2;

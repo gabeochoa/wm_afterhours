@@ -103,16 +103,13 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
               .with_transparent_bg().with_ignore_pointer_events().with_skip_grid_snap(true));
         }, box(48, 84, 1180, 560).with_custom_background({18, 25, 39, 255}).with_debug_name("vl_list"));
     auto &scroll = list.ent().get<HasScrollView>();
-    if (jump) {
-      scroll.scroll_offset.y = static_cast<float>(*jump) * kRowHeight;
-      scroll.clamp_scroll();
-      scroll.scroll_target = scroll.scroll_offset;
-      scroll.last_eased_offset = scroll.scroll_offset;
-    }
+    if (jump)
+      scroll_to_item(list.ent(), *jump);
     const float height = scroll.viewport_or_zero().y;
     const float max_offset = std::max(0.f, scroll.content_size.y - height);
-    const size_t first = std::min(kCount - 1, static_cast<size_t>(std::max(0.f, std::floor(scroll.scroll_offset.y / kRowHeight))));
-    const size_t end = std::clamp(static_cast<size_t>(std::max(1.f, std::ceil((scroll.scroll_offset.y + height) / kRowHeight))), size_t{1}, kCount);
+    const auto range = virtual_list_range(list.ent());
+    const size_t first = range.visible_first;
+    const size_t end = std::max<size_t>(range.visible_last, first + 1);
     text(20, fmt::format("Visible rows {} to {} of 10,000", first, end - 1), 48, 650, 460, 27, 20, white, "vl_range");
     text(21, fmt::format("Built {} rows / {} row UI entities", built_rows, built_rows * 3), 514, 650, 414, 27, 19, white, "vl_built");
     text(22, fmt::format("{:.0f} px / {:.1f}%", scroll.scroll_offset.y, max_offset > 0 ? 100.f * scroll.scroll_offset.y / max_offset : 0.f),
