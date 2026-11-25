@@ -280,7 +280,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     text(40, categories[active_tab] + " settings", 472, 62, 728, 44, 34);
-    text(41, "Local preferences preview", 472, 108, 728, 26, 18);
+    text(41, "Gameplay & accessibility", 472, 108, 728, 26, 18);
     auto toggle = [&](int id, const char *label, bool &value, float row_y,
                       const std::string &debug_name) {
       text(id, label, 472, row_y, 550, 40, 30);
@@ -358,7 +358,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(151, "Controller feedback preference.", 472, 290, 550, 27, 19);
       text(152, "Keep pressed to draw or remove roads.", 472, 382, 550, 27, 19);
       text(153, "Controller pointer speed: Low / Default / High.", 472, 478, 716, 27, 19);
-      text(154, "Compare the alternative colors in this preview.", 472, 584, 550, 27, 19);
+      text(154, "Use high-contrast road and building colors.", 472, 584, 550, 27, 19);
       div(context, mk(root.ent()), box(scale, 1060, 596, 128, 22)
           .with_ignore_pointer_events().with_debug_name("mm_palette_preview")
           .with_on_draw_fg([this](RectangleType r) {

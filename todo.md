@@ -3,6 +3,61 @@
 Remaining library work and external checks follow.
 See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
 
+## Screen polish & duplicate consolidation (intern handoff)
+
+Full per-screen recommendations (all 156 screens × 5 items): [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md).
+Full duplicate / merge analysis (156 → ~115 screens): [DUPLICATE_SCREENS_AUDIT.md](docs/DUPLICATE_SCREENS_AUDIT.md).
+
+**How to verify any screen change locally:**
+- Build: `make output` (or if `pkg-config` is slow, pass explicit `RAYLIB_FLAGS` / `RAYLIB_LIB`).
+- Capture one screen headlessly: `./output/ui_tester.exe --headless-screenshots /tmp/check --screen <flag_name>` and inspect `/tmp/check/<flag_name>_720p.png` (also check stderr for `LOG_WARN`).
+- Run unit + layout tests: `./output/ui_tester.exe --run-all-tests && make test-layout`.
+- Design bar: quiet surface layering over harsh 1px borders; reserve saturated color for active marks/selection (avoid `Theme::Usage::Secondary` bright-green fills on unselected `ocean_navy` controls); strip `"in this demo"` / `"local preview"` meta-disclaimers out of realistic mockups; avoid Unicode arrows (`←→↑↓─`) in `AtkinsonMock` labels (draw vector lines with `raylib::DrawLineEx` instead).
+
+### Completed
+- [x] Batches 1–9 visual polish (42 screens polished, 6 runtime layout/font warnings fixed, Escape closes interactive window unless modal/navigator/dropdown/text input is active).
+- [x] Codebase hygiene: deleted 5 dead legacy headers in `src/systems/` (`ExampleButtons.h`, `ExampleCheckboxes.h`, `ExampleDropdowns.h`, `ExampleSliders.h`, `ExampleComponentShowcase.h`) and stale checked-in `src/screen_includes.gen`.
+
+### P1 — Quick visual & copy wins (great first PRs)
+- [ ] **Strip `"in this demo"` / `"local preview"` meta-disclaimers from realistic mockups & dialogs:** `DialogInfoShowcase.h`, `IslandsTrainsSettings.h`, `RubberBanditsMenu.h`, `SettingRowShowcase.h`, `ShopInterface.h` (Sell tab), `OffsiteBackupApp.h` (Restore detail), `AIMChatDemo.h` (Help/Info copy), `SecureTunnelMockup.h` (Settings modal).
+- [ ] **Audit `ocean_navy` screens using `Theme::Usage::Secondary` (bright `#0C5E2A` green) on non-primary buttons/tabs** (same fix we applied to `Themes.h` and `LanguageDemo.h`): `AutoTextColorShowcase.h`, `ButtonVariantsShowcase.h`, `Buttons.h`, `ModalAdvanced.h`, `RealWorldModals.h`.
+- [ ] **Check remaining `─` box-drawing chars in comments vs labels:** verify `AdaptiveScalingDemo.h`, `ScrollClipBugRepro.h`, and `ToggleSwitchShowcase.h` emit zero missing-glyph warnings in `make run`.
+- [ ] **Check & fix any remaining `LOG_WARN` messages across all 156 screens:** run `./output/ui_tester.exe --headless-screenshots /tmp/all_check` (or cycle through screens in `make run`) and fix any unintentional `Layout overflow`, `Container too small for text`, or `sets padding on a label with no children` warnings. (Note: warnings in `validation_throttle_lab`, `touch_targets`, `text_cache_lab`, and `styled_text_lab` are intentional test fixtures.)
+
+### P2 — Remaining per-screen polish (~114 screens)
+- [ ] **Game & App Mockups:** `CasualSettings.h`, `FlightOptions.h`, `IslandsTrainsSettings.h`, `KirbyOptions.h`, `MarloKart.h`, `MediaLibraryGrid.h`, `NeonStrike.h`, `ParcelCorpsSettings.h`, `PodcastLibrary.h`, `PotionCrafting.h`, `RubberBanditsMenu.h` (see exact 5 items per screen in [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md)).
+- [ ] **Component Galleries:** `Buttons.h`, `ButtonVariantsShowcase.h`, `ConfigGapGallery.h`, `DecorativeFrameShowcase.h`, `DecoratorShowcase.h`, `DefaultTheme.h`, `DialogDangerShowcase.h`, `DialogFyiShowcase.h`, `DialogInfoShowcase.h`, `DialogPromptShowcase.h`, `DisclosureShowcase.h`, `DragDropShowcase.h`, `DropdownShowcase.h`, `ExampleBevelBorders.h`, `ExampleBorders.h`, `ExampleNineSliceBorders.h`, `FileTreeShowcase.h`, `FontWeightShowcase.h`, `ImageShowcase.h`, `MetersGaugesShowcase.h`, `ModalAdvanced.h`, `RealWorldModals.h`, `ScrollViewShowcase.h`, `SettingRowShowcase.h`, `StepperShowcase.h`, `TextInputDemo.h`, `TextInputSizes.h`, `ToastShowcase.h`, `TransparentControlsLab.h`, `WidgetGapGallery.h`.
+- [ ] **Animations & System Demos & Tools:** work through remaining items in [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md), prioritizing adding live sliders/toggles + `"Copy config/snippet"` buttons to technical labs (`AnimationBasicDemo.h`, `AnimationDeclarativeDemo.h`, `AnimationLoopingDemo.h`, `ChartLab.h`, `ContextMenuLab.h`, `HoverLab.h`, `PopoverLab.h`, `PseudoLocaleLab.h`, `TextInputLab.h`, `VirtualListLab.h`).
+- [ ] **Tone down heavy raw `Color{}` palettes (>=8 hardcoded colors)** into cohesive surface tokens: `AbsolutePositioningShowcase.h` (18), `AdaptiveScalingDemo.h` (16), `ContextMenuLab.h` (8), `EntityIndexLab.h` (8), `HStackShowcase.h` (8), `HoverLab.h` (11), `ModalAdvanced.h` (16), `PinchZoomLab.h` (10), `PopoverLab.h` (8), `PseudoLocaleLab.h` (16), `ScrollClickBug.h` (10), `SyncScrollLab.h` (10).
+
+### P3 — Duplicate-screen consolidation (156 → ~115 screens)
+See full rationale and screenshot-baseline caveats in [DUPLICATE_SCREENS_AUDIT.md](docs/DUPLICATE_SCREENS_AUDIT.md). Update any `.e2e` test scripts referencing merged screen flags.
+- [ ] **Clean 1-for-1 pair merges:**
+  - `ActiveTabStyles.h` → fold into `TabContainerShowcase.h`
+  - `HorizontalDragShowcase.h` → fold into `DragDropShowcase.h`
+  - `HStackShowcase.h` + `VStackShowcase.h` → single `StackShowcase.h` (axis toggle)
+  - `TextAreaStatesLab.h` → fold into `TextAreaLab.h` (and fold `ComposerLab.h` as a tab)
+  - `ButtonVariantsShowcase.h` → fold into `Buttons.h` (archive `ExampleSimpleButton.h` to tests)
+  - `RotatedControlsShowcase.h` + `RotatedSubtreeShowcase.h` → single `RotationLab.h`
+  - `SelfAlignShowcase.h` + `BaselineAlignShowcase.h` → fold into `ExampleFlexAlignment.h`
+  - `SmallComponentsLab.h` → fold into `SettingRowShowcase.h`
+  - `ExampleColors.h` → fold into `Themes.h` as a swatches tab
+  - `TransparentControlsLab.h` + `AutoTextColorShowcase.h` → single contrast/legibility lab
+  - `ConfigGapGallery.h` + `WidgetGapGallery.h` → single `GapGallery.h`
+  - `CircularProgressShowcase.h` + `MetersGaugesShowcase.h` → single progress/gauges gallery
+- [ ] **Larger cluster consolidations:**
+  - **Animations (14 → ~6):** merge `AnimationBasicDemo` + `AnimationInteractiveDemo` + `AnimationLoopingDemo` + `AnimationSpringDemo` → `AnimationLab`; fold `AnimationDeclarativeDemo` → `TransitionsLab`; fold `CurvedTextStressLab` → `CurvedTextLab`; archive `MotionButtonCheckpoint` + `MotionModalCheckpoint` to tests.
+  - **Dialogs & Modals (8 → 3):** merge `ModalAdvanced` + `RealWorldModals`; optionally unify the 5 `Dialog*Showcase` files into `DialogGallery` once the screenshot harness supports per-mode baselines.
+  - **Text Input (3 → 1):** merge `TextInputDemo` + `TextInputSizes` + `TextInputLab` into tabbed `TextInput`.
+  - **Typography & i18n (14 → ~7):** merge `ExampleTextShadow` + `ExampleTextStroke` + `FontWeightShowcase` + `StyledTextLab`; merge `MultiLineTextLab` + `ExampleTextOverflow`; merge `LanguageDemo` + `PseudoLocaleLab` + `LocalizedInputPrompts`.
+  - **Scroll & Virtual Lists (8 → 3 + fixtures):** merge `ScrollViewShowcase` + `SyncScrollLab` + `ScrollbarStyleLab`; merge `VirtualListLab` + `VirtualListHeightsLab`; move `ScrollClickBug` + `ScrollClipBugRepro` into `LayoutBugRepros.h`.
+  - **Borders & Dividers (7 → 2):** merge `ExampleBorders` + `ExampleBevelBorders` + `ExampleNineSliceBorders` + `DecorativeFrameShowcase` → `BorderLab`; merge `ExampleSeparators` + `DividerShowcase` → `DividerLab`.
+- [ ] **Keep separate (do not merge):** the 10 bespoke game settings mockups (`AngryBirdsSettings`, `CasualSettings`, `DeadSpaceSettings`, `FlightOptions`, `IslandsTrainsSettings`, `KirbyOptions`, `MiniMotorwaysSettings`, `ParcelCorpsSettings`, `PowerWashSettings`, `SportsSettings`) and distinct game/app mockups (`CozyCafe`, `EmpireTycoon`, `FighterMenu`, `MarloKart`, `ShopInterface`, `OffsiteBackupApp`, `SecureTunnelMockup`, `AIMChatDemo`, `MediaLibraryGrid`, `MinesweeperLab`, `GuessWhoLab`).
+
+### P4 — Baselines & CI
+- [ ] Run `make update-baselines` and `make validate-screenshots` after polish & consolidation passes settle.
+- [ ] Run full E2E suite (`make test`) and update any `.e2e` scripts whose screen names or labels changed.
+
 ## UI element follow-ups from the lab review
 
 - [x] `with_padding` on a label with no children does nothing (it warns); leaf text spacing is `with_text_inset`/`Theme::text_inset`, while padding remains container spacing. Covered by `label_inset_test` and the ranked text-inset item below.
