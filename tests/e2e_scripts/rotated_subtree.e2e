@@ -1,0 +1,16 @@
+goto_screen rotated_subtree
+resize 1280 720
+wait 0.3
+expect_text "Rotated subtree & hit areas"
+expect_text "Inner A"
+expect_text "Inner B"
+click_ui rot_sub_a
+wait 0.2
+expect_text "Inner A: 1"
+click_ui rot_sub_b
+wait 0.2
+expect_text "Inner B: 1"
+click_ui prompt_item_1
+wait 0.2
+expect_text "Last prompt: Back"
+assert_within_parents
