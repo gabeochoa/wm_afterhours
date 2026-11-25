@@ -65,13 +65,13 @@ struct FitContentLab : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity), at(984, 26, 248, 42)
         .with_label(show_guides ? "Hide measurement guides" : "Show measurement guides")
         .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(white)
-        .with_custom_background({43, 70, 108, 255}).with_corner_radius(8 * s)
+        .with_custom_background({43, 70, 108, 255}).with_corner_radius(4 * s)
         .with_debug_name("fc_guides"))) show_guides = !show_guides;
     div(context, mk(entity), at(244, 111, 18, 18).with_custom_background(incoming)
-        .with_corner_radius(5 * s));
+        .with_corner_radius(4 * s));
     label(5, "Incoming / left", 270, 105, 210, 30, 18, white, "fc_incoming_legend");
     div(context, mk(entity), at(486, 111, 18, 18).with_custom_background(outgoing)
-        .with_corner_radius(5 * s));
+        .with_corner_radius(4 * s));
     label(7, "You / right", 512, 105, 187, 30, 18, white, "fc_outgoing_legend");
     div(context, mk(entity, 8), at(736, 105, 304, 30)
         .with_label("4 = sample layout story").with_font("AtkinsonMock", pixels(18 * s))
@@ -139,7 +139,7 @@ struct FitContentLab : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.top = pixels(8 * s), .left = pixels(12 * s),
                                   .bottom = pixels(8 * s), .right = pixels(12 * s)})
             .with_custom_background(is_me ? outgoing : incoming)
-            .with_corner_radius(10 * s)
+            .with_corner_radius(8 * s)
             .with_debug_name(std::string(spec.name) + "_msg_" + std::to_string(message_index)));
         auto content = div(context, mk(bubble.ent(), 0), ComponentConfig{}
             .with_label(message).with_fit_content(pixels((spec.cap - 24) * s), pixels(18 * s))

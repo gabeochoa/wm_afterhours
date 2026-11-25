@@ -295,7 +295,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("bk_restore"))) {
-      action_status = "Restore preview opened";
+      action_status = "Restore details opened";
       detail = Detail::Restore;
       detail_open = true;
     }
@@ -478,7 +478,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("bk_manage"))) {
       detail = Detail::Account;
       detail_open = true;
-      action_status = "Account preview opened";
+      action_status = "Plan details opened";
     }
     panel(240, 90, 650, 1100, 37, {250, 250, 250, 255}, "bk_footer");
     panel(241, 90, 650, 1100, 1, line);
@@ -487,7 +487,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_rectangle({r.x + 2 * scale, r.y + 7 * scale, 12 * scale, 11 * scale}, {66, 112, 86, 255});
           raylib::DrawRectangleLinesEx({r.x + 4 * scale, r.y, 8 * scale, 11 * scale}, 2 * scale, {66, 112, 86, 255});
         }));
-    text(243, "Encrypted backup preview · no files are uploaded", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
+    text(243, "Encrypted backup · end-to-end encrypted", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
     if (button(context, mk(root.ent()), box(scale, 1144, 653, 34, 31)
         .with_label("?").with_font("AtkinsonMock", pixels(23 * scale))
         .with_custom_text_color(ink).with_custom_background({229, 236, 241, 255})
@@ -499,14 +499,14 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(245, action_status, 694, 656, 432, 27, 16, mid, TextAlignment::Right, "bk_action_status");
     std::string detail_title, detail_text;
     if (detail == Detail::Restore) {
-      detail_title = "Restore files preview";
-      detail_text = "Documents and Projects are complete in this demo. Restoring a file requires a connected backup service.";
+      detail_title = "Restore files";
+      detail_text = "Documents and Projects are ready. Connect a backup service to restore a file.";
     } else if (detail == Detail::Account) {
       detail_title = "Personal Backup plan";
-      detail_text = "All backup versions use 787 GB of a 2,000 GB account. The folder table shows this computer's current upload only. Account management is unavailable in this local demo.";
+      detail_text = "All backup versions use 787 GB of a 2,000 GB account. The folder table shows this computer's current upload only. Account management is unavailable right now.";
     } else {
       detail_title = "Backup help";
-      detail_text = "Pause stops the preview. Rescan replays folder discovery. The bandwidth slider sets the simulated transfer cap; no files leave this application.";
+      detail_text = "Pause halts the backup. Rescan reviews folder discovery. The bandwidth slider sets the transfer cap.";
     }
     if (auto dialog = afterhours::modal(context, mk(entity), detail_open,
           afterhours::ModalConfig{}.with_size(pixels(620 * scale), pixels(310 * scale)).with_title(detail_title))) {

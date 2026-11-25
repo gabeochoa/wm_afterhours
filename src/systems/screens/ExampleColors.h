@@ -79,7 +79,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     label("Status", 950, 159, 174, 23, 18, muted);
     // Color row 1: Theme colors background
     div(context, mk(root.ent()), box(left, 185, 1144, 189)
-        .with_custom_background({19, 23, 30, 255}).with_corner_radius(10 * s).with_debug_name("theme_tray"));
+        .with_custom_background({19, 23, 30, 255}).with_corner_radius(12 * s).with_debug_name("theme_tray"));
     for (size_t i = 0; i < theme_swatches.size(); ++i) {
       const auto &swatch = theme_swatches[i];
       const auto color = theme.from_usage(swatch.usage);
@@ -93,7 +93,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(root.ent(), id++), box(left + x, 197, 174, 78)
           .with_label(swatch.label).with_font("AtkinsonMock", pixels(22 * s))
           .with_background(swatch.usage).with_custom_hover_bg(color).with_auto_text_color(true)
-          .with_corner_radius(7 * s).with_alignment(TextAlignment::Center)
+          .with_corner_radius(4 * s).with_alignment(TextAlignment::Center)
           .with_debug_name("swatch_" + std::to_string(swatch.debug_index)))) {
         selected = i;
         ++activations;
@@ -108,7 +108,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     label("Fixed custom values", 20, 390, 1104, 31, 25, white);
     // Color row 2: Custom colors background
     div(context, mk(root.ent()), box(left, 429, 1144, 161)
-        .with_custom_background({19, 23, 30, 255}).with_corner_radius(10 * s).with_debug_name("custom_tray"));
+        .with_custom_background({19, 23, 30, 255}).with_corner_radius(12 * s).with_debug_name("custom_tray"));
     // Custom color swatches with hex values
     struct CustomColorInfo {
       const char *name;
@@ -133,7 +133,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(root.ent(), id++), box(left + x, 441, 208, 60)
           .with_label(swatch.name).with_font("AtkinsonMock", pixels(22 * s))
           .with_custom_background(swatch.color).with_custom_hover_bg(swatch.color).with_auto_text_color(true)
-          .with_corner_radius(7 * s).with_alignment(TextAlignment::Center).with_debug_name("custom_" + std::to_string(i)))) {
+          .with_corner_radius(4 * s).with_alignment(TextAlignment::Center).with_debug_name("custom_" + std::to_string(i)))) {
         selected = i + 6;
         ++activations;
       }
@@ -153,7 +153,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent(), id++), box(left + 528, 603, 132, 32)
         .with_label("Copy hex").with_font("AtkinsonMock", pixels(17 * s))
         .with_custom_background({34, 42, 56, 255}).with_border({68, 80, 98, 255}, s)
-        .with_custom_text_color(white).with_corner_radius(6 * s).with_debug_name("colors_copy_hex"))) {
+        .with_custom_text_color(white).with_corner_radius(4 * s).with_debug_name("colors_copy_hex"))) {
       afterhours::clipboard::set_text(hex(chosen));
     }
     label(semantic ? theme_swatches[selected].purpose : "Fixed RGB value, independent of semantic roles",
@@ -162,7 +162,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
                       chosen.r, chosen.g, chosen.b, hex(foreground), afterhours::colors::contrast_ratio(foreground, chosen), activations),
           20, 671, 1104, 25, 17, muted, "colors_metadata");
     div(context, mk(root.ent(), id++), box(left + 702, 604, 422, 57)
-        .with_custom_background({240, 242, 247, 255}).with_corner_radius(6 * s).with_debug_name("colors_light_backing"));
+        .with_custom_background({240, 242, 247, 255}).with_corner_radius(8 * s).with_debug_name("colors_light_backing"));
     label("Same selected color", 718, 618, 254, 28, 18, {27, 35, 48, 255});
     div(context, mk(root.ent()), box(left + 994, 613, 112, 39)
         .with_custom_background(chosen).with_border({112, 124, 143, 255}, s)

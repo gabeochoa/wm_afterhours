@@ -12,7 +12,7 @@ expect_text "Progress"
 expect_text "State"
 expect_text "Size"
 expect_text "787 GB of 2 TB · 39.4% used"
-expect_text "Encrypted backup preview · no files are uploaded"
+expect_text "Encrypted backup · end-to-end encrypted"
 assert_ui bk_canvas w=1280 h=720
 assert_ui bk_root x=0 y=0 w=1280 h=720
 assert_ui bk_window x=90 y=65 w=1100 h=622
@@ -89,14 +89,14 @@ click_ui bk_detail_close
 wait 0.3
 click_ui bk_restore
 wait 0.3
-expect_text "Restore files preview"
-expect_text "Restoring a file requires a connected backup service."
+expect_text "Restore files"
+expect_text "Connect a backup service to restore a file."
 click_ui bk_detail_close
 wait 0.3
 click_ui bk_help
 wait 0.3
 expect_text "Backup help"
-expect_text "Rescan replays folder discovery."
+expect_text "Rescan reviews folder discovery."
 key ESCAPE
 wait 0.3
 click_ui bk_rescan

@@ -61,7 +61,7 @@ wait 0.2
 expect_text "Include external drives: On"
 click_ui bk_restore
 wait 0.2
-expect_text "Restore files preview"
+expect_text "Restore files"
 click_ui bk_detail_close
 wait 0.3
 click_ui bk_help
