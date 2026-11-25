@@ -117,7 +117,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                   raylib::DrawCircleV({r.x + (10 + 4 * static_cast<float>(dx)) * s,
                                       r.y + r.height / 2 + 4 * static_cast<float>(dy) * s}, s, muted);
             }));
-        tag.ent().get<HasLabel>().text_x_offset = 10 * s;
+        tag.ent().get<HasLabel>().text_x_offset = 5 * s; // halved: centered labels now shift by the full offset (#471)
         tag.ent().addComponentIfMissing<HasOpacity>().value =
             ghost_preview && tag.ent().hasTag(DragTag::DraggedItem) ? .45f : 1.f;
       }

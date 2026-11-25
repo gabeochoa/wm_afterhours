@@ -21,10 +21,8 @@ expect_text "requests 1"
 expect_text "granted frames 1"
 
 click_ui hl_async
-wait 0.2
 expect_text "async pending 1"
-wait 2
-expect_text "async pending 0"
+wait_until_wall 2 expect_text "async pending 0"
 expect_text "async done 1"
 expect_text "requests 2"
 

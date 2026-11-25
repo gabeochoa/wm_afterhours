@@ -4,12 +4,11 @@ mouse_move 20 20
 wait 0.3
 click_ui group_effect_presets
 click_ui ex_wipe
+expect_text "motion: in flight"
 mouse_move 20 20
-wait 0.2
 expect_text "Wipe"
 expect_text "effect: wipe"
 expect_text "shader: ok"
-expect_text "motion: in flight"
 wait 1.5
 expect_text "progress: 100%"
 expect_text "motion: settled"

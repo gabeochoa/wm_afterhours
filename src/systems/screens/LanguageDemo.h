@@ -135,7 +135,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
           .with_background(index == 3 ? Theme::Usage::Secondary : Theme::Usage::Primary)
           .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
           .with_debug_name(name));
-      control.ent().get<HasLabel>().text_x_offset = 14 * s;
+      control.ent().get<HasLabel>().text_x_offset = 7 * s; // halved: centered labels now shift by the full offset (#471)
       const float text_width = afterhours::measure_text(fonts->get_font(font.font_name),
           value.c_str(), 22 * font.size_scale * s, 1.f).x;
       div(context, mk(root.ent(), id + 100), box(20 + (control_width - text_width / s - 28) / 2,

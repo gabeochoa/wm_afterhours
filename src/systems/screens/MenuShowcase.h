@@ -114,6 +114,7 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
             // at the popup-relative x the showcase lays out from.
             // computed_padd is last frame's value (0 on the first frame,
             // then settles), so this is one frame off on frame one.
+            sub.get<UIComponent>().absolute_offset_is_size = false;
             sub.get<UIComponent>().absolute_pos_x =
                 206 * scale - item_cmp.computed_padd[Axis::left];
             if (sub.has<afterhours::HasColor>())

@@ -68,7 +68,7 @@ wait 0.2
 expect_input_text cg_field "Aste!r"
 click_ui cg_reset
 wait 0.2
-click_ui cg_field
+focus_ui cg_field
 wait 0.2
 type "+"
 wait 0.2

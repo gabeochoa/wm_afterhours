@@ -1,0 +1,7 @@
+goto_screen baseline_align
+resize 1280 720
+wait 0.3
+expect_text "Row baseline alignment"
+expect_text "03   AlignItems::Baseline"
+expect_text "42.50"
+assert_within_parents

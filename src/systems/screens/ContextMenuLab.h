@@ -313,28 +313,6 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           if (!text.is_disabled) continue;
           text.set_explicit_text_color({165, 177, 193, 255});
           text.is_disabled = false;
-          row.removeComponentIfExists<HasClickListener>();
-        }
-        const auto placed = overlay::place({at.x, at.y, 0, 0}, 340 * s, 242 * s,
-                                            context.screen_width, context.screen_height,
-                                            overlay::Placement::Below);
-        const auto holder_rect = holder.get<UIComponent>().rect();
-        float row_y = 2 * s;
-        for (size_t index = 0; index < items.size(); ++index) {
-          const auto &item = items[index];
-          const float height = (item.separator ? 11.f : 44.f) * s;
-          if (item.disabled && !item.separator) {
-            auto shield = button(context, mk(holder, 50000 + static_cast<int>(index)),
-                ComponentConfig{}.with_size({pixels(336 * s), pixels(height)})
-                    .with_absolute_position(placed.x - holder_rect.x + 2 * s,
-                                            placed.y - holder_rect.y + row_y)
-                    .with_custom_background({0, 0, 0, 0}).with_custom_hover_bg({0, 0, 0, 0}).with_corner_radius(0)
-                    .with_skip_tabbing(true).with_render_layer(23));
-            shield.ent().get<HasClickListener>().cb = [&context, list_id](afterhours::Entity &) {
-              context.set_focus(list_id);
-            };
-          }
-          row_y += height;
         }
       }
       return picked;

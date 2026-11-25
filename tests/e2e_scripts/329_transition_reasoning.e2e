@@ -4,12 +4,10 @@ mouse_move 20 20
 wait 0.3
 click_ui group_status
 click_ui ex_reasoning
-mouse_move 20 20
-wait 0.3
+expect_text "steps: 0"
 expect_text "Reasoning stream"
 expect_text "playing: yes"
-expect_text "steps: 0"
-expect_text "steps: 1"
+wait_until 2 expect_text "steps: 1"
 click_ui reasoning_btn
 mouse_move 20 20
 expect_text "playing: no"
@@ -20,4 +18,4 @@ screenshot transition_reasoning_paused
 click_ui reasoning_btn
 mouse_move 20 20
 expect_text "playing: yes"
-expect_text "steps: 2"
+wait_until 2 expect_text "steps: 2"

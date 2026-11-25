@@ -32,6 +32,7 @@ inline void style(UIContext<InputAction> &context, afterhours::Entity &root,
   const float height = body_height + 160;
   panel.desired[Axis::X] = pixels(width * scale);
   panel.desired[Axis::Y] = pixels(height * scale);
+  panel.absolute_offset_is_size = false;
   panel.absolute_pos_x = (context.screen_width - width * scale) / 2;
   panel.absolute_pos_y = (context.screen_height - height * scale) / 2;
   for (auto axis : {Axis::left, Axis::right, Axis::top, Axis::bottom})
