@@ -1,5 +1,6 @@
 # Fighter menu mock parity smoke test.
 
+resize 1280 720
 goto_screen fighter_menu
 wait 0.5
 
