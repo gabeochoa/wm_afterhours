@@ -1,0 +1,14 @@
+goto_screen rotated_controls
+resize 1280 720
+wait 0.3
+expect_text "Rotated controls & hit areas"
+click_ui rot_btn_a
+wait 0.2
+expect_text "Clicks A: 1"
+click_ui rot_btn_b
+wait 0.2
+expect_text "Clicks B: 1"
+click_ui rot_btn_c
+wait 0.2
+expect_text "Clicks C: 1"
+assert_within_parents
