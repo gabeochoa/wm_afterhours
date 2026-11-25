@@ -602,6 +602,33 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
           static_cast<int>(screen_names.size()));
       load_screen(current_screen_index);
     }
+    // Escape closes the window unless a modal, screen navigator, or
+    // temporary layer (open dropdown/menu/focused text input) is active.
+    const bool escape_pressed = !g_mcp_mode && raylib::IsKeyPressed(raylib::KEY_ESCAPE);
+    bool escape_claimed = navigator->visible || afterhours::modal::is_active();
+    if (escape_pressed && !escape_claimed) {
+      if (auto *ui_ctx = afterhours::EntityHelper::get_singleton_cmp<UIContext<InputAction>>()) {
+        for (afterhours::EntityID cur = ui_ctx->focus_id, depth = 0;
+             depth < 64 && cur >= 0 && cur != ui_ctx->ROOT; ++depth) {
+          auto opt = afterhours::ui::UICollectionHolder::getEntityForID(cur);
+          if (!opt.valid()) break;
+          afterhours::Entity &e = opt.asE();
+          if (e.get_or_default(&afterhours::ui::imm::HasMenuState::was_open_last_frame, false) ||
+              e.get_or_default(&afterhours::ui::HasDropdownState::was_open_last_frame, false) ||
+              e.get_or_default(&afterhours::text_input::HasTextInputState::escape_blurs, false)) {
+            escape_claimed = true;
+            break;
+          }
+          if (!e.has<afterhours::ui::UIComponent>()) break;
+          cur = e.get<afterhours::ui::UIComponent>().parent;
+        }
+      }
+      if (!escape_claimed) {
+        running = false;
+        break;
+      }
+    }
+
     // Backtick, out of the way of the filter box and of widget tabbing.
     if (!afterhours::modal::is_active() && raylib::IsKeyPressed(raylib::KEY_GRAVE)) {
       if (navigator->visible) navigator->visible = false;

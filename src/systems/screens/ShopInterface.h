@@ -423,7 +423,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
           }
         }).with_ignore_pointer_events());
     for (int i = 0; i < 2; ++i)
-      div(context, mk(root.ent(), 15 + i), box(scale, i == 0 ? 40 : 447, 90, 18, 26)
+      div(context, mk(root.ent(), 15 + i), box(scale, i == 0 ? 40 : 352, 90, 18, 26)
           .with_on_draw_fg([this, scale](RectangleType r) {
             afterhours::draw_line_ex({r.x + r.width / 2, r.y}, {r.x + r.width / 2, r.y + r.height}, scale, gold);
             afterhours::draw_poly({r.x + r.width * .3f, r.y + r.height * .3f}, 4, 5 * scale, 0, gold);
@@ -587,9 +587,10 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Right)
               .with_ignore_pointer_events());
       if (item.stock <= 3)
-        div(context, mk(root.ent(), 650 + static_cast<int>(i)), box(scale, 518, y + 25, 110, 18)
-            .with_label("Low stock").with_font("Garamond", pixels(12 * scale))
-            .with_custom_text_color(red).with_alignment(TextAlignment::Right).with_ignore_pointer_events());
+        div(context, mk(root.ent(), 650 + static_cast<int>(i)), box(scale, 548, y + 24, 80, 19)
+            .with_label("Low stock").with_font("Garamond", pixels(15 * scale))
+            .with_custom_background({166, 58, 45, 28}).with_corner_radius(3 * scale)
+            .with_custom_text_color(red).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
       div(context, mk(root.ent(), 700 + static_cast<int>(i)),
           box(scale, 650, y + 10, 100, 29)
               .with_label(std::to_string(item.price) + " G")

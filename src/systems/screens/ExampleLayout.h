@@ -55,9 +55,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
            18, muted, fmt::format("layout_key_{}", i));
     }
     text(20, "Row / centered children", 72, 121, 1136, 28, 23, ink, "layout_row_heading");
+    const auto card_bg = afterhours::Color{247, 250, 246, 255};
+    const auto card_border = afterhours::Color{178, 198, 173, 255};
     // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container = hstack(context, mk(entity, 21), at(72, 156, 1136, 120)
-        .with_custom_background(theme.surface).with_corner_radius(10 * s)
+        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(10 * s)
         .with_padding(Padding::all(pixels(12 * s)))
         .with_justify_content(JustifyContent::Center).with_align_items(AlignItems::Center)
         .with_debug_name("row_container"));
@@ -87,13 +89,16 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
           .with_absolute_position(first.x - margin, first.y)
           .with_background(Theme::Usage::None).with_ignore_pointer_events()
           .with_on_draw_fg([=](RectangleType r) {
-            const raylib::Color tint{142, 170, 124, 74};
+            const raylib::Color tint{124, 158, 108, 42};
+            const raylib::Color guide{83, 113, 66, 200};
+            const float cy = r.y + r.height / 2;
+            const float tick = 6 * s;
             raylib::DrawRectangleRec({r.x, r.y, margin, r.height}, tint);
             raylib::DrawRectangleRec({r.x + r.width - margin, r.y, margin, r.height}, tint);
-            raylib::DrawLineEx({r.x, r.y + r.height / 2},
-                               {r.x + margin, r.y + r.height / 2}, s, {83, 113, 66, 255});
-            raylib::DrawLineEx({r.x + r.width - margin, r.y + r.height / 2},
-                               {r.x + r.width, r.y + r.height / 2}, s, {83, 113, 66, 255});
+            raylib::DrawLineEx({r.x, cy}, {r.x + margin, cy}, s, guide);
+            raylib::DrawLineEx({r.x, cy - tick}, {r.x, cy + tick}, s, guide);
+            raylib::DrawLineEx({r.x + r.width - margin, cy}, {r.x + r.width, cy}, s, guide);
+            raylib::DrawLineEx({r.x + r.width, cy - tick}, {r.x + r.width, cy + tick}, s, guide);
           }).with_debug_name("layout_margin_guide"));
     }
     const float row_gap = row_rects[1].x - first.x - first.width;
@@ -106,7 +111,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     text(31, "Parent frame", 1004, 334, 204, 24, 18, muted, "layout_parent_label");
     // Column layout demo - stacked items demonstration
     auto col_container = hstack(context, mk(entity), at(72, 364, 1136, 220)
-        .with_custom_background(theme.surface).with_corner_radius(10 * s)
+        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(10 * s)
         .with_padding(Padding::all(pixels(20 * s)))
         .with_justify_content(JustifyContent::Center).with_debug_name("col_demo_container"));
     // Column with stacked items - centered within container

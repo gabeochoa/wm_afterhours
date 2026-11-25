@@ -61,14 +61,18 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     };
     auto header = div(context, mk(content.ent()), box(0, 24, 1144, 80)
         .with_background(Theme::Usage::Primary).with_corner_radius(12 * s));
-    const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.darkfont);
+    const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.surface);
     // Title - larger font for better visibility
     label(header.ent(), "Cards & Panels Gallery", 20, 8, 870, 40, 33, header_ink, "cards_title");
-    label(header.ent(), "Cozy Kraft / cards, nesting, alpha. Measurements use 720p design pixels.", 20, 49, 1104, 25, 21, header_ink);
+    label(header.ent(), "Cozy Kraft / cards, nesting, alpha. Measurements use 720p design pixels.", 20, 49, 1104, 25, 21,
+          afterhours::colors::opacity_pct(header_ink, 0.88f));
 
     label(content.ent(), "Styles", 0, 120, 280, 28, 25, theme.font);
-    label(content.ent(), "140 x 100 px / requested 1 px border #968273 / fills and corners vary",
-          312, 123, 832, 27, 20, theme.font_muted, "cards_style_dimensions");
+    div(context, mk(content.ent(), id++), box(312, 123, 832, 27)
+        .with_label("140 x 100 px / requested 1 px border #968273 / fills and corners vary")
+        .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(theme.font_muted)
+        .with_alignment(TextAlignment::Right).with_ignore_pointer_events()
+        .with_debug_name("cards_style_dimensions"));
     // Row 1: Basic cards - all simple like theme swatches
     auto styles = div(context, mk(content.ent()), box(0, 158, 1144, 180).with_debug_name("row1_cards"));
     const std::array<const char *, 4> style_names{"Surface", "Primary", "Sharp", "Custom"};
@@ -91,7 +95,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         config.with_rounded_corners(RoundedCorners().all_sharp().round(TOP_LEFT).round(BOTTOM_RIGHT));
       auto card = div(context, mk(styles.ent(), id++), config);
       child_label(card.ent(), style_names[i], 30, 23,
-          afterhours::colors::auto_text_color(theme.from_usage(style_roles[i]), theme.font, theme.darkfont),
+          afterhours::colors::auto_text_color(theme.from_usage(style_roles[i]), theme.font, theme.surface),
           "style_label_" + std::to_string(i));
       label(styles.ent(), std::string(role_names[i]) + " / " + hex(theme.from_usage(style_roles[i])),
             x, 121, 274, 26, 21, theme.font, "style_fill_" + std::to_string(i));
@@ -119,7 +123,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(item_roles[i]).with_corner_radius(1.65f * s)
           .with_padding(Padding::all(pixels(12 * s))).with_debug_name("nested_item_" + std::to_string(i + 1)));
       child_label(item.ent(), "Item " + std::to_string(i + 1), 28, 22,
-          afterhours::colors::auto_text_color(theme.from_usage(item_roles[i]), theme.font, theme.darkfont),
+          afterhours::colors::auto_text_color(theme.from_usage(item_roles[i]), theme.font, theme.surface),
           "nested_item_label_" + std::to_string(i + 1));
     }
     child_label(nested.ent(), "Parent padding: 16 px / item gap: 12 px", 23, 19, theme.font_muted, "nested_metrics");
@@ -137,7 +141,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             for (float x = 0; x < r.width; x += cell) {
               const bool alternate = (static_cast<int>(x / cell) + static_cast<int>(y / cell)) % 2;
               afterhours::draw_rectangle({r.x + x, r.y + y, std::min(cell, r.width - x), std::min(cell, r.height - y)},
-                  alternate ? afterhours::Color{210, 188, 164, 255} : afterhours::Color{255, 250, 242, 255});
+                  alternate ? afterhours::Color{228, 213, 196, 255} : afterhours::Color{253, 248, 240, 255});
             }
         }));
     // Info panel with different opacity
@@ -184,7 +188,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(roles[i]).with_border(card_border, s).with_corner_radius(4 * s)
           .with_debug_name("cards_swatch_" + std::to_string(i)));
       label(swatch.ent(), names[i], 12, 2, 192, 28, 22,
-            afterhours::colors::auto_text_color(theme.from_usage(roles[i]), theme.font, theme.darkfont));
+            afterhours::colors::auto_text_color(theme.from_usage(roles[i]), theme.font, theme.surface));
       label(palette.ent(), hex(theme.from_usage(roles[i])), x, 35, 216, 23, 18, theme.font_muted,
             "cards_palette_value_" + std::to_string(i), true);
     }

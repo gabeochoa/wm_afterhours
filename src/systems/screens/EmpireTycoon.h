@@ -353,14 +353,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < gauges.size(); ++i) {
       const auto &g = gauges[i];
       div(context, mk(content.ent(), 30 + static_cast<int>(i) * 10),
-          box(scale, g.x, 135, 143, 62)
+          box(scale, g.x, 127, 143, 62)
               .with_on_draw_fg([pct = g.pct, fill = g.fill, resource = i == 1](RectangleType r) {
                 draw_gauge(r, pct, fill, resource);
               })
               .with_ignore_pointer_events()
               .with_debug_name("empire_gauge_" + std::to_string(i)));
       div(context, mk(content.ent(), 31 + static_cast<int>(i) * 10),
-          box(scale, g.x - 34, 209, 186, 34)
+          box(scale, g.x - 22, 211, 186, 34)
               .with_label(g.label + std::string(" ") +
                           std::to_string(static_cast<int>(std::lround(g.pct * 100.f))) + "%")
               .with_custom_background(afterhours::Color{184, 241, 255, 230})
@@ -372,8 +372,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("empire_gauge_label_" + std::to_string(i)));
       for (int endpoint = 0; endpoint < 2; ++endpoint)
         div(context, mk(content.ent(), 32 + static_cast<int>(i) * 10 + endpoint),
-            box(scale, g.x - 8 + endpoint * 124.f, 188, 38, 23)
-                .with_label(endpoint == 0 ? "0" : "100").with_font("FredokaMockBold", pixels(17 * scale))
+            box(scale, g.x - 10 + endpoint * 124.f, 184, 38, 22)
+                .with_label(endpoint == 0 ? "0" : "100").with_font("FredokaMockBold", pixels(16 * scale))
                 .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     }
 
@@ -587,11 +587,11 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         .with_label(chat_status).with_font("FredokaMockBold", pixels(20 * scale))
         .with_custom_text_color(ink).with_text_overflow(TextOverflow::Ellipsis).with_debug_name("empire_chat_status"));
     div(context, mk(content.ent(), 402), box(scale, 184, 660, 256, 26)
-        .with_label("Update v2.0 is live").with_font("FredokaMockBold", pixels(20 * scale)).with_custom_text_color(ink));
+        .with_label("Ferris Wheel queue booming!").with_font("FredokaMockBold", pixels(20 * scale)).with_custom_text_color(ink));
     div(context, mk(content.ent(), 403), box(scale, 84, 625, 88, 28)
         .with_label("GLOBAL").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
     div(context, mk(content.ent()), box(scale, 84, 660, 88, 26)
-        .with_label("DEVTEAM").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
+        .with_label("PARKS").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
     div(context, mk(content.ent()), box(scale, 474, 617, 386, 32)
         .with_label("Park development " + std::to_string(static_cast<int>(std::lround(milestone_pct * 100))) + "%")
         .with_font("FredokaMockBold", pixels(23 * scale)).with_custom_text_color(ink)

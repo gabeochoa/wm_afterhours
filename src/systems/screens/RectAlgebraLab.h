@@ -61,6 +61,7 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     // ---- Tiling, the way a WM does it -------------------------------------
     div(context, mk(root.ent()), box(32, 190, 596, 280)
         .with_custom_background(afterhours::Color{24, 27, 36, 255})
+        .with_border({48, 56, 74, 255}, s).with_corner_radius(8 * s)
             .with_on_draw_fg([](RectangleType rr) {
               namespace r = afterhours::rect;
               const afterhours::Color frame{70, 120, 190, 255};
@@ -95,6 +96,7 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     // ---- The report's repro ------------------------------------------------
     div(context, mk(root.ent()), box(652, 190, 596, 280)
         .with_custom_background(afterhours::Color{24, 27, 36, 255})
+        .with_border({48, 56, 74, 255}, s).with_corner_radius(8 * s)
             .with_on_draw_fg([guides = center_guides](RectangleType rr) {
               namespace r = afterhours::rect;
               RectangleType panel = r::pad(rr, 20.f);
@@ -145,8 +147,10 @@ struct RectAlgebraLab : ScreenSystem<UIContext<InputAction>> {
     text(35, "All operation values are screen px.", 652, 658, 380, 28, 18, muted);
     if (button(context, mk(root.ent()), box(1032, 656, 216, 36)
         .with_label(center_guides ? "Center guides: on" : "Center guides: off")
-        .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background(purple)
-        .with_custom_text_color(ink).with_corner_radius(6 * s).with_debug_name("ral_guides")))
+        .with_font("AtkinsonMock", pixels(18 * s))
+        .with_custom_background(center_guides ? afterhours::Color{50, 66, 94, 255} : afterhours::Color{32, 38, 52, 255})
+        .with_border({82, 102, 134, 255}, s)
+        .with_custom_text_color(white).with_corner_radius(6 * s).with_debug_name("ral_guides")))
       center_guides = !center_guides;
   }
 };

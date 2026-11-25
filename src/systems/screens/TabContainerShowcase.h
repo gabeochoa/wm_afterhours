@@ -84,14 +84,17 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       label(24, 216, 381, 350, 38, "player@example.com", 23, ink, "tc_email");
       row(25, 434, "Created", "January 2024");
       label(27, 24, 488, 170, 40, "Subscription", 21, muted);
-      div(context, mk(root.ent()), box(204, 490, 142, 35).with_custom_background({222, 237, 255, 255}).with_corner_radius(6 * scale));
-      label(29, 216, 491, 118, 33, "Premium", 23, accent);
+      div(context, mk(root.ent()), box(204, 490, 110, 34).with_custom_background({222, 237, 255, 255}).with_corner_radius(6 * scale));
+      div(context, mk(root.ent(), 29), box(204, 490, 110, 34).with_label("Premium")
+          .with_font("AtkinsonMockBold", pixels(20 * scale)).with_custom_text_color(accent)
+          .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
       row(30, 542, "Sample last login", "2024-01-15 10:30 UTC");
       div(context, mk(root.ent()), box(634, 321, 486, 268).with_custom_background(field).with_corner_radius(8 * scale));
       label(33, 658, 341, 438, 37, "Example profile", 27, ink);
       label(34, 658, 390, 438, 90, "These are fixed sample values. Closing and reopening the example keeps your selected tab.", 22, muted);
       if (button(context, mk(root.ent()), box(658, 514, 230, 44).with_label(copied ? "Email copied" : "Copy email")
           .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_background(white)
+          .with_border({196, 209, 224, 255}, scale)
           .with_custom_text_color(accent).with_corner_radius(6 * scale).with_debug_name("tc_copy"))) {
         afterhours::clipboard::set_text("player@example.com");
         copied = true;
@@ -151,7 +154,8 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             "tc_narrow_selected");
     }
     div(context, mk(root.ent(), 100), box(24, 609, 1096, 1).with_custom_background({203, 214, 226, 255}));
-    label(101, 24, 633, 840, 33, "Read-only example / No pending changes", 21, muted);
+    label(101, 24, 633, 840, 33,
+          fmt::format("Tab {} of 4  ·  {}", active_tab + 1, tab_labels[active_tab]), 20, muted);
     if (button(context, mk(root.ent()), box(940, 627, 180, 46).with_label("Close")
         .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_background(accent)
         .with_custom_text_color(white).with_corner_radius(7 * scale).with_debug_name("tc_close"))) open = false;

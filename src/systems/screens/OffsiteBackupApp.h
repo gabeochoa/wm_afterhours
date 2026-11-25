@@ -322,16 +322,17 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(66, fmt::format("{} of 5 folders complete", complete_count()), 286, 335, 300, 26, 18, mid, TextAlignment::Left, "bk_folders_done");
     auto pause_button = button(context, mk(root.ent()), box(scale, 286, 365, 196, 34)
         .with_label(paused ? "Resume backup" : "Pause backup")
-        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(ink)
-        .with_custom_background({235, 239, 242, 255}).with_corner_radius(4 * scale)
+        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(afterhours::Color{255, 255, 255, 255})
+        .with_custom_background(paused ? afterhours::Color{72, 141, 101, 255} : ink).with_corner_radius(5 * scale)
         .with_text_inset(32 * scale, 0).with_alignment(TextAlignment::Left)
-        .with_on_draw_fg([paused = paused, scale, ink](RectangleType r) {
+        .with_on_draw_fg([paused = paused, scale](RectangleType r) {
+          const afterhours::Color fg{255, 255, 255, 255};
           if (paused) {
-            afterhours::draw_triangle({r.x + 12 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 25 * scale}, {r.x + 24 * scale, r.y + 17 * scale}, ink);
+            afterhours::draw_triangle({r.x + 12 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 25 * scale}, {r.x + 24 * scale, r.y + 17 * scale}, fg);
             return;
           }
-          afterhours::draw_rectangle({r.x + 12 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
-          afterhours::draw_rectangle({r.x + 20 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
+          afterhours::draw_rectangle({r.x + 12 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, fg);
+          afterhours::draw_rectangle({r.x + 20 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, fg);
         }).with_debug_name("bk_pause"));
     pause_button.ent().get<HasLabel>().text_x_offset = 32 * scale;
     if (pause_button) {
@@ -349,12 +350,13 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(84, "Size", 664, 452, 90, 25, 16, mid, TextAlignment::Right);
     auto rescan = button(context, mk(root.ent()), box(scale, 644, 365, 110, 34)
         .with_label("Rescan").with_font("AtkinsonMock", pixels(18 * scale))
-        .with_custom_text_color(red).with_custom_background({245, 238, 235, 255})
+        .with_custom_text_color(ink).with_custom_background({242, 245, 247, 255})
+        .with_border(line, scale).with_corner_radius(5 * scale)
         .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
-        .with_on_draw_fg([scale, red](RectangleType r) {
+        .with_on_draw_fg([scale, ink](RectangleType r) {
           const float x = r.x + 18 * scale, y = r.y + 17 * scale;
-          afterhours::draw_ring_segment(x, y, 6 * scale, 8 * scale, 40, 320, 24, red);
-          afterhours::draw_triangle({x + 6 * scale, y - 8 * scale}, {x + 1 * scale, y - 7 * scale}, {x + 6 * scale, y - 2 * scale}, red);
+          afterhours::draw_ring_segment(x, y, 6 * scale, 8 * scale, 40, 320, 24, ink);
+          afterhours::draw_triangle({x + 6 * scale, y - 8 * scale}, {x + 1 * scale, y - 7 * scale}, {x + 6 * scale, y - 2 * scale}, ink);
         }).with_debug_name("bk_rescan"));
     rescan.ent().get<HasLabel>().text_x_offset = 38 * scale;
     if (rescan) {
@@ -370,8 +372,14 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(root.ent(), 100 + static_cast<int>(i)), box(scale, 122, y + 7, 16, 12)
           .with_on_draw_fg([](RectangleType r) { draw_folder_icon(r); }));
       text(110 + static_cast<int>(i), folders[i].name, 146, y, 132, 24, 18, ink, TextAlignment::Left, "bk_name_" + std::to_string(i));
+      const bool queued = !done && !paused && !scanning && i != 1;
       div(context, mk(root.ent(), 120 + static_cast<int>(i)), box(scale, 290, y + 10, 158, 7)
-          .with_on_draw_fg([value = folder_now[i], done](RectangleType r) { draw_track(r, value, done ? afterhours::Color{72, 141, 101, 255} : afterhours::Color{219, 100, 88, 255}); })
+          .with_on_draw_fg([value = folder_now[i], done, queued](RectangleType r) {
+            const afterhours::Color bar_color = done ? afterhours::Color{72, 141, 101, 255}
+                : queued ? afterhours::Color{146, 162, 174, 255}
+                         : afterhours::Color{219, 100, 88, 255};
+            draw_track(r, value, bar_color);
+          })
           .with_debug_name("bk_bar_" + std::to_string(i)));
       text(130 + static_cast<int>(i), fmt::format("{:.0f}%", folder_now[i] * 100), 457, y, 58, 24, 17, mid, TextAlignment::Right, "bk_pct_" + std::to_string(i));
       text(150 + static_cast<int>(i), state, 547, y, 105, 24, 17, done ? afterhours::Color{45, 115, 77, 255} : mid, TextAlignment::Left, "bk_state_" + std::to_string(i));

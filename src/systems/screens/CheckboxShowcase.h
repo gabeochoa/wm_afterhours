@@ -72,23 +72,38 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(subdued ? muted : ink)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled) {
+    const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled,
+                             afterhours::Color accent_color = {236, 242, 251, 255}) {
       div(context, mk(parent, id++), box(x, y, 22, 22).with_ignore_pointer_events()
-          .with_border(disabled ? afterhours::colors::darken(ink, .5f) : ink, pixels(2 * s)));
+          .with_border(disabled ? afterhours::colors::darken(ink, .5f) : accent_color, pixels(2 * s))
+          .with_corner_radius(3 * s));
     };
     const auto check_row = [&](afterhours::Entity &parent, bool &value, const std::string &text,
-                               float y, afterhours::Color background, const std::string &name,
+                               float y, afterhours::Color role_color, const std::string &name,
                                bool disabled = false, const std::string &lock_reason = "") {
+      const afterhours::Color row_bg = disabled ? afterhours::Color{18, 24, 36, 255}
+                                                : afterhours::Color{28, 39, 58, 255};
+      const afterhours::Color row_border = disabled ? afterhours::Color{36, 46, 64, 255}
+                                                    : afterhours::Color{52, 68, 94, 255};
       const auto changed = checkbox(context, mk(parent, id++), value,
-          box(20, y, 516, 44).with_label("").with_custom_background(background)
+          box(20, y, 516, 44).with_label("").with_custom_background(row_bg)
+              .with_border(row_border, s)
               .with_alignment(TextAlignment::Left).with_text_inset(14 * s, 0)
-              .with_custom_text_color(ink).with_corner_radius(6 * s)
+              .with_custom_text_color(disabled ? afterhours::colors::darken(ink, .5f) : ink)
+              .with_corner_radius(6 * s)
               .with_font("AtkinsonMock", pixels(23 * s)).with_disabled(disabled)
               .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
-      outline(parent, 34, y + 11, disabled);
-      label(parent, text, 72, y + 7, 334, 30, 23, name + "_label");
-      label(parent, disabled ? (lock_reason.empty() ? "Disabled" : lock_reason) : (value ? "Checked" : "Unchecked"),
-            422, y + 10, 104, 26, 17, name + "_state", true);
+      // Quiet left role bar so theme role is unmistakable without flooding the row
+      div(context, mk(parent, id++), box(20, y + 6, 4, 32).with_ignore_pointer_events()
+          .with_custom_background(disabled ? afterhours::colors::darken(role_color, .55f) : role_color)
+          .with_corner_radius(2 * s));
+      outline(parent, 34, y + 11, disabled, value ? role_color : ink);
+      label(parent, text, 72, y + 7, 328, 30, 22, name + "_label", disabled);
+      div(context, mk(parent, id++), box(404, y + 10, 118, 26)
+          .with_label(disabled ? (lock_reason.empty() ? "Disabled" : lock_reason) : (value ? "Checked" : "Unchecked"))
+          .with_font("AtkinsonMock", pixels(17 * s))
+          .with_custom_text_color(disabled ? afterhours::colors::darken(muted, .45f) : (value ? ink : muted))
+          .with_alignment(TextAlignment::Right).with_ignore_pointer_events().with_debug_name(name + "_state"));
       if (changed) last_change = text + (value ? " checked" : " unchecked");
       return static_cast<bool>(changed);
     };

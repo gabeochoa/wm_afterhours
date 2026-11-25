@@ -158,7 +158,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     text(70, "Checkboxes", 660, 120, 268, 31, 24, ink, "forms_checkboxes_heading");
     text(74, fmt::format("Music {} / effects {}", enable_music ? "on" : "off", enable_sfx ? "on" : "off"),
          940, 125, 268, 26, 17, muted, "forms_audio_state");
-    auto options = vstack(context, mk(entity), at(660, 164, 548, 290)
+    auto options = vstack(context, mk(entity), at(660, 160, 548, 304)
         .with_background(Theme::Usage::None).with_no_wrap()
         .with_overflow(Overflow::Scroll, Axis::Y)
         .with_debug_name("forms_options"));
@@ -218,9 +218,11 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox_row(4, "Fullscreen", "forms_fullscreen", fullscreen);
     checkbox_row(5, "V-Sync", "forms_vsync", vsync);
     div(context, mk(options.ent(), 6), ComponentConfig{}
-        .with_size({pixels(524 * s), pixels(28 * s)})
+        .with_size({pixels(480 * s), pixels(28 * s)})
+        .with_margin(Margin{.left = pixels(44 * s)})
         .with_label("Synchronize frames with the display.")
         .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(muted)
+        .with_alignment(TextAlignment::Left)
         .with_background(Theme::Usage::None).with_ignore_pointer_events());
     checkbox_row(7, "Show FPS", "forms_fps", show_fps);
     checkbox_row(8, "Show HUD", "forms_hud", show_hud);
@@ -242,7 +244,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     const float max_scroll = std::max(0.f, scroll.content_size.y - options.cmp().rect().height);
     text(72, scroll.scroll_offset.y + s < max_scroll ? "More options below / scroll this list"
                                                    : "End of options / scroll up to Audio",
-         660, 466, 548, 26, 17, muted, "forms_scroll_hint");
+         660, 470, 548, 24, 16, muted, "forms_scroll_hint");
     const std::string status = "Volume: " + std::to_string(static_cast<int>(volume_slider * 100)) +
         "% | Resolution: " + resolutions[resolution_index] +
         " | Quality: " + quality_options[quality_index];
@@ -329,18 +331,18 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity), at(636, 516, 596, 186)
         .with_custom_background(panel).with_corner_radius(10 * s)
         .with_debug_name("clipboard_row"));
+    text(86, "Display & Export", 652, 522, 340, 26, 20, ink, "forms_export_heading");
+    text(87, auto_save ? fmt::format("Saved {:.0f}s", saved_preview_time) : "Autosave off",
+         1018, 524, 196, 24, 16, muted, "forms_preview_saved");
     dropdown(context, mk(entity), resolutions, resolution_index,
-        at(652, 526, 198, 34).with_font("AtkinsonMock", pixels(18 * s))
+        at(652, 554, 198, 34).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
             .with_debug_name("forms_resolution"));
     dropdown(context, mk(entity), quality_options, quality_index,
-        at(866, 526, 140, 34).with_font("AtkinsonMock", pixels(18 * s))
+        at(866, 554, 140, 34).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
             .with_debug_name("forms_quality"));
-    text(87, auto_save ? fmt::format("Saved {:.0f}s", saved_preview_time) : "Autosave off",
-         1018, 526, 196, 34, 17, muted, "forms_preview_saved");
-    text(91, "Copy saves the summary as text.", 652, 568, 560, 23, 18, muted, "forms_clipboard_copy_help");
-    text(92, "Paste reads text; it does not apply settings.", 652, 594, 560, 23, 17, muted, "forms_clipboard_paste_help");
+    text(91, "Copy saves the summary as text. Paste reads text only.", 652, 598, 560, 22, 16, muted, "forms_clipboard_copy_help");
     // Copy button - copies current status to clipboard
     if (button(context, mk(entity), at(652, 650, 162, 36)
         .with_label("Copy Status").with_font("AtkinsonMock", pixels(19 * s))

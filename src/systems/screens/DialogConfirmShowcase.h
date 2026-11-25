@@ -38,7 +38,7 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     const bool changed = preview || applied;
     dialog_backdrop::draw_context(context, entity, "Display",
-        {{"Resolution", changed ? "2560 x 1440 / active" : "1920 x 1080 -> 2560 x 1440 / pending", !applied},
+        {{"Resolution", changed ? "2560 × 1440 / active" : "1920 × 1080 -> 2560 × 1440 / pending", !applied},
          {"Refresh rate", changed ? "120 Hz / active" : "60 Hz -> 120 Hz / pending", !applied},
          {"Window mode", "Borderless"}, {"Vertical sync", "On"},
          {"Render scale", "100%"}, {"Colour profile", "sRGB"}}, status);
@@ -54,14 +54,13 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
     const bool confirming = open;
     auto confirmation = afterhours::modal::confirm(
         context, mk(entity), open, "Apply display changes?",
-        "Resolution: 1920 x 1080  ->  2560 x 1440\n"
+        "Resolution: 1920 × 1080  ->  2560 × 1440\n"
         "Refresh rate: 60 Hz  ->  120 Hz\n"
         "The display may go dark briefly. Confirm within 15 seconds,\n"
-        "or the previous settings return. You can change them in Display.\n"
-        "Demo preview only; your actual display stays unchanged.",
+        "or your previous settings will be restored automatically.",
         "Apply display settings", "Keep current settings");
     constexpr std::array<float, 2> widths{282, 282};
-    if (confirmation) dialog_presentation::style(context, confirmation.ent(), 760, 144, widths);
+    if (confirmation) dialog_presentation::style(context, confirmation.ent(), 760, 128, widths);
     if (confirming && confirmation.confirmed()) {
       preview = true;
       remaining = 15;

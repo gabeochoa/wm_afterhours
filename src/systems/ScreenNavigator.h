@@ -53,6 +53,7 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
       if (!show_launcher) return;
       if (button(context, mk(entity, 100), ComponentConfig{}
           .with_label("Browse screens (`)").with_size({pixels(200), pixels(32)})
+          .with_font("AtkinsonMock", pixels(16))
           .with_absolute_position(static_cast<float>(Settings::get().get_screen_width()) - 212, 8)
           .with_custom_background({22, 25, 32, 255}).with_custom_text_color({220, 228, 240, 255})
           .with_auto_text_color(false).with_render_layer(layer).with_debug_name("nav_open"))) open();

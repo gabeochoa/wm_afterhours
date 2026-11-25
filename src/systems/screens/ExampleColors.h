@@ -149,7 +149,13 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     const auto chosen = semantic ? theme.from_usage(theme_swatches[selected].usage) : custom_colors[selected - 6].color;
     const auto foreground = afterhours::colors::auto_text_color(chosen, theme.font, theme.darkfont);
     const std::string chosen_name = semantic ? theme_swatches[selected].label : custom_colors[selected - 6].name;
-    label("Selected: " + chosen_name + " / " + hex(chosen), 20, 604, 638, 30, 23, white, "colors_selected");
+    label("Selected: " + chosen_name + " / " + hex(chosen), 20, 604, 490, 30, 23, white, "colors_selected");
+    if (button(context, mk(root.ent(), id++), box(left + 528, 603, 132, 32)
+        .with_label("Copy hex").with_font("AtkinsonMock", pixels(17 * s))
+        .with_custom_background({34, 42, 56, 255}).with_border({68, 80, 98, 255}, s)
+        .with_custom_text_color(white).with_corner_radius(6 * s).with_debug_name("colors_copy_hex"))) {
+      afterhours::clipboard::set_text(hex(chosen));
+    }
     label(semantic ? theme_swatches[selected].purpose : "Fixed RGB value, independent of semantic roles",
           20, 638, 638, 25, 19, muted, "colors_purpose");
     label(fmt::format("RGB {}, {}, {} / text {} / {:.2f}:1 / {} activations",

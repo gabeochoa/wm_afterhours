@@ -43,7 +43,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(838, 27, 306, 44)
         .with_label(comparison ? "Show original specimens" : "Compare overflow modes")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
-        .with_custom_background(surface).with_corner_radius(6 * scale).with_debug_name("overflow_compare"))) comparison = !comparison;
+        .with_custom_background(surface).with_border({74, 92, 118, 255}, scale)
+        .with_corner_radius(6 * scale).with_debug_name("overflow_compare"))) comparison = !comparison;
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
     label(3, 0, 119, 264, 28, "Debug flag: ON", 21, green);
 #else

@@ -47,6 +47,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     label(1, 0, 79, 1144, 31, "Atkinson / native shadow rendering / metadata uses rendered pixel offsets", 22, muted);
     if (button(context, mk(root.ent()), box(910, 29, 234, 43).with_label(guides ? "Box guides: On" : "Box guides: Off")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(white).with_custom_text_color(ink)
+        .with_border({182, 194, 212, 255}, scale)
         .with_corner_radius(6 * scale).with_debug_name("shadow_guides"))) guides = !guides;
     const auto backing = [&](int id, float y, float h) {
       div(context, mk(root.ent(), id), box(0, y, 680, h).with_custom_background(panel).with_corner_radius(8 * scale));
@@ -63,10 +64,10 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     label(23, 20, 329, 306, 41, fmt::format("S3 / Soft / offset +{:.1f}, +{:.1f}px\nAlpha 80 of 255 / no blur", 5 * scale, 5 * scale), 18, pale);
     label(24, 356, 329, 304, 41, fmt::format("S4 / Hard / offset +{:.1f}, +{:.1f}px\nAlpha 180 of 255 / no blur", 5 * scale, 5 * scale), 18, pale);
     backing(30, 391, 114);
-    sample(31, 20, 400, 306, 62, "COLORED", 48, {80, 255, 255, 255}, {{200, 0, 0, 255}, 6 * scale, 6 * scale}, "shadow_colored");
+    sample(31, 20, 400, 306, 62, "COLORED", 48, {255, 209, 102, 255}, {{143, 45, 28, 255}, 6 * scale, 6 * scale}, "shadow_colored");
     auto combo = sample(32, 356, 400, 304, 62, "COMBO", 48, {255, 180, 60, 255}, {{0, 0, 0, 120}, 5 * scale, 5 * scale}, "shadow_combo");
     combo.ent().get<HasLabel>().set_text_stroke(afterhours::Color{40, 20, 0, 255}, 3 * scale);
-    label(33, 20, 460, 306, 40, fmt::format("S5 / #50FFFF + #C80000\nOffset +{:.1f}, +{:.1f}px / alpha 255", 6 * scale, 6 * scale), 18, pale);
+    label(33, 20, 460, 306, 40, fmt::format("S5 / #FFD166 + #8F2D1C\nOffset +{:.1f}, +{:.1f}px / alpha 255", 6 * scale, 6 * scale), 18, pale);
     label(34, 356, 460, 304, 40, fmt::format("S6 / Outline {:.1f}px / x,y +{:.1f}px\nShadow alpha 120 of 255", 3 * scale, 5 * scale), 18, pale);
     backing(40, 519, 117);
     sample(41, 20, 532, 306, 50, "LIGHT", 34, white, none, "shadow_light_none");
@@ -81,8 +82,9 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
       const float offset = offsets[i] * scale;
       sample(60 + static_cast<int>(i), 734, y, 256, 48, "SHADOW", 34, {180, 100, 255, 255},
              {{60, 20, 100, 200}, offset, offset}, i == 0 ? "offset_zero" : "offset_" + std::to_string(i - 1));
-      label(70 + static_cast<int>(i), 1002, y + 4, 122, 44,
-            fmt::format("{:.1f} px\nx / y", offset), 21, pale);
+      div(context, mk(root.ent(), 70 + static_cast<int>(i)), box(996, y + 10, 128, 28)
+          .with_label(fmt::format("+{:.1f} px", offset)).with_font("AtkinsonMock", pixels(20 * scale))
+          .with_custom_text_color(pale).with_alignment(TextAlignment::Right).with_ignore_pointer_events());
       if (!guides) continue;
       div(context, mk(root.ent(), 80 + static_cast<int>(i)), box(724, y, 278, 48).with_ignore_pointer_events()
           .with_on_draw_fg([scale](RectangleType r) {

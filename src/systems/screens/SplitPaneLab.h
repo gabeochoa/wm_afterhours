@@ -95,7 +95,7 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(pane.ent(), 1), ComponentConfig{}
           .with_size({pixels(std::max(0.f, r.width - 24 * s)), pixels(30 * s)})
           .with_absolute_position(12 * s, std::max(40 * s, (r.height - 30 * s) / 2))
-          .with_label(fmt::format("{:.0f} × {:.0f} px", r.width, r.height))
+          .with_label(r.width > 24 * s ? fmt::format("{:.0f} × {:.0f} px", r.width, r.height) : "")
           .with_font("AtkinsonMock", pixels(24 * s)).with_alignment(TextAlignment::Center)
           .with_custom_text_color(muted).with_transparent_bg().with_ignore_pointer_events().with_debug_name(metrics));
     };
