@@ -40,11 +40,20 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const float left = (context.screen_width - 1280 * s) / 2;
     const float top = (context.screen_height - 720 * s) / 2;
-    const auto white = afterhours::Color{235, 240, 250, 255};
-    const auto muted = afterhours::Color{174, 188, 211, 255};
+    // Surface/text tokens derive from ctx.theme (kept in sync with the
+    // headless baseline). Plot regions and selection rows are derived mixes,
+    // not new hues; the 4/8 radius scale is used throughout.
+    const auto white = theme.font;
+    const auto muted = theme.font_muted;
     const auto panel = theme.surface;
-    const auto cyan = afterhours::Color{154, 192, 245, 255};
-    const auto ink = afterhours::Color{15, 22, 36, 255};
+    const auto cyan = theme.accent;
+    const auto ink = theme.background;
+    const auto checkbox_bg = afterhours::colors::mix(theme.primary, theme.surface, 0.5f);
+    const auto branch_selected = afterhours::colors::lighten(theme.primary, 0.15f);
+    const auto branch_hover = afterhours::colors::mix(theme.primary, theme.surface, 0.35f);
+    const auto plot_bg = afterhours::colors::darken(theme.surface, 0.85f);
+    const auto edge = afterhours::colors::opacity_pct(theme.font, 0.25f);
+    const auto ghost_edge = afterhours::colors::opacity_pct(theme.font, 0.2f);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
     div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
@@ -57,7 +66,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     auto box = [&](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_transparent_bg()
-          .with_corner_radius(6 * s).with_skip_grid_snap(true);
+          .with_corner_radius(8 * s).with_skip_grid_snap(true);
     };
     auto text = [&](int id, std::string value, float x, float y, float w,
                     float h, float size, afterhours::Color color,
@@ -73,7 +82,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     };
     auto floating = [&](float w, float h, const std::string &debug) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
-          .with_custom_background(panel).with_border({79, 94, 117, 255}, s)
+          .with_custom_background(panel).with_border(edge, s)
           .with_corner_radius(8 * s).with_skip_grid_snap(true)
           .with_debug_name(debug);
     };
@@ -109,8 +118,8 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
       const auto option = [&](int id, bool &value, const char *label, const char *debug) {
         auto checkbox_row = checkbox(context, mk(body.ent(), id), value,
             row(40).with_label("").with_checkbox_indicators("", "")
-                .with_custom_background(afterhours::Color{48, 65, 87, 255})
-                .with_corner_radius(6 * s).with_margin(Margin{.bottom = pixels(4 * s)})
+                .with_custom_background(checkbox_bg)
+                .with_corner_radius(8 * s).with_margin(Margin{.bottom = pixels(4 * s)})
                 .with_debug_name(debug));
         div(context, mk(checkbox_row.ent(), 1), box(10, 11, 18, 18)
             .with_ignore_pointer_events().with_on_draw_fg([s, value, white](RectangleType mark) {
@@ -151,8 +160,8 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
         if (button(context, mk(body.ent(), 1 + b), row(36)
             .with_label(fmt::format("  {}{}", BRANCHES[b], b == current_branch ? "  Current" : ""))
             .with_alignment(TextAlignment::Left).with_font("AtkinsonMock", pixels(18 * s))
-            .with_custom_background(b == current_branch ? afterhours::Color{54, 76, 105, 255} : panel)
-            .with_custom_text_color(white).with_custom_hover_bg({61, 76, 100, 255}).with_corner_radius(4 * s)
+            .with_custom_background(b == current_branch ? branch_selected : panel)
+            .with_custom_text_color(white).with_custom_hover_bg(branch_hover).with_corner_radius(4 * s)
             // Without this the rounded corners of adjacent rows
             // touch and the column reads as one scalloped block.
             .with_margin(Margin{.bottom = pixels(4 * s)})
@@ -186,7 +195,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 3; i++) {
       const auto r = regions[static_cast<size_t>(i)];
       div(context, mk(root.ent(), 90 + i), box(r.x, r.y, r.width, r.height)
-          .with_custom_background(afterhours::Color{21, 31, 47, 255}).with_ignore_pointer_events());
+          .with_custom_background(plot_bg).with_ignore_pointer_events());
       text(94 + i, fmt::format("{} placement", places[i].name), r.x + 8, i == 0 ? 540 : 418, r.width - 16, 26, 18, muted);
       auto t = button(context, mk(root.ent(), 40 + i), control(places[i].x, 500, 200, 36)
           .with_label(places[i].name).with_debug_name(fmt::format("pv_place_{}", i)));
@@ -198,7 +207,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(root.ent(), 120 + i), box(ghost_x, ghost_y, 190, 72)
             .with_label("Panel appears here").with_alignment(TextAlignment::Center)
             .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(muted)
-            .with_border(afterhours::Color{67, 88, 112, 255}, 1.f)
+            .with_border(ghost_edge, 1.f)
             .with_ignore_pointer_events());
       }
       if (auto pop = popover(context, mk(root.ent(), 50 + i), a, place_open[i], places[i].placement,

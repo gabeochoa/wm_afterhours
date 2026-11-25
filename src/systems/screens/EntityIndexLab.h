@@ -99,12 +99,21 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
                              context.screen_height / 720.f);
     const float offset_x = (context.screen_width - 1280 * s) / 2;
     const float offset_y = (context.screen_height - 720 * s) / 2;
-    const auto ink = afterhours::Color{235, 240, 250, 255};
-    const auto muted = afterhours::Color{168, 184, 208, 255};
+    // Surface/text tokens derive from ctx.theme; success/error surfaces and
+    // the selection marker stay as semantic tokens (single definitions).
+    const auto ink = context.theme.font;
+    const auto muted = context.theme.font_muted;
     const auto good = afterhours::Color{120, 220, 160, 255};
-    const auto panel = afterhours::Color{26, 35, 50, 255};
-    const auto rowbg = afterhours::Color{34, 46, 65, 255};
-    const auto selbg = afterhours::Color{47, 78, 119, 255};
+    const auto panel = context.theme.surface;
+    const auto rowbg = afterhours::colors::lighten(context.theme.surface, 0.08f);
+    const auto selbg = context.theme.primary;
+    const auto select_marker = afterhours::colors::lighten(context.theme.primary, 0.3f);
+    const auto badge_bg = afterhours::colors::lighten(context.theme.surface, 0.15f);
+    const auto idle_bg = afterhours::colors::mix(context.theme.surface, context.theme.primary, 0.3f);
+    const auto track_bg = afterhours::colors::mix(context.theme.surface, context.theme.background, 0.5f);
+    const auto scan_bar = afterhours::colors::lighten(context.theme.primary, 0.25f);
+    const auto success_surface = afterhours::Color{28, 57, 47, 255};
+    const auto error_surface = afterhours::Color{84, 41, 44, 255};
     const auto box = [=](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(offset_x + x * s, offset_y + y * s)
@@ -129,7 +138,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_custom_background({16, 22, 32, 255}).with_corner_radius(0)
+        .with_custom_background(context.theme.background).with_corner_radius(0)
         .with_debug_name("ei_canvas"));
     text(0, "Patch Bay", 48, 20, 220, 44, 34, ink, "ei_title");
     text(101, "Secondary index demo", 276, 29, 700, 31, 23, muted, "ei_demo_label");
@@ -158,7 +167,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
       }
       if (selected) {
         div(context, mk(entity, 110 + n), box(64, y + 7, 4, 38)
-            .with_custom_background({154, 201, 252, 255}).with_corner_radius(2 * s)
+            .with_custom_background(select_marker).with_corner_radius(4 * s)
             .with_ignore_pointer_events().with_debug_name("ei_selected_marker"));
       }
       text(120 + n, DEVICE[n], 80, y + 1, 219, 28, 21, ink,
@@ -170,7 +179,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
           .with_label(fmt::format("{} ports", count))
           .with_font("AtkinsonMock", pixels(15 * s))
           .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
-          .with_custom_background({56, 74, 99, 255}).with_corner_radius(8 * s)
+          .with_custom_background(badge_bg).with_corner_radius(8 * s)
           .with_ignore_pointer_events().with_debug_name(fmt::format("ei_devcount_{}", n)));
     }
     text(103, fmt::format("{} ports across {} devices", total_ports, nodes.size()),
@@ -200,7 +209,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
       const float y = 248.f + static_cast<float>(row) * 46.f;
       const bool connected = slot % kPortsPerNode != 2;
       div(context, mk(entity, 30 + row), box(432, y, 784, 40)
-          .with_custom_background(rowbg).with_corner_radius(6 * s)
+          .with_custom_background(rowbg).with_corner_radius(8 * s)
           .with_debug_name(fmt::format("ei_portrow_{}", row)));
       text(40 + row, std::to_string(slot), 448, y, 161, 40, 26, ink,
            fmt::format("ei_slot_{}", row), "AtkinsonMock");
@@ -208,15 +217,15 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
            21, ink, fmt::format("ei_pname_{}", row));
       div(context, mk(entity, 140 + row), box(952, y + 15, 10, 10)
           .with_custom_background(connected ? good : rowbg)
-          .with_corner_radius(5 * s).with_ignore_pointer_events()
+          .with_corner_radius(4 * s).with_ignore_pointer_events()
           .with_on_draw_fg([=](RectangleType r) {
             if (connected) return;
             raylib::DrawRing({r.x + r.width / 2, r.y + r.height / 2},
-                            3 * s, 5 * s, 0, 360, 24, {168, 184, 208, 255});
+                            3 * s, 5 * s, 0, 360, 24, muted);
           }).with_debug_name(connected ? "ei_connected_dot" : "ei_idle_dot"));
       if (!connected) {
         div(context, mk(entity, 150 + row), box(974, y + 5, 70, 30)
-            .with_custom_background({50, 62, 81, 255}).with_corner_radius(8 * s)
+            .with_custom_background(idle_bg).with_corner_radius(8 * s)
             .with_ignore_pointer_events());
       }
       text(60 + row, connected ? "connected" : "idle", 974, y, 225, 40,
@@ -267,19 +276,19 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
     const auto work_bar = [&](int id, float x, size_t value, afterhours::Color color,
                               const char *name) {
       div(context, mk(entity, id), box(x, 592, 234, 7)
-          .with_custom_background({46, 59, 78, 255}).with_debug_name(std::string(name) + "_track"));
+          .with_custom_background(track_bg).with_debug_name(std::string(name) + "_track"));
       if (max_work <= 0 || value == 0) return;
       div(context, mk(entity, id + 1), box(x, 592, 234 * static_cast<float>(value) / max_work, 7)
           .with_custom_background(color).with_skip_grid_snap().with_debug_name(name));
     };
-    work_bar(170, 432, scanned, {115, 158, 217, 255}, "ei_scan_bar");
+    work_bar(170, 432, scanned, scan_bar, "ei_scan_bar");
     work_bar(172, 698, resolves, good, "ei_index_bar");
     text(174, "Entity checks / linear scale", 432, 603, 242, 22, 15, muted, "ei_scan_units");
     text(175, "Handle resolves / same scale", 698, 603, 242, 22, 15, muted, "ei_index_units");
     text(176, "Demo + app entities", 964, 603, 242, 22, 15, muted, "ei_collection_units");
     div(context, mk(entity), box(48, 648, 1184, 44)
-        .with_custom_background(results_match ? afterhours::Color{28, 57, 47, 255}
-                                             : afterhours::Color{84, 41, 44, 255})
+        .with_custom_background(results_match ? success_surface
+                                             : error_surface)
         .with_corner_radius(8 * s).with_debug_name("ei_result_banner"));
     text(71, results_match ? fmt::format("Results match: {}", indexed_ids.size())
                           : "Results differ", 64, 653, 296, 32, 23,

@@ -38,17 +38,19 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     float sw = static_cast<float>(Settings::get().get_screen_width());
     float sh = static_cast<float>(Settings::get().get_screen_height());
 
-    // Colors
-    const auto bg = afterhours::Color{20, 24, 36, 255};
-    const auto surface = afterhours::Color{30, 36, 52, 255};
-    const auto card_bg = afterhours::Color{38, 46, 66, 255};
+    // Surface/text tokens derive from ctx.theme. Red/orange/green/accent are
+    // the deliberate color-coded demo boxes, kept as one 4-entry palette.
+    const auto bg = theme.background;
+    const auto surface = theme.surface;
+    const auto card_bg = afterhours::colors::lighten(theme.surface, 0.12f);
     const auto accent = afterhours::Color{100, 160, 255, 255};
-    const auto accent_dim = afterhours::Color{70, 120, 200, 255};
+    const auto accent_dim = afterhours::colors::lighten(theme.primary, 0.25f);
     const auto green = afterhours::Color{80, 200, 140, 255};
     const auto orange = afterhours::Color{240, 180, 80, 255};
     const auto red = afterhours::Color{220, 90, 90, 255};
-    const auto white = afterhours::Color{240, 240, 250, 255};
-    const auto muted = afterhours::Color{140, 150, 175, 255};
+    const auto white = theme.font;
+    const auto muted = theme.font_muted;
+    const auto ink_on_demo = theme.darkfont;
 
     const float pixel_scale = use_adaptive ? current_scale : 1.f;
     const auto layout = ComponentConfig{}.with_skip_grid_snap();
@@ -78,7 +80,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     context.scaling_mode = ScalingMode::Proportional;
 
-    // ── Full screen root ────────────────────────────────────────
+    // -- Full screen root ----------------------------------------
     auto root =
         vstack(context, mk(entity),
                ComponentConfig{layout}
@@ -88,7 +90,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_no_wrap()
                    .with_debug_name("adaptive_root"));
 
-    // ── Header bar ──────────────────────────────────────────────
+    // -- Header bar ----------------------------------------------
     auto header = hstack(
         context, mk(root.ent()),
         ComponentConfig{layout}
@@ -117,7 +119,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(accent)
             .with_alignment(TextAlignment::Right));
 
-    // ── Controls bar ────────────────────────────────────────────
+    // -- Controls bar --------------------------------------------
     auto controls = hstack(
         context, mk(root.ent()),
         ComponentConfig{layout}
@@ -138,7 +140,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label(use_adaptive ? "Adaptive >" : "Proportional >")
                    .with_size(ComponentSize{pixels(200), pixels(36)})
                    .with_custom_background(use_adaptive ? green : orange)
-                   .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+                   .with_custom_text_color(ink_on_demo)
                    .with_font("AtkinsonMock", screen_pct(22.f / sh))
                    .with_rounded_corners(RoundedCorners())
                    .with_corner_radius(8.f)
@@ -214,7 +216,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", screen_pct(20.f / sh))
             .with_custom_text_color(muted));
 
-    // ── Content area ────────────────────────────────────────────
+    // -- Content area --------------------------------------------
     auto viewport =
         vstack(context, mk(root.ent()),
                ComponentConfig{layout}
@@ -234,7 +236,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_no_wrap()
                    .with_debug_name("content"));
 
-    // ── Left column ─────────────────────────────────────────────
+    // -- Left column ---------------------------------------------
     auto left_col = vstack(
         context, mk(content.ent()),
         ComponentConfig{layout}
@@ -337,7 +339,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_label("B: fill width x 36px")
                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
                      .with_custom_background(green)
-                     .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+                     .with_custom_text_color(ink_on_demo)
                      .with_font("AtkinsonMock",
                                 pixels(22))
                      .with_rounded_corners(RoundedCorners())
@@ -402,7 +404,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // ── Right column ────────────────────────────────────────────
+    // -- Right column --------------------------------------------
     auto right_col = vstack(
         context, mk(content.ent()),
         ComponentConfig{layout}
@@ -457,8 +459,8 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
       };
       ExpandItem items[] = {
           {"1x", 1.f, red, white},
-          {"2x", 2.f, orange, {30, 30, 40, 255}},
-          {"3x", 3.f, green, {20, 20, 30, 255}},
+          {"2x", 2.f, orange, ink_on_demo},
+          {"3x", 3.f, green, ink_on_demo},
       };
       for (int i = 0; i < 3; i++) {
         div(context, mk(row.ent(), i),
@@ -521,7 +523,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_label("80px")
               .with_size(ComponentSize{pixels(80), percent(1.0f)})
               .with_custom_background(accent)
-              .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+              .with_custom_text_color(ink_on_demo)
               .with_font("AtkinsonMock", FontSize::Medium)
               .with_rounded_corners(RoundedCorners())
               .with_corner_radius(8.f * pixel_scale)
@@ -535,7 +537,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_label("80/720")
               .with_size(ComponentSize{h720(80.0f), percent(1.0f)})
               .with_custom_background(orange)
-              .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+              .with_custom_text_color(ink_on_demo)
               .with_font("AtkinsonMock", screen_pct(20.f / sh))
               .with_rounded_corners(RoundedCorners())
               .with_corner_radius(8.f * pixel_scale)
@@ -551,7 +553,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_size(
                   ComponentSize{screen_pct(80.0f / 1280.0f), percent(1.0f)})
               .with_custom_background(green)
-              .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+              .with_custom_text_color(ink_on_demo)
               .with_font("AtkinsonMock", screen_pct(20.f / sh))
               .with_rounded_corners(RoundedCorners())
               .with_corner_radius(8.f * pixel_scale)
@@ -618,7 +620,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(220), pixels(26)})
                 .with_custom_background(active ? accent : surface)
                 .with_custom_text_color(
-                    active ? afterhours::Color{20, 20, 30, 255} : muted)
+                    active ? ink_on_demo : muted)
                 .with_font("AtkinsonMock", pixels(20))
                 .with_rounded_corners(RoundedCorners())
                 .with_corner_radius(8.f * pixel_scale)
