@@ -97,7 +97,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
   static void draw_lightning(RectangleType r, float scale) {
     const float cx = r.x + r.width - 48.f * scale;
-    const float cy = r.y + 48.f * scale;
+    const float cy = r.y + r.height * .5f;
     afterhours::draw_circle(static_cast<int>(cx),
                             static_cast<int>(cy + 3.f * scale), 42.f * scale,
                             afterhours::Color{155, 118, 20, 90});
@@ -186,26 +186,26 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         box(scale, 52, 78, 330, 183).with_ignore_pointer_events().with_debug_name("rb_logo"));
     div(context, mk(root.ent()), box(scale, 0, 0, 1280, 40)
         .with_custom_background(afterhours::Color{43, 150, 201, 255}).with_debug_name("rb_online_bar"));
-    label(4, "thia9uers", 32, 4, 154, 32, 22, white, "rb_online");
-    div(context, mk(root.ent()), box(scale, 196, 7, 96, 26)
-        .with_custom_background(afterhours::Color{30, 109, 135, 255}).with_corner_radius(13 * scale));
-    label(5, "Online", 196, 7, 96, 26, 18, white, "rb_connection", TextAlignment::Center);
+    label(4, "thia9uers", 32, 6, 154, 28, 22, white, "rb_online");
+    div(context, mk(root.ent()), box(scale, 196, 8, 96, 24)
+        .with_custom_background(afterhours::Color{30, 109, 135, 255}).with_corner_radius(12 * scale));
+    label(5, "Online", 196, 8, 96, 24, 18, white, "rb_connection", TextAlignment::Center);
     label(6, "Players  " + std::to_string(player_count), 980, 4, 136, 32, 20, white, "rb_player_count");
     label(7, "Coins  " + std::to_string(coins), 1132, 4, 124, 32, 20, white, "rb_coins");
     auto promo = button(context, mk(root.ent()), box(scale, 938, 72, 310, 138)
         .with_custom_background(afterhours::Color{165, 124, 29, 235})
-        .with_border(white, 2 * scale).with_corner_radius(14 * scale)
+        .with_border(white, 2 * scale).with_corner_radius(12 * scale)
         .with_on_draw_fg([scale](RectangleType r) {
           afterhours::draw_rectangle_rounded_lines_ex(
               {r.x + 6 * scale, r.y + 6 * scale, r.width - 12 * scale, r.height - 12 * scale},
               .2f, 24, 1 * scale, afterhours::Color{255, 236, 150, 255});
           draw_lightning(r, scale);
         }).with_debug_name("rb_promo"));
-    label(11, "Supporter pack", 956, 83, 220, 30, 24, white, "rb_promo_title");
+    label(11, "Supporter pack", 956, 83, 190, 30, 24, white, "rb_promo_title");
     label(12, supporter_selected ? "Cosmetic pack preview" : "More looks for your bandits.",
-          956, 118, 214, 24, 16, white, "rb_promo_description");
-    label(13, supporter_selected ? "No purchase in this demo" : "View pack  >", 956, 163,
-          266, 28, 19, white, "rb_promo_action");
+          956, 118, 200, 24, 14, white, "rb_promo_description");
+    label(13, supporter_selected ? "Preview" : "View pack  >", 956, 163,
+          190, 28, 19, white, "rb_promo_action");
     if (promo) {
       supporter_selected = !supporter_selected;
       footer_message = supporter_selected ? "Supporter pack preview" : menu_hints[selected_item];
@@ -238,7 +238,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     } else {
       if (button(context, mk(root.ent()), box(scale, 48, 324, 354, 48)
           .with_label("OPEN MENU").with_font("FredokaMockBold", pixels(28 * scale))
-          .with_custom_background(cyan).with_corner_radius(20 * scale)
+          .with_custom_background(cyan).with_corner_radius(12 * scale)
           .with_debug_name("rb_open_menu"))) {
         menu_open = true;
         selected_item = 0;
@@ -246,9 +246,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
     const std::array<float, 4> marker_x{708, 936, 1070, 1140};
-    const std::array<float, 4> marker_y{576, 558, 570, 553};
+    const std::array<float, 4> marker_y{564, 546, 558, 541};
     div(context, mk(root.ent()), box(scale, marker_x[character_index] - 49,
-        marker_y[character_index] - 8, 98, 16)
+        marker_y[character_index], 98, 12)
         .with_on_draw_fg([scale, cyan](RectangleType r) {
           afterhours::draw_rectangle_rounded_lines_ex(r, 1, 32, 3 * scale, cyan);
         }).with_ignore_pointer_events().with_debug_name("rb_selected_marker"));
@@ -260,24 +260,35 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       if (!button(context, mk(root.ent(), id), box(scale, x, 622, 48, 32)
           .with_label(caption).with_font("FredokaMockBold", pixels(18 * scale))
           .with_custom_background(dark).with_border(white, 1 * scale)
-          .with_corner_radius(6 * scale).with_custom_text_color(white)
+          .with_corner_radius(4 * scale).with_custom_text_color(white)
           .with_debug_name(name))) return;
       character_index = (character_index + (direction > 0 ? 1 : character_names.size() - 1)) % character_names.size();
       footer_message = "Selected " + character_names[character_index];
     };
     character_button(60, "LB", 486, -1, "rb_character_prev");
     character_button(61, "RB", 1166, 1, "rb_character_next");
-    label(62, character_names[character_index], 548, 614, 418, 28, 24, white,
+    label(62, character_names[character_index], 640, 614, 420, 28, 24, white,
           "rb_character_name", TextAlignment::Center);
-    label(63, "FAVOURITE", 548, 645, 418, 18, 13, afterhours::Color{255, 237, 160, 255},
+    label(63, "FAVOURITE", 640, 645, 420, 18, 13, afterhours::Color{255, 237, 160, 255},
           "rb_favourite", TextAlignment::Center);
-    label(64, std::to_string(character_index + 1) + " of 4", 1002, 622, 126, 32,
+    label(64, std::to_string(character_index + 1) + " of 4", 1080, 622, 72, 32,
           20, white, "rb_character_count", TextAlignment::Center);
     label(70, "1.6.0 / RUBBER BANDITS", 32, 645, 260, 24, 14, dark, "rb_build");
     div(context, mk(root.ent()), box(scale, 0, 678, 1280, 42)
         .with_custom_background(cyan).with_debug_name("rb_footer"));
     label(72, footer_message, 32, 686, 830, 26, 21, dark, "rb_footer_text");
-    label(73, "Enter  Select     Esc  Menu", 922, 686, 326, 26, 18, dark, "rb_input_guide");
+    div(context, mk(root.ent()), box(scale, 922, 684, 52, 26)
+        .with_label("Enter").with_font("FredokaMockBold", pixels(18 * scale))
+        .with_custom_background(dark).with_custom_text_color(white)
+        .with_alignment(TextAlignment::Center).with_corner_radius(4 * scale)
+        .with_ignore_pointer_events().with_debug_name("rb_enter_keycap"));
+    label(74, "Select", 980, 686, 70, 26, 18, dark, "rb_select_hint");
+    div(context, mk(root.ent()), box(scale, 1056, 684, 46, 26)
+        .with_label("Esc").with_font("FredokaMockBold", pixels(18 * scale))
+        .with_custom_background(dark).with_custom_text_color(white)
+        .with_alignment(TextAlignment::Center).with_corner_radius(4 * scale)
+        .with_ignore_pointer_events().with_debug_name("rb_esc_keycap"));
+    label(75, "Menu", 1108, 686, 140, 26, 18, dark, "rb_menu_hint");
   }
 };
 

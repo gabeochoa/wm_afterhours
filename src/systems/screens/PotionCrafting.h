@@ -182,9 +182,9 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     };
     text(2, 32, 22, 700, 24, "THE ART OF ALCHEMY", 18, muted);
     text(3, 32, 47, 850, 49, "Alchemist's Workshop", 43, ink, "potion_title");
-    div(context, mk(root.ent()), box(1052, 27, 196, 63).with_custom_background(paper).with_border(rule, 1));
-    text(5, 1064, 39, 66, 37, "Gold", 22, muted);
-    text(8, 1130, 37, 106, 41, "2,450", 32, ink, "potion_gold", TextAlignment::Right);
+    div(context, mk(root.ent()), box(1052, 27, 164, 63).with_custom_background(paper).with_border(rule, 1));
+    text(5, 1064, 39, 52, 37, "Gold", 22, muted);
+    text(8, 1112, 37, 92, 41, "2,450", 32, ink, "potion_gold", TextAlignment::Right);
     line(6, 24, 103, 1232, 1, rule);
     line(7, 24, 157, 1232, 1, rule);
     const std::array<std::string, 3> tabs{"Recipes", "Inventory", "Journal"};
@@ -205,7 +205,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 2; ++i) {
       const float x = 878 + static_cast<float>(i) * 173;
       div(context, mk(root.ent(), 36 + i), box(x, 688, i == 0 ? 49 : 67, 27)
-          .with_custom_background(paper).with_border(rule, 1));
+          .with_custom_background(paper).with_border(rule, 1).with_corner_radius(4 * scale));
       text(38 + i, x, 687, i == 0 ? 49 : 67, 29, i == 0 ? "Tab" : "Enter", 20, ink, "", TextAlignment::Center);
     }
     text(35, 933, 687, 112, 29, "Move", 20, muted);
@@ -241,7 +241,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
         text(id + 3, 84, y + 35, 207, 25, recipes[i].effect, 21, muted);
         text(id + 4, 84, y + 63, 207, 24, std::to_string(recipes[i].seconds) + " s recipe", 20, muted);
       }
-      text(150, 24, 644, 274, 28, "Four recipes, one workbench.", 21, muted);
+      text(150, 24, 638, 274, 28, "Four recipes, one workbench.", 21, muted);
       const auto &active = recipes[selected_recipe];
       const bool available = can_brew(active);
       text(200, 328, 175, 536, 43, active.name, 36, ink, "potion_recipe_title", TextAlignment::Center);
@@ -264,11 +264,11 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
         const float x = 328 + 276.f * static_cast<float>(i);
         const int id = 210 + static_cast<int>(i) * 10;
         const bool enough = ingredient.count >= count;
-        div(context, mk(root.ent(), eid(id)), box(x, 464, 260, 82).with_custom_background(paper).with_border(rule, 1));
-        text(id + 1, x + 10, 469, 240, 28, std::string(ingredient.name) + " × " + std::to_string(count), 24, ink);
-        text(id + 2, x + 10, 497, 240, 23, "Required " + std::to_string(count) + " / Owned " + std::to_string(ingredient.count), 20, muted,
+        div(context, mk(root.ent(), eid(id)), box(x, 462, 260, 86).with_custom_background(paper).with_border(rule, 1));
+        text(id + 1, x + 10, 471, 240, 28, std::string(ingredient.name) + " × " + std::to_string(count), 24, ink);
+        text(id + 2, x + 10, 499, 240, 23, "Required " + std::to_string(count) + " / Owned " + std::to_string(ingredient.count), 20, muted,
              "potion_required_" + std::to_string(i));
-        text(id + 3, x + 31, 520, 219, 22, enough ? "After brew: " + std::to_string(ingredient.count - count) + " remaining" : "Not enough in stock",
+        text(id + 3, x + 31, 522, 219, 22, enough ? "After brew: " + std::to_string(ingredient.count - count) + " remaining" : "Not enough in stock",
              19, enough ? olive : unavailable);
         div(context, mk(root.ent(), eid(id + 4)), box(x + 12, 525, 12, 12).with_ignore_pointer_events()
             .with_on_draw_fg([enough, olive, unavailable](RectangleType r) {
@@ -278,7 +278,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               if (!enough) afterhours::draw_line_ex({r.x, r.y}, {r.x + r.width, r.y + r.height}, 2, color);
             }));
       }
-      text(232, 328, 552, 536, 27, std::to_string(active.seconds) + " s recipe / Instant demo / Makes 1 potion", 21, muted, "", TextAlignment::Center);
+      text(232, 328, 552, 536, 27, std::to_string(active.seconds) + " s recipe / Makes 1 potion", 21, muted, "", TextAlignment::Center);
       if (button(context, mk(root.ent()), box(448, 586, 296, 49)
           .with_label(available ? "Brew potion" : "Missing ingredients").with_font("Garamond", pixels(29 * scale))
           .with_custom_background(available ? olive : afterhours::Color{105, 82, 48, 255})
@@ -301,7 +301,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     const float gy = inventory ? 293.f : 228.f;
     if (!inventory) {
       text(300, 900, 176, 348, 40, "Ingredients", 30, ink);
-      text(301, 900, 209, 348, 22, "Marked tiles are used by this recipe.", 18, muted);
+      text(301, 900, 200, 348, 22, "Marked tiles are used by this recipe.", 18, muted);
     }
     for (size_t i = 0; i < ingredients.size(); ++i) {
       const float x = gx + static_cast<float>(inventory ? i : i % 3) * (inventory ? 202.f : 116.f);

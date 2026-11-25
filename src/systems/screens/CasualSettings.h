@@ -95,10 +95,11 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("casual_root"));
     auto label = [&](afterhours::Entity &parent, int id, float x, float y,
                      float w, float h, const std::string &text, float size,
-                     afterhours::Color color, const std::string &name = "", bool shadow = false) {
+                     afterhours::Color color, const std::string &name = "", bool shadow = false,
+                     TextAlignment align = TextAlignment::Center) {
       return div(context, mk(parent, id), box(scale, x, y, w, h).with_label(text)
           .with_font("FredokaMockBold", pixels(size * 1.25f * scale))
-          .with_custom_text_color(color).with_alignment(TextAlignment::Center)
+          .with_custom_text_color(color).with_alignment(align)
           .with_text_shadow(shadow ? brown : afterhours::Color{0, 0, 0, 0},
                             0, 1.5f * scale)
           .with_text_stroke(shadow ? brown : afterhours::Color{0, 0, 0, 0},
@@ -107,7 +108,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
     auto action = [&](afterhours::Entity &parent, int id, const std::string &text,
                       float x, float y, float w, float h, const std::string &name,
-                      float size = 29.f, int texture_index = 2) {
+                      float size = 29.f, int texture_index = 2, bool dimOff = false) {
       const auto texture = art[static_cast<size_t>(texture_index)];
       const float base_w = texture_index == 2 ? 400.f : texture_index == 9 ? 74.f : 119.f;
       const float base_h = texture_index == 2 ? 77.f : texture_index == 9 ? 74.f : 82.f;
@@ -118,23 +119,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_text_inset(4 * scale, 2 * scale).with_corner_radius(35 * scale)
           .with_text_shadow({67, 128, 144, 255}, 0, 1.5f * scale)
           .with_click_activation(ClickActivationMode::Release)
-          .with_on_draw_bg([texture, base_w, base_h, image_w, image_h](RectangleType r) {
+          .with_on_draw_bg([texture, base_w, base_h, image_w, image_h, dimOff](RectangleType r) {
             const float sx = r.width / base_w, sy = r.height / base_h;
-            paint(texture, {r.x - 8 * sx, r.y - 8 * sy, image_w * sx, image_h * sy});
+            const RectangleType plate{r.x - 8 * sx, r.y - 8 * sy, image_w * sx, image_h * sy};
+            paint(texture, plate);
+            if (dimOff) afterhours::draw_rectangle_rounded(plate, 1.f, 24,
+                {44, 34, 24, 115}, RoundedCorners().all_round());
           }).with_debug_name(name));
     };
 
-    div(context, mk(root.ent()), box(scale, 1068, 28, 184, 52)
-        .with_custom_background({255, 240, 207, 255}).with_corner_radius(26 * scale)
-        .with_border({217, 176, 101, 255}, 3 * scale).with_ignore_pointer_events()
-        .with_on_draw_fg([scale](RectangleType r) {
-          const raylib::Vector2 center{r.x + 27 * scale, r.y + r.height / 2};
-          raylib::DrawCircleV(center, 14 * scale, {244, 187, 50, 255});
-          raylib::DrawCircleLinesV(center, 11 * scale, {165, 108, 31, 255});
-          raylib::DrawLineEx({center.x, center.y - 7 * scale}, {center.x, center.y + 7 * scale},
-                             3 * scale, {255, 231, 132, 255});
-        }));
-    label(root.ent(), 2, 1115, 31, 130, 44, std::to_string(progress.coins) + " +", 24, brown, "casual_coins");
     if (settings_open) {
       div(context, mk(root.ent()), box(scale, 0, 0, 1280, 720)
           .with_custom_background({6, 22, 12, 194}).with_ignore_pointer_events());
@@ -152,7 +145,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       for (size_t i = 0; i < values.size(); ++i) {
         const float x = 74 + 132.f * i;
         if (action(board.ent(), 10 + static_cast<int>(i), "", x, 139, 102, 70, ids[i],
-                   20, 3 + static_cast<int>(i) * 2 + (*values[i] ? 0 : 1))) {
+                   20, 3 + static_cast<int>(i) * 2 + (*values[i] ? 0 : 1), !*values[i])) {
           *values[i] = !*values[i];
           status = std::string(names[i]) + (*values[i] ? " on" : " off");
         }
@@ -177,8 +170,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         notifications_on = !notifications_on;
         status = notifications_on ? "Notifications enabled" : "Notifications disabled";
       }
-      label(board.ent(), 44, 72, 290, 280, 32, "NOTIFICATIONS", 23, cream);
-      label(board.ent(), 45, 72, 320, 280, 23, notifications_on ? "ON" : "OFF", 16, cream, "casual_notifications_state");
+      label(board.ent(), 44, 77, 290, 270, 32, "NOTIFICATIONS", 23, cream, "", false, TextAlignment::Left);
+      label(board.ent(), 45, 77, 320, 270, 23, notifications_on ? "ON" : "OFF", 16, cream, "casual_notifications_state", false, TextAlignment::Left);
       div(context, mk(board.ent()), box(scale, 367, 305, 64, 30)
           .with_custom_background(notifications_on ? afterhours::Color{91, 176, 45, 255} : afterhours::Color{35, 112, 145, 255})
           .with_corner_radius(15 * scale).with_border({255, 248, 230, 220}, scale).with_ignore_pointer_events()
@@ -208,15 +201,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       constexpr std::array<const char *, 3> metadata_labels{"Build", "Version", "Player ID"};
       constexpr std::array<const char *, 3> metadata_values{"15555-1-114203-20-10200-01", "1.11.0.12346", "281 676 956 389"};
       for (int i = 0; i < 3; ++i) {
-        div(context, mk(board.ent(), 70 + i), box(scale, 77, 485 + i * 30.f, 104, 30)
+        div(context, mk(board.ent(), 70 + i), box(scale, 77, 493 + i * 27.f, 104, 27)
             .with_label(metadata_labels[i]).with_font("FredokaMockBold", pixels(19 * scale))
             .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
-        div(context, mk(board.ent(), 75 + i), box(scale, 182, 485 + i * 30.f, 646, 30)
-            .with_label(metadata_values[i]).with_font("FredokaMockBold", pixels(27 * scale))
+        div(context, mk(board.ent(), 75 + i), box(scale, 190, 493 + i * 27.f, 638, 27)
+            .with_label(metadata_values[i]).with_font("FredokaMockBold", pixels(24 * scale))
             .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events()
             .with_debug_name("casual_metadata_" + std::to_string(i)));
       }
-      label(board.ent(), 30, 70, 580, 800, 26,
+      label(board.ent(), 30, 70, 568, 800, 26,
             status.empty() ? "Preferences apply immediately. Kept for this session." : status,
             16.5f, brown, "casual_status");
       if (action(root.ent(), 50, "", 1022, 104, 62, 62, "casual_close", 20, 9)) settings_open = false;
@@ -228,6 +221,17 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (action(root.ent(), 62, "SETTINGS", 440, 414, 400, 77, "casual_reopen"))
         settings_open = true;
     }
+    div(context, mk(root.ent()), box(scale, 1068, 28, 184, 52)
+        .with_custom_background({255, 240, 207, 255}).with_corner_radius(26 * scale)
+        .with_border({240, 205, 140, 255}, 3 * scale).with_ignore_pointer_events()
+        .with_on_draw_fg([scale](RectangleType r) {
+          const raylib::Vector2 center{r.x + 27 * scale, r.y + r.height / 2};
+          raylib::DrawCircleV(center, 14 * scale, {244, 187, 50, 255});
+          raylib::DrawCircleLinesV(center, 11 * scale, {165, 108, 31, 255});
+          raylib::DrawLineEx({center.x, center.y - 7 * scale}, {center.x, center.y + 7 * scale},
+                             3 * scale, {255, 231, 132, 255});
+        }));
+    label(root.ent(), 2, 1115, 31, 130, 44, std::to_string(progress.coins) + " +", 24, brown, "casual_coins");
 
     constexpr std::array<const char *, 6> titles{
         "About", "Language", "Credits", "Support", "Terms and privacy", "Save / load progress"};
