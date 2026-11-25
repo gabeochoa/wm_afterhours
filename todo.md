@@ -22,7 +22,109 @@ Full duplicate / merge analysis (156 → ~115 screens): [DUPLICATE_SCREENS_AUDIT
 - [ ] **Strip `"in this demo"` / `"local preview"` meta-disclaimers from realistic mockups & dialogs:** `DialogInfoShowcase.h`, `IslandsTrainsSettings.h`, `RubberBanditsMenu.h`, `SettingRowShowcase.h`, `ShopInterface.h` (Sell tab), `OffsiteBackupApp.h` (Restore detail), `AIMChatDemo.h` (Help/Info copy), `SecureTunnelMockup.h` (Settings modal).
 - [ ] **Audit `ocean_navy` screens using `Theme::Usage::Secondary` (bright `#0C5E2A` green) on non-primary buttons/tabs** (same fix we applied to `Themes.h` and `LanguageDemo.h`): `AutoTextColorShowcase.h`, `ButtonVariantsShowcase.h`, `Buttons.h`, `ModalAdvanced.h`, `RealWorldModals.h`.
 - [ ] **Check remaining `─` box-drawing chars in comments vs labels:** verify `AdaptiveScalingDemo.h`, `ScrollClipBugRepro.h`, and `ToggleSwitchShowcase.h` emit zero missing-glyph warnings in `make run`.
+- [ ] **Fix leaf-label `with_padding` warning candidate:** audit `PseudoLocaleLab.h` (swap `with_padding` on leaf labels to `with_text_inset`).
+- [ ] **Normalize mixed corner radii (`>=4` distinct 1–14px values in one screen)** to a clean 3-step scale (`4px` controls / `8px` inner cards / `12px` outer panels): `AnimationBasicDemo.h`, `AnimationInteractiveDemo.h`, `AnimationLoopingDemo.h`, `Cards.h`, `CheckboxShowcase.h`, `ContextMenuLab.h`, `DecoratorShowcase.h`, `DragDropShowcase.h`, `EmpireTycoon.h`, `EntityIndexLab.h`, `ExampleColors.h`, `ExampleLayout.h`, `FitContentLab.h`, `FontWeightShowcase.h`, `Forms.h`, `GuessWhoLab.h`, `HorizontalDragShowcase.h`, `ImageShowcase.h`, `LanguageDemo.h`, `PaginationShowcase.h`, `ParcelCorpsSettings.h`, `PseudoLocaleLab.h`, `RubberBanditsMenu.h`, `ScrollViewShowcase.h`, `TabContainerShowcase.h`, `TransitionsLab.h`.
 - [ ] **Check & fix any remaining `LOG_WARN` messages across all 156 screens:** run `./output/ui_tester.exe --headless-screenshots /tmp/all_check` (or cycle through screens in `make run`) and fix any unintentional `Layout overflow`, `Container too small for text`, or `sets padding on a label with no children` warnings. (Note: warnings in `validation_throttle_lab`, `touch_targets`, `text_cache_lab`, and `styled_text_lab` are intentional test fixtures.)
+
+### P1.5 — Pixel-verified corners, padding & alignment issues (16 screens × 5 issues)
+Every item below was verified directly in `output/*_720p.png` screenshots.
+
+- [ ] **`casual_settings` (`src/systems/screens/CasualSettings.h`)**
+  1. `"Preferences apply immediately. Kept for this session."` collides with the curved bottom peach rim — add bottom padding or lift it `12px` inside the inner card.
+  2. `VIBRATION` icon stays bright blue while OFF — dim/desaturate OFF icons (matching `AngryBirdsSettings.h`).
+  3. `"NOTIFICATIONS / OFF"` text sits off-center next to the toggle switch — left-align cleanly with symmetric horizontal padding inside the blue pill.
+  4. `Build / Version / Player ID` block sits tight below `LANGUAGE` — increase top gap by `10–12px` and align values on a clean left column.
+  5. Top-right `1000 +` coin pill is barely readable dark-on-dark — raise text contrast or add a lighter border.
+- [ ] **`flight_options` (`src/systems/screens/FlightOptions.h`)**
+  1. `"Standard"` inside the right `CURRENT SELECTION` box is randomly indented `~50px` right relative to `"Control Type"` and `"Saved: Standard"` — align flush left with the card's inner padding.
+  2. Left nav column has no border while the right card has a bright `1px` cyan outline — unify border/elevation strategy across all 3 columns.
+  3. `"Enter activates the focused control."` sits cramped under `[Enter]` with tiny bottom padding inside the footer bar — give the footer symmetrical top/bottom padding.
+  4. `"APPLY & CLOSE"` and `"BACK"` float in the footer without consistent button frames or right-edge alignment.
+  5. `AUDIO / LANGUAGE` section header crowds `GRAPHICS` above it — normalize vertical section-header spacing (`+8px` top margin).
+- [ ] **`islands_trains_settings` (`src/systems/screens/IslandsTrainsSettings.h`)**
+  1. Strip `"Changes apply immediately in this demo."` meta-copy beneath `SETTINGS`.
+  2. `"PLAY TUTORIAL"` has its `▶` triangle pinned far left while the label is centered — place icon `10px` to the left of the centered text.
+  3. Align `"RESET TO DEFAULTS"` and `"All six settings"` symmetrically on the bottom row (right-align `"All six settings"` flush with the controls above).
+  4. Right-align `"Low 0 / 10 High"` flush with the right edge of the `Pan speed` segmented bar.
+  5. Unify border/corner styling across `Keyboard controls >` (borderless) and `PLAY TUTORIAL` (`1px` dark outline).
+- [ ] **`kirby_options` (`src/systems/screens/KirbyOptions.h`)**
+  1. Remove the duplicate overlapping purple `"Options"` banner glued onto the top of the white card (the purple `"Options"` tab directly above already names the active tab).
+  2. Add vertical breathing room between the dark-brown `"Common"` pill and the top border of the `Controller` tile, and align `"Common"` + `"Controls & visibility"` on one clean baseline.
+  3. Match corner radii: `Delete Data` uses `6px` rounded corners while the 5 big category tiles (`Controller`, `Display`, `Accessibility`, `Sound`, `Online`) use sharp `0px` corners.
+  4. Give `"Choose a category to customize your rider."` clean vertical padding above the bottom purple hairline rule.
+  5. Align left notepad `"Profile customization"` header and `"Race day notes"` list lines to a consistent inner padding inset.
+- [ ] **`parcel_corps_settings` (`src/systems/screens/ParcelCorpsSettings.h`)**
+  1. `"MSAA"` sub-label under `Anti-aliasing` touches the bottom row divider — increase row height or shift `Anti-aliasing` up `4px` for balanced vertical padding.
+  2. `"Changes apply locally"` sits tight against the curved bottom phone bezel — add `10px` bottom safe-area inset (and trim meta-copy).
+  3. Unify overlay card corner radii: `"LIVE · EDDCOATES"` uses sharp `0px` corners while `"Grow your delivery network"` and `"9 mph"` use `8px` rounded corners.
+  4. Tighten the huge horizontal gap in `"9       mph"` inside the bottom-right speedometer card.
+  5. Boost contrast on the `"Lv 0"` dark-on-dark-blue badge inside `"Grow your delivery network"`.
+- [ ] **`potion_crafting` (`src/systems/screens/PotionCrafting.h`)**
+  1. `"Marked tiles are used by this recipe."` touches the top border of the `Moonpetal / Fire Root / Sea Salt` cards — add `6–8px` vertical gap.
+  2. Add inner top/bottom padding to the `Sea Salt × 3` and `Star Dust × 1` requirement boxes and strip `"Instant demo"` from `"45 s recipe / Instant demo / Makes 1 potion"`.
+  3. Add subtle breathing room above the bottom hairline rule under `"Four recipes, one workbench."`.
+  4. Round the sharp `0px` `Tab` / `Enter` keycaps slightly (`4px`) and center their labels with consistent horizontal padding.
+  5. Tighten the `Gold 2,450` top-right box width so there isn't an oversized empty gap between `"Gold"` and `"2,450"`.
+- [ ] **`rubber_bandits_menu` (`src/systems/screens/RubberBanditsMenu.h`)**
+  1. Remove or reposition the stray cyan oval outline overlapping Earl the Bird's feet and the dollar bills.
+  2. Center `"EARL THE BIRD / FAVOURITE"` cleanly between `LB` and `RB` and align `"1 of 4"` symmetrically inside the brown bar.
+  3. Vertically center `"thia9uers"` and the `"Online"` pill inside the top cyan header bar.
+  4. Give the top-right `"Supporter pack"` card symmetrical padding around the circular lightning badge on its right edge.
+  5. Style `Enter` and `Esc` in the bottom cyan bar as snug keycap pills for instant scannability.
+- [ ] **`neon_strike` (`src/systems/screens/NeonStrike.h`)**
+  1. Close the oversized horizontal gap in `"35       / 210"` ammo readout.
+  2. Replace meta-copy (`"HUD PREVIEW"`, `"Select equipment / reload the sample magazine"`, `"Sample combat values / keys 1-4 select streaks"`) with clean tactical HUD labels.
+  3. Add bottom/right inner padding inside the bottom-right `GRENADE x2` and `MELEE x1` cards so text doesn't hug the border.
+  4. Offset top compass `W` and `E` markers `4px` outward so they don't touch the circular compass ring.
+  5. Give `EVENT HISTORY` a subtle `1px` border and `4px` corner radius so it separates cleanly from the dark canvas.
+- [ ] **`buttons` (`src/systems/screens/Buttons.h`)**
+  1. **Critical contrast bug:** `"Disabled"` text inside Row 1's disabled button is invisible dark-on-dark — raise disabled label contrast to readable muted foreground.
+  2. Align Row 2 (`Sizes`) captions (`Small / 90 x 45`, `Medium / 120 x 45`, `Large / 180 x 60`) directly to the left edge (or center) of each button above them.
+  3. Add subtle `1px` vertical dividers between `Day | Week | Month | Year` in Row 3 (`View selection`) so the segmented group reads as 4 distinct buttons.
+  4. Restyle `"Guides: off"` at top-right as a quiet secondary bordered button so it doesn't compete with the `Primary` specimen.
+  5. Center the vertical divider in Row 4 (`Custom`) evenly between `Teal` and `Rounded`.
+- [ ] **`button_variants` (`src/systems/screens/ButtonVariantsShowcase.h`)**
+  1. Replace bright `#0C5E2A` green on `"Show bounds"` (`Theme::Usage::Secondary`) with a quiet bordered navy button.
+  2. Soften the bright `1px` white borders on the `Ghost / Disabled` button so it doesn't look *more* prominent than `Ghost / Enabled`.
+  3. Align `"214 x 40px"` column spec cleanly over the button columns instead of above `"Filled"`.
+  4. Vertically align `Small`, `Medium`, `Large`, and `Large outline` in the `Sizes` row on a shared centerline with even bottom padding above their captions.
+  5. Add `6–8px` extra bottom padding inside the `Neon Dark`, `Cozy Kraft`, and `Sage` theme preview cards below the hex strings.
+- [ ] **`dropdowns` (`src/systems/screens/DropdownShowcase.h`)**
+  1. Add bottom padding inside `Gemstone / style comparison` card so `"2px requested border / 12px corners"` doesn't hug the bottom edge.
+  2. Label the two small `"Placement: below, flip, then clamp"` wireframe diagrams (`Below`, `Flipped`) so the schematic is self-explanatory.
+  3. Match left text inset on `"Pet"` (`Pet / built-in label`) with `"Alpha"` and `"January"` in neighboring cards.
+  4. Right-align `[+]` in `Preset / custom markers` (`"Option A"` left, `"[+]"` right) to match the chevron alignment of all other dropdowns.
+  5. Soften the `Disabled example` fill from near-black (`#0D1117`) to a muted surface with a subtle border so it matches the dark-card depth language.
+- [ ] **`drag_drop` (`src/systems/screens/DragDropShowcase.h`)**
+  1. Align `Earlier`, `Later`, `<`, `>`, and `To do / In progress / Done` onto one clean horizontal baseline inside the `Move task` bottom bar (fix the staggered staircase).
+  2. Left-align card titles (`Design mockups`, `API endpoints`, `Setup CI`) beside the 6-dot grip to match `SPR-01 / Design` and `Medium priority`.
+  3. Align `"2 of 8 completed"` cleanly under `"Board / Lanes"` or right-aligned under `"Reset board"` in the header.
+  4. Boost contrast on disabled `Up` / `Down` pagination buttons at the bottom of each column.
+  5. Add a matching subtle `1px` border to the `Move task` bottom bar so it matches the 3 column cards above.
+- [ ] **`file_tree` (`src/systems/screens/FileTreeShowcase.h`)**
+  1. Remove `"Switch data source at right"` pointer copy and add a subtle chevron on `"Project sources"`.
+  2. Right-align the `Size` column header flush with the right edge of the file sizes (`19.4 KB`, `704 B`).
+  3. Deduplicate the empty preview state (`"Select a file to read its source"` + `"Select a source file on the left"`) and replace the hardcoded local path `/Users/gabeochoa/p/wm_afterhours` with a relative project root label (`wm_afterhours/`).
+  4. Equalize horizontal gaps between `Home`, `Up`, and `Refresh` toolbar buttons.
+  5. Soften the hollow sharp-cornered `[]` file icons with `2px` rounded corners or a subtle document fold.
+- [ ] **`meters_gauges` (`src/systems/screens/MetersGaugesShowcase.h`)**
+  1. Increase bottom padding inside `Animated Progress` card below `"Pause"` / `"Restart"` to match its top padding.
+  2. Increase bottom padding inside `Circular Gauges` card below `"Color names these fixtures; no live thresholds."`.
+  3. Add bottom viewport breathing room below the footer line (`"Native progress bars + circular progress + slider..."`) and align `0%` / `100%` flush with the slider track ends.
+  4. Format integer slider percentages cleanly (`65%`, `39%`) instead of noisy trailing `.00%`.
+  5. Add subtle `1px` borders to all 5 dark section cards for crisp surface layering.
+- [ ] **`stepper_showcase` (`src/systems/screens/StepperShowcase.h`)**
+  1. Fix the doubled bottom-edge line inside the 5 left steppers (`Resolution`, `Quality`, `Language`, `Difficulty`, `Framerate`) so borders are crisp and uniform.
+  2. Round or taper the square `0px` connector notch on top of the terracotta `Warrior` card so it harmonizes with the card's rounded corners.
+  3. Tighten internal alignment inside the `Warrior` card (align shield icon and title/description neatly without a giant empty left column underneath the shield).
+  4. Increase vertical spacing between `"3 / 4 | Default"` captions and the next stepper row below.
+  5. Add a subtle `1px` border to `"Restore defaults"` at top-right so it reads clearly as a button.
+- [ ] **`toasts` (`src/systems/screens/ToastShowcase.h`)**
+  1. **Semantic color bug:** change `"[+] Success Toast"` from dark purple to semantic emerald green, and `"[!] Warning Toast"` from crimson-magenta to semantic amber (distinct from `"[x] Error Toast"` red).
+  2. Add bottom padding inside `Simple toasts` card so `"Operation completed successfully!"` doesn't touch the bottom card edge.
+  3. Match corner radius (`6px`) on `"<  Bottom center  >"` (currently sharp `0px`) with the buttons on the left, and close the `~70px` empty vertical gap between `"Last notification"` and `"None yet"`.
+  4. Replace bright purple `"Clear toasts"` (`Theme::Usage::Secondary`) at top-right with a quiet bordered secondary button.
+  5. Wire `"Sample deletion"` to a real 1-item undoable toast/counter instead of `"No item is deleted and no undo action is attached."`.
 
 ### P2 — Remaining per-screen polish (~114 screens)
 - [ ] **Game & App Mockups:** `CasualSettings.h`, `FlightOptions.h`, `IslandsTrainsSettings.h`, `KirbyOptions.h`, `MarloKart.h`, `MediaLibraryGrid.h`, `NeonStrike.h`, `ParcelCorpsSettings.h`, `PodcastLibrary.h`, `PotionCrafting.h`, `RubberBanditsMenu.h` (see exact 5 items per screen in [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md)).
