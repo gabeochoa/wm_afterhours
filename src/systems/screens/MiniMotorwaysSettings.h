@@ -49,7 +49,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color night_road{74, 91, 94, 255};
   const afterhours::Color night_grid{109, 135, 140, 20};
   const afterhours::Color night_ink{237, 243, 241, 255};
-  const afterhours::Color yellow{255, 208, 102, 255};
+  const afterhours::Color yellow{255, 183, 77, 255};
   const afterhours::Color teal{142, 187, 188, 255};
   const afterhours::Color pale_teal{152, 194, 199, 128};
 
@@ -234,30 +234,27 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    auto back = button(context, mk(root.ent()), box(scale, 48, 40, 152, 48)
-        .with_label("Back").with_font("AtkinsonMock", pixels(26 * scale))
-        .with_custom_text_color(ink).with_custom_background(night_mode ? night_road : day_road)
-        .with_text_inset(40 * scale, 0).with_alignment(TextAlignment::Left)
-        .with_on_draw_fg([ink](RectangleType r) {
-          const float unit = r.height / 48;
-          draw_cycle_arrow({r.x + 5 * unit, r.y + 8 * unit, 30 * unit, 32 * unit}, false, ink);
-        }).with_debug_name("mm_back"));
-    back.ent().get<HasLabel>().text_x_offset = 40 * scale;
+    auto back = button(context, mk(root.ent()), box(scale, 28, 24, 78, 78)
+        .with_custom_background(afterhours::Color{0, 0, 0, 0})
+        .with_on_draw_fg([ink](RectangleType r) { draw_back_arrow(r, ink); })
+        .with_debug_name("mm_back"));
     if (back) {
       settings_open = false;
       tutorial_open = false;
     }
     for (size_t i = 0; i < categories.size(); ++i) {
       const bool active = active_tab == i;
+      const float tab_w = 92.f + static_cast<float>(categories[i].size()) * 21.f;
       auto tab = button(context, mk(root.ent(), 20 + static_cast<int>(i)),
-          box(scale, 120, 132 + static_cast<float>(i) * 66, 268, 54)
-              .with_label(categories[i]).with_font("AtkinsonMock", pixels(35 * scale))
-              .with_custom_background(active ? yellow : afterhours::Color{175, 206, 207, 255})
-              .with_custom_text_color(day_ink).with_alignment(TextAlignment::Left)
-              .with_text_inset(20 * scale, 0).with_letter_spacing(0)
+          box(scale, 388 - tab_w, 138 + static_cast<float>(i) * 57, tab_w, 52)
+              .with_custom_background(active ? yellow : afterhours::Color{168, 200, 203, 255})
               .with_click_activation(ClickActivationMode::Release)
               .with_debug_name("mm_tab_" + std::to_string(i)));
-      tab.ent().get<HasLabel>().text_x_offset = 20 * scale;
+      div(context, mk(root.ent(), 60 + static_cast<int>(i)),
+          box(scale, 388 - tab_w, 138 + static_cast<float>(i) * 57, tab_w - 16, 52)
+              .with_label(categories[i]).with_font("AtkinsonMock", pixels(38 * scale))
+              .with_custom_text_color(afterhours::Color{255, 255, 255, 255}).with_alignment(TextAlignment::Right)
+              .with_text_inset(0, 0).with_letter_spacing(0).with_ignore_pointer_events());
       if (tab) {
         active_tab = i;
         tutorial_open = false;
@@ -279,12 +276,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_letter_spacing(0).with_ignore_pointer_events());
     };
 
-    text(40, categories[active_tab] + " settings", 472, 62, 728, 44, 34);
-    text(41, "Local preferences preview", 472, 108, 728, 26, 18);
     auto toggle = [&](int id, const char *label, bool &value, float row_y,
                       const std::string &debug_name) {
-      text(id, label, 472, row_y, 550, 40, 30);
-      if (button(context, mk(root.ent(), id + 1), box(scale, 1144, row_y + 3, 44, 44)
+      text(id, label, 500, row_y, 360, 46, 32, TextAlignment::Right);
+      if (button(context, mk(root.ent(), id + 1), box(scale, 884, row_y, 58, 58)
           .with_click_activation(ClickActivationMode::Release)
           .with_roundness(1.f)
           .with_on_draw_fg([value, ink, canvas](RectangleType r) {
@@ -293,44 +288,41 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         value = !value;
         feedback = std::string(label) + (value ? " on" : " off");
       }
-      div(context, mk(root.ent(), id + 2), box(scale, 1052, row_y + 3, 80, 44)
-          .with_label(value ? "On" : "Off").with_font("AtkinsonMock", pixels(25 * scale))
-          .with_custom_text_color(ink).with_alignment(TextAlignment::Right)
-          .with_ignore_pointer_events().with_debug_name(debug_name + "_state"));
     };
 
     auto cycle = [&](int id, const std::string &label, std::string value,
                      float row_y, const std::string &debug_prefix,
                      auto previous, auto next,
                      const std::string &value_font = "AtkinsonMock") {
-      text(id, label, 472, row_y, 400, 42, 30, TextAlignment::Left);
+      text(id, label, 500, row_y + 6, 360, 42, 26, TextAlignment::Right);
       if (button(context, mk(root.ent(), id + 1),
-                 box(scale, 896, row_y + 1, 44, 44)
+                 box(scale, 884, row_y, 52, 52)
                      .with_click_activation(ClickActivationMode::Release)
                      .with_on_draw_fg([ink](RectangleType r) {
-                       draw_cycle_arrow(r, false, ink);
+                       // solid left triangle
+                       afterhours::draw_triangle({r.x + 14, r.y + 26}, {r.x + 38, r.y + 10}, {r.x + 38, r.y + 42}, ink);
                      })
                      .with_debug_name(debug_prefix + "_left")))
         previous();
-      text(id + 2, value, 940, row_y + 1, 204, 44, 27,
+      text(id + 2, value, 948, row_y + 4, 150, 44, 29,
            TextAlignment::Center, value_font);
       if (button(context, mk(root.ent(), id + 3),
-                 box(scale, 1144, row_y + 1, 44, 44)
+                 box(scale, 1110, row_y, 52, 52)
                      .with_click_activation(ClickActivationMode::Release)
                      .with_on_draw_fg([ink](RectangleType r) {
-                       draw_cycle_arrow(r, true, ink);
+                       afterhours::draw_triangle({r.x + 38, r.y + 26}, {r.x + 14, r.y + 10}, {r.x + 14, r.y + 42}, ink);
                      })
                      .with_debug_name(debug_prefix + "_right")))
         next();
     };
 
     if (active_tab == 0) {
-      toggle(100, "Night Mode", night_mode, 156.f, "mm_night");
-      toggle(110, "Vibration", vibration, 248.f, "mm_vibration");
-      toggle(120, "Hold to draw or delete", hold_to_draw, 340.f, "mm_hold");
+      toggle(100, "Night Mode", night_mode, 150.f, "mm_night");
+      toggle(110, "Vibration", vibration, 242.f, "mm_vibration");
+      toggle(120, "Hold to Draw/Delete", hold_to_draw, 334.f, "mm_hold");
       cycle(
-          130, "Cursor sensitivity",
-          sensitivity[static_cast<size_t>(sensitivity_level)], 432.f,
+          130, "Controller Cursor Sensitivity",
+          sensitivity[static_cast<size_t>(sensitivity_level)], 426.f,
           "mm_sensitivity",
           [&] {
             sensitivity_level =
@@ -347,29 +339,13 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        sensitivity[static_cast<size_t>(sensitivity_level)];
           });
       div(context, mk(root.ent()),
-          box(scale, 472, 521, 716, 2)
+          box(scale, 500, 500, 662, 2)
               .with_custom_background(night_mode
                                           ? afterhours::Color{105, 128, 132, 255}
                                           : afterhours::Color{183, 195, 199, 255})
               .with_debug_name("mm_separator"));
-      toggle(141, "Colorblind Mode", colorblind_mode, 542.f,
+      toggle(141, "Colorblind Mode", colorblind_mode, 522.f,
              "mm_colorblind");
-      text(150, "Preview the darker settings palette.", 472, 198, 550, 27, 19);
-      text(151, "Controller feedback preference.", 472, 290, 550, 27, 19);
-      text(152, "Keep pressed to draw or remove roads.", 472, 382, 550, 27, 19);
-      text(153, "Controller pointer speed: Low / Default / High.", 472, 478, 716, 27, 19);
-      text(154, "Compare the alternative colors in this preview.", 472, 584, 550, 27, 19);
-      div(context, mk(root.ent()), box(scale, 1060, 596, 128, 22)
-          .with_ignore_pointer_events().with_debug_name("mm_palette_preview")
-          .with_on_draw_fg([this](RectangleType r) {
-            const std::array<afterhours::Color, 3> palette = colorblind_mode
-                ? std::array<afterhours::Color, 3>{{{32, 101, 155, 255}, {210, 138, 30, 255}, {117, 71, 128, 255}}}
-                : std::array<afterhours::Color, 3>{{{181, 66, 70, 255}, {56, 120, 106, 255}, {66, 106, 164, 255}}};
-            for (int i = 0; i < 3; ++i) {
-              const float x = r.x + static_cast<float>(i) * r.width / 3;
-              afterhours::draw_circle(static_cast<int>(x + r.height / 2), static_cast<int>(r.y + r.height / 2), r.height / 2, palette[static_cast<size_t>(i)]);
-            }
-          }));
     } else if (active_tab == 1) {
       toggle(200, "Fullscreen", fullscreen, 151.f, "mm_fullscreen");
       cycle(
@@ -470,15 +446,16 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(702, "Wellington, New Zealand", 507.f, 260.f, 570.f, 45.f, 27.f);
     }
 
-    text(800, "Mini Motorways / 10.2", 48, 658, 350, 36, 18);
-    auto tutorial = button(context, mk(root.ent()), box(scale, 976, 654, 224, 48)
-        .with_label("Tutorial guide").with_font("AtkinsonMock", pixels(24 * scale))
-        .with_custom_background({59, 115, 118, 255}).with_custom_text_color({255, 255, 255, 255})
-        .with_alignment(TextAlignment::Left).with_text_inset(18 * scale, 0)
+    text(800, "Mini Motorways release-10-patch-2 (202207010917)", 24, 664, 620, 30, 19);
+    auto tutorial = button(context, mk(root.ent()), box(scale, 1042, 642, 196, 52)
+        .with_label("Tutorial").with_font("AtkinsonMock", pixels(31 * scale))
+        .with_custom_background(teal).with_custom_text_color({255, 255, 255, 255})
+        .with_alignment(TextAlignment::Left).with_text_inset(16 * scale, 0)
         .with_on_draw_fg([scale](RectangleType r) {
-          draw_cycle_arrow({r.x + 185 * scale, r.y + 10 * scale, 24 * scale, 28 * scale}, true, {255, 255, 255, 255});
+          afterhours::draw_triangle({r.x + 168 * scale, r.y + 26 * scale}, {r.x + 150 * scale, r.y + 14 * scale}, {r.x + 150 * scale, r.y + 38 * scale}, {255,255,255,255});
+          afterhours::draw_rectangle({r.x + 138 * scale, r.y + 23 * scale, 16 * scale, 6 * scale}, {255,255,255,255});
         }).with_debug_name("mm_tutorial"));
-    tutorial.ent().get<HasLabel>().text_x_offset = 18 * scale;
+    tutorial.ent().get<HasLabel>().text_x_offset = 16 * scale;
     if (tutorial) {
       tutorial_open = true;
       feedback.clear();

@@ -47,7 +47,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        {"1920 × 1080", "2560 × 1440", "3840 × 2160"},
        1},
       {"Screen percentage", true, 100, {}, 0},
-      {"V Sync", false, 0, {"Off", "On"}, 1},
+      {"V Sync", false, 0, {"Disabled", "Enabled"}, 1},
       {"Max FPS", true, 50, {}, 0},
       {"Gamma", true, 32, {}, 0},
       {"Anti-Aliasing method",
@@ -55,7 +55,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        0,
        {"Off", "FXAA", "TAA", "TSR", "DLSS"},
        3},
-      {"Dynamic resolution", false, 0, {"Off", "On"}, 1},
+      {"Dynamic resolution", false, 0, {"Disabled", "Enabled"}, 1},
       {"Framerate target", true, 25, {}, 0},
       {"Motion blur", true, 50, {}, 0},
       {"Graphics quality", false, 0, {"Low", "Medium", "High", "Ultra"}, 3},
@@ -115,18 +115,23 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return "AUDIO";
     if (active_tab == 3)
       return "CONTROLS";
-    return "VIDEO SETTINGS";
+    return "GRAPHICS";
   }
 
   std::string value_for(const SettingRow &row) const {
     if (row.is_slider) {
       if (row.label == "Max FPS" || row.label == "Framerate target")
-        return std::to_string(
-            static_cast<int>(std::round(row.slider_value * 2.4f))) + " FPS";
-      if (row.label == "Gamma")
-        return fmt::format("{:.2f}", 1.0f + row.slider_value * 0.0375f);
+        return std::to_string(static_cast<int>(std::round(row.slider_value * 2.4f)));
+      if (row.label == "Gamma") {
+        std::string s = fmt::format("{:.2f}", 1.0f + row.slider_value * 0.0375f);
+        while (!s.empty() && s.back() == '0') s.pop_back();
+        if (!s.empty() && s.back() == '.') s.pop_back();
+        return s;
+      }
       if (row.label == "Motion blur")
-        return std::to_string(row.slider_value * 2) + "%";
+        return std::to_string(row.slider_value / 50) + (row.slider_value % 50 ? "." + std::to_string((row.slider_value % 50) / 5) : "");
+      if (row.label == "Screen percentage")
+        return std::to_string(row.slider_value);
       return std::to_string(row.slider_value) + "%";
     }
     if (!row.options.empty())
@@ -136,24 +141,24 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::string description_for(const SettingRow &row) const {
     if (row.label == "Max FPS")
-      return "The maximum frames displayed per second. This local preview does not change the running application's frame limit.";
+      return "The maximum number of frames the game will try to display per second";
     if (row.label == "Framerate target")
-      return "Dynamic resolution adjusts image quality to aim for this frame rate. It takes effect only while Dynamic resolution is On.";
+      return "Dynamic resolution adjusts image quality to aim for this frame rate.";
     if (row.label == "Anti-Aliasing method") {
       const std::array<const char *, 5> help{
           "Off: no anti-aliasing.", "FXAA: Fast Approximate Anti-Aliasing.",
           "TAA: Temporal Anti-Aliasing combines information from previous frames.",
           "TSR: Temporal Super Resolution reconstructs a sharper image using previous frames.",
-          "DLSS: Deep Learning Super Sampling. This is a local settings preview, not a GPU capability check."};
+          "DLSS: Deep Learning Super Sampling."};
       return help[row.option_idx];
     }
     if (row.label == "Motion blur")
-      return "Motion blur intensity: 0% disables the effect, 100% is the default, and 200% is the strongest preview setting.";
+      return "Motion blur intensity.";
     if (row.label == "Texture quality" || row.label == "Graphics quality")
-      return "Graphics quality is a preset preview. Texture quality is an independent override; changing one does not change the other.";
-    if (row.label == "Resolution") return "Set the resolution of the rendered image in this local settings preview.";
-    if (row.label == "Gamma") return "Adjust the brightness response. The local preview range is 1.0 to 4.75; the default is 2.2.";
-    return "Adjust " + row.label + ". Changes apply to this local preview immediately.";
+      return "Texture quality is an independent override; changing one does not change the other.";
+    if (row.label == "Resolution") return "Set the resolution of the rendered image.";
+    if (row.label == "Gamma") return "Adjust the brightness response.";
+    return "Adjust " + row.label + ".";
   }
 
   std::string range_for(const SettingRow &row) const {
@@ -384,37 +389,33 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                       const float width = std::max(0.f, r.width - 6.f);
                       const float x = r.x + position * width;
                       const float y = r.y + r.height * .5f;
-                      afterhours::draw_line_ex({r.x, y}, {r.x + width, y}, 4 * scale,
+                      afterhours::draw_line_ex({r.x, y}, {r.x + width, y}, 2.5f * scale,
                           active ? afterhours::Color{47, 162, 103, 255} : afterhours::Color{86, 107, 115, 255});
-                      afterhours::draw_line_ex({r.x, y}, {x, y}, 4 * scale, color);
-                      afterhours::draw_poly({x, y}, 4, 10 * scale, 15, white);
-                      afterhours::draw_poly({x, y}, 4, 7 * scale, 15, color);
+                      afterhours::draw_line_ex({r.x, y}, {x, y}, 2.5f * scale, color);
+                      afterhours::draw_poly({x, y}, 4, 7 * scale, 15, white);
+                      afterhours::draw_poly({x, y}, 4, 5 * scale, 15, color);
                     }));
       } else {
-        const bool binary = row.options.size() == 2 && (row.options[0] == "Off" || row.options[0] == "Disabled");
         auto value = button(context, mk(root.ent(), 700 + static_cast<int>(i)),
             box(scale, 292, y + 5, 284, 29).with_label(row.options[row.option_idx])
                 .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_text_color(active ? green_dark : green)
-                .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
-                .with_on_draw_fg([binary, enabled = row.option_idx == 1, active, this, scale](RectangleType r) {
+                .with_alignment(TextAlignment::Center).with_text_inset(0, 0)
+                .with_on_draw_fg([count = row.options.size(), idx = row.option_idx, active, this, scale](RectangleType r) {
                   const auto color = active ? green_dark : green;
-                  if (binary) {
-                    const RectangleType track{r.x + r.width - 52 * scale, r.y + 3 * scale, 48 * scale, 23 * scale};
-                    afterhours::draw_rectangle_rounded(track, 1, 16, enabled ? color : muted, RoundedCorners().all_round());
-                    afterhours::draw_circle(static_cast<int>(track.x + (enabled ? 36 : 12) * scale),
-                        static_cast<int>(track.y + 11.5f * scale), 8 * scale, enabled ? white : green_dark);
-                    return;
+                  const float cy = r.y + r.height - 4 * scale;
+                  const float total = static_cast<float>(count) * 12 * scale;
+                  float x = r.x + r.width / 2 - total / 2 + 6 * scale;
+                  for (size_t d = 0; d < count; ++d) {
+                    if (d == idx) afterhours::draw_poly({x, cy}, 4, 4 * scale, 0, color);
+                    else afterhours::draw_circle(static_cast<int>(x), static_cast<int>(cy), 2.2f * scale, color);
+                    x += 12 * scale;
                   }
-                  const float x = r.x + r.width - 15 * scale;
-                  const float y = r.y + r.height / 2;
-                  afterhours::draw_line_ex({x - 4 * scale, y - 5 * scale}, {x + 2 * scale, y}, 2 * scale, color);
-                  afterhours::draw_line_ex({x + 2 * scale, y}, {x - 4 * scale, y + 5 * scale}, 2 * scale, color);
                 }).with_debug_name("sports_value_" + std::to_string(i)));
-        value.ent().get<HasLabel>().text_x_offset = 12 * scale;
+        value.ent().get<HasLabel>().alignment = TextAlignment::Center;
         if (value) {
           selected_row = i;
           row.option_idx = (row.option_idx + 1) % row.options.size();
-          status = "Applied locally";
+          status = row.label;
         }
       }
     }
@@ -439,45 +440,18 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_text_overflow(TextOverflow::Wrap));
     div(context, mk(root.ent()),
         box(scale, 680, 288, 510, 34)
-            .with_label("Default: " +
+            .with_label("Default value: " +
                         value_for(initial_settings[active_tab][selected_row]))
             .with_font("AtkinsonMock", pixels(22.f * scale))
             .with_custom_text_color(white));
-
-    div(context, mk(root.ent(), 1004), box(scale, 680, 336, 510, 30)
-        .with_label(range_for(selected)).with_font("AtkinsonMock", pixels(18 * scale))
-        .with_custom_text_color(muted).with_debug_name("sports_range"));
-    if (selected.is_slider) {
-      div(context, mk(root.ent(), 1006), box(scale, 680, 386, 510, 22)
-          .with_ignore_pointer_events().with_on_draw_fg([this, value = selected.slider_value, scale](RectangleType r) {
-            const float x = r.x + r.width * static_cast<float>(value) / 100;
-            const float y = r.y + r.height / 2;
-            afterhours::draw_line_ex({r.x, y}, {r.x + r.width, y}, 4 * scale, muted);
-            afterhours::draw_line_ex({r.x, y}, {x, y}, 4 * scale, green);
-            afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), 7 * scale, white);
-          }).with_debug_name("sports_range_track"));
-      auto minimum = selected;
-      auto maximum = selected;
-      minimum.slider_value = 0;
-      maximum.slider_value = 100;
-      div(context, mk(root.ent()), box(scale, 680, 419, 220, 26)
-          .with_label(value_for(minimum)).with_font("AtkinsonMock", pixels(18 * scale))
-          .with_custom_text_color(white));
-      div(context, mk(root.ent()), box(scale, 970, 419, 220, 26)
-          .with_label(value_for(maximum)).with_font("AtkinsonMock", pixels(18 * scale))
-          .with_alignment(TextAlignment::Right).with_custom_text_color(white));
-    }
-    div(context, mk(root.ent()), box(scale, 680, 467, 510, 32)
-        .with_label("Settings preview / changes stay local")
-        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(muted));
 
     div(context, mk(root.ent()),
         box(scale, 0, 673, 1280, 47)
             .with_custom_background(afterhours::Color{32, 45, 54, 255})
             .with_debug_name("sports_footer"));
     if (button(context, mk(root.ent()),
-               box(scale, 880, 681, 270, 32)
-                   .with_label("[Y] Reset " + tabs[active_tab])
+               box(scale, 840, 681, 300, 32)
+                   .with_label("[Y] Reset to default")
                    .with_font("AtkinsonMockBold", pixels(23.f * scale))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Left)
@@ -494,13 +468,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       status = "Back";
       settings_open = false;
     }
-    div(context, mk(root.ent()),
-        box(scale, 34, 684, 800, 28)
-            .with_label(status)
-            .with_font("AtkinsonMockBold", pixels(21.f * scale))
-            .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("sports_status"));
   }
 };
 

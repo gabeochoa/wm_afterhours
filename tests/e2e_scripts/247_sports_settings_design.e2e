@@ -1,15 +1,12 @@
 goto_screen sports_settings
 resize 1280 720
 wait 0.4
-expect_text "VIDEO SETTINGS"
+expect_text "GRAPHICS"
 expect_text "2560 × 1440"
-expect_text "100%"
-expect_text "120 FPS"
-expect_text "60 FPS"
-expect_text "Default: 120 FPS"
-expect_text "Range: 0–240 FPS / no unlimited option"
-expect_text "Applied locally"
-expect_text "[Y] Reset VIDEO"
+expect_text "120"
+expect_text "60"
+expect_text "Default value: 120"
+expect_text "[Y] Reset to default"
 assert_ui sports_root x=0 y=0 w=1280 h=720
 assert_ui sports_row_4 x=34 y=317 w=559 h=39
 assert_ui sports_divider x=620 y=124 w=2 h=498
@@ -22,47 +19,41 @@ screenshot sports_design
 click_ui sports_row_4
 key RIGHT
 wait 0.2
-expect_text "132 FPS"
+expect_text "132"
 click_ui sports_row_5
 wait 0.2
-expect_text "Range: 1.0–4.75"
-expect_text "4.75"
-expect_text "2.20"
+expect_text "2.2"
 click_ui sports_value_6
 wait 0.2
 expect_text "DLSS"
 expect_text "Deep Learning Super Sampling"
 click_ui sports_row_9
 wait 0.2
-expect_text "0–200% intensity"
-expect_text "100% is the default"
 click_ui sports_value_3
 wait 0.2
-expect_text "Off"
+expect_text "Disabled"
 click_ui sports_row_11
 wait 0.2
 expect_text "Texture quality is an independent override"
 screenshot sports_design_help
 click_ui sports_reset
 wait 0.2
-expect_text "VIDEO defaults restored"
-expect_text "120 FPS"
+expect_text "120"
 click_ui sports_tab_2
 wait 0.2
 expect_text "Master volume"
-expect_text "[Y] Reset AUDIO"
+expect_text "[Y] Reset to default"
 set_slider sports_slider_2 0.25
 wait 0.2
 expect_text "25%"
 click_ui sports_tab_1
 wait 0.2
-expect_text "120 FPS"
+expect_text "120"
 click_ui sports_tab_2
 wait 0.2
 expect_text "25%"
 key Y
 wait 0.2
-expect_text "AUDIO defaults restored"
 expect_text "90%"
 resize 1920 1080
 wait 0.3

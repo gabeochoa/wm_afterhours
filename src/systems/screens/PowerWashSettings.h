@@ -18,7 +18,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 2;
   size_t selected_row = 4;
   bool settings_open = true;
-  std::string status = "Use Left / Right to change the selected value.";
+  bool dropdown_open = true;
+  std::string status;
   float design_left = 0;
   float design_top = 0;
 
@@ -141,7 +142,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
 
   static void draw_header_icon(RectangleType r, int index, bool active) {
-    const afterhours::Color color = active ? afterhours::Color{238, 248, 255, 255} : afterhours::Color{151, 181, 214, 255};
+    const afterhours::Color color = active ? afterhours::Color{14, 54, 113, 255} : afterhours::Color{151, 181, 214, 255};
     const float scale = r.width / 38;
     const float cx = r.x + r.width / 2;
     const float cy = r.y + r.height / 2;
@@ -338,7 +339,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name(name));
     };
-    label(14, 107, 102, 270, 20, category_names[active_tab] + " settings", 17, muted);
 
     if (!settings_open) {
       div(context, mk(root.ent()),
@@ -369,13 +369,11 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 6; ++i) {
       const bool active = i == 5;
       div(context, mk(root.ent(), 20 + i), box(scale, 500.f + static_cast<float>(i) * 49.f, 75, 38, 26)
-          .with_custom_background(active ? afterhours::Color{71, 124, 210, 255} : afterhours::Color{0, 0, 0, 0})
+          .with_custom_background(active ? afterhours::Color{238, 248, 255, 255} : afterhours::Color{0, 0, 0, 0})
           .with_on_draw_fg([i, active](RectangleType r) { draw_header_icon(r, i, active); })
           .with_ignore_pointer_events());
     }
-    label(26, 500, 102, 240, 20, "Tablet navigation", 16, muted);
-    label(27, 746, 102, 77, 20, "Settings", 16, white, true);
-    const std::array<std::string, 3> counters{"10.00", "200", "1"};
+    const std::array<std::string, 3> counters{"$10.00", "200", "1"};
     for (int i = 0; i < 3; ++i) {
       const float x = 912 + static_cast<float>(i) * 100;
       div(context, mk(root.ent(), 30 + i), box(scale, x, 85, 20, 20).with_ignore_pointer_events()
@@ -431,16 +429,46 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         selected_row = i;
         settings[i].option_idx = (settings[i].option_idx + 1) % settings[i].options.size();
         status = settings[i].label + ": " + settings[i].options[settings[i].option_idx];
+        if (settings[i].label == "Anti-Aliasing") dropdown_open = false;
       }
       div(context, mk(root.ent(), 360 + static_cast<int>(i)), box(scale, 658, y + 12, 12, 12)
           .with_on_draw_fg([this, scale](RectangleType r) {
-            afterhours::draw_line_ex({r.x + 3 * scale, r.y}, {r.x + 9 * scale, r.y + 6 * scale}, 2 * scale, white);
-            afterhours::draw_line_ex({r.x + 9 * scale, r.y + 6 * scale}, {r.x + 3 * scale, r.y + 12 * scale}, 2 * scale, white);
+            afterhours::draw_line_ex({r.x, r.y + 3 * scale}, {r.x + 6 * scale, r.y + 9 * scale}, 2 * scale, white);
+            afterhours::draw_line_ex({r.x + 6 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 3 * scale}, 2 * scale, white);
           }).with_ignore_pointer_events());
       if (active) div(context, mk(root.ent(), 380 + static_cast<int>(i)), box(scale, 75, y, 610, 37)
           .with_ignore_pointer_events().with_on_draw_fg([this, scale](RectangleType r) {
             afterhours::draw_rectangle_outline(r, white, 2 * scale);
           }));
+    }
+    if (dropdown_open && active_tab == 2) {
+      const float aa_y = 141.f + 4.f * 46.f;
+      div(context, mk(root.ent(), 391), box(scale, 433, aa_y + 37, 251, 137)
+          .with_custom_background(value_blue).with_border(afterhours::Color{98, 149, 212, 255}, 1.f)
+          .with_render_layer(5)
+          .with_debug_name("pw_aa_dropdown"));
+      const std::array<std::string, 4> aa_items{"8x", "4x", "2x", "Off"};
+      for (int di = 0; di < 4; ++di) {
+        const bool cur = video_settings[4].options[video_settings[4].option_idx] == aa_items[di];
+        div(context, mk(root.ent(), 395 + di),
+            box(scale, 433, aa_y + 38 + static_cast<float>(di) * 31, 251, 28)
+                .with_label(aa_items[di])
+                .with_custom_background(cur ? selected : value_blue)
+                .with_font("ArchivoMockBold", pixels(20.f * scale))
+                .with_custom_text_color(cur ? navy : white)
+                .with_alignment(TextAlignment::Left).with_text_inset(10 * scale, 0)
+                .with_render_layer(6)
+                .with_ignore_pointer_events());
+        if (button(context, mk(root.ent(), 392 + di),
+                   box(scale, 433, aa_y + 37 + static_cast<float>(di) * 31, 251, 31)
+                       .with_custom_background({0,0,0,0}).with_render_layer(6)
+                       .with_debug_name("pw_aa_option_" + std::to_string(di)))) {
+          video_settings[4].option_idx = aa_items[di] == "Off" ? 0 : aa_items[di] == "2x" ? 1 : aa_items[di] == "4x" ? 2 : 3;
+          selected_row = 4;
+          status = "Anti-Aliasing: " + aa_items[di];
+          dropdown_open = false;
+        }
+      }
     }
     div(context, mk(root.ent(), 390),
         box(scale, 700, 132, 2, 431)
@@ -451,8 +479,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     std::string help = "Change " + selected_setting.label + " for this settings preview.";
     std::string detail = "Click the value to cycle forward. Left and Right move through its options. This mock keeps changes while you switch categories.";
     if (selected_setting.label == "Anti-Aliasing") {
-      help = "Multisample anti-aliasing smooths jagged lines and edges.";
-      detail = "Higher sample counts can improve edge quality. Turning MSAA off can reduce graphics processing load.";
+      help = "Turn MSAA on or off and choose from different anti-aliasing amounts.";
+      detail = "Multisample Anti-Aliasing smooths the image, reducing jagged lines and edges. Higher amounts use more samples for a better image. Turning this setting off will reduce GPU load.";
     }
     if (selected_setting.label == "VSync") {
       help = "Vertical synchronization matches frame presentation to the display refresh cycle.";
@@ -469,9 +497,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(400, 725, 143, 460, 39, selected_setting.label, 29, white, true, "pw_help_title");
     label(401, 725, 192, 446, 97, help, 25, white);
     label(402, 725, 300, 446, 150, detail, 24, afterhours::Color{215, 231, 253, 255});
-    label(404, 725, 456, 461, 50, "Changes apply immediately in this preview.", 21, white);
-    label(405, 725, 510, 461, 45, status, 21, muted, false, "pw_status");
-    label(403, 861, 555, 337, 21, "FUTURLAB / POWERWASH SIMULATOR", 18, afterhours::Color{143, 172, 205, 255});
+    if (!status.empty()) label(405, 725, 500, 461, 45, status, 21, muted, false, "pw_status");
+    label(403, 880, 548, 318, 20, "v1.1.0.29 / PC.GOG.240730.0725", 15, afterhours::Color{143, 172, 205, 255});
 
     div(context, mk(root.ent()),
         box(scale, 64, 579, 1152, 47)
@@ -523,15 +550,13 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return static_cast<bool>(result);
     };
     if (action(600, 72, 113, "Esc", "Close", "pw_footer_close")) close_settings();
-    std::string lower_category = category_names[active_tab];
-    lower_category[0] = static_cast<char>(std::tolower(static_cast<unsigned char>(lower_category[0])));
-    if (action(610, 210, 276, "R", "Reset " + lower_category + " settings", "pw_footer_reset")) reset_current_tab();
-    if (action(620, 511, 186, "Enter", "Change value", "pw_footer_select")) {
+    std::string lower_category = category_names[active_tab]; (void)lower_category;
+    if (action(610, 210, 180, "R", "Reset", "pw_footer_reset")) reset_current_tab();
+    if (action(620, 420, 186, "Enter", "Select", "pw_footer_select")) {
       auto &row = get_current_settings()[selected_row];
       row.option_idx = (row.option_idx + 1) % row.options.size();
       status = row.label + ": " + row.options[row.option_idx];
     }
-    label(630, 725, 666, 469, 33, "A / D  Change category     Up / Down  Select row", 22, muted);
 
   }
 };

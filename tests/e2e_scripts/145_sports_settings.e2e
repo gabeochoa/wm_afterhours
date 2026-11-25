@@ -4,7 +4,7 @@ goto_screen sports_settings
 resize 1280 720
 wait 0.5
 
-expect_text "VIDEO SETTINGS"
+expect_text "GRAPHICS"
 expect_text "Window mode"
 expect_text "Borderless window"
 expect_text "Resolution"
@@ -12,7 +12,7 @@ expect_text "2560 × 1440"
 expect_text "Max FPS"
 expect_text "Anti-Aliasing method"
 expect_text "TSR"
-expect_text "Default: 120 FPS"
+expect_text "Default value: 120"
 
 assert_ui sports_root x=0 y=0 w=1280 h=720
 assert_ui sports_tabs x=0 y=0 w=1280 h=50
@@ -23,17 +23,17 @@ assert_ui sports_divider x=620 y=124 w=2 h=498
 assert_ui sports_help x=680 y=110 w=530 h=400
 assert_ui sports_footer x=0 y=673 w=1280 h=47
 
-assert_ui_text "120 FPS" x=282 y=323 w=96 h=29
-assert_ui_text "2.20" x=282 y=363 w=96 h=29
-assert_ui_text "60 FPS" x=282 y=483 w=96 h=29
-assert_ui sports_numeric_9 x=282 y=523 w=96 h=29 text=100%
+assert_ui_text "120" x=282 y=323 w=96 h=29
+assert_ui_text "2.2" x=282 y=363 w=96 h=29
+assert_ui_text "60" x=282 y=483 w=96 h=29
+assert_ui sports_numeric_9 x=282 y=523 w=96 h=29 text=1
 click_ui sports_row_4
 key RIGHT
 wait 0.2
-assert_ui_text "132 FPS" x=282 y=323 w=96 h=29
+assert_ui_text "132" x=282 y=323 w=96 h=29
 click_ui sports_reset
 wait 0.2
-assert_ui_text "120 FPS" x=282 y=323 w=96 h=29
+assert_ui_text "120" x=282 y=323 w=96 h=29
 assert_no_overflow
 assert_within_parents
 click_ui sports_value_6
@@ -56,7 +56,6 @@ wait 0.2
 expect_text "25"
 click_ui sports_reset
 wait 0.2
-expect_text "defaults restored"
 expect_text "80"
 expect_text "90"
 set_slider sports_slider_2 0.26

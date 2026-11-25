@@ -2,19 +2,16 @@ goto_screen powerwash_settings
 resize 1280 720
 wait 0.5
 expect_text "SETTINGS"
-expect_text "Video settings"
-expect_text "Tablet navigation"
-expect_text "10.00"
+expect_text "Anti-Aliasing"
+expect_text "$10.00"
 expect_text "200"
 expect_text "2560 × 1440"
 expect_text "VSync"
 expect_text "Ambient occlusion"
 expect_text "100% (native)"
 expect_text "Anti-Aliasing"
-expect_text "reduce graphics processing load."
-expect_text "Changes apply immediately in this preview."
-expect_text "Reset video settings"
-expect_text "Change category"
+expect_text "will reduce GPU load."
+expect_text "Reset"
 assert_ui pw_root x=0 y=0 w=1280 h=720
 assert_ui pw_header x=63 y=69 w=1154 h=54
 assert_ui pw_row_4 x=75 y=325 w=610 h=37
@@ -48,9 +45,9 @@ expect_text "Defaults restored"
 expect_text "100% (native)"
 key D
 wait 0.2
-expect_text "Audio settings"
 expect_text "Master Volume"
-expect_text "Reset audio settings"
+expect_text "Master Volume"
+expect_text "Reset"
 click_ui pw_value_0
 wait 0.2
 expect_text "Master Volume: 0%"
@@ -60,10 +57,10 @@ expect_text "Defaults restored"
 expect_text "100%"
 key A
 wait 0.2
-expect_text "Video settings"
+expect_text "Anti-Aliasing"
 click_ui pw_tab_0
 wait 0.2
-expect_text "General settings"
+expect_text "Colorblind Mode"
 expect_text "Colorblind Mode"
 click_ui pw_value_2
 wait 0.2
@@ -71,7 +68,7 @@ expect_text "Deuteranopia"
 assert_within_parents
 click_ui pw_tab_4
 wait 0.2
-expect_text "Controls settings"
+expect_text "Controller Vibration"
 expect_text "Controller Vibration"
 click_ui pw_footer_select
 wait 0.2
@@ -82,7 +79,7 @@ expect_text "Settings closed"
 click_ui pw_reopen
 wait 0.2
 expect_text "Settings open"
-expect_text "Controls settings"
+expect_text "Controller Vibration"
 key ESCAPE
 wait 0.2
 expect_text "Settings closed"
