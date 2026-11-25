@@ -99,7 +99,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             afterhours::draw_rectangle_outline({r.x + scale, r.y + scale, r.width - 2 * scale, r.height - 2 * scale}, ink, 2 * scale);
             afterhours::draw_rectangle({r.x + r.width / 2 - 12 * scale, r.y + r.height - 7 * scale, 24 * scale, 3 * scale}, ink);
           }));
-      if (swatch.a > 0) result.ent().get<HasLabel>().text_x_offset = 15 * scale;
+      if (swatch.a > 0) result.ent().get<HasLabel>().text_x_offset = 7.5f * scale; // halved: centered labels now shift by the full offset (#471)
       return static_cast<bool>(result);
     };
     const auto step = [&](size_t &index, size_t count, bool previous) {

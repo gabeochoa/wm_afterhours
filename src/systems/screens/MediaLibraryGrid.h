@@ -160,7 +160,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
         .with_border((name == "ml_filter" || name == "ml_sort" || name == "ml_queue") ? afterhours::Color{98, 99, 101, 255} : transparent, scale)
         .with_debug_name(name));
     if (name == "ml_play" || name == "ml_profile" || name == "ml_grid" || name == "ml_list") {
-      result.ent().get<HasLabel>().text_x_offset = 8 * scale;
+      result.ent().get<HasLabel>().text_x_offset = 4 * scale; // halved: centered labels now shift by the full offset (#471)
       result.ent().addComponentIfMissing<HasOnDraw>().fg = [name, s = scale, color = filled ? afterhours::Color{35, 37, 37, 255} : ink](RectangleType r) {
         const float x = r.x + 12 * s, y = r.y + r.height / 2;
         if (name == "ml_play") {
