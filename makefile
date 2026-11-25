@@ -24,7 +24,7 @@ ifeq ($(UNAME_S),Darwin)
     # -fblocks + AppKit: afterhours reads trackpad pinch through a local
     # NSEvent monitor, whose handler is an Objective-C block.
     MACOS_FLAGS := -DBACKWARD -DAFTER_HOURS_ENABLE_MACOS_GESTURES -fblocks
-    FRAMEWORKS := -framework CoreFoundation -framework OpenGL -framework AppKit
+    FRAMEWORKS := -framework CoreFoundation -framework OpenGL -framework AppKit -framework IOKit
 else ifeq ($(OS),Windows_NT)
     CXX := $(CCACHE) g++
     EXT := .exe
