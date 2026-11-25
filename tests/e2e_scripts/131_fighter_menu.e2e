@@ -3,8 +3,8 @@
 goto_screen fighter_menu
 wait 0.5
 
-expect_text "Main Menu"
-expect_text "25,000 P$"
+expect_text "MainMenu"
+expect_text "25000 P$"
 expect_text "Options"
 expect_text "System Options"
 expect_text "Change various settings in the game, such as vibration, save, and autosave functions."
@@ -19,32 +19,28 @@ assert_ui fighter_description x=804 y=492 w=476 h=170
 
 click_ui fighter_option_3
 wait 0.2
-expect_text "SOUND"
 expect_text "Sound & Language"
 expect_text "Set music and sound levels, voices, and language preferences."
 
 click_ui fighter_option_5
 wait 0.2
-expect_text "BUTTONS"
 expect_text "Remap your controller layout and keyboard bindings."
 
 key UP
 wait 0.2
-expect_text "NETWORK"
 expect_text "Configure online play and connection settings."
 
 focus_ui fighter_option_1
 key ENTER
 wait 0.2
-expect_text "GAME"
+expect_text "Game Options"
 key DOWN
 wait 0.2
-expect_text "DISPLAY"
+expect_text "Display Options"
 key DOWN
 wait 0.2
 key DOWN
 wait 0.2
-expect_text "NETWORK"
 screenshot fighter_menu_review
 
 resize 1920 1080

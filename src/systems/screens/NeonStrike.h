@@ -128,39 +128,28 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 44; ++i)
       panel(10 + i, 420.f + 10.f * i, 32, 1, i % 10 == 0 ? 8 : 4,
             {92, 100, 86, 150}, {92, 100, 86, 150});
-    const std::array<const char *, 5> bearings{"300", "330", "N", "030", "060"};
-    for (int i = 0; i < 5; ++i)
-      text(60 + i, bearings[i], 414.f + i * 105.f, 8, 44, 24, i == 2 ? 20 : 17, ink);
-    picture(70, 1, 594, 42, 92, 92);
-    text(71, "N", 632, 40, 22, 23, 18, ink);
-    text(72, "S", 632, 112, 22, 23, 17, muted);
-    text(73, "W", 591, 76, 24, 23, 17, muted);
-    text(74, "E", 670, 76, 24, 23, 17, muted);
-    text(80, "SCORE 15,000", 1016, 25, 220, 32, 27, ink, "neon_score");
+    picture(70, 1, 610, 36, 60, 60);
+    text(71, "N", 629, 30, 22, 23, 17, ink);
+    text(72, "S", 629, 92, 22, 23, 15, muted);
+    text(73, "W", 603, 62, 24, 23, 15, muted);
+    text(74, "E", 656, 62, 24, 23, 15, muted);
+    text(80, "SCORE: 15,000", 1016, 25, 220, 32, 27, ink, "neon_score");
     panel(82, 970, 67, 266, 38, {28, 30, 21, 220}, {133, 115, 75, 190});
-    text(83, "SECURE OBJECTIVE B", 982, 73, 242, 26, 23, gold, "neon_objective");
-    text(84, "HUD PREVIEW", 32, 26, 250, 30, 23, ink);
-    text(85, "Select equipment / reload the sample magazine", 32, 61, 370, 24, 17, muted, "", false);
-    panel(90, 410, 148, 480, 117, {13, 18, 16, 225}, {0, 0, 0, 0});
-    text(94, "EVENT HISTORY", 430, 152, 420, 23, 16, muted);
+    text(83, ">> SECURE OBJECTIVE B", 982, 73, 242, 26, 23, gold, "neon_objective");
+    // Minimal translucent kill feed (no boxed header).
     const std::array<const char *, 3> actors{"Alpha_Six", "Tsha_Rio", "Alpha_Six"};
-    const std::array<const char *, 3> events{"eliminated Emepine / M4", "eliminated Emepine / SCAR", "radio: requested cover"};
+    const std::array<const char *, 3> events{"eliminated [Emepine] with M4", "eliminated [Emepine] with SCAR", "- Under fire!"};
     for (int i = 0; i < 3; ++i) {
-      text(300 + i * 2, actors[i], 430, 178.f + i * 27, 124, 24, 18, gold);
-      text(301 + i * 2, events[i], 558, 178.f + i * 27, 315, 24, 18, ink, "", false);
+      text(300 + i * 2, actors[i], 430, 158.f + i * 27, 124, 24, 18, gold);
+      text(301 + i * 2, events[i], 558, 158.f + i * 27, 315, 24, 18, ink, "", false);
     }
-    text(350, "LIVE RADIO", 1014, 153, 220, 23, 16, muted);
-    picture(351, 3, 1018, 184, 20, 24);
-    text(352, "Alpha_Six: Under fire!", 1046, 182, 190, 29, 20, ink);
-    const auto keycap = [&](int id, const std::string &key, float x, float y, float w = 28.f) {
-      panel(id, x, y, w, 26, {42, 49, 38, 255}, {111, 124, 99, 255});
-      text(id + 1, key, x, y + 1, w, 24, 18, ink, "", true, TextAlignment::Center);
-    };
+    picture(351, 3, 1018, 158, 20, 24);
+    text(352, "Alpha_Six: Under fire!", 1046, 156, 190, 29, 20, ink);
     for (int i = 0; i < 4; ++i) {
-      const float y = 182.f + i * 68.f;
+      const float y = 186.f + i * 66.f;
       const bool selected = selected_ability == i;
-      if (button(context, mk(entity, 110 + i), box(32, y, 226, 60)
-          .with_custom_background({19, 26, 21, 230}).with_debug_name("neon_ability_" + std::to_string(i))
+      if (button(context, mk(entity, 110 + i), box(24, y, 56, 56)
+          .with_custom_background({19, 26, 21, 235}).with_debug_name("neon_ability_" + std::to_string(i))
           .with_on_draw_fg([selected, edge, gold, sy](RectangleType r) {
             raylib::DrawRectangleLinesEx(r, sy, selected ? gold : edge);
             if (selected) afterhours::draw_rectangle({r.x, r.y + r.height - 3 * sy, r.width, 3 * sy}, gold);
@@ -168,8 +157,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         selected_ability = i;
         status = std::string(abilities[i]) + " selected";
       }
-      if (i < 3) picture(130 + i, 5 + i * 2, 44, y + 10, 40, 40);
-      else div(context, mk(entity, 133), box(44, y + 10, 40, 40).with_ignore_pointer_events()
+      if (i < 3) picture(130 + i, 5 + i * 2, 34, y + 10, 36, 36);
+      else div(context, mk(entity, 133), box(34, y + 10, 36, 36).with_ignore_pointer_events()
           .with_on_draw_fg([ink](RectangleType r) {
             const float s = r.width / 40;
             raylib::DrawLineEx({r.x + 27 * s, r.y + 7 * s}, {r.x + 10 * s, r.y + 27 * s}, 5 * s, ink);
@@ -178,10 +167,6 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             raylib::DrawLineEx({r.x + 8 * s, r.y + 32 * s}, {r.x + 30 * s, r.y + 32 * s}, 2 * s, ink);
             raylib::DrawLineEx({r.x + 3 * s, r.y + 29 * s}, {r.x + 8 * s, r.y + 23 * s}, 2 * s, ink);
           }));
-      std::string name = abilities[i];
-      std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::toupper(c); });
-      text(140 + i, name, 96, y + 17, 116, 28, 20, ink);
-      keycap(410 + i * 2, std::to_string(i + 1), 218, y + 17);
     }
     panel(160, 624, 359, 8, 1, {177, 192, 171, 118}, {177, 192, 171, 118});
     panel(161, 648, 359, 8, 1, {177, 192, 171, 118}, {177, 192, 171, 118});
@@ -189,7 +174,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     panel(163, 639, 368, 1, 8, {177, 192, 171, 118}, {177, 192, 171, 118});
     panel(164, 639, 359, 2, 2, {213, 217, 198, 118}, {213, 217, 198, 118});
     panel(170, 31, 463, 238, 32, {20, 24, 19, 230}, edge);
-    text(172, "STREAK PROGRESS 1/3", 40, 467, 172, 24, 16, ink);
+    text(172, "KILLSTREAK", 40, 467, 172, 24, 16, ink);
     for (int i = 0; i < 3; ++i)
       panel(173 + i, 216.f + i * 16.f, 474, 11, 11, i == 0 ? ink : edge, muted);
     panel(180, 31, 501, 238, 189, {14, 23, 21, 255}, {101, 112, 93, 255});
@@ -220,33 +205,33 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           raylib::DrawCircleV({r.x + 145 * x, r.y + 28 * y}, 11 * x, gold);
         }).with_debug_name("neon_map"));
     text(182, "B", 190, 520, 30, 28, 20, {22, 35, 29, 255});
-    text(183, "SECTOR 7B / GRID 042", 42, 666, 218, 24, 16, ink);
-    text(184, "MAP KEY", 290, 482, 240, 22, 15, muted);
-    text(185, "Ally markers", 290, 508, 116, 24, 17, {99, 210, 218, 255});
-    text(186, "B / Objective", 414, 508, 140, 24, 17, gold);
-    text(193, "M4 / AUTOMATIC", 290, 544, 190, 24, 18, ink);
     if (button(context, mk(entity), box(282, 565, 316, 60)
-        .with_custom_background({15, 23, 19, 140}).with_debug_name("neon_reload"))) reload();
-    text(191, std::to_string(ammo_clip), 290, 565, 78, 58, 48, ink, "neon_magazine");
-    text(192, "/ " + std::to_string(ammo_reserve), 370, 581, 102, 38, 28, muted, "neon_reserve", false);
-    keycap(430, "R", 491, 575);
-    text(196, "Reload", 526, 576, 64, 27, 17, ink);
+        .with_custom_background({15, 23, 19, 0}).with_debug_name("neon_reload"))) reload();
+    // Sleek weapon silhouette beside the minimap.
+    div(context, mk(entity, 190), box(292, 540, 210, 30).with_ignore_pointer_events()
+        .with_on_draw_fg([ink](RectangleType r) {
+          const float s = r.width / 210.f;
+          raylib::DrawLineEx({r.x + 8 * s, r.y + 18 * s}, {r.x + 150 * s, r.y + 18 * s}, 8 * s, ink);
+          raylib::DrawLineEx({r.x + 150 * s, r.y + 15 * s}, {r.x + 198 * s, r.y + 15 * s}, 3 * s, ink);
+          raylib::DrawLineEx({r.x + 55 * s, r.y + 11 * s}, {r.x + 105 * s, r.y + 11 * s}, 6 * s, ink);
+          raylib::DrawLineEx({r.x + 78 * s, r.y + 19 * s}, {r.x + 84 * s, r.y + 29 * s}, 4 * s, ink);
+          raylib::DrawLineEx({r.x + 30 * s, r.y + 19 * s}, {r.x + 26 * s, r.y + 27 * s}, 4 * s, ink);
+        }));
+    text(191, std::to_string(ammo_clip) + "/" + std::to_string(ammo_reserve), 290, 572, 190, 52, 44, ink, "neon_magazine");
     picture(201, 14, 290, 635, 23, 23);
-    text(202, "HEALTH 80/100", 321, 630, 126, 26, 18, {147, 212, 214, 255});
-    panel(203, 455, 638, 144, 10, {29, 38, 34, 255}, edge);
-    panel(204, 457, 640, 112, 6, {115, 179, 183, 255}, {115, 179, 183, 255});
-    picture(205, 2, 290, 672, 23, 23);
-    text(208, "ARMOR 45%", 321, 667, 126, 26, 18, ink);
-    panel(206, 455, 675, 144, 10, {29, 38, 34, 255}, edge);
-    panel(207, 457, 677, 63, 6, {151, 176, 126, 255}, {151, 176, 126, 255});
+    panel(203, 325, 640, 220, 8, {29, 38, 34, 255}, edge);
+    panel(204, 327, 642, 172, 4, {115, 179, 183, 255}, {115, 179, 183, 255});
+    picture(205, 2, 290, 662, 23, 23);
+    panel(206, 325, 667, 220, 8, {29, 38, 34, 255}, edge);
+    panel(207, 327, 669, 96, 4, {151, 176, 126, 255}, {151, 176, 126, 255});
     for (int i = 0; i < 2; ++i) {
       const float x = 1048.f + i * 102.f;
       const bool selected = selected_equipment == i;
       if (button(context, mk(entity, 210 + i), box(x, 591, 88, 100)
           .with_custom_background({20, 25, 20, 230}).with_debug_name(i == 0 ? "neon_grenade" : "neon_melee")
-          .with_on_draw_fg([selected, edge, gold, sy](RectangleType r) {
-            raylib::DrawRectangleLinesEx(r, sy, selected ? gold : edge);
-            if (selected) afterhours::draw_rectangle({r.x + 1, r.y + r.height - 4 * sy, r.width - 2, 3 * sy}, gold);
+          .with_on_draw_fg([selected, edge, ink, sy](RectangleType r) {
+            raylib::DrawRectangleLinesEx(r, sy, selected ? ink : edge);
+            if (selected) afterhours::draw_rectangle({r.x + 1, r.y + r.height - 4 * sy, r.width - 2, 3 * sy}, ink);
           }))) {
         selected_equipment = i;
         status = i == 0 ? "Grenade selected" : "Melee selected";
@@ -272,11 +257,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           }));
       text(230 + i, i == 0 ? "x2" : "x1", x + 54, 658, 30, 24, 19, ink,
            i == 0 ? "neon_grenade_count" : "neon_melee_count");
-      text(232 + i, i == 0 ? "GRENADE" : "MELEE", x + 6, 667, 50, 21, 12, ink);
-      keycap(440 + i * 2, i == 0 ? "G" : "V", x + 8, 599, 26);
     }
     if (!status.empty()) text(250, status, 644, 653, 365, 30, 22, gold, "neon_status");
-    text(251, "Sample combat values / keys 1-4 select streaks", 644, 689, 365, 22, 16, muted, "", false);
   }
 };
 REGISTER_EXAMPLE_SCREEN(neon_strike, "Game Mockups",
