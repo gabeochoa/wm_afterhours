@@ -18,7 +18,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
   bool music_on = true;
   bool sound_on = true;
-  bool vibration_on = false;
+  bool vibration_on = true;
   bool notifications_off = true;
   bool settings_open = true;
   DetailPanel detail_panel = DetailPanel::None;
@@ -29,7 +29,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   bool saved_music_on = true;
   bool saved_sound_on = true;
-  bool saved_vibration_on = false;
+  bool saved_vibration_on = true;
   bool saved_notifications_off = true;
   std::string status_message;
 
@@ -161,7 +161,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   ElementResult audio_button(UIContext<InputAction> &context,
                              afterhours::Entity &parent, int id, AudioIcon icon,
-                             bool enabled, float x, const std::string &name) {
+                             bool enabled, float x, const std::string &name,
+                             float y = 125.f, float w = 126.f, float h = 72.f) {
     const size_t texture_index =
         icon == AudioIcon::Music   ? (enabled ? MusicOn : MusicOff)
         : icon == AudioIcon::Sound ? (enabled ? SoundOn : SoundOff)
@@ -169,12 +170,12 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     const auto texture = art[texture_index];
     return button(context, mk(parent, id),
                   ComponentConfig{}
-                      .with_size(ComponentSize{pixels(148.f * layout_scale),
-                                               pixels(107.f * layout_scale)})
+                      .with_size(ComponentSize{pixels(w * layout_scale),
+                                               pixels(h * layout_scale)})
                       .with_absolute_position(pixels(x * layout_scale),
-                                              pixels(235.f * layout_scale))
+                                              pixels(y * layout_scale))
                       .with_background(Theme::Usage::None)
-                      .with_corner_radius(53.5f * layout_scale)
+                      .with_corner_radius(36.f * layout_scale)
                       .with_click_activation(ClickActivationMode::Release)
                       .with_on_draw_bg([texture](RectangleType r) {
                         paint_plate(texture, r, 119.f, 82.f);
@@ -389,6 +390,45 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name(name));
   }
 
+
+  void render_single(UIContext<InputAction> &context, afterhours::Entity &board) {
+    // Left: 3 icon toggles
+    const std::array<float, 3> xs{50.f, 188.f, 326.f};
+    const std::array<const char *, 3> names{"ab_music", "ab_sound", "ab_vibration"};
+    const std::array<AudioIcon, 3> icons{AudioIcon::Music, AudioIcon::Sound, AudioIcon::Vibration};
+    std::array<bool *, 3> values{&music_on, &sound_on, &vibration_on};
+    for (int i = 0; i < 3; i++) {
+      const bool enabled = *values[(size_t)i];
+      if (audio_button(context, board, 30 + i, icons[(size_t)i], enabled, xs[(size_t)i], names[(size_t)i])) {
+        *values[(size_t)i] = !enabled;
+        const char *display = i == 0 ? "Music" : i == 1 ? "Sound" : "Vibration";
+        status_message = std::string(display) + (!enabled ? " enabled" : " disabled");
+        save_settings(status_message);
+      }
+      // gray/muted overlay when off is handled by *_off texture; add debug state node
+      div(context, mk(board, 50 + i), ComponentConfig{}.with_size({pixels(10.f*layout_scale),pixels(10.f*layout_scale)}).with_absolute_position(pixels((xs[(size_t)i]+58.f)*layout_scale), pixels(205.f*layout_scale)).with_background(Theme::Usage::None).with_ignore_pointer_events().with_debug_name(std::string(names[(size_t)i]) + "_state"));
+    }
+    // Left pills
+    const std::string notification_label = notifications_off ? "NOTIFICATIONS: OFF" : "NOTIFICATIONS: ON";
+    if (pill_button(context, board, 21, notification_label, 50.f, 215.f, 402.f, 64.f, false, "ab_notifications", 22.f)) {
+      notifications_off = !notifications_off;
+      status_message = notifications_off ? "Notifications disabled" : "Notifications enabled";
+      save_settings(status_message);
+    }
+    div(context, mk(board, 71), ComponentConfig{}.with_size({pixels(34.f*layout_scale),pixels(34.f*layout_scale)}).with_absolute_position(pixels(66.f*layout_scale), pixels(230.f*layout_scale)).with_label("X").with_font("FredokaMockBold", pixels(22.f*layout_scale)).with_custom_text_color(afterhours::Color{220,60,50,255}).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+    if (pill_button(context, board, 22, "LANGUAGE", 50.f, 295.f, 402.f, 64.f, false, "ab_language", 24.f)) { detail_panel = DetailPanel::Language; status_message.clear(); }
+    div(context, mk(board, 72), ComponentConfig{}.with_label("15555-1-114203-20-10200-01\nVERSION 1.11.0.12346\nPLAYER ID: 281676956389").with_size({pixels(402.f*layout_scale),pixels(84.f*layout_scale)}).with_absolute_position(pixels(50.f*layout_scale), pixels(385.f*layout_scale)).with_background(Theme::Usage::None).with_custom_text_color(brown).with_font("FredokaMockBold", pixels(20.f*layout_scale)).with_alignment(TextAlignment::Center).with_debug_name("ab_version"));
+    // Right pills
+    if (pill_button(context, board, 20, "SAVE/LOAD PROGRESS", 495.f, 125.f, 395.f, 72.f, false, "ab_save_progress", 23.f)) { detail_panel = DetailPanel::Progress; status_message.clear(); }
+    div(context, mk(board, 73), ComponentConfig{}.with_size({pixels(36.f*layout_scale),pixels(36.f*layout_scale)}).with_absolute_position(pixels(838.f*layout_scale), pixels(143.f*layout_scale)).with_on_draw_bg([](RectangleType r){ afterhours::draw_circle((int)(r.x+r.width/2),(int)(r.y+r.height/2), r.width/2, afterhours::Color{75,213,6,255}); }).with_label(")))").with_font("FredokaMockBold", pixels(14.f*layout_scale)).with_custom_text_color(cream).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+    if (pill_button(context, board, 23, "CREDITS", 495.f, 215.f, 395.f, 64.f, false, "ab_credits", 24.f)) { detail_panel = DetailPanel::Credits; status_message.clear(); }
+    if (pill_button(context, board, 24, "SUPPORT", 495.f, 295.f, 395.f, 64.f, false, "ab_support", 24.f)) { detail_panel = DetailPanel::Support; status_message.clear(); }
+    if (pill_button(context, board, 25, "TERMS AND PRIVACY", 495.f, 375.f, 395.f, 64.f, false, "ab_terms", 22.f)) { detail_panel = DetailPanel::Terms; status_message.clear(); }
+    if (!status_message.empty()) {
+      div(context, mk(board, 74), ComponentConfig{}.with_label(status_message).with_size({pixels(840.f*layout_scale),pixels(28.f*layout_scale)}).with_absolute_position(pixels(50.f*layout_scale), pixels(505.f*layout_scale)).with_background(Theme::Usage::None).with_custom_text_color(brown_muted).with_font("FredokaMockBold", pixels(18.f*layout_scale)).with_alignment(TextAlignment::Center).with_debug_name("ab_status"));
+    }
+  }
+
   void render_detail(UIContext<InputAction> &context,
                      afterhours::Entity &board) {
     div(context, mk(board),
@@ -576,16 +616,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    })
                    .with_debug_name("ab_root"));
 
-    div(context, mk(root.ent()), ComponentConfig{}
-        .with_size({pixels(220.f * s), pixels(36.f * s)})
-        .with_absolute_position(pixels(56.f * s), pixels(12.f * s))
-        .with_label("5 / 5 lives").with_font("FredokaMockBold", pixels(27.f * s))
-        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
-    div(context, mk(root.ent()), ComponentConfig{}
-        .with_size({pixels(220.f * s), pixels(36.f * s)})
-        .with_absolute_position(pixels(1004.f * s), pixels(12.f * s))
-        .with_label("1000 coins").with_font("FredokaMockBold", pixels(27.f * s))
-        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
+    div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(150.f*s),pixels(44.f*s)}).with_absolute_position(pixels(18.f*s),pixels(12.f*s)).with_custom_background(afterhours::Color{214,64,54,255}).with_corner_radius(22.f*s).with_label("UNLIMITED").with_font("FredokaMockBold", pixels(20.f*s)).with_custom_text_color(cream).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("ab_lives_badge"));
+    div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(150.f*s),pixels(44.f*s)}).with_absolute_position(pixels(1112.f*s),pixels(12.f*s)).with_custom_background(afterhours::Color{238,184,52,255}).with_corner_radius(22.f*s).with_label("1000 +").with_font("FredokaMockBold", pixels(22.f*s)).with_custom_text_color(brown).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("ab_coins_badge"));
+    div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(72.f*s),pixels(72.f*s)}).with_absolute_position(pixels(1120.f*s),pixels(612.f*s)).with_custom_background(green).with_corner_radius(20.f*s).with_label("4").with_font("FredokaMockBold", pixels(36.f*s)).with_custom_text_color(cream).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("ab_level_badge"));
+    div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(56.f*s),pixels(56.f*s)}).with_absolute_position(pixels(28.f*s),pixels(636.f*s)).with_custom_background(blue).with_corner_radius(28.f*s).with_label("*").with_font("FredokaMockBold", pixels(30.f*s)).with_custom_text_color(cream).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
 
     if (!settings_open) {
       div(context, mk(root.ent()),
@@ -611,7 +645,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.f), screen_pct(1.f)})
             .with_absolute_position(pixels(0.f), pixels(0.f))
-            .with_custom_background(afterhours::Color{6, 22, 12, 218})
+            .with_custom_background(afterhours::Color{6, 22, 12, 90})
             .with_ignore_pointer_events()
             .with_debug_name("ab_shade"));
 
@@ -643,14 +677,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ab_title"));
 
     if (detail_panel == DetailPanel::None) {
-      render_tabs(context, board.ent());
-      if (active_tab == 0)
-        render_audio(context, board.ent());
-      else if (active_tab == 1)
-        render_general(context, board.ent());
-      else
-        render_info(context, board.ent());
-      render_footer(context, board.ent());
+      render_single(context, board.ent());
     } else {
       render_detail(context, board.ent());
     }
@@ -659,8 +686,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(
             context, mk(root.ent()),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(60.f * s), pixels(60.f * s)})
-                .with_absolute_position(pixels(1016.f * s), pixels(104.f * s))
+                .with_size(ComponentSize{pixels(64.f * s), pixels(64.f * s)})
+                .with_absolute_position(pixels(1068.f * s), pixels(88.f * s))
                 .with_overlay(2).with_roundness(1.f)
                 .with_background(Theme::Usage::None)
                 .with_click_activation(ClickActivationMode::Release)
