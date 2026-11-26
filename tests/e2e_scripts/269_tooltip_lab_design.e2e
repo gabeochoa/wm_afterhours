@@ -7,8 +7,8 @@ expect_text "Expected placement"
 expect_text "Native tooltip: 14 px text"
 assert_ui ttl_btn_0 x=67 y=124 w=160 h=40
 assert_ui ttl_btn_1 x=1040 y=124 w=160 h=40
-assert_ui ttl_btn_3 x=67 y=657 w=160 h=40
-assert_ui ttl_btn_4 x=1040 y=657 w=160 h=40
+assert_ui ttl_btn_3 x=67 y=614 w=160 h=40
+assert_ui ttl_btn_4 x=1040 y=614 w=160 h=40
 assert_no_overflow
 assert_within_parents
 screenshot tooltip_lab_design
@@ -23,11 +23,11 @@ mouse_move 1120 151
 wait 0.6
 expect_text "Active case: Clamp to right edge"
 screenshot tooltip_lab_design_clamp
-mouse_move 147 684
+mouse_move 147 634
 wait 0.6
 expect_text "Active case: Flip above"
 screenshot tooltip_lab_design_flip
-mouse_move 1120 684
+mouse_move 1120 634
 wait 0.6
 expect_text "Active case: Flip above and clamp"
 screenshot tooltip_lab_design_flip_clamp

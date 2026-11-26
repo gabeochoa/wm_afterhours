@@ -59,8 +59,8 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
         {"top left", "Plenty of room below this one", "Normal below", .04f, .16f},
         {"top right", "Clamped so it stays on screen near this right edge", "Clamp to right edge", .80f, .16f},
         {"middle", "A longer tooltip, to show the box grows with the text", "Long content", .38f, .46f},
-        {"bottom left", "No room below, so this one flips above", "Flip above", .04f, .90f},
-        {"bottom right", "Flipped and clamped at once near the viewport corner", "Flip above and clamp", .80f, .90f},
+        {"bottom left", "No room below, so this one flips above", "Flip above", .04f, .84f},
+        {"bottom right", "Flipped and clamped at once near the viewport corner", "Flip above and clamp", .80f, .84f},
         {"Instant, 0 ms", "delay 0, shows the moment you arrive", "Instant / 0 ms", .38f, .70f},
     };
     std::string active = "None";
@@ -74,7 +74,7 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("ttl_btn_" + std::to_string(i)));
       if (context.prev_hot_id == trigger.ent().id) active = spot.expectation;
       const float x = spot.x * context.screen_width;
-      const float y = spot.y * context.screen_height + (i == 3 || i == 4 ? -32 : 45) * scale;
+      const float y = spot.y * context.screen_height + (i == 3 || i == 4 ? -26 : 45) * scale;
       div(context, mk(root.ent(), 30 + i), ComponentConfig{}
           .with_size({pixels(230 * scale), pixels(27 * scale)}).with_absolute_position(x, y)
           .with_label(spot.expectation).with_font("AtkinsonMock", pixels(16 * scale))
@@ -116,7 +116,7 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
           .with_label(spot.caption).with_font("AtkinsonMock", pixels(16 * scale))
           .with_custom_text_color(theme.font_muted).with_ignore_pointer_events());
     }
-    div(context, mk(root.ent()), at(16, 257, 420, 328)
+    div(context, mk(root.ent()), at(16, 257, 420, 318)
         .with_custom_background(theme.surface).with_corner_radius(8 * scale));
     text(42, "Expected placement", 32, 269, 388, 30, 22);
     const char *rows[] = {

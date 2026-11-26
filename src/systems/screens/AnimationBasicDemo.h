@@ -197,7 +197,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
           raylib::DrawCircleV({r.x + r.width * time / clock_duration, r.y + r.height / 2}, r.height * .8f, {235, 240, 250, 255});
         }));
     // ========== Restart Button ==========
-    if (button(context, mk(root.ent()), box(left, 636, 240, 44)
+    if (button(context, mk(root.ent()), box(left, 612, 240, 40)
         .with_label("Replay all animations").with_font("AtkinsonMock", pixels(23 * s))
         .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light).with_corner_radius(4 * s)
         .with_debug_name("restart_btn"))) {
@@ -206,8 +206,8 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     }
     bool running = false;
     for (auto key : keys) running |= track(key).active();
-    label(running ? "Running" : "Complete", 270, 644, 170, 30, 23, text_light, "basic_phase");
-    label("Thumbnails show 0%, 50% and 100% of each duration.", 500, 644, 644, 30, 19, muted);
+    label(running ? "Running" : "Complete", 270, 616, 170, 30, 23, text_light, "basic_phase");
+    label("Thumbnails show 0%, 50% and 100% of each duration.", 500, 616, 644, 30, 19, muted);
   }
 
 };

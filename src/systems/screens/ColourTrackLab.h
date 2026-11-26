@@ -137,12 +137,12 @@ struct ColourTrackLab : ScreenSystem<UIContext<InputAction>> {
                                                     motion::Spring::smooth())));
     if (spring_btn) spring_on = !spring_on;
     label(211, "The button background is a ui_motion colour track on a spring; toggling crosses in OKLab.", 380, 560, 820, 17, true);
-    if (button(context, mk(entity), box(60, 624, 160, 44).with_label("Replay")
+    if (button(context, mk(entity), box(60, 606, 160, 44).with_label("Replay")
                                              .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
                                              .with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
                                              .with_debug_name("replay_btn")))
       ++replay_stamp;
-    label(213, std::string("motion: ") + (prog.active() ? "in flight" : "settled"), 240, 634, 300, 18, false, "motion_state");
+    label(213, std::string("motion: ") + (prog.active() ? "in flight" : "settled"), 240, 616, 300, 18, false, "motion_state");
   }
 };
 
