@@ -1,25 +1,9 @@
 #pragma once
 
-#include "../game.h"
-#include "../render_backend.h"
-#include <afterhours/ah.h>
-#include <afterhours/src/plugins/effects.h>
-#include <afterhours/src/plugins/ui.h>
-
-struct ApplyBlurPass : afterhours::System<> {
-  std::optional<afterhours::effects::BlurPass> pass;
-  virtual ~ApplyBlurPass() {}
-  void once(float) override {
-    auto &requests = afterhours::ui::blur_requests();
-    if (requests.empty()) return;
-    if (!pass) pass.emplace();
-    if (render_backend::draw_directly_to_window) {
-      const Vector2Type screen_px{static_cast<float>(raylib::GetRenderWidth()), static_cast<float>(raylib::GetRenderHeight())};
-      const float scale = screen_px.x / static_cast<float>(std::max(1, raylib::GetScreenWidth()));
-      for (const auto &r : requests) pass->apply_screen(r.rect, r.radius, scale, screen_px);
-    } else {
-      for (const auto &r : requests) pass->apply(mainRT, r.rect, r.radius);
-    }
-    requests.clear();
-  }
-};
+// Compatibility shim (WM pluginization Batch 3 Lane H): the canonical
+// ApplyBlurPass implementation now lives at
+// src/plugins/render_passes/ApplyBlurPass.h (named WM-local plugin
+// "render_passes"). This header keeps the historical include path
+// working unchanged, so game.cpp and wm_devtools.h compile unmodified.
+// Behavior is identical; new code should include the canonical path.
+#include "../plugins/render_passes/ApplyBlurPass.h"
