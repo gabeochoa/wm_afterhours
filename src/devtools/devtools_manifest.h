@@ -150,7 +150,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "(draw_directly_to_window vs mainRT). Intentionally not refactored "
      "in Batch P-C."},
     {"font_config", "WM font registry + CJK codepoint tables",
-     "src/font_config.h", "header-only", Owner::WmLocal,
+     "src/plugins/font_registry/font_config.h", "header-only", Owner::WmLocal,
      "font_config::get_all_fonts(), get_*_codepoints(), aliases; "
      "FontDef{name, filename, needs_codepoints, get_codepoints, "
      "raster_size, screens}",

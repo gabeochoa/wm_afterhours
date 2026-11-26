@@ -50,7 +50,8 @@ TEST(devtools_manifest_registry) {
                   "apply_blur_pass header path");
   devtools_assert(blur->owner == Owner::WmLocal, "apply_blur_pass is WM-local");
   const auto *font = find("font_config");
-  devtools_assert(font->header == "src/font_config.h", "font_config header path");
+  devtools_assert(font->header == "src/plugins/font_registry/font_config.h",
+                  "font_config header path");
 
   // The aggregate compatibility include is the point of this layer:
   // these names must be visible through wm_devtools.h without moving
