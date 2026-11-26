@@ -286,7 +286,11 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
-.PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible test-layout
+.PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible test-layout lint-raw-colors
+
+# No new raw Color{...} literals in screens beyond today's per-file counts
+lint-raw-colors:
+	python3 scripts/check_raw_colors.py
 
 # Run E2E test scripts headlessly with minimal output (agent/CI default)
 # --time-scale 4: the suite spends ~289s of its runtime in scripted `wait`s.
@@ -350,7 +354,7 @@ $(UI_LAYOUT_EXE): $(UI_LAYOUT_DIR)/main.cpp
 	$(MAKE) -C $(UI_LAYOUT_DIR)
 
 # CI target: build + validate + run tests + E2E + layout math
-ci: $(MAIN_EXE) validate-screenshots run-all-tests test-layout test
+ci: $(MAIN_EXE) validate-screenshots run-all-tests test-layout test lint-raw-colors
 	@echo "CI passed."
 
 # Code counting

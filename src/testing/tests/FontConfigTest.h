@@ -154,6 +154,35 @@ TEST(theme_presets_have_fonts) {
   co_return;
 }
 
+// Test presets pin surface_raised/border/border_muted to the colours Theme's
+// fallback math (theme.h) derived for them, so screens reading the optionals
+// render exactly what they rendered before the optionals were set.
+TEST(theme_presets_pin_derived_surfaces) {
+  const auto eq = [](afterhours::Color a, afterhours::Color b) {
+    return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+  };
+  for (const Theme &preset : {theme_presets::cozy_kraft(),
+                              theme_presets::neon_dark(),
+                              theme_presets::ocean_navy(),
+                              theme_presets::midnight(),
+                              theme_presets::sage_natural()}) {
+    assert_true(preset.surface_raised.has_value() && preset.border.has_value() &&
+                    preset.border_muted.has_value(),
+                "every preset must pin surface_raised/border/border_muted");
+    Theme derived = preset;
+    derived.surface_raised.reset();
+    derived.border.reset();
+    derived.border_muted.reset();
+    assert_true(eq(preset.raised_surface(), derived.raised_surface()),
+                "pinned surface_raised must equal the derived fallback");
+    assert_true(eq(preset.control_border(), derived.control_border()),
+                "pinned border must equal the derived fallback");
+    assert_true(eq(preset.subtle_border(), derived.subtle_border()),
+                "pinned border_muted must equal the derived fallback");
+  }
+  co_return;
+}
+
 // Test that preset fonts have expected names from theme_presets constants
 TEST(theme_presets_font_names) {
   auto theme = theme_presets::ocean_navy();
