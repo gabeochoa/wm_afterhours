@@ -69,7 +69,9 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     label("Compare theme roles, dimensions, single selection, and custom colors or corners.",
           20, 80, 894, 28, 20, muted);
     if (button(context, mk(root.ent()), specimen(950, 76, 174, 32,
-        show_guides ? "Guides: on" : "Guides: off", "buttons_guides", 18))) show_guides = !show_guides;
+        show_guides ? "Guides: on" : "Guides: off", "buttons_guides", 18)
+        .with_custom_background({30, 50, 80, 255}).with_custom_text_color(muted)
+        .with_auto_text_color(false).with_border({81, 109, 146, 255}, 1.5f * s))) show_guides = !show_guides;
 
     // Row 1: Basic button roles and availability
     div(context, mk(root.ent()), box(left, 128, 1144, 116)
@@ -90,16 +92,16 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Enhanced disabled styling: reduced opacity + muted border + custom text
     // color makes the disabled state more visually obvious per accessibility
     // guidelines.
-    constexpr float disabled_opacity = .45f;
+    constexpr float disabled_opacity = .65f;
     div(context, mk(root.ent()), box(left + 908, 154, 128, 53)
         .with_on_draw_fg([s, line](RectangleType r) {
           afterhours::draw_rectangle_rounded_lines_ex(r, .2f, 12, s, line);
         }).with_ignore_pointer_events().with_debug_name("disabled_reference"));
     button(context, mk(root.ent()), specimen(912, 158, 120, 45, "Disabled", "btn_disabled")
-        .with_custom_background({60, 65, 80, 255}).with_custom_text_color({140, 140, 150, 255})
+        .with_custom_background({85, 98, 120, 255}).with_custom_text_color({225, 232, 245, 255})
         .with_auto_text_color(false).with_disabled(true).with_opacity(disabled_opacity)
-        .with_border({100, 100, 110, 180}, 2 * s));
-    label("Disabled / opacity 45%", 872, 209, 208, 24, 17, text, "disabled_caption");
+        .with_border({130, 145, 168, 255}, 1.5f * s));
+    label("Disabled / opacity 65%", 872, 209, 208, 24, 17, text, "disabled_caption");
 
     // Row 2: Different sizes - controls share a vertical center
     div(context, mk(root.ent()), box(left, 254, 1144, 122)
@@ -122,11 +124,12 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     const std::array<float, 3> font_sizes{16, 20, 20};
     for (size_t i = 0; i < sizes.size(); ++i) {
       const float x = 206 + static_cast<float>(i) * 222;
-      if (button(context, mk(root.ent(), id++), specimen(x + (200 - widths[i]) / 2, 301 - heights[i] / 2,
+      const float bx = x + (200 - widths[i]) / 2;
+      if (button(context, mk(root.ent(), id++), specimen(bx, 301 - heights[i] / 2,
           widths[i], heights[i], "Action", size_names[i], font_sizes[i]))) activated(i + 3, sizes[i]);
       label(fmt::format("{} / {:g} x {:g}", sizes[i], widths[i] * s, heights[i] * s),
-            x, 337, 208, 23, 18, text);
-      label(fmt::format("Text {:g}px / padding 0", font_sizes[i] * s), x, 358, 208, 18, 15, muted);
+            bx, 337, 208, 23, 18, text);
+      label(fmt::format("Text {:g}px / padding 0", font_sizes[i] * s), bx, 358, 208, 18, 15, muted);
     }
     label("Small and Medium", 872, 275, 238, 24, 18, muted);
     label("share a height.", 872, 300, 238, 24, 18, muted);
@@ -152,6 +155,10 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
         activated(6 + i, group_labels[i]);
       }
     }
+    for (int i = 1; i < 4; ++i) {
+      div(context, mk(root.ent(), id++), box(left + 246 + static_cast<float>(i) * 90, 407, 1, 45)
+          .with_custom_background({81, 109, 146, 200}).with_ignore_pointer_events());
+    }
     label(fmt::format("Outer corners: {:g}px / inner: 0 / gap: 0", 8 * s), 226, 457, 432, 24, 17, muted);
     label("Selected view: " + std::string(selected_group < 0 ? "None" : group_labels[static_cast<size_t>(selected_group)]),
           690, 408, 414, 27, 23, text, "selected_view");
@@ -174,7 +181,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
       label(hex(custom_colors[i]), x, 577, 208, 23, 18, text);
       label("Auto text " + hex(foreground), x, 602, 208, 23, 17, muted);
     }
-    div(context, mk(root.ent(), id++), box(left + 642, 513, 1, 108)
+    div(context, mk(root.ent(), id++), box(left + 639, 513, 1, 108)
         .with_custom_background(line).with_ignore_pointer_events());
     if (button(context, mk(root.ent(), id++), specimen(690, 524, 120, 45, "Rounded", "btn_rounded")))
       activated(12, "Rounded");

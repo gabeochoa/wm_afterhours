@@ -25,7 +25,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     const float top = (context.screen_height / s - 720.f) / 2.f;
     const float left = (context.screen_width / s - 1144.f) / 2.f;
     const afterhours::Color muted{183, 199, 216, 255};
-    const afterhours::Color diagnostic{104, 125, 145, 255};
+    const afterhours::Color diagnostic{70, 84, 102, 255};
     const auto box = [s, top](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, (y + top) * s).with_corner_radius(0)
@@ -70,14 +70,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     label("Variant = appearance     Role = color     Size = geometry     Availability = enabled or disabled",
           20, 77, 1104, 25, 19, muted);
     if (button(context, mk(root.ent()), specimen(show_bounds ? "Hide bounds" : "Show bounds",
-          950, 38, 174, 36, 20, ButtonVariant::Filled, Theme::Usage::Secondary, "bv_toggle_bounds")))
+          950, 38, 174, 36, 20, ButtonVariant::Outline, Theme::Usage::Primary, "bv_toggle_bounds")))
       show_bounds = !show_bounds;
     const std::array<ButtonVariant, 3> variants{ButtonVariant::Filled, ButtonVariant::Outline, ButtonVariant::Ghost};
     const std::array<const char *, 3> variant_names{"Filled", "Outline", "Ghost"};
     const std::array<Theme::Usage, 4> roles{Theme::Usage::Primary, Theme::Usage::Accent,
                                          Theme::Usage::Secondary, Theme::Usage::Primary};
     const std::array<const char *, 4> role_names{"Primary", "Accent", "Secondary", "Disabled primary"};
-    label(fmt::format("{:.0f} x {:.0f}px", 214 * s, 40 * s), 12, 117, 128, 26, 18, muted);
+    label(fmt::format("{:.0f} x {:.0f}px", 214 * s, 40 * s), 148, 98, 214, 22, 18, muted);
     for (int column = 0; column < 4; ++column)
       label(role_names[column], 148 + column * 242.f, 116, 224, 28, 21, theme.font);
 
@@ -93,7 +93,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       label(row == 1 ? fmt::format("req {:.0f}px / r{:.0f}", 2 * s, 8 * s) : row == 2 ? "No fill" : "Solid fill", 20, y + 29, 116, 18, 15, muted);
       for (int column = 0; column < 4; ++column) {
         const float x = 148 + column * 242.f;
-        bounds(x, y + 5, 214, 40, show_bounds || column == 3);
+        bounds(x, y + 5, 214, 40, show_bounds || (column == 3 && row != 2));
         if (button(context, mk(root.ent(), id++), specimen(column == 3 ? "Disabled" : "Press",
               x, y + 5, 214, 40, 20, variants[row], roles[column],
               fmt::format("bv_{}_{}", row, column), column == 3)))
@@ -119,9 +119,10 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
             widths[size], heights[size], font_sizes[size], size == 3 ? ButtonVariant::Outline : ButtonVariant::Filled,
             size == 3 ? Theme::Usage::Accent : Theme::Usage::Primary, "bv_size_" + std::to_string(size))))
         pressed(12 + size, std::string("Size / ") + size_names[size] + (size == 3 ? " / Accent" : " / Primary"));
+      const float caption_y = y + heights[size] + 6;
       label(fmt::format("{:.0f} x {:.0f}px / {:.0f}px text", widths[size] * s, heights[size] * s, font_sizes[size] * s),
-            x, 398, 224, 22, 16, muted, "bv_size_token_" + std::to_string(size));
-      label(size == 3 ? "Accent" : "Primary", x, 418, 224, 19, 16, muted);
+            x, caption_y, 224, 22, 16, muted, "bv_size_token_" + std::to_string(size));
+      label(size == 3 ? "Accent" : "Primary", x, caption_y + 19, 224, 19, 16, muted);
     }
 
     // --- Row 5: Theme comparison ---
@@ -158,7 +159,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
         if (button(context, mk(root.ent(), id++), config))
           pressed(16 + t * 3 + variant, std::string(themes[t].name) + " / " + variant_names[variant]);
       }
-      label(hex(foreground) + " / " + hex(demo.primary), x + 16, 610, 288, 28, 18, demo.font,
+      label(hex(foreground) + " / " + hex(demo.primary), x + 16, 604, 288, 28, 18, demo.font,
             "bv_theme_pair_" + std::to_string(t));
       context.theme = theme;
     }

@@ -17,6 +17,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
   int toast_counter = 0;
   int notifications_sent = 0;
   std::string last_notification = "None yet";
+  bool sample_deleted = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -51,15 +52,18 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name(name));
     };
     auto action = [&](int id, const std::string &caption, float x, float y,
-                      afterhours::Color background, const std::string &name) {
-      return button(context, mk(root.ent(), id), at(x, y, 188, 44)
+                      afterhours::Color background, const std::string &name,
+                      afterhours::Color border = {0, 0, 0, 0}) {
+      auto cfg = at(x, y, 188, 44)
           .with_label(caption).with_font("AtkinsonMock", pixels(20 * s))
           .with_custom_background(background).with_auto_text_color(true)
-          .with_corner_radius(6 * s).with_debug_name(name));
+          .with_corner_radius(6 * s).with_debug_name(name);
+      if (border.a > 0) cfg.with_border(border, 1.f);
+      return button(context, mk(root.ent(), id), cfg);
     };
     text(0, "Toast Notifications", 48, 24, 900, 44, 34);
     text(1, "Inspect native severity, duration and stacking behavior.", 48, 77, 900, 30, 21);
-    if (action(2, "Clear toasts", 1044, 45, theme.secondary, "toast_clear")) {
+    if (action(2, "Clear toasts", 1044, 45, {28, 34, 48, 255}, "toast_clear", theme.font_muted)) {
       for (afterhours::Entity &notice : notices)
         notice.get<toast::Toast>().dismiss();
       last_notification = "All toasts cleared";
@@ -77,7 +81,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     const std::array<const char *, 4> names{"[i] Info Toast", "[+] Success Toast", "[!] Warning Toast", "[x] Error Toast"};
     const std::array<const char *, 4> messages{"This is an info message", "Operation completed successfully!", "Warning: Check your settings", "Error: Something went wrong!"};
     const std::array<const char *, 4> debug{"btn_info", "btn_success", "btn_warning", "btn_error"};
-    const std::array<afterhours::Color, 4> colors{theme.primary, theme.secondary, theme.accent, theme.error};
+    const std::array<afterhours::Color, 4> colors{theme.primary, theme.success, theme.warning, theme.error};
     const std::array<const char *, 4> lifetime{"Default: 3 s", "Default: 3 s", "Default: 5 s", "Default: 7 s"};
     for (size_t i = 0; i < names.size(); ++i) {
       const float x = 64 + static_cast<float>(i) * 208;
@@ -90,7 +94,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         if (i == 3) style_toast(toast::send_error(context, messages[i]));
       }
       text(30 + static_cast<int>(i), lifetime[i], x, 236, 188, 24, 17);
-      text(40 + static_cast<int>(i), messages[i], x, 264, 188, 36, 14);
+      text(40 + static_cast<int>(i), messages[i], x, 259, 188, 31, 14);
     }
     // =========================================================================
     // Section 2: Duration and spam
@@ -123,12 +127,20 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     text(57, "Coral / #FF7F50", 688, 437, 188, 28, 17);
     section(60, 498, 178, "section3");
     text(61, "Simulated action feedback", 64, 511, 812, 30, 23);
-    if (action(62, "Sample deletion", 64, 558, theme.secondary, "btn_undo")) {
-      style_toast(toast::send_success(context, "Demo: deletion feedback only", 5));
-      ++notifications_sent;
-      last_notification = "Deletion feedback / no undo action";
+    if (action(62, sample_deleted ? "Undo deletion" : "Sample deletion", 64, 558, theme.secondary, "btn_undo")) {
+      sample_deleted = !sample_deleted;
+      if (sample_deleted) {
+        style_toast(toast::send_success(context, "[+] Item deleted / press Undo deletion to restore", 5));
+        ++notifications_sent;
+        last_notification = "1 item deleted";
+      } else {
+        style_toast(toast::send_success(context, "[+] Deletion undone / item restored", 5));
+        ++notifications_sent;
+        last_notification = "Item restored";
+      }
     }
-    text(63, "Sends a five-second message. No item is deleted and no undo action is attached.",
+    text(63, sample_deleted ? "1 item is deleted. Press Undo deletion to restore it."
+                            : "Press Sample deletion to delete 1 item and show a toast.",
          272, 554, 600, 64, 19);
     text(64, "Notifications sent: " + std::to_string(notifications_sent), 64, 631, 812, 28, 20, "toast_sent");
     div(context, mk(root.ent(), 70), at(932, 128, 300, 548)
@@ -147,15 +159,15 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (stepper(context, mk(root.ent()), positions, position_index,
         at(948, 344, 268, 40).with_font("AtkinsonMock", pixels(18 * s))
             .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
-            .with_debug_name("toast_position")))
+            .with_corner_radius(6 * s).with_debug_name("toast_position")))
       toast::position = static_cast<toast::Position>(position_index);
     text(77, position_index < 2 ? "Stack grows downward" : "Stack grows upward", 948, 385, 268, 24, 17);
     int active_count = 0;
     for (afterhours::Entity &notice : notices)
       if (!notice.get<toast::Toast>().is_expired()) ++active_count;
     text(74, "Active count: " + std::to_string(active_count), 948, 411, 268, 32, 21, "toast_active");
-    text(75, "Last notification", 948, 466, 268, 28, 19);
-    text(76, last_notification, 948, 505, 268, 118, 20, "toast_last");
+    text(75, "Last notification", 948, 457, 268, 28, 19);
+    text(76, last_notification, 948, 483, 268, 110, 20, "toast_last");
   }
 };
 
