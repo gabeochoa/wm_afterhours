@@ -76,18 +76,23 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       };
     };
     ws.defs["explorer"] = {"Explorer", {90, 160, 255, 255},
-                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_explorer(c, p, r); }};
-    ws.defs["file_main"] = {"main.cpp", {120, 200, 120, 255}, editor("main.cpp")};
-    ws.defs["file_ui"] = {"ui.h", {120, 200, 120, 255}, editor("ui.h")};
-    ws.defs["file_readme"] = {"README.md", {120, 200, 120, 255}, editor("README.md")};
+                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_explorer(c, p, r); },
+                           170.f, 170.f};
+    ws.defs["file_main"] = {"main.cpp", {120, 200, 120, 255}, editor("main.cpp"), 260.f, 170.f};
+    ws.defs["file_ui"] = {"ui.h", {120, 200, 120, 255}, editor("ui.h"), 260.f, 170.f};
+    ws.defs["file_readme"] = {"README.md", {120, 200, 120, 255}, editor("README.md"), 260.f, 170.f};
     ws.defs["terminal"] = {"Terminal", {45, 52, 72, 255},
-                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_terminal(c, p, r); }};
+                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_terminal(c, p, r); },
+                           280.f, 150.f};
     ws.defs["problems"] = {"Problems", {214, 24, 60, 255},
-                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_problems(c, p, r); }};
+                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_problems(c, p, r); },
+                           220.f, 120.f};
     ws.defs["outline"] = {"Outline", {248, 185, 40, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_outline(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_outline(c, p, r); },
+                          200.f, 210.f};
     ws.defs["preview"] = {"Live Preview", {23, 86, 227, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_preview(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_preview(c, p, r); },
+                          200.f, 180.f};
     reset_layout();
   }
 
@@ -218,11 +223,12 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     using namespace afterhours::ui::imm;
     const char *syms[4] = {"main()", "Panel", "draw_panel()", "# Pulse"};
     const char *targets[4] = {"file_main", "file_ui", "file_ui", "file_readme"};
+    const float row_h = std::clamp((r.height - 32.f) / 4.f, 26.f, 34.f);
     for (int i = 0; i < 4; ++i) {
       auto b = button(ctx, mk(parent, i),
                       ComponentConfig{}
-                          .with_absolute_position(8.f, 8.f + i * 40.f)
-                          .with_size({pixels(r.width - 16.f), pixels(34.f)})
+                          .with_absolute_position(8.f, 8.f + i * (row_h + 6.f))
+                          .with_size({pixels(r.width - 16.f), pixels(row_h)})
                           .with_label(syms[i])
                           .with_font("FredokaMockBold", pixels(13.f))
                           .with_corner_radius(7.f)
@@ -297,7 +303,8 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             .with_ignore_pointer_events());
     // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width,
+               s);
     // Bottom 48px of the page is reserved for the global HUD.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,

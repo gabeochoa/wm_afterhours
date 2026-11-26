@@ -78,6 +78,26 @@ int main() {
     assert(serialize_doc(doc) == "L(b)");
   }
 
+  // First render adopts the real area as the root: build/reset ran while
+  // root_rect was still the 1280x720 default, so the overview camera must
+  // not keep that stale view (it squeezed fixed-size panel content).
+  {
+    struct Dummy {};
+    dock::Workspace<Dummy> ws;
+    ws.doc.floating = {{"gallery", {300, 380, 420, 260}}};
+    ws.sync_root_to_area({12, 52, 1256, 620});
+    assert(ws.root_rect.width == 1256.f && ws.root_rect.height == 620.f);
+    assert(ws.view.width == 1256.f && ws.view.height == 620.f);
+    assert(ws.view_target.width == 1256.f && ws.view_target.height == 620.f);
+    assert(ws.doc.floating[0].rect.y == 360.f);
+    // Later area changes rescale workspace-space state instead of leaving
+    // a mismatched camera behind.
+    ws.sync_root_to_area({12, 52, 628, 310});
+    assert(ws.root_rect.width == 628.f && ws.view.width == 628.f);
+    assert(ws.doc.floating[0].rect.width == 210.f);
+    assert(ws.doc.floating[0].rect.y == 180.f);
+  }
+
   // Drop labels are readable (owner: drop preview wasn't obvious).
   {
     struct Dummy {};
