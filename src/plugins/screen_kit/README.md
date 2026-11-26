@@ -106,15 +106,25 @@ pilot screen was edited.
 
 ## Current consumers
 
-No screen header currently `#include`s these headers: PR #3 and
-PR #4 landed the two headers header-only, and the designated pilot
-screens below still hand-roll the equivalent preamble/rows; adopting
-the kit in a screen body is a follow-up, not this batch. The pilots
-are the behavior proof for this plugin:
+The `checkboxes` pilot (`src/systems/screens/CheckboxShowcase.h`) is
+the first screen that `#include`s the canonical `screen_scaffold.h`
+and drives its preamble through `begin_screen` + `ScreenFrame::layout`
+(its own text colors ride `ScreenOptions`). PR #3 and PR #4 landed the
+two headers header-only; the other designated pilots below still
+hand-roll the equivalent preamble/rows. `CheckboxShowcase.h` was
+chosen because its preamble already matched `begin_screen` closest:
+`set_theme` (like the kit), a full-screen `Theme::Usage::Background`
+`bg` div, and a `[s](x,y,w,h)` box lambda whose math is exactly
+`layout()`. `Buttons.h` (`context.theme = theme` assignment, custom
+`theme.background` canvas named `buttons_canvas`) and
+`ExampleSimpleButton.h` (`context.theme = theme` assignment, bespoke
+`{255,245,235}` background that is not the cozy_kraft background,
+no full-screen root) diverge further, so they were left hand-rolled.
+The pilots are the behavior proof for this plugin:
 
 - Scaffold pilots (designated): `Buttons.h` (`buttons`),
-  `CheckboxShowcase.h` (`checkboxes`), `ExampleSimpleButton.h`
-  (`simple_button`) — `src/systems/screens/`.
+  `CheckboxShowcase.h` (`checkboxes`, kit consumer as above),
+  `ExampleSimpleButton.h` (`simple_button`) — `src/systems/screens/`.
 - SettingsPage pilots (designated): `FlightOptions.h`
   (`flight_options`), `PowerWashSettings.h`
   (`powerwash_settings`) — `src/systems/screens/`.

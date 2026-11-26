@@ -2,6 +2,7 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../plugins/screen_kit/screen_scaffold.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
@@ -45,23 +46,26 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     const auto theme = afterhours::ui::theme_presets::neon_dark();
-    context.set_theme(theme);
-    context.scaling_mode = ScalingMode::Proportional;
-    const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
-    if (s <= 0.f) return;
+    // Screen-kit preamble (screen_kit is the first real consumer on this
+    // screen): set_theme + Proportional + 720p scale + full-screen
+    // Usage::Background stage ("bg" + transparent "screen_root"). The
+    // screen's own text colors ride ScreenOptions so every widget keeps
+    // its hand-tuned ink/muted. The legacy guard stays before begin_screen
+    // so a degenerate scale still draws nothing.
+    if (std::min(context.screen_height / 720.f, context.screen_width / 1280.f) <= 0.f)
+      return;
+    auto frame = begin_screen(context, entity, theme,
+                              ScreenOptions{.ink = afterhours::Color{236, 242, 251, 255},
+                                            .muted = afterhours::Color{182, 197, 219, 255}});
+    const float s = frame.s;
     const float left = (context.screen_width - 1144 * s) / 2.f;
     const float top = (context.screen_height - 720 * s) / 2.f;
-    const afterhours::Color ink{236, 242, 251, 255};
-    const afterhours::Color muted{182, 197, 219, 255};
-    const auto box = [s](float x, float y, float w, float h) {
-      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
-          .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
+    const auto ink = frame.ink;
+    const auto muted = frame.muted;
+    const auto box = [frame](float x, float y, float w, float h) {
+      return frame.layout(x, y, w, h);
     };
-    // Root - full screen centering container
-    auto root = div(context, mk(entity), ComponentConfig{}
-        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("bg"));
-    auto content = div(context, mk(root.ent()), ComponentConfig{}
+    auto content = div(context, mk(frame.root.ent()), ComponentConfig{}
         .with_size({pixels(1144 * s), pixels(720 * s)}).with_absolute_position(left, top)
         .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("card"));
     int id = 0;
