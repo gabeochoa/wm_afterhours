@@ -1,5 +1,21 @@
 #pragma once
 
+// Local WM testing plugin: scheduled synthetic input injector.
+// Kept local (not retired to vendored afterhours e2e_testing:
+// testing::input_injector / test_input) because parity is not proven:
+//   * Rectangle-centred scheduled clicks (schedule_mouse_click_at takes a
+//     raylib::Rectangle; vendored schedule_click_at takes x/y/w/h) --
+//     game.cpp MCP cursor wraps the rect spelling.
+//   * int-button mouse queries and int/vec2 positions with raylib
+//     *_Real fallback (vendored uses Position + no-arg button functions).
+//   * consume_synthetic_press decrements a per-key count with a 1-frame
+//     delay (vendored consume_press reads until reset_frame; vendored
+//     test_input routing differs again) -- see src/testing/test_input.cpp.
+//   * test_input.cpp delegates mouse/button queries here; headless_screenshots
+//     already uses the vendored injector for the shift key, so the two
+//     coexist by call site, not by duplication.
+// See src/testing/input_injector_plugin.md for the plugin README/manifest.
+// API and behavior are frozen by this comment: no renames, no migration here.
 #include "../rl.h"
 
 namespace input_injector {
