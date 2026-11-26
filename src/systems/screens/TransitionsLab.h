@@ -47,6 +47,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
   std::string fx_slug;
   size_t replay_stamp = 0;
   size_t seen_replay = 0;
+  bool seeded = false;
 
   bool checked = false;
   bool toggled = false;
@@ -245,6 +246,20 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
     namespace motion = afterhours::motion;
+    // Motion tracks are global (motion::anim on the permanent root
+    // entity), so they survive leaving and returning: per-frame
+    // !started() seeding never re-fires and tracks that only change on
+    // click/replay (CheckDraw, LikeFill, SuccessDraw, StreamCount,
+    // Reel*, Goo*, Dissolve*, BendP, ReasonOffset, ...) would stay at
+    // non-default values against fresh instance state. Reseed once per
+    // screen instance. Tracks reset_examples() does not cover
+    // (PillX/W, AccHeight, MorphW/H, CardW/H, LearnShift/Spread,
+    // TooltipX, ShimmerX, Tilt*, Drag*, Drop*) all retarget per-frame
+    // to fresh-member-derived defaults, so they self-correct.
+    if (!seeded) {
+      seeded = true;
+      reset_examples();
+    }
     static const Theme night = [] {
       Theme t = Theme::create().with_palette({.background = {24, 22, 30, 255}, .surface = {52, 48, 62, 255}, .primary = {80, 120, 220, 255},
                                               .secondary = {66, 60, 76, 255}, .accent = {255, 115, 105, 255}, .error = {255, 110, 120, 255},

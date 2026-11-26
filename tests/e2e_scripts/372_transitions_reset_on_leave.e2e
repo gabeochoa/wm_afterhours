@@ -1,0 +1,32 @@
+goto_screen transitions_lab
+resize 1280 720
+mouse_move 20 20
+wait 0.3
+click_ui group_controls
+click_ui ex_checkbox
+mouse_move 20 20
+wait 0.6
+expect_text "Checkbox check"
+expect_text "checked: no"
+expect_text "stroke: 0%"
+expect_text "motion: settled"
+click_ui check_box
+mouse_move 20 20
+expect_text "checked: yes"
+wait 1
+expect_text "stroke: 100%"
+expect_text "motion: settled"
+goto_screen motion_modal
+mouse_move 20 20
+wait 0.5
+goto_screen transitions_lab
+mouse_move 20 20
+wait 0.6
+click_ui group_controls
+click_ui ex_checkbox
+mouse_move 20 20
+wait 0.6
+expect_text "Checkbox check"
+expect_text "checked: no"
+expect_text "stroke: 0%"
+expect_text "motion: settled"
