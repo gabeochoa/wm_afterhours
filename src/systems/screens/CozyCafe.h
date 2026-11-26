@@ -224,9 +224,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_on_draw_fg(outline(22, 2, {158, 130, 91, 255}))
             .with_debug_name("specials_inner"));
     const afterhours::Color menu_colors[] = {pink_btn, mint_btn, tan_btn};
-    const char *descriptions[] = {"Floral coffee / promotion earns 25 coins",
-                                  "Sweet toast / promotion earns 25 coins",
-                                  "Green tea cake / promotion earns 25 coins"};
+    const char *descriptions[] = {"Floral espresso · +25 coins",
+                                  "Warm brioche & honey · +25 coins",
+                                  "Ceremonial green tea · +25 coins"};
     for (size_t i = 0; i < daily_specials.size(); ++i) {
       const bool selected = i == selected_special;
       const float y = 215.f + static_cast<float>(i) * 63.f;
@@ -390,12 +390,12 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("chat_box"));
     // Chat messages with avatars - data-driven
     const char *messages[] = {status_message.c_str(),
-                             "DevTeam_Support: Check out the new update!"};
+                             "BakerMomo: fresh matcha batch ready!"};
     for (int i = 0; i < 2; ++i) {
       const float y = 615.f + static_cast<float>(i) * 30.f;
       div(context, mk(entity, 405 + i),
           box(164, y + 3, 23, 23, i == 0 ? mint_btn : pink_btn, 11.5f)
-              .with_label(i == 0 ? "G" : "D")
+              .with_label(i == 0 ? "G" : "B")
               .with_font("GaeguMock", px(14))
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center));
@@ -415,7 +415,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     };
     const IconBtn tools[] = {{500, &icon_inventory_tex, "Inventory", "2", "2 notices"},
                              {510, nullptr, "Research", "1", "1 recipe note"},
-                             {520, &icon_crafting_tex, "Crafting", nullptr, "No notices"}};
+                             {520, &icon_crafting_tex, "Crafting", nullptr, ""}};
     for (size_t i = 0; i < 3; ++i) {
       const auto &tool = tools[i];
       const float x = 801.f + static_cast<float>(i) * 114.f;

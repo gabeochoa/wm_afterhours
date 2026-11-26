@@ -96,21 +96,46 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     // Theme buttons
     const std::array<ThemeChoice, 5> choices{ThemeChoice::CozyKraft, ThemeChoice::NeonDark,
         ThemeChoice::OceanNavy, ThemeChoice::Midnight, ThemeChoice::SageNatural};
+    const auto idle_btn_bg = afterhours::colors::mix(theme.surface, theme.background, 0.45f);
+    const auto subtle_border = afterhours::colors::opacity_pct(theme.font, 0.18f);
     for (size_t i = 0; i < choices.size(); ++i) {
       const bool selected = choices[i] == current_theme;
-      auto option = button(context, mk(root.ent(), 10 + static_cast<int>(i)),
-          at(64, 188 + static_cast<float>(i) * 55, 232, 42).with_label(get_theme_name(choices[i]))
-              .with_font("AtkinsonMock", pixels(21 * s)).with_alignment(TextAlignment::Left)
-              .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Secondary)
-              .with_auto_text_color(true).with_corner_radius(5 * s)
-              .with_debug_name("theme_btn_" + std::to_string(i + 1)));
+      const auto choice_theme = get_theme_for_choice(choices[i]);
+      const float row_y = 188 + static_cast<float>(i) * 55;
+      auto btn_cfg = at(64, row_y, 232, 42).with_label(get_theme_name(choices[i]))
+          .with_font("AtkinsonMock", pixels(20 * s)).with_alignment(TextAlignment::Left)
+          .with_custom_background(selected ? theme.accent : idle_btn_bg)
+          .with_auto_text_color(true).with_corner_radius(6 * s)
+          .with_debug_name("theme_btn_" + std::to_string(i + 1));
+      if (!selected) btn_cfg.with_border(subtle_border, s);
+      auto option = button(context, mk(root.ent(), 10 + static_cast<int>(i)), btn_cfg);
       option.ent().get<HasLabel>().text_x_offset = 14 * s;
+      // Preview swatches for each theme
+      const std::array<afterhours::Color, 3> dots{choice_theme.primary, choice_theme.secondary, choice_theme.accent};
+      for (size_t d = 0; d < dots.size(); ++d) {
+        div(context, mk(root.ent(), 140 + static_cast<int>(i * 3 + d)),
+            at(246 + static_cast<float>(d) * 14, row_y + 16, 10, 10)
+                .with_custom_background(dots[d])
+                .with_border(afterhours::colors::opacity_pct(theme.font, 0.35f), s)
+                .with_corner_radius(5 * s).with_ignore_pointer_events());
+      }
       if (selected)
-        div(context, mk(root.ent(), 20 + static_cast<int>(i)), at(64, 188 + static_cast<float>(i) * 55, 4, 42)
+        div(context, mk(root.ent(), 20 + static_cast<int>(i)), at(64, row_y, 4, 42)
             .with_custom_background(theme.font).with_ignore_pointer_events());
       if (option) current_theme = choices[i];
     }
-    label(30, "Resolved color tokens", 64, 478, 232, 26, 20);
+    label(30, "Color tokens", 64, 474, 146, 26, 18);
+    if (button(context, mk(root.ent(), 39), at(224, 472, 72, 26).with_label("Copy")
+        .with_font("AtkinsonMock", pixels(15 * s)).with_custom_background(idle_btn_bg)
+        .with_border(subtle_border, s).with_custom_text_color(theme.font)
+        .with_corner_radius(5 * s).with_debug_name("theme_copy_tokens"))) {
+      afterhours::clipboard::set_text(fmt::format(
+          "// {} theme tokens\nbackground: {}\nsurface: {}\nprimary: {}\nsecondary: {}\naccent: {}\nfont: {}\ndarkfont: {}",
+          get_theme_name(current_theme), hex(theme.background), hex(theme.surface),
+          hex(theme.primary), hex(theme.secondary), hex(theme.accent),
+          hex(theme.font), hex(theme.darkfont)));
+      last_action = get_theme_name(current_theme) + " tokens copied to clipboard";
+    }
     const std::array<const char *, 7> token_names{"Background", "Surface", "Primary", "Secondary", "Accent", "Font", "Dark font"};
     const std::array<afterhours::Color, 7> colors{theme.background, theme.surface, theme.primary,
         theme.secondary, theme.accent, theme.font, theme.darkfont};
@@ -180,7 +205,8 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
       const float x = 356 + static_cast<float>(i) * 288;
       auto sample = div(context, mk(root.ent(), 100 + static_cast<int>(i)), at(x, 532, 268, 34)
           .with_label(swatches[i]).with_custom_background(backgrounds[i]).with_custom_text_color(foreground)
-          .with_border({127, 139, 151, 255}, s).with_font("AtkinsonMock", pixels(20 * s)));
+          .with_border(afterhours::colors::opacity_pct(theme.font, 0.22f), s).with_corner_radius(5 * s)
+          .with_font("AtkinsonMock", pixels(20 * s)));
       sample.ent().get<HasLabel>().text_x_offset = 12 * s;
       label(110 + static_cast<int>(i), "FG " + hex(foreground) + " / BG " + hex(backgrounds[i]),
           x, 571, 268, 23, 15);

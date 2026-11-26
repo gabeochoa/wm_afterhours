@@ -68,10 +68,10 @@ assert_ui mg_shield_value text=45.00%
 focus_element mg_slider
 key LEFT
 wait 0.2
-assert_ui mg_control_value text=98.00%
-assert_ui mg_hp_value text=98.00%
-assert_ui mg_mp_value text=58.80%
-assert_ui mg_shield_value text=44.10%
+assert_ui mg_control_value text=99.00%
+assert_ui mg_hp_value text=99.00%
+assert_ui mg_mp_value text=59.40%
+assert_ui mg_shield_value text=44.55%
 assert_ui mg_xp_value text=100.00%
 assert_within_parents
 screenshot meters_gauges_control_full

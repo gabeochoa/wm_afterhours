@@ -18,7 +18,7 @@ screenshot tab_profile_design
 click_ui tc_copy
 wait 0.2
 expect_text "Email copied"
-click_ui tab_1
+click_ui tab_1 under=tabs
 wait 0.3
 expect_text "Audio sample"
 expect_text "Master volume"
@@ -52,11 +52,11 @@ focus_element tc_reopen
 key ENTER
 wait 0.3
 expect_text "Display sample"
-click_ui tab_0
+click_ui tab_0 under=tabs
 wait 0.3
 expect_text "Profile details"
 expect_text "Email copied"
-click_ui tab_3
+click_ui tab_3 under=tabs
 wait 0.3
 expect_text "Long label sample"
 expect_text "Wide bar: long tab takes its label width"
@@ -72,7 +72,7 @@ wait 0.3
 assert_ui root w=1920 h=1080
 assert_within_parents
 screenshot tab_profile_1080_design
-click_ui tab_1
+click_ui tab_1 under=tabs
 wait 0.3
 assert_ui bar_0 w=180 h=36
 assert_within_parents
@@ -81,7 +81,7 @@ wait 0.3
 assert_ui root w=1024 h=768
 assert_within_parents
 screenshot tab_audio_1024_design
-click_ui tab_2
+click_ui tab_2 under=tabs
 wait 0.3
 assert_within_parents
 screenshot tab_display_1024_design

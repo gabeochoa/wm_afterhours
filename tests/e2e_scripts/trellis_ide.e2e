@@ -1,0 +1,14 @@
+goto_screen trellis_ide
+resize 1280 720
+wait 0.5
+expect_text "Pulse"
+expect_text "pulse shell"
+expect_text "TODO"
+click_ui ide_outline_1
+wait 0.2
+drag_to 1050 75 640 660
+wait 0.3
+screenshot trellis_ide_moved
+click_ui dock_overview
+wait 0.3
+assert_within_parents

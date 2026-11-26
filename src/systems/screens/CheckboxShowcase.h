@@ -72,23 +72,38 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(subdued ? muted : ink)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events().with_debug_name(name));
     };
-    const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled) {
+    const auto outline = [&](afterhours::Entity &parent, float x, float y, bool disabled,
+                             afterhours::Color accent_color = {236, 242, 251, 255}) {
       div(context, mk(parent, id++), box(x, y, 22, 22).with_ignore_pointer_events()
-          .with_border(disabled ? afterhours::colors::darken(ink, .5f) : ink, pixels(2 * s)));
+          .with_border(disabled ? afterhours::colors::darken(ink, .5f) : accent_color, pixels(2 * s))
+          .with_corner_radius(4 * s));
     };
     const auto check_row = [&](afterhours::Entity &parent, bool &value, const std::string &text,
-                               float y, afterhours::Color background, const std::string &name,
+                               float y, afterhours::Color role_color, const std::string &name,
                                bool disabled = false, const std::string &lock_reason = "") {
+      const afterhours::Color row_bg = disabled ? afterhours::Color{18, 24, 36, 255}
+                                                : afterhours::Color{28, 39, 58, 255};
+      const afterhours::Color row_border = disabled ? afterhours::Color{36, 46, 64, 255}
+                                                    : afterhours::Color{52, 68, 94, 255};
       const auto changed = checkbox(context, mk(parent, id++), value,
-          box(20, y, 516, 44).with_label("").with_custom_background(background)
+          box(20, y, 516, 44).with_label("").with_custom_background(row_bg)
+              .with_border(row_border, s)
               .with_alignment(TextAlignment::Left).with_text_inset(14 * s, 0)
-              .with_custom_text_color(ink).with_corner_radius(6 * s)
+              .with_custom_text_color(disabled ? afterhours::colors::darken(ink, .5f) : ink)
+              .with_corner_radius(8 * s)
               .with_font("AtkinsonMock", pixels(23 * s)).with_disabled(disabled)
               .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
-      outline(parent, 34, y + 11, disabled);
-      label(parent, text, 72, y + 7, 334, 30, 23, name + "_label");
-      label(parent, disabled ? (lock_reason.empty() ? "Disabled" : lock_reason) : (value ? "Checked" : "Unchecked"),
-            422, y + 10, 104, 26, 17, name + "_state", true);
+      // Quiet left role bar so theme role is unmistakable without flooding the row
+      div(context, mk(parent, id++), box(20, y + 6, 4, 32).with_ignore_pointer_events()
+          .with_custom_background(disabled ? afterhours::colors::darken(role_color, .55f) : role_color)
+          .with_corner_radius(2 * s));
+      outline(parent, 34, y + 11, disabled, value ? role_color : ink);
+      label(parent, text, 72, y + 7, 328, 30, 22, name + "_label", disabled);
+      div(context, mk(parent, id++), box(404, y + 10, 118, 26)
+          .with_label(disabled ? (lock_reason.empty() ? "Disabled" : lock_reason) : (value ? "Checked" : "Unchecked"))
+          .with_font("AtkinsonMock", pixels(17 * s))
+          .with_custom_text_color(disabled ? afterhours::colors::darken(muted, .45f) : (value ? ink : muted))
+          .with_alignment(TextAlignment::Right).with_ignore_pointer_events().with_debug_name(name + "_state"));
       if (changed) last_change = text + (value ? " checked" : " unchecked");
       return static_cast<bool>(changed);
     };
@@ -101,7 +116,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(header.ent()), box(914, 10, 210, 36)
         .with_label("Reset demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
-        .with_corner_radius(7 * s).with_debug_name("checkbox_reset"))) reset();
+        .with_corner_radius(4 * s).with_debug_name("checkbox_reset"))) reset();
     label(header.ent(), "Last: " + last_change, 774, 52, 350, 26, 18, "checkbox_feedback", true);
 
     // ========== LEFT COLUMN ==========
@@ -112,7 +127,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(left_col.ent()), box(366, 52, 170, 30)
         .with_label("Match checked").with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
-        .with_corner_radius(6 * s).with_debug_name("checkbox_match_roles"))) {
+        .with_corner_radius(4 * s).with_debug_name("checkbox_match_roles"))) {
       labeled_primary = labeled_secondary = labeled_accent = true;
       last_change = "Role states matched";
     }
@@ -128,7 +143,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
       const float x = 20 + static_cast<float>(i) * 129;
       label(left_col.ent(), std::to_string(i + 1) + " / " + role_names[i], x, 282, 120, 23, 17, "", true);
       if (checkbox(context, mk(left_col.ent(), id++), *box_values[i], box(x + 38, 311, 44, 44)
-          .with_label("").with_background(box_roles[i]).with_corner_radius(3 * s)
+          .with_label("").with_background(box_roles[i]).with_corner_radius(4 * s)
           .with_custom_text_color(ink).with_font("AtkinsonMock", pixels(23 * s))
           .with_click_activation(ClickActivationMode::Release).with_debug_name("nl_option_" + std::to_string(i + 1))))
         last_change = "Box " + std::to_string(i + 1) + (*box_values[i] ? " checked" : " unchecked");
@@ -149,7 +164,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     label(right_col.ent(), "Grouped preferences", 20, 12, 516, 33, 27);
     label(right_col.ent(), "News preferences", 20, 54, 344, 27, 23);
     auto multi_count = div(context, mk(right_col.ent(), id++), box(374, 51, 162, 31)
-        .with_custom_background({40, 57, 80, 255}).with_corner_radius(6 * s));
+        .with_custom_background({40, 57, 80, 255}).with_corner_radius(8 * s));
     label(multi_count.ent(), std::to_string(options_group.count()) + " of 4 selected", 8, 2, 146, 27, 20, "options_count");
     const std::array<const char *, 4> option_names{"Product updates", "Security alerts", "Tips and guides", "Event reminders"};
     const std::array<const char *, 4> option_debug{"opt_a", "opt_b", "opt_c", "opt_d"};
@@ -160,7 +175,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     label(right_col.ent(), "Delivery channels", 20, 314, 330, 28, 23);
     auto limit_count = div(context, mk(right_col.ent(), id++), box(374, 311, 162, 31)
-        .with_custom_background({40, 57, 80, 255}).with_corner_radius(6 * s));
+        .with_custom_background({40, 57, 80, 255}).with_corner_radius(8 * s));
     label(limit_count.ent(), std::to_string(min_max_group.count()) + " selected", 8, 2, 146, 27, 20, "channels_count");
     label(right_col.ent(), "Min 1, max 2 / Secondary fill marks this group", 20, 346, 516, 26, 19, "channel_rules", true);
     const std::array<const char *, 3> channel_names{"Email", "Push notifications", "SMS"};

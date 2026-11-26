@@ -69,7 +69,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(878, 37, 246, 34)
         .with_label(show_measurements ? "Hide measurements" : "Show measurements")
         .with_font("AtkinsonMock", pixels(18 * s)).with_background(Theme::Usage::Primary)
-        .with_auto_text_color(true).with_corner_radius(8 * s).with_alignment(TextAlignment::Center)
+        .with_auto_text_color(true).with_corner_radius(4 * s).with_alignment(TextAlignment::Center)
         .with_debug_name("decorator_measurements"))) show_measurements = !show_measurements;
     const std::array<const char *, 3> headings{"Corner brackets", "Grid backgrounds", "Quote bars"};
     const std::array<const char *, 3> api{"with_brackets()", "with_grid_bg()", "with_quote()"};
@@ -178,7 +178,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             "quote_caption_" + std::to_string(i));
     }
     div(context, mk(root.ent(), 120), box(0, 683, 1144, 25)
-        .with_custom_background(theme.surface).with_corner_radius(6 * s));
+        .with_custom_background(theme.surface).with_corner_radius(8 * s));
     label(root.ent(), 121, "720p parameters; quote text adds 5 screen px. Colors supply meaning; decorators add visuals. Ruler: 12px.",
           8, 684, 974, 23, 16, theme.font_muted);
     div(context, mk(root.ent(), 122), box(986, 688, 144, 13).with_ignore_pointer_events()

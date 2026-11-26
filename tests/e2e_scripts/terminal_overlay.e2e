@@ -28,10 +28,10 @@ type "echo spaces stay in the terminal"
 key ENTER
 wait 0.3
 expect_text "spaces stay in the terminal"
-key SPACE
+expect_unread_key SPACE
 wait 0.2
 expect_text "Jumps: 1"
-key PERIOD
+expect_unread_key PERIOD
 wait 0.2
 expect_text "Developer terminal"
 key F2

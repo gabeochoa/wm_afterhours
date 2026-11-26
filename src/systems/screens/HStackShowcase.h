@@ -29,14 +29,17 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     const float left = (context.screen_width - 1160 * s) / 2;
     const float top = (context.screen_height - 720 * s) / 2;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18 * s));
-    // Bright, high-contrast colors for demo boxes
+    // Color-coded demo boxes are the point of this screen: one named 6-entry
+    // palette (single definitions). Surfaces/text derive from ctx.theme.
     const auto teal = afterhours::Color{0, 180, 220, 255};
     const auto pink = afterhours::Color{220, 60, 120, 255};
     const auto green = afterhours::Color{50, 210, 130, 255};
     const auto orange = afterhours::Color{250, 140, 40, 255};
     const auto purple = afterhours::Color{160, 100, 255, 255};
     const auto blue = afterhours::Color{70, 140, 255, 255};
-    const auto panel_bg = afterhours::Color{37, 47, 65, 255};
+    const auto panel_bg = theme.surface;
+    const auto on_demo = theme.darkfont;
+    const auto guide = afterhours::colors::opacity_pct(theme.font, 0.55f);
     const auto box = [s](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None)
@@ -64,7 +67,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_label(i == 0 ? "Width and distribution" : "Alignment and patterns")
           .with_font("AtkinsonMock", pixels(20 * s)).with_alignment(TextAlignment::Center)
           .with_custom_background(page == i ? teal : panel_bg)
-          .with_custom_text_color(page == i ? afterhours::Color{0, 0, 0, 255} : theme.font)
+          .with_custom_text_color(page == i ? on_demo : theme.font)
           .with_corner_radius(8 * s).with_debug_name("hstack_page_" + std::to_string(i)))) continue;
       page = i;
     }
@@ -83,7 +86,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(row1.ent(), i), ComponentConfig{}.with_size({percent(.30f), percent(.85f)})
             .with_label("Item " + std::to_string(i + 1)).with_alignment(TextAlignment::Center)
             .with_font("AtkinsonMock", pixels(23 * s)).with_custom_background(colors[i])
-            .with_custom_text_color({0, 0, 0, 255}).with_corner_radius(8.f * s).with_skip_grid_snap(true)
+            .with_custom_text_color(on_demo).with_corner_radius(8.f * s).with_skip_grid_snap(true)
             .with_debug_name("box_" + std::to_string(i)));
       label(root.ent(), 13, "Content 1128px / child 338.4px / edge 18.8px / internal gap 37.6px.",
             0, 343, 1160, 26, 18);
@@ -105,12 +108,12 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
         for (int k = 0; k < 3; ++k)
           div(context, mk(frame.ent(), k), ComponentConfig{}.with_size({pixels(30 * s), pixels(30 * s)})
               .with_label(std::to_string(k + 1)).with_font("AtkinsonMock", pixels(18 * s))
-              .with_alignment(TextAlignment::Center).with_custom_text_color({0, 0, 0, 255})
+              .with_alignment(TextAlignment::Center).with_custom_text_color(on_demo)
               .with_custom_background(teal).with_corner_radius(8.f * s).with_skip_grid_snap(true)
               .with_debug_name("jc_box_" + std::to_string(j) + "_" + std::to_string(k)));
         div(context, mk(root.ent(), 40 + j), box(x, 509, 208, 140).with_ignore_pointer_events()
-            .with_on_draw_fg([j, s, eid = frame.ent().id](RectangleType r) {
-              const afterhours::Color ink{170, 204, 226, 145};
+            .with_on_draw_fg([j, s, guide, eid = frame.ent().id](RectangleType r) {
+              const auto ink = guide;
               if (j < 3) {
                 const float xline = j == 0 ? r.x + 12 * s : j == 1 ? r.x + r.width - 12 * s : r.x + r.width / 2;
                 raylib::DrawLineEx({xline, r.y + 8 * s}, {xline, r.y + r.height - 8 * s}, s, ink);
@@ -154,14 +157,14 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background(panel_bg).with_padding(Padding::all(pixels(12 * s)))
           .with_align_items(aligns[a]).with_justify_content(JustifyContent::SpaceAround)
           .with_debug_name("ai_row_" + std::to_string(a))
-          .with_on_draw_fg([a, s](RectangleType r) {
+          .with_on_draw_fg([a, s, guide](RectangleType r) {
             const float yline = a == 0 ? r.y + 12 * s : a == 2 ? r.y + r.height - 12 * s : r.y + r.height / 2;
-            raylib::DrawLineEx({r.x, yline}, {r.x + r.width, yline}, s, {181, 211, 236, 155});
+            raylib::DrawLineEx({r.x, yline}, {r.x + r.width, yline}, s, guide);
           }));
       for (int k = 0; k < 3; ++k)
         div(context, mk(frame.ent(), k), ComponentConfig{}.with_size({pixels(28 * s), percent(heights[k])})
             .with_label(std::to_string(k + 1)).with_font("AtkinsonMock", pixels(18 * s)).with_alignment(TextAlignment::Center)
-            .with_custom_background(align_colors[k]).with_custom_text_color({0, 0, 0, 255})
+            .with_custom_background(align_colors[k]).with_custom_text_color(on_demo)
             .with_corner_radius(4 * s).with_skip_grid_snap(true).with_debug_name("ai_box_" + std::to_string(a) + "_" + std::to_string(k)));
     }
     // RIGHT: Real-world toolbar pattern
@@ -194,7 +197,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(cards.ent(), i), ComponentConfig{}.with_size({percent(.22f), percent(.85f)})
           .with_label(std::string(1, static_cast<char>('A' + i))).with_alignment(TextAlignment::Center)
           .with_font("AtkinsonMock", pixels(24 * s)).with_custom_background(card_colors[i])
-          .with_custom_text_color({0, 0, 0, 255}).with_corner_radius(8.f * s).with_skip_grid_snap(true)
+          .with_custom_text_color(on_demo).with_corner_radius(8.f * s).with_skip_grid_snap(true)
           .with_debug_name("card_" + std::to_string(i)));
     // == Row 4: Dashboard cards spanning full width ==
     label(root.ent(), 90, "Six expanding cards", 0, 553, 1160, 31, 25, true);
@@ -210,10 +213,10 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("metric_" + std::to_string(i)));
       div(context, mk(card.ent(), 0), box(10, 5, 140, 22).with_label(names[i])
           .with_font("AtkinsonMock", pixels(17 * s)).with_alignment(TextAlignment::Left)
-          .with_custom_text_color({0, 0, 0, 255}).with_ignore_pointer_events());
+          .with_custom_text_color(on_demo).with_ignore_pointer_events());
       div(context, mk(card.ent(), 1), box(10, 28, 140, 28).with_label(values[i])
           .with_font("AtkinsonMockBold", pixels(23 * s)).with_alignment(TextAlignment::Left)
-          .with_custom_text_color({0, 0, 0, 255}).with_ignore_pointer_events());
+          .with_custom_text_color(on_demo).with_ignore_pointer_events());
     }
     label(root.ent(), 93, "Sample values. Colors identify cards; they do not encode success, failure or a trend. Dimensions use 720p design pixels.",
           0, 695, 1160, 22, 17);

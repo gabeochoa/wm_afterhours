@@ -3,49 +3,63 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
-#include "../SettingsPage.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <array>
 #include <string>
 #include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Settings data lives in a settings_kit::Page (tabs of stepper rows with
-// saved snapshots); the kit renders the category column and the row stack.
-// This screen keeps only its bespoke chrome: artwork, preview pane, help
-// text, footer, and the modal select -> edit -> apply/cancel flow.
-// Gap in the vendored widget, reported rather than forked: setting_row has
-// no action/button control, so the KEYBOARD tab's "Restore Defaults" command
-// is drawn here as a plain button after the kit's rows, in the next row slot.
 struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
-  settings_kit::Page page{{
-      {"FLIGHT SYSTEM", {settings_kit::stepper_row("Control Type", {"Standard", "Expert"}, 0, "Choose between standard or expert control schemes."),
-                          settings_kit::stepper_row("High-G Turn Settings", {"Standard", "Hold", "Toggle"}, 0, "Choose how the high-G turn command is activated."),
-                          settings_kit::stepper_row("Reduced Collision Damage", {"Off", "On"}, 0, "Reduce damage from collisions with terrain and aircraft."),
-                          settings_kit::unavailable_row("Vibration (Unavailable)", "Vibration requires a compatible controller.")}},
-      {"CONTROLS", {settings_kit::stepper_row("Controller Preset", {"Type A", "Type B", "Type C"}, 0, "Choose the controller button layout."),
-                     settings_kit::stepper_row("Button Assignment", {"Default", "Southpaw"}, 0, "Swap the movement and camera stick assignments."),
-                     settings_kit::unavailable_row("Vibration (Unavailable)", "Vibration requires a compatible controller.")}},
-      {"KEYBOARD", {settings_kit::stepper_row("Keyboard Bindings", {"WASD", "Arrow keys"}, 0, "Choose the keys used for pitch and roll.")}},
-      {"MOUSE", {settings_kit::stepper_row("Sensitivity", {"Low", "Medium", "High"}, 1, "Adjust how quickly mouse movement changes the view."),
-                  settings_kit::stepper_row("Invert Y-Axis", {"Off", "On"}, 0, "Reverse the vertical mouse axis.")}},
-      {"FLIGHT STICK", {settings_kit::stepper_row("Axis Assignment", {"Standard", "Reversed"}, 0, "Choose the preferred pitch axis for a flight stick."),
-                         settings_kit::stepper_row("Dead Zone", {"5%", "10%", "15%"}, 1, "Ignore small movements around the center of the stick.")}},
-      {"DISPLAY", {settings_kit::stepper_row("HUD Display", {"On", "Off"}, 0, "Show or hide flight instruments and targeting information."),
-                    settings_kit::stepper_row("Brightness", {"40%", "50%", "60%", "70%"}, 1, "Set the preferred display brightness.")}},
-      {"GRAPHICS", {settings_kit::stepper_row("Resolution", {"1280 x 720", "1920 x 1080", "2560 x 1440"}, 1, "Choose the preferred game rendering resolution."),
-                     settings_kit::stepper_row("Texture Quality", {"Low", "Medium", "High"}, 2, "Choose texture detail. Higher quality uses more memory."),
-                     settings_kit::stepper_row("Frame Rate", {"30 FPS", "60 FPS", "120 FPS", "Unlimited"}, 1, "Choose the preferred frame rate limit.")}},
-      {"SOUND", {settings_kit::stepper_row("Master Volume", {"0%", "25%", "50%", "75%", "100%"}, 4, "Set the overall audio level."),
-                  settings_kit::stepper_row("Music", {"0%", "25%", "50%", "75%", "100%"}, 3, "Set the background music level."),
-                  settings_kit::stepper_row("Voice", {"0%", "25%", "50%", "75%", "100%"}, 4, "Set the radio and dialogue level.")}},
-      {"LANGUAGE", {settings_kit::stepper_row("Voice Language", {"English", "Japanese"}, 0, "Choose the preferred voice language."),
-                     settings_kit::stepper_row("Text Language", {"English", "Spanish", "French"}, 0, "Choose the preferred text language.")}},
+  struct Option {
+    std::string name;
+    std::vector<std::string> values;
+    std::string help;
+    size_t value = 0;
+    size_t saved = 0;
+    bool unavailable = false;
+  };
+  struct Category { std::string name; std::vector<Option> options; };
+  std::array<Category, 9> categories{{
+      {"FLIGHT SYSTEM", {
+          {"Control Type", {"Standard", "Expert"}, "Choose between standard or expert control schemes."},
+          {"High-G Turn Settings", {"Standard", "Hold", "Toggle"}, "Choose how the high-G turn command is activated."},
+          {"Reduced Collision Damage", {"Off", "On"}, "Reduce damage from collisions with terrain and aircraft."},
+          {"Vibration", {"Unavailable"}, "Vibration requires a compatible controller.", 0, 0, true}}},
+      {"CONTROLS", {
+          {"Controller Preset", {"Type A", "Type B", "Type C"}, "Choose the controller button layout."},
+          {"Button Assignment", {"Default", "Southpaw"}, "Swap the movement and camera stick assignments."},
+          {"Vibration", {"Unavailable"}, "Vibration requires a compatible controller.", 0, 0, true}}},
+      {"KEYBOARD", {
+          {"Keyboard Bindings", {"WASD", "Arrow keys"}, "Choose the keys used for pitch and roll."},
+          {"Restore Defaults", {}, "Restore the default keyboard bindings."}}},
+      {"MOUSE", {
+          {"Sensitivity", {"Low", "Medium", "High"}, "Adjust how quickly mouse movement changes the view.", 1, 1},
+          {"Invert Y-Axis", {"Off", "On"}, "Reverse the vertical mouse axis."}}},
+      {"FLIGHT STICK", {
+          {"Axis Assignment", {"Standard", "Reversed"}, "Choose the preferred pitch axis for a flight stick."},
+          {"Dead Zone", {"5%", "10%", "15%"}, "Ignore small movements around the center of the stick.", 1, 1}}},
+      {"DISPLAY", {
+          {"HUD Display", {"On", "Off"}, "Show or hide flight instruments and targeting information."},
+          {"Brightness", {"40%", "50%", "60%", "70%"}, "Set the preferred display brightness.", 1, 1}}},
+      {"GRAPHICS", {
+          {"Resolution", {"1280 x 720", "1920 x 1080", "2560 x 1440"}, "Choose the preferred game rendering resolution.", 1, 1},
+          {"Texture Quality", {"Low", "Medium", "High"}, "Choose texture detail. Higher quality uses more memory.", 2, 2},
+          {"Frame Rate", {"30 FPS", "60 FPS", "120 FPS", "Unlimited"}, "Choose the preferred frame rate limit.", 1, 1}}},
+      {"SOUND", {
+          {"Master Volume", {"0%", "25%", "50%", "75%", "100%"}, "Set the overall audio level.", 4, 4},
+          {"Music", {"0%", "25%", "50%", "75%", "100%"}, "Set the background music level.", 3, 3},
+          {"Voice", {"0%", "25%", "50%", "75%", "100%"}, "Set the radio and dialogue level.", 4, 4}}},
+      {"LANGUAGE", {
+          {"Voice Language", {"English", "Japanese"}, "Choose the preferred voice language."},
+          {"Text Language", {"English", "Spanish", "French"}, "Choose the preferred text language."}}},
   }};
+  size_t active_tab = 0, selected_option = 0;
   bool editing = false, options_open = true, loaded = false;
   int focus_category = -1, focus_option = -1;
+  std::string status;
   raylib::Texture2D airspace{};
   const afterhours::Color cyan{155, 223, 255, 255};
   const afterhours::Color bright{228, 249, 255, 255};
@@ -64,20 +78,26 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         static_cast<float>(texture.height)}, r, {0, 0}, 0, raylib::WHITE);
   }
   void save() {
-    page.apply();
-    page.status = "Settings applied";
+    for (auto &category : categories)
+      for (auto &option : category.options) option.saved = option.value;
+    status = "Settings applied";
   }
   void restore() {
-    page.revert();
-    page.status = "Unapplied changes discarded";
+    for (auto &category : categories)
+      for (auto &option : category.options) option.value = option.saved;
+    status = "Unapplied changes discarded";
   }
   void choose_category(size_t i) {
-    page.select_tab(i);
+    active_tab = i;
+    selected_option = 0;
     editing = false;
-    page.status.clear();
+    status.clear();
   }
   void step(int direction) {
-    if (page.step_selected(direction)) page.status = "Changes pending";
+    auto &option = categories[active_tab].options[selected_option];
+    if (option.unavailable || option.values.empty()) return;
+    option.value = (option.value + option.values.size() + direction) % option.values.size();
+    status = "Changes pending";
   }
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
     return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
@@ -102,27 +122,31 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Proportional;
 
     if (context.pressed(InputAction::MenuBack)) {
-      if (!options_open) { options_open = true; page.status.clear(); }
-      else if (editing) { editing = false; focus_category = static_cast<int>(page.active_tab); }
+      if (!options_open) { options_open = true; status.clear(); }
+      else if (editing) { editing = false; focus_category = static_cast<int>(active_tab); }
       else { restore(); options_open = false; }
     }
     if (options_open) {
       int direction = context.pressed(InputAction::WidgetDown) ? 1 :
                       context.pressed(InputAction::WidgetUp) ? -1 : 0;
       if (direction && !editing) {
-        choose_category((page.active_tab + page.tabs.size() + direction) % page.tabs.size());
-        focus_category = static_cast<int>(page.active_tab);
+        choose_category((active_tab + categories.size() + direction) % categories.size());
+        focus_category = static_cast<int>(active_tab);
       } else if (direction && editing) {
-        page.move_selection(direction);
-        focus_option = static_cast<int>(page.selected_row);
+        const auto &rows = categories[active_tab].options;
+        do { selected_option = (selected_option + rows.size() + direction) % rows.size(); }
+        while (rows[selected_option].unavailable || rows[selected_option].values.empty());
+        focus_option = static_cast<int>(selected_option);
       }
       if (editing) {
         if (context.pressed(InputAction::WidgetRight)) step(1);
         if (context.pressed(InputAction::WidgetLeft)) step(-1);
       } else if (context.pressed(InputAction::WidgetRight)) {
-        if (page.selected().unavailable) page.selected_row = 0;
+        const auto &rows = categories[active_tab].options;
+        if (rows[selected_option].unavailable || rows[selected_option].values.empty())
+          selected_option = 0;
         editing = true;
-        focus_option = static_cast<int>(page.selected_row);
+        focus_option = static_cast<int>(selected_option);
       }
     }
 
@@ -156,86 +180,84 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent()), box(scale, 76, 196, 660, 224)
           .with_custom_background({3, 18, 34, 235}));
       label(2, "OPTIONS CLOSED", 100, 220, 590, 42, 30, bright);
-      label(3, page.status, 100, 270, 590, 44, 23, cyan, "flight_status");
+      label(3, status, 100, 270, 590, 44, 23, cyan, "flight_status");
       if (action(4, "RETURN TO OPTIONS", 100, 344, 340, 44, 25, "flight_reopen")) {
         options_open = true;
         editing = false;
-        page.status.clear();
+        status.clear();
       }
       return;
     }
     div(context, mk(content.ent()), box(scale, 76, 136, 272, 426)
-        .with_custom_background({3, 18, 34, 225}).with_debug_name("flight_navigation"));
+        .with_custom_background({3, 18, 34, 225}).with_border({78, 124, 151, 255}, scale)
+        .with_debug_name("flight_navigation"));
     div(context, mk(content.ent()), box(scale, 384, 136, 456, 426)
-        .with_custom_background({3, 18, 34, 235}).with_debug_name("flight_settings"));
+        .with_custom_background({3, 18, 34, 235}).with_border({78, 124, 151, 255}, scale)
+        .with_debug_name("flight_settings"));
     div(context, mk(content.ent()), box(scale, 868, 136, 324, 426)
         .with_custom_background({5, 24, 44, 235}).with_border({78, 124, 151, 255}, scale)
         .with_debug_name("flight_preview"));
+    const auto category_y = [](size_t i) {
+      return 164.f + static_cast<float>(i) * 38 + (i >= 5 ? 24 : 0) + (i >= 7 ? 32 : 0);
+    };
+    div(context, mk(content.ent()), box(scale, 86, category_y(active_tab), 252, 34)
+        .with_custom_background({109, 93, 53, 105}).with_ignore_pointer_events());
+    div(context, mk(content.ent()), box(scale, 86, category_y(active_tab) + 2, 4, 30)
+        .with_custom_background(gold).with_ignore_pointer_events());
     label(12, "INPUT", 102, 139, 224, 23, 16, muted);
-
-    settings_kit::Style style;
-    style.font_name = "ArchivoMock";
-    style.tab_debug_prefix = "flight_category_";
-    style.row_debug_prefix = "flight_option_";
-    style.tab_alignment = TextAlignment::Left;
-    style.tab_width = 252 * scale;
-    style.tab_height = 34 * scale;
-    style.tab_gap = 4 * scale;
-    style.row_height = 42 * scale;
-    style.row_spacing = 6 * scale;
-    style.font_size = 22 * scale;
-    style.focus_tab = focus_category;
-    style.focus_row = focus_option;
-    style.row_bg = {12, 35, 53, 170};
-    style.row_bg_selected = {31, 61, 83, 210};
-    style.tab_bg = {0, 0, 0, 0};
-    style.tab_bg_selected = {109, 93, 53, 105};
-    style.label_color = cyan;
-    style.label_color_selected = gold;
-    style.tab_text = cyan;
-    style.tab_text_selected = bright;
-
-    auto tabs_result = settings_kit::render_tabs(
-        context, mk(content.ent(), 500), page, box(scale, 86, 164, 252, 386), style, true);
-    if (tabs_result.tab_changed) { editing = false; page.status.clear(); }
-    label(15, page.tabs[page.active_tab].name, 404, 153, 416, 38, 27, bright, "flight_subheading", true);
-    const float rows_h = static_cast<float>(page.tabs[page.active_tab].rows.size()) * 48.f;
-    auto rows_result = settings_kit::render_rows(
-        context, mk(content.ent(), 501), page, box(scale, 396, 208, 432, rows_h), style);
-    focus_category = -1;
-    focus_option = -1;
-    if (rows_result.row_selected) {
-      editing = !page.selected().unavailable;
-      if (editing) page.status.clear();
-    }
-    if (rows_result.row_changed) {
-      editing = true;
-      page.status = "Changes pending";
-    }
-    // Command row the kit cannot express (see header note): same slot the
-    // hand-drawn screen gave its second KEYBOARD row.
-    if (page.active_tab == 2) {
-      auto restore_btn = action(41, "Restore Defaults", 396, 256, 432, 42, 22, "flight_option_1");
-      restore_btn.ent().get<HasLabel>().text_x_offset = 12 * scale;
-      label(121, "Restore", 688, 259, 126, 36, 22, bright, "flight_row_value_1")
-          .ent().get<HasLabel>().alignment = TextAlignment::Right;
-      if (restore_btn) {
-        page.tabs[2].rows[0].index = 0;
-        page.selected_row = 0;
-        editing = false;
-        page.status = "Keyboard bindings restored to WASD";
+    label(13, "DISPLAY", 102, 353, 224, 23, 16, muted);
+    label(14, "AUDIO / LANGUAGE", 102, 461, 224, 23, 16, muted);
+    for (size_t i = 0; i < categories.size(); ++i) {
+      auto category = action(20 + static_cast<int>(i), categories[i].name,
+          86, category_y(i), 252, 34, 24, "flight_category_" + std::to_string(i),
+          false, active_tab == i ? bright : cyan);
+      category.ent().get<HasLabel>().text_x_offset = 16 * scale;
+      if (category) choose_category(i);
+      if (focus_category == static_cast<int>(i)) {
+        context.set_focus(category.ent().id);
+        focus_category = -1;
       }
     }
-    const auto &option = page.selected();
-    if (page.active_tab <= 1)
+    auto &rows = categories[active_tab].options;
+    label(15, categories[active_tab].name, 404, 153, 416, 38, 27, bright, "flight_subheading", true);
+    for (size_t i = 0; i < rows.size(); ++i) {
+      const float y = 208 + static_cast<float>(i) * 48;
+      const bool selected = selected_option == i;
+      div(context, mk(content.ent(), 100 + static_cast<int>(i)), box(scale, 396, y, 432, 42)
+          .with_custom_background(selected ? afterhours::Color{31, 61, 83, 210} : afterhours::Color{12, 35, 53, 170})
+          .with_ignore_pointer_events());
+      auto option = action(40 + static_cast<int>(i), "", 396, y, 432, 42, 22,
+          "flight_option_" + std::to_string(i), rows[i].unavailable);
+      if (rows[i].unavailable) option.ent().removeComponent<HasClickListener>();
+      label(110 + static_cast<int>(i), rows[i].name + (rows[i].unavailable ? " (Unavailable)" : ""),
+            408, y + 3, 280, 36, 22, rows[i].unavailable ? muted : selected ? gold : cyan);
+      auto value_label = label(120 + static_cast<int>(i), rows[i].values.empty() ? "Restore" : rows[i].values[rows[i].value],
+            688, y + 3, 126, 36, 22, rows[i].unavailable ? muted : bright, "flight_row_value_" + std::to_string(i));
+      value_label.ent().get<HasLabel>().alignment = TextAlignment::Right;
+      if (option && !rows[i].unavailable) {
+        selected_option = i;
+        if (rows[i].values.empty()) {
+          rows[0].value = 0;
+          selected_option = 0;
+          editing = false;
+          status = "Keyboard bindings restored to WASD";
+        } else { editing = true; status.clear(); }
+      }
+      if (focus_option == static_cast<int>(i)) {
+        context.set_focus(option.ent().id);
+        focus_option = -1;
+      }
+    }
+    const auto &option = rows[selected_option];
+    if (active_tab <= 1)
       label(130, "Vibration requires a compatible controller.", 404, 410, 416, 30, 20, muted);
     label(80, option.help, 404, 451, 416, 80, 23, cyan, "flight_help");
     label(60, editing ? "EDIT PREFERENCE" : "CURRENT SELECTION", 888, 153, 284, 28, 18, muted);
-    label(70, option.label, 888, 197, 284, 68, 28, bright, "flight_edit_name", true);
-    label(71, option.current_text(), 934, 284, 204, 44, 29, gold, "flight_value", true);
-    label(76, "Saved: " + option.saved_text(), 888, 350, 284, 32, 23, cyan, "flight_saved_value");
-    label(77, option.dirty() ? "Unapplied change" : "Matches saved preference", 888, 389, 284, 30, 22,
-          option.dirty() ? gold : muted, "flight_pending");
+    label(70, option.name, 888, 197, 284, 68, 28, bright, "flight_edit_name", true);
+    label(71, option.values[option.value], 888, 284, 204, 44, 29, gold, "flight_value", true);
+    label(76, "Saved: " + option.values[option.saved], 888, 350, 284, 32, 23, cyan, "flight_saved_value");
+    label(77, option.value == option.saved ? "Matches saved preference" : "Unapplied change", 888, 389, 284, 30, 22,
+          option.value == option.saved ? muted : gold, "flight_pending");
     if (editing) {
       if (action(72, "<", 890, 284, 32, 44, 32, "flight_previous")) step(-1);
       if (action(73, ">", 1150, 284, 32, 44, 32, "flight_next")) step(1);
@@ -245,32 +267,40 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         editing = false;
       }
     } else label(78, "Select a setting to edit.\nLeft / right changes its value.", 888, 448, 284, 60, 22, cyan);
-    settings_kit::render_status(context, mk(content.ent(), 81), page,
-        box(scale, 404, 568, 788, 28).with_font("ArchivoMock", pixels(21 * scale))
-            .with_custom_text_color(gold).with_alignment(TextAlignment::Left)
-            .with_debug_name("flight_status"));
+    if (!status.empty()) label(81, status, 404, 568, 788, 28, 21, gold, "flight_status");
     div(context, mk(content.ent(), 82), box(scale, 76, 606, 1116, 98)
         .with_custom_background({3, 18, 34, 240}).with_debug_name("flight_footer"));
     const auto keycap = [&](int id, const std::string &key, float x, float width) {
-      div(context, mk(content.ent(), id), box(scale, x, 630, width, 34).with_label(key)
+      div(context, mk(content.ent(), id), box(scale, x, 624, width, 34).with_label(key)
           .with_font("ArchivoMockBold", pixels(22 * scale)).with_custom_text_color(bright)
           .with_alignment(TextAlignment::Center).with_border({165, 206, 251, 255}, scale)
           .with_corner_radius(3 * scale).with_ignore_pointer_events());
     };
     keycap(90, "Enter", 100, 64);
     keycap(91, "Esc", 306, 52);
-    label(92, "SELECT", 176, 630, 108, 34, 24, cyan);
-    label(93, "BACK", 370, 630, 92, 34, 24, cyan);
-    label(96, "Enter activates the focused control.", 100, 670, 600, 24, 18, muted);
-    if (action(94, "APPLY & CLOSE", 770, 630, 208, 44, 24, "flight_ok")) {
+    label(92, "SELECT", 176, 624, 108, 34, 24, cyan);
+    label(93, "BACK", 370, 624, 92, 34, 24, cyan);
+    label(96, "Enter activates the focused control.", 100, 664, 600, 24, 18, muted);
+    if (button(context, mk(content.ent(), 94), box(scale, 772, 624, 208, 44).with_label("APPLY & CLOSE")
+          .with_font("ArchivoMock", pixels(24 * scale)).with_custom_text_color(bright)
+          .with_alignment(TextAlignment::Center).with_text_inset(0, 0)
+          .with_custom_background({19, 47, 70, 255}).with_border({165, 206, 251, 255}, scale)
+          .with_corner_radius(4 * scale).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("flight_ok"))) {
       save();
       editing = false;
       options_open = false;
     }
-    if (action(95, "BACK", 1026, 630, 146, 44, 24, "flight_back")) {
+    if (button(context, mk(content.ent(), 95), box(scale, 1026, 624, 146, 44).with_label("BACK")
+          .with_font("ArchivoMock", pixels(24 * scale)).with_custom_text_color(bright)
+          .with_alignment(TextAlignment::Center).with_text_inset(0, 0)
+          .with_custom_background({19, 47, 70, 255}).with_border({165, 206, 251, 255}, scale)
+          .with_corner_radius(4 * scale).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("flight_back"))) {
       if (editing) editing = false;
       else { restore(); options_open = false; }
     }
+
   }
 };
 

@@ -54,12 +54,14 @@ struct SmallComponentsLab : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(200 * scale), pixels(28 * scale)}));
     value_pill(context, mk(row_volume.ent()), pct(volume), ComponentConfig{}
         .with_size({pixels(80 * scale), pixels(28 * scale)})
+        .with_padding(Padding{})
         .with_margin(Margin::Left(pixels(12 * scale))));
     auto row_bright = settings_row(context, mk(list.ent()), "Brightness");
     slider(context, mk(row_bright.ent()), brightness, ComponentConfig{}
         .with_size({pixels(200 * scale), pixels(28 * scale)}));
     value_pill(context, mk(row_bright.ent()), pct(brightness), ComponentConfig{}
         .with_size({pixels(80 * scale), pixels(28 * scale)})
+        .with_padding(Padding{})
         .with_margin(Margin::Left(pixels(12 * scale))));
     static const std::vector<std::string> qualities = {"Low", "Medium", "High", "Ultra"};
     auto row_quality = settings_row(context, mk(list.ent()), "Quality");
@@ -67,12 +69,15 @@ struct SmallComponentsLab : ScreenSystem<UIContext<InputAction>> {
         .with_size({pixels(200 * scale), pixels(32 * scale)}));
     value_pill(context, mk(row_quality.ent()), qualities[quality], ComponentConfig{}
         .with_size({pixels(96 * scale), pixels(28 * scale)})
+        .with_padding(Padding{})
         .with_margin(Margin::Left(pixels(12 * scale))));
     auto row_notif = settings_row(context, mk(list.ent()), "Notifications");
-    toggle_switch(context, mk(row_notif.ent()), notifications);
+    toggle_switch(context, mk(row_notif.ent()), notifications, ComponentConfig{}
+        .with_size({pixels(64 * scale), pixels(32 * scale)}));
     value_pill(context, mk(row_notif.ent()), notifications ? "On" : "Off",
                ComponentConfig{}
                    .with_size({pixels(64 * scale), pixels(28 * scale)})
+                   .with_padding(Padding{})
                    .with_margin(Margin::Left(pixels(12 * scale))));
 
     text(4, "divider_line, horizontal", 660, 108, 560, 30, 21);
@@ -90,14 +95,12 @@ struct SmallComponentsLab : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(panes.ent()), ComponentConfig{}
         .with_size({expand(), percent(1.f)}).with_label("Left pane")
         .with_background(Theme::Usage::Surface)
-        .with_padding(Padding::all(pixels(16 * scale)))
         .with_alignment(TextAlignment::Center)
         .with_align_items(AlignItems::Center).with_justify_content(JustifyContent::Center));
     divider_line(context, mk(panes.ent()), Axis::Y);
     div(context, mk(panes.ent()), ComponentConfig{}
         .with_size({expand(), percent(1.f)}).with_label("Right pane")
         .with_background(Theme::Usage::Surface)
-        .with_padding(Padding::all(pixels(16 * scale)))
         .with_alignment(TextAlignment::Center)
         .with_align_items(AlignItems::Center).with_justify_content(JustifyContent::Center));
 

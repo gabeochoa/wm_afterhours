@@ -40,7 +40,19 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     label(0, "SelfAlign: child alignment overrides", 0,0,1080,44,32);
     label(1, "The parent stays a column; each child chooses its horizontal alignment.", 0,52,1080,32,21,true);
     label(2, "Column parent / align-items: FlexStart", 48,104,624,30,23);
-    label(3, "Cross axis  <-------------------->", 48,142,600,28,18,true);
+    label(3, "Cross axis", 48,142,108,28,18,true);
+    if (guides) {
+      div(context,mk(root.ent(), 18),box(160,142,180,28).with_ignore_pointer_events()
+          .with_on_draw_fg([s, muted](RectangleType r) {
+            const float cy = r.y + r.height * 0.5f;
+            const float x0 = r.x + 4 * s, x1 = r.x + r.width - 4 * s, ah = 5 * s;
+            raylib::DrawLineEx({x0, cy}, {x1, cy}, 1.5f * s, muted);
+            raylib::DrawLineEx({x0, cy}, {x0 + ah, cy - ah}, 1.5f * s, muted);
+            raylib::DrawLineEx({x0, cy}, {x0 + ah, cy + ah}, 1.5f * s, muted);
+            raylib::DrawLineEx({x1, cy}, {x1 - ah, cy - ah}, 1.5f * s, muted);
+            raylib::DrawLineEx({x1, cy}, {x1 - ah, cy + ah}, 1.5f * s, muted);
+          }));
+    }
     auto demo = vstack(context, mk(root.ent()), box(48,184,600,224)
         .with_custom_background({45,50,55,255}).with_border({100,110,120,255},2)
         .with_padding(Padding{.left=pixels(8*s),.right=pixels(8*s)})
@@ -58,23 +70,34 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     if (guides) {
       div(context,mk(root.ent()),box(348,184,1,224).with_custom_background({170,195,183,75}).with_ignore_pointer_events());
       div(context,mk(root.ent()),box(640,380,16,2).with_custom_background(muted).with_ignore_pointer_events());
-      div(context,mk(root.ent()),box(30,184,2,224).with_custom_background(muted).with_ignore_pointer_events());
-      label(13,"v",20,384,20,24,18,true);
+      div(context,mk(root.ent(), 13),box(22,184,18,224).with_ignore_pointer_events()
+          .with_on_draw_fg([s, muted](RectangleType r) {
+            const float cx = r.x + r.width * 0.5f, y0 = r.y, y1 = r.y + r.height, ah = 5 * s;
+            raylib::DrawLineEx({cx, y0}, {cx, y1}, 1.5f * s, muted);
+            raylib::DrawLineEx({cx, y1}, {cx - ah, y1 - ah}, 1.5f * s, muted);
+            raylib::DrawLineEx({cx, y1}, {cx + ah, y1 - ah}, 1.5f * s, muted);
+          }));
     }
     label(14,"Main axis: top to bottom",48,420,600,28,19,true);
     label(15,"8 px left and right padding / 184 x 48 px children",48,454,600,28,18,true);
     label(16,"Parent default",712,104,360,30,23);
     label(17,"SelfAlign::Auto inherits FlexStart",712,142,360,28,18,true);
     auto comparison=vstack(context,mk(root.ent()),box(712,184,360,90)
-        .with_background(Theme::Usage::Surface).with_padding(Padding{.left=pixels(8*s),.right=pixels(8*s)})
+        .with_background(Theme::Usage::Surface).with_border({80,90,100,255},s)
+        .with_padding(Padding{.left=pixels(8*s),.right=pixels(8*s)})
         .with_justify_content(JustifyContent::Center).with_debug_name("self_align_default"));
     div(context,mk(comparison.ent()),ComponentConfig{}.with_size({pixels(184*s),pixels(48*s)})
         .with_label("Auto / inherited").with_font("AtkinsonMock",pixels(19*s))
+        .with_alignment(TextAlignment::Center)
         .with_background(Theme::Usage::Primary).with_auto_text_color(true).with_corner_radius(8*s));
-    label(19,"Value                   Position",712,302,360,30,20);
-    label(20,"FlexStart              Left + inset",712,340,360,30,20,true);
-    label(21,"Center                  Center",712,378,360,30,20,true);
-    label(22,"FlexEnd                 Right - inset",712,416,360,30,20,true);
+    label(19,"Value",712,302,150,30,20);
+    label(26,"Position",872,302,200,30,20);
+    label(20,"FlexStart",712,340,150,30,20,true);
+    label(27,"Left + inset",872,340,200,30,20,true);
+    label(21,"Center",712,378,150,30,20,true);
+    label(28,"Center",872,378,200,30,20,true);
+    label(22,"FlexEnd",712,416,150,30,20,true);
+    label(29,"Right - inset",872,416,200,30,20,true);
     label(23,last,48,506,600,32,21);
     if (button(context,mk(root.ent()),box(712,506,360,40).with_label(guides ? "Alignment guides: on" : "Alignment guides: off")
         .with_font("AtkinsonMock",pixels(19*s)).with_background(Theme::Usage::Secondary)

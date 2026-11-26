@@ -176,8 +176,13 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                       .with_background(Theme::Usage::None)
                       .with_corner_radius(53.5f * layout_scale)
                       .with_click_activation(ClickActivationMode::Release)
-                      .with_on_draw_bg([texture](RectangleType r) {
+                      .with_on_draw_bg([texture, enabled, scale = layout_scale](RectangleType r) {
                         paint_plate(texture, r, 119.f, 82.f);
+                        if (!enabled) {
+                          afterhours::draw_rectangle_rounded(
+                              {r.x + 8.f * scale, r.y + 4.f * scale, r.width - 16.f * scale, r.height - 8.f * scale},
+                              1.f, 24, afterhours::Color{44, 34, 24, 115}, RoundedCorners().all_round());
+                        }
                       })
                       .with_debug_name(name));
   }
@@ -577,15 +582,21 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("ab_root"));
 
     div(context, mk(root.ent()), ComponentConfig{}
-        .with_size({pixels(220.f * s), pixels(36.f * s)})
-        .with_absolute_position(pixels(56.f * s), pixels(12.f * s))
-        .with_label("5 / 5 lives").with_font("FredokaMockBold", pixels(27.f * s))
-        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
+        .with_size({pixels(174.f * s), pixels(38.f * s)})
+        .with_absolute_position(pixels(36.f * s), pixels(12.f * s))
+        .with_label("5 / 5 lives").with_font("FredokaMockBold", pixels(24.f * s))
+        .with_alignment(TextAlignment::Center)
+        .with_custom_text_color(cream).with_custom_background(afterhours::Color{18, 32, 24, 190})
+        .with_border(afterhours::Color{245, 224, 184, 110}, 1.5f * s)
+        .with_corner_radius(19.f * s).with_ignore_pointer_events());
     div(context, mk(root.ent()), ComponentConfig{}
-        .with_size({pixels(220.f * s), pixels(36.f * s)})
-        .with_absolute_position(pixels(1004.f * s), pixels(12.f * s))
-        .with_label("1000 coins").with_font("FredokaMockBold", pixels(27.f * s))
-        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
+        .with_size({pixels(174.f * s), pixels(38.f * s)})
+        .with_absolute_position(pixels(1070.f * s), pixels(12.f * s))
+        .with_label("1000 coins").with_font("FredokaMockBold", pixels(24.f * s))
+        .with_alignment(TextAlignment::Center)
+        .with_custom_text_color(cream).with_custom_background(afterhours::Color{18, 32, 24, 190})
+        .with_border(afterhours::Color{245, 224, 184, 110}, 1.5f * s)
+        .with_corner_radius(19.f * s).with_ignore_pointer_events());
 
     if (!settings_open) {
       div(context, mk(root.ent()),

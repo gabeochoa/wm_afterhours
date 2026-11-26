@@ -122,7 +122,8 @@ struct FocusRingLab : ScreenSystem<UIContext<InputAction>> {
             ring.contrast = {0, 0, 0, 180};
             ring.contrast_edges = edges;
             ::afterhours::ui::detail::draw_focus_paint(
-                ::afterhours::ui::detail::FocusPaint{ring, -1, 0, 0, 0.f, std::nullopt});
+                ::afterhours::ui::detail::FocusPaint{
+                    ring, -1, 0, 0, 0.f, {0.f, 0.f}, std::nullopt});
           }));
       (void)box;
     };

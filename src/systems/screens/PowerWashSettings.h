@@ -3,9 +3,9 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
-#include "../SettingsPage.h"
 #include <afterhours/ah.h>
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cctype>
 #include <string>
@@ -14,38 +14,59 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Settings data lives in a settings_kit::Page; each row's saved snapshot is
-// its default, so the kit's revert_tab is this screen's Reset and dirty()
-// means "differs from defaults" (edits still apply immediately, as before).
-// The kit renders the bottom tab bar and the row stack; this screen keeps
-// its bespoke chrome: scene, tablet, header icons, help pane and footer.
 struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  settings_kit::Page page{{
-      {"GENERAL", {settings_kit::stepper_row("Language", {"English", "Spanish", "French", "German"}, 0),
-                    settings_kit::stepper_row("Subtitles", {"Off", "On"}, 1),
-                    settings_kit::stepper_row("Colorblind Mode", {"Off", "Deuteranopia", "Protanopia", "Tritanopia"}, 0)}},
-      {"GAMEPLAY", {settings_kit::stepper_row("Difficulty", {"Easy", "Normal", "Hard"}, 1),
-                     settings_kit::stepper_row("Camera Sensitivity", {"Low", "Medium", "High"}, 1),
-                     settings_kit::stepper_row("Invert Y Axis", {"Off", "On"}, 0)}},
-      {"VIDEO", {settings_kit::stepper_row("Screen Resolution", {"1920 × 1080", "2560 × 1440", "3840 × 2160"}, 1),
-                  settings_kit::stepper_row("Window Mode", {"Fullscreen", "Borderless Windowed", "Windowed"}, 1),
-                  settings_kit::stepper_row("Target Framerate", {"30", "60", "120", "Unlimited"}, 3),
-                  settings_kit::stepper_row("VSync", {"Off", "On"}, 1),
-                  settings_kit::stepper_row("Anti-Aliasing", {"Off", "2x", "4x", "8x"}, 1),
-                  settings_kit::stepper_row("Ambient occlusion", {"Off", "2x", "4x"}, 1),
-                  settings_kit::stepper_row("Render Scale", {"100% (native)", "75%", "125%"}, 0),
-                  settings_kit::stepper_row("Model Quality", {"Low", "Medium", "High", "Ultra"}, 2),
-                  settings_kit::stepper_row("Texture Quality", {"Low", "Medium", "High", "Ultra"}, 3)}},
-      {"AUDIO", {settings_kit::stepper_row("Master Volume", {"0%", "25%", "50%", "75%", "100%"}, 4),
-                  settings_kit::stepper_row("Music Volume", {"0%", "25%", "50%", "75%", "100%"}, 3),
-                  settings_kit::stepper_row("SFX Volume", {"0%", "25%", "50%", "75%", "100%"}, 4),
-                  settings_kit::stepper_row("Voice Volume", {"0%", "25%", "50%", "75%", "100%"}, 4)}},
-      {"CONTROLS", {settings_kit::stepper_row("Controller Vibration", {"Off", "On"}, 1),
-                     settings_kit::stepper_row("Button Layout", {"Default", "Alternate A", "Alternate B"}, 0)}},
-  }, 2, 4, "Use Left / Right to change the selected value."};
+  size_t active_tab = 2;
+  size_t selected_row = 4;
   bool settings_open = true;
+  std::string status = "Use Left / Right to change the selected value.";
   float design_left = 0;
   float design_top = 0;
+
+  struct SettingRow {
+    std::string label;
+    std::vector<std::string> options;
+    size_t option_idx;
+  };
+
+  std::array<std::string, 5> tabs = {"GENERAL", "GAMEPLAY", "VIDEO", "AUDIO", "CONTROLS"};
+
+  std::vector<SettingRow> video_settings = {
+      {"Screen Resolution", {"1920 × 1080", "2560 × 1440", "3840 × 2160"}, 1},
+      {"Window Mode", {"Fullscreen", "Borderless Windowed", "Windowed"}, 1},
+      {"Target Framerate", {"30", "60", "120", "Unlimited"}, 3},
+      {"VSync", {"Off", "On"}, 1},
+      {"Anti-Aliasing", {"Off", "2x", "4x", "8x"}, 1},
+      {"Ambient Occlusion", {"Off", "2x", "4x"}, 1},
+      {"Render Scale", {"100% (native)", "75%", "125%"}, 0},
+      {"Model Quality", {"Low", "Medium", "High", "Ultra"}, 2},
+      {"Texture Quality", {"Low", "Medium", "High", "Ultra"}, 3},
+  };
+  std::vector<SettingRow> general_settings = {
+      {"Language", {"English", "Spanish", "French", "German"}, 0},
+      {"Subtitles", {"Off", "On"}, 1},
+      {"Colorblind Mode", {"Off", "Deuteranopia", "Protanopia", "Tritanopia"}, 0},
+  };
+  std::vector<SettingRow> gameplay_settings = {
+      {"Difficulty", {"Easy", "Normal", "Hard"}, 1},
+      {"Camera Sensitivity", {"Low", "Medium", "High"}, 1},
+      {"Invert Y Axis", {"Off", "On"}, 0},
+  };
+  std::vector<SettingRow> audio_settings = {
+      {"Master Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+      {"Music Volume", {"0%", "25%", "50%", "75%", "100%"}, 3},
+      {"SFX Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+      {"Voice Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+  };
+  std::vector<SettingRow> controls_settings = {
+      {"Controller Vibration", {"Off", "On"}, 1},
+      {"Button Layout", {"Default", "Alternate A", "Alternate B"}, 0},
+  };
+
+  const std::vector<SettingRow> default_video_settings = video_settings;
+  const std::vector<SettingRow> default_general_settings = general_settings;
+  const std::vector<SettingRow> default_gameplay_settings = gameplay_settings;
+  const std::vector<SettingRow> default_audio_settings = audio_settings;
+  const std::vector<SettingRow> default_controls_settings = controls_settings;
 
   const afterhours::Color navy{14, 54, 113, 255};
   const afterhours::Color deep{7, 38, 84, 255};
@@ -63,6 +84,23 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_background(Theme::Usage::None)
         .with_corner_radius(0.f)
         .disable_rounded_corners();
+  }
+
+  std::vector<SettingRow> &get_current_settings() {
+    switch (active_tab) {
+    case 0:
+      return general_settings;
+    case 1:
+      return gameplay_settings;
+    case 2:
+      return video_settings;
+    case 3:
+      return audio_settings;
+    case 4:
+      return controls_settings;
+    default:
+      return video_settings;
+    }
   }
 
   static void draw_scene(RectangleType r) {
@@ -100,6 +138,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     afterhours::draw_rectangle({r.x, r.y + r.height - 11.f * r.width / 1168.f, r.width, 11.f * r.width / 1168.f},
                                afterhours::Color{8, 45, 99, 255});
   }
+
 
   static void draw_header_icon(RectangleType r, int index, bool active) {
     const afterhours::Color color = active ? afterhours::Color{238, 248, 255, 255} : afterhours::Color{151, 181, 214, 255};
@@ -143,17 +182,39 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   }
 
   void reset_current_tab() {
-    page.revert_tab(page.active_tab);
-    page.selected_row = 0;
-    page.status = "Defaults restored";
+    switch (active_tab) {
+    case 0:
+      general_settings = default_general_settings;
+      break;
+    case 1:
+      gameplay_settings = default_gameplay_settings;
+      break;
+    case 2:
+      video_settings = default_video_settings;
+      break;
+    case 3:
+      audio_settings = default_audio_settings;
+      break;
+    case 4:
+      controls_settings = default_controls_settings;
+      break;
+    default:
+      video_settings = default_video_settings;
+      active_tab = 2;
+      break;
+    }
+    selected_row = 0;
+    status = "Defaults restored";
   }
+
   void close_settings() {
     settings_open = false;
-    page.status = "Settings closed";
+    status = "Settings closed";
   }
+
   void open_settings() {
     settings_open = true;
-    page.status = "Settings open";
+    status = "Settings open";
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -168,12 +229,14 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     design_left = (screen_w / scale - 1280) / 2;
     design_top = (screen_h / scale - 720) / 2;
     if (settings_open && afterhours::input::is_key_pressed(raylib::KEY_A)) {
-      page.select_tab((page.active_tab + page.tabs.size() - 1) % page.tabs.size());
-      page.status = page.tabs[page.active_tab].name;
+      active_tab = (active_tab + tabs.size() - 1) % tabs.size();
+      selected_row = 0;
+      status = tabs[active_tab];
     }
     if (settings_open && afterhours::input::is_key_pressed(raylib::KEY_D)) {
-      page.select_tab((page.active_tab + 1) % page.tabs.size());
-      page.status = page.tabs[page.active_tab].name;
+      active_tab = (active_tab + 1) % tabs.size();
+      selected_row = 0;
+      status = tabs[active_tab];
     }
     if (settings_open && afterhours::input::is_key_pressed(raylib::KEY_R)) reset_current_tab();
 
@@ -184,25 +247,28 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         open_settings();
     }
 
-    if (page.selected_row >= page.tabs[page.active_tab].rows.size())
-      page.selected_row = 0;
+    auto &settings = get_current_settings();
+    if (selected_row >= settings.size())
+      selected_row = 0;
     bool row_navigation = false;
     if (settings_open) {
       if (context.pressed(InputAction::WidgetDown)) {
-        page.move_selection(1);
+        selected_row = (selected_row + 1) % settings.size();
         row_navigation = true;
       }
       if (context.pressed(InputAction::WidgetUp)) {
-        page.move_selection(-1);
+        selected_row = (selected_row + settings.size() - 1) % settings.size();
         row_navigation = true;
       }
       if (context.pressed(InputAction::WidgetRight)) {
-        if (page.step_selected(1))
-          page.status = page.selected().label + ": " + page.selected().current_text();
+        auto &row = settings[selected_row];
+        row.option_idx = (row.option_idx + 1) % row.options.size();
+        status = row.label + ": " + row.options[row.option_idx];
       }
       if (context.pressed(InputAction::WidgetLeft)) {
-        if (page.step_selected(-1))
-          page.status = page.selected().label + ": " + page.selected().current_text();
+        auto &row = settings[selected_row];
+        row.option_idx = (row.option_idx + row.options.size() - 1) % row.options.size();
+        status = row.label + ": " + row.options[row.option_idx];
       }
     }
 
@@ -272,7 +338,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(color).with_alignment(TextAlignment::Left)
           .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name(name));
     };
-    label(14, 107, 102, 270, 20, category_names[page.active_tab] + " settings", 17, muted);
+    label(14, 107, 102, 270, 20, category_names[active_tab] + " settings", 17, muted);
 
     if (!settings_open) {
       div(context, mk(root.ent()),
@@ -328,41 +394,60 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       label(33 + i, x + 27, 81, 66, 29, counters[i], 20, white, true);
     }
 
-    settings_kit::Style style;
-    style.font_name = "ArchivoMock";
-    style.tab_debug_prefix = "pw_tab_";
-    style.row_debug_prefix = "pw_row_";
-    style.tab_width = 198 * scale;
-    style.tab_height = 36 * scale;
-    style.tab_gap = 12 * scale; // +1px of button margin in the stack = old 211 pitch
-    // 32px floor: setting_row's stepper is row_h-8 tall and its arrows are
-    // 24px, so below that the arrows overflow the stepper at narrow scales.
-    style.row_height = std::max(std::round(37 * scale), 32.f);
-    style.stepper_value_width = 190 * scale; // "Borderless Windowed" must fit at 0.8x
-    style.row_spacing = 9 * scale;
-    style.font_size = 23 * scale;
-    style.focus_row = row_navigation ? static_cast<int>(page.selected_row) : -1;
-    style.row_bg = row_blue;
-    style.row_bg_selected = selected;
-    style.tab_bg = {0, 0, 0, 0};
-    style.tab_bg_selected = {53, 107, 193, 255};
-    style.label_color = afterhours::Color{220, 234, 251, 255};
-    style.label_color_selected = navy;
-    style.tab_text = muted;
-    style.tab_text_selected = white;
-    style.control_bg = value_blue;
-
-    auto rows_result = settings_kit::render_rows(
-        context, mk(root.ent(), 500), page,
-        box(scale, 75, 141, 610, 414).with_size({pixels(610 * scale), children()}), style);
-    if (rows_result.row_changed)
-      page.status = page.selected().label + ": " + page.selected().current_text();
+    for (size_t i = 0; i < settings.size(); ++i) {
+      const bool active = i == selected_row;
+      const float y = 141.f + static_cast<float>(i) * 46.f;
+      if (button(context, mk(root.ent(), 100 + static_cast<int>(i)),
+                 box(scale, 75, y, 610, 37)
+                     .with_label("")
+                     .with_custom_background(active ? selected : row_blue)
+                     .with_border(active ? afterhours::Color{255, 255, 255, 160}
+                                         : afterhours::Color{50, 109, 179, 255},
+                                  active ? 1.5f : .5f)
+                     .with_debug_name("pw_row_" + std::to_string(i)))) {
+        selected_row = i;
+      }
+      div(context, mk(root.ent(), 200 + static_cast<int>(i)),
+          box(scale, 87, y + 5, 327, 29)
+              .with_label(settings[i].label)
+              .with_font("ArchivoMock", pixels(23.f * scale))
+              .with_custom_text_color(active ? navy : afterhours::Color{220, 234, 251, 255})
+              .with_alignment(TextAlignment::Left)
+              .with_ignore_pointer_events());
+      auto value = button(context, mk(root.ent(), 300 + static_cast<int>(i)),
+                 box(scale, 433, y + 1, 251, 35)
+                     .with_label(settings[i].options[settings[i].option_idx])
+                     .with_custom_background(value_blue)
+                     .with_border(afterhours::Color{98, 149, 212, 255}, 1.f)
+                     .with_font("ArchivoMockBold", pixels(22.f * scale))
+                     .with_custom_text_color(white)
+                     .with_alignment(TextAlignment::Left)
+                     .with_text_inset(0)
+                     .disable_rounded_corners()
+                     .with_debug_name("pw_value_" + std::to_string(i)));
+      value.ent().get<HasLabel>().text_x_offset = 10 * scale;
+      if (row_navigation && selected_row == i) context.set_focus(value.ent().id);
+      if (value) {
+        selected_row = i;
+        settings[i].option_idx = (settings[i].option_idx + 1) % settings[i].options.size();
+        status = settings[i].label + ": " + settings[i].options[settings[i].option_idx];
+      }
+      div(context, mk(root.ent(), 360 + static_cast<int>(i)), box(scale, 658, y + 12, 12, 12)
+          .with_on_draw_fg([this, scale](RectangleType r) {
+            afterhours::draw_line_ex({r.x + 3 * scale, r.y}, {r.x + 9 * scale, r.y + 6 * scale}, 2 * scale, white);
+            afterhours::draw_line_ex({r.x + 9 * scale, r.y + 6 * scale}, {r.x + 3 * scale, r.y + 12 * scale}, 2 * scale, white);
+          }).with_ignore_pointer_events());
+      if (active) div(context, mk(root.ent(), 380 + static_cast<int>(i)), box(scale, 75, y, 610, 37)
+          .with_ignore_pointer_events().with_on_draw_fg([this, scale](RectangleType r) {
+            afterhours::draw_rectangle_outline(r, white, 2 * scale);
+          }));
+    }
     div(context, mk(root.ent(), 390),
         box(scale, 700, 132, 2, 431)
             .with_custom_background(afterhours::Color{94, 134, 184, 255})
             .with_debug_name("pw_scroll"));
 
-    const auto &selected_setting = page.selected();
+    const auto &selected_setting = settings[selected_row];
     std::string help = "Change " + selected_setting.label + " for this settings preview.";
     std::string detail = "Click the value to cycle forward. Left and Right move through its options. This mock keeps changes while you switch categories.";
     if (selected_setting.label == "Anti-Aliasing") {
@@ -373,7 +458,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       help = "Vertical synchronization matches frame presentation to the display refresh cycle.";
       detail = "It can reduce screen tearing. The best choice depends on your display and rendering setup.";
     }
-    if (selected_setting.label == "Ambient occlusion") {
+    if (selected_setting.label == "Ambient Occlusion") {
       help = "SSAO means screen-space ambient occlusion. It adds contact shading where surfaces meet.";
       detail = "Higher settings increase the occlusion sampling level in the mock's options.";
     }
@@ -384,11 +469,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(400, 725, 143, 460, 39, selected_setting.label, 29, white, true, "pw_help_title");
     label(401, 725, 192, 446, 97, help, 25, white);
     label(402, 725, 300, 446, 150, detail, 24, afterhours::Color{215, 231, 253, 255});
-    label(404, 725, 456, 461, 50, "Changes apply immediately in this preview.", 21, white);
-    settings_kit::render_status(context, mk(root.ent(), 405), page,
-        box(scale, 725, 510, 461, 45).with_font("ArchivoMock", pixels(21 * scale))
-            .with_custom_text_color(muted).with_alignment(TextAlignment::Left)
-            .with_debug_name("pw_status"));
+    label(404, 725, 456, 461, 50, "Changes apply immediately.", 21, white);
+    label(405, 725, 510, 461, 45, status, 21, muted, false, "pw_status");
     label(403, 861, 555, 337, 21, "FUTURLAB / POWERWASH SIMULATOR", 18, afterhours::Color{143, 172, 205, 255});
 
     div(context, mk(root.ent()),
@@ -409,9 +491,26 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("ArchivoMockBold", pixels(22.f * scale))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
-    auto tabs_result = settings_kit::render_tabs(
-        context, mk(root.ent(), 501), page, box(scale, 109, 583, 1042, 36), style);
-    if (tabs_result.tab_changed) page.status = page.tabs[page.active_tab].name;
+    for (size_t i = 0; i < tabs.size(); ++i) {
+      const bool active = i == active_tab;
+      if (button(context, mk(root.ent(), 510 + static_cast<int>(i)),
+                 box(scale, 109.f + static_cast<float>(i) * 211.f, 583, 198, 36)
+                     .with_label(tabs[i])
+                     .with_custom_background(active ? afterhours::Color{53, 107, 193, 255}
+                                                    : afterhours::Color{0, 0, 0, 0})
+                     .with_on_draw_fg([active, scale](RectangleType r) {
+                       if (!active) return;
+                       afterhours::draw_rectangle({r.x, r.y + r.height - 3 * scale, r.width, 3 * scale}, {145, 186, 255, 255});
+                     })
+                     .with_font("ArchivoMockBold", pixels(22.f * scale))
+                     .with_custom_text_color(active ? white : muted)
+                     .with_alignment(TextAlignment::Center)
+                     .with_debug_name("pw_tab_" + std::to_string(i)))) {
+        active_tab = i;
+        selected_row = 0;
+        status = tabs[i];
+      }
+    }
 
     div(context, mk(root.ent()), box(scale, 56, 655, 1168, 57).with_custom_background(deep));
     const auto action = [&](int id, float x, float w, const std::string &key, const std::string &caption, const std::string &name) {
@@ -424,14 +523,16 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return static_cast<bool>(result);
     };
     if (action(600, 72, 113, "Esc", "Close", "pw_footer_close")) close_settings();
-    std::string lower_category = category_names[page.active_tab];
+    std::string lower_category = category_names[active_tab];
     lower_category[0] = static_cast<char>(std::tolower(static_cast<unsigned char>(lower_category[0])));
     if (action(610, 210, 276, "R", "Reset " + lower_category + " settings", "pw_footer_reset")) reset_current_tab();
     if (action(620, 511, 186, "Enter", "Change value", "pw_footer_select")) {
-      if (page.step_selected(1))
-        page.status = page.selected().label + ": " + page.selected().current_text();
+      auto &row = get_current_settings()[selected_row];
+      row.option_idx = (row.option_idx + 1) % row.options.size();
+      status = row.label + ": " + row.options[row.option_idx];
     }
     label(630, 725, 666, 469, 33, "A / D  Change category     Up / Down  Select row", 22, muted);
+
   }
 };
 

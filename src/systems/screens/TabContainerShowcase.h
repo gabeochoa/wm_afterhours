@@ -56,10 +56,10 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       label(2, 24, 194, 1096, 44, "Example closed. No account or device settings were changed.", 27, ink, "tc_closed");
       if (button(context, mk(root.ent()), box(24, 258, 280, 46).with_label("Reopen example")
           .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_background(accent)
-          .with_custom_text_color(white).with_corner_radius(7 * scale).with_debug_name("tc_reopen"))) open = true;
+          .with_custom_text_color(white).with_corner_radius(4 * scale).with_debug_name("tc_reopen"))) open = true;
       return;
     }
-    div(context, mk(root.ent()), box(0, 141, 1144, 550).with_custom_background(white).with_corner_radius(10 * scale));
+    div(context, mk(root.ent()), box(0, 141, 1144, 550).with_custom_background(white).with_corner_radius(12 * scale));
     auto tabs = tab_container(context, mk(root.ent()), tab_labels, active_tab,
         box(0, 141, 1144, 58).with_font("AtkinsonMock", pixels(27 * scale))
             .with_no_wrap().with_debug_name("tabs"));
@@ -68,7 +68,6 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       auto &tab = UICollectionHolder::getEntityForIDEnforce(child_id);
       const auto font = tab_index == active_tab ? "AtkinsonMockBold" : "AtkinsonMock";
       tab.get<UIComponent>().enable_font(font, pixels(27 * scale), true);
-      tab.get<HasLabel>().font_name = font;
       ++tab_index;
     }
     const std::array<const char *, 4> titles{"Profile details", "Audio sample", "Display sample", "Long label sample"};
@@ -81,19 +80,22 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     if (active_tab == 0) {
       row(20, 326, "Username", "player_one");
       label(22, 24, 380, 170, 40, "Email", 21, muted);
-      div(context, mk(root.ent()), box(204, 379, 374, 42).with_custom_background(field).with_corner_radius(5 * scale));
+      div(context, mk(root.ent()), box(204, 379, 374, 42).with_custom_background(field).with_corner_radius(4 * scale));
       label(24, 216, 381, 350, 38, "player@example.com", 23, ink, "tc_email");
       row(25, 434, "Created", "January 2024");
       label(27, 24, 488, 170, 40, "Subscription", 21, muted);
-      div(context, mk(root.ent()), box(204, 490, 142, 35).with_custom_background({222, 237, 255, 255}).with_corner_radius(6 * scale));
-      label(29, 216, 491, 118, 33, "Premium", 23, accent);
+      div(context, mk(root.ent()), box(204, 490, 110, 34).with_custom_background({222, 237, 255, 255}).with_corner_radius(4 * scale));
+      div(context, mk(root.ent(), 29), box(204, 490, 110, 34).with_label("Premium")
+          .with_font("AtkinsonMockBold", pixels(20 * scale)).with_custom_text_color(accent)
+          .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
       row(30, 542, "Sample last login", "2024-01-15 10:30 UTC");
       div(context, mk(root.ent()), box(634, 321, 486, 268).with_custom_background(field).with_corner_radius(8 * scale));
       label(33, 658, 341, 438, 37, "Example profile", 27, ink);
       label(34, 658, 390, 438, 90, "These are fixed sample values. Closing and reopening the example keeps your selected tab.", 22, muted);
       if (button(context, mk(root.ent()), box(658, 514, 230, 44).with_label(copied ? "Email copied" : "Copy email")
           .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_background(white)
-          .with_custom_text_color(accent).with_corner_radius(6 * scale).with_debug_name("tc_copy"))) {
+          .with_border({196, 209, 224, 255}, scale)
+          .with_custom_text_color(accent).with_corner_radius(4 * scale).with_debug_name("tc_copy"))) {
         afterhours::clipboard::set_text("player@example.com");
         copied = true;
       }
@@ -108,7 +110,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         const float width = 120 + static_cast<float>(i) * 90;
         const float y = 359 + static_cast<float>(i) * 48;
         div(context, mk(root.ent(), 50 + i), box(602, y, width, 24).with_custom_background(accent)
-            .with_corner_radius(1.8f * scale).with_debug_name("bar_" + std::to_string(i)));
+            .with_corner_radius(4 * scale).with_debug_name("bar_" + std::to_string(i)));
         label(60 + i, 602, y + 24, 518, 23, fmt::format("{:.0f} × {:.0f} px", width * scale, 24 * scale), 17, muted);
       }
     }
@@ -123,7 +125,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         const float x = 614 + static_cast<float>(i % 3) * 176;
         const float y = 364 + static_cast<float>(i / 3) * 121;
         div(context, mk(root.ent(), 80 + static_cast<int>(i)), box(x, y, 60, 60)
-            .with_custom_background(swatches[i]).with_corner_radius(6 * scale).with_debug_name("swatch_" + std::to_string(i)));
+            .with_custom_background(swatches[i]).with_corner_radius(8 * scale).with_debug_name("swatch_" + std::to_string(i)));
         label(90 + static_cast<int>(i), x, y + 68, 152, 28,
               fmt::format("#{:02X}{:02X}{:02X}", swatches[i].r, swatches[i].g, swatches[i].b), 22, ink);
       }
@@ -152,10 +154,11 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             "tc_narrow_selected");
     }
     div(context, mk(root.ent(), 100), box(24, 609, 1096, 1).with_custom_background({203, 214, 226, 255}));
-    label(101, 24, 633, 840, 33, "Read-only example / No pending changes", 21, muted);
+    label(101, 24, 633, 840, 33,
+          fmt::format("Tab {} of 4  ·  {}", active_tab + 1, tab_labels[active_tab]), 20, muted);
     if (button(context, mk(root.ent()), box(940, 627, 180, 46).with_label("Close")
         .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_background(accent)
-        .with_custom_text_color(white).with_corner_radius(7 * scale).with_debug_name("tc_close"))) open = false;
+        .with_custom_text_color(white).with_corner_radius(4 * scale).with_debug_name("tc_close"))) open = false;
   }
 };
 

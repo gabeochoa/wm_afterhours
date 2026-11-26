@@ -212,7 +212,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
       auto result = dropdown(context, mk(root.ent(), id), options, index,
           box(scale, x, y, width, height).with_font("AtkinsonMock", pixels(font_size * scale))
               .with_custom_background(fill).with_custom_text_color(ink).with_alignment(TextAlignment::Left)
-              .with_dropdown_indicators("", "").with_corner_radius(6 * scale).with_debug_name(name));
+              .with_dropdown_indicators("", "").with_corner_radius(4 * scale).with_debug_name(name));
       const bool opened = result.ent().template get<HasDropdownState>().on;
       div(context, mk(root.ent(), 1000 + id), box(scale, x + width - 23, y + height / 2 - 4, 12, 8)
           .with_ignore_pointer_events().with_render_layer(2)
@@ -240,7 +240,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
                 .with_font("AtkinsonMock", pixels(21.f * scale))
                 .with_custom_background(afterhours::Color{255, 255, 255, 255})
                 .with_border(white, 1.f * scale)
-                .with_corner_radius(10.f * scale)
+                .with_corner_radius(4.f * scale)
                 .with_custom_text_color(navy)
                 .with_alignment(TextAlignment::Center)
                 .with_text_inset(0.f, 0.f)
@@ -279,7 +279,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
                    .with_text_inset(0.f, 0.f)
-                   .with_corner_radius(9.f * scale)
+                   .with_corner_radius(4.f * scale)
                    .with_on_draw_fg([scale](RectangleType r) {
                      afterhours::draw_rectangle(
                          {r.x, r.y + r.height - 4.f * scale, r.width,

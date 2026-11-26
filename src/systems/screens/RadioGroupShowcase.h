@@ -87,14 +87,14 @@ ElementResult custom_radio_group(
                         .with_skip_tabbing(true)
                         .with_ignore_pointer_events().with_debug_name(fmt::format("{}_ring_{}", config.debug_name, i)));
 
-    // Inner filled dot when selected - larger and with accent color
+    // Inner filled dot when selected - crisp contrast against dark ring interior
     if (is_selected) {
       float offset = (visual_circle_sz - dot_sz) / 2.0f;
       div(ctx, mk(ring.ent(), 0),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(dot_sz), pixels(dot_sz)})
               .with_absolute_position(offset, offset)
-              .with_background(Theme::Usage::Accent)
+              .with_custom_background(afterhours::colors::lighten(ctx.theme.accent, 0.25f))
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(1.0f)
               .with_skip_tabbing(true)
@@ -155,12 +155,12 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     };
     label(root.ent(), 0, "Radio Button Groups", 16, 0, 1128, 44, 32);
     label(root.ent(), 1, "Choose one value in each independent group.", 16, 50, 1128, 30, 21, true);
-    const RadioButtonConfig style{.visual_circle_size = 28 * s, .dot_size = 18 * s,
+    const RadioButtonConfig style{.visual_circle_size = 28 * s, .dot_size = 12 * s,
         .border_width = 3 * s, .group_spacing = 20 * s, .use_accent_color = true};
     const auto group = [&](int id, float x, const std::string &title, const auto &options,
                            size_t &selected, size_t initial, const std::string &name) {
       auto panel = div(context, mk(root.ent(), id), box(x, 104, 368, 380)
-          .with_background(Theme::Usage::Surface).with_border({71, 84, 103, 255}, 1)
+          .with_background(Theme::Usage::Surface).with_border({50, 62, 82, 255}, 1)
           .with_corner_radius(10 * s).with_debug_name(name + "_panel"));
       label(panel.ent(), 0, title, 16, 12, 336, 32, 24);
       label(panel.ent(), 1, std::to_string(options.size()) + " options / independent choice", 16, 48, 336, 26, 17, true);
@@ -183,7 +183,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background(swatches[static_cast<size_t>(i)]).with_border(ink, 1)
           .with_corner_radius(3 * s).with_ignore_pointer_events());
     label(root.ent(), 20, "Watermelon tests a longer label.", 16, 492, 560, 26, 18, true);
-    label(root.ent(), 21, "Ring 28px / dot 18px at 720p", 660, 492, 484, 26, 18, true);
+    label(root.ent(), 21, "Ring 28px / dot 12px at 720p", 660, 492, 484, 26, 18, true);
     div(context, mk(root.ent(), 22), box(0, 530, 1160, 40)
         .with_custom_background({35, 45, 63, 255}).with_corner_radius(8 * s));
     label(root.ent(), 23, "Fruit: " + std::string(fruit_options[fruit_idx]), 16, 534, 352, 30, 20);

@@ -61,14 +61,18 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     };
     auto header = div(context, mk(content.ent()), box(0, 24, 1144, 80)
         .with_background(Theme::Usage::Primary).with_corner_radius(12 * s));
-    const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.darkfont);
+    const auto header_ink = afterhours::colors::auto_text_color(theme.primary, theme.font, theme.surface);
     // Title - larger font for better visibility
     label(header.ent(), "Cards & Panels Gallery", 20, 8, 870, 40, 33, header_ink, "cards_title");
-    label(header.ent(), "Cozy Kraft / cards, nesting, alpha. Measurements use 720p design pixels.", 20, 49, 1104, 25, 21, header_ink);
+    label(header.ent(), "Cozy Kraft / cards, nesting, alpha. Measurements use 720p design pixels.", 20, 49, 1104, 25, 21,
+          afterhours::colors::opacity_pct(header_ink, 0.88f));
 
     label(content.ent(), "Styles", 0, 120, 280, 28, 25, theme.font);
-    label(content.ent(), "140 x 100 px / requested 1 px border #968273 / fills and corners vary",
-          312, 123, 832, 27, 20, theme.font_muted, "cards_style_dimensions");
+    div(context, mk(content.ent(), id++), box(312, 123, 832, 27)
+        .with_label("140 x 100 px / requested 1 px border #968273 / fills and corners vary")
+        .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(theme.font_muted)
+        .with_alignment(TextAlignment::Right).with_ignore_pointer_events()
+        .with_debug_name("cards_style_dimensions"));
     // Row 1: Basic cards - all simple like theme swatches
     auto styles = div(context, mk(content.ent()), box(0, 158, 1144, 180).with_debug_name("row1_cards"));
     const std::array<const char *, 4> style_names{"Surface", "Primary", "Sharp", "Custom"};
@@ -91,7 +95,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         config.with_rounded_corners(RoundedCorners().all_sharp().round(TOP_LEFT).round(BOTTOM_RIGHT));
       auto card = div(context, mk(styles.ent(), id++), config);
       child_label(card.ent(), style_names[i], 30, 23,
-          afterhours::colors::auto_text_color(theme.from_usage(style_roles[i]), theme.font, theme.darkfont),
+          afterhours::colors::auto_text_color(theme.from_usage(style_roles[i]), theme.font, theme.surface),
           "style_label_" + std::to_string(i));
       label(styles.ent(), std::string(role_names[i]) + " / " + hex(theme.from_usage(style_roles[i])),
             x, 121, 274, 26, 21, theme.font, "style_fill_" + std::to_string(i));
@@ -103,7 +107,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     label(content.ent(), "Nested cards and transparent panels", 0, 350, 900, 28, 25, theme.font);
     auto panels = div(context, mk(content.ent(), id++), box(0, 386, 1144, 170).with_debug_name("row2_nested"));
     auto nested = vstack(context, mk(panels.ent(), id++), box(0, 0, 556, 170)
-        .with_background(Theme::Usage::Surface).with_corner_radius(6 * s)
+        .with_background(Theme::Usage::Surface).with_corner_radius(8 * s)
         .with_border(card_border, 2 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
         .with_no_wrap().with_debug_name("nested_container"));
@@ -116,10 +120,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < item_roles.size(); ++i) {
       auto item = div(context, mk(inner_row.ent(), id++), ComponentConfig{}
           .with_size({pixels((500.f / 3.f) * s), pixels(55 * s)})
-          .with_background(item_roles[i]).with_corner_radius(1.65f * s)
+          .with_background(item_roles[i]).with_corner_radius(8 * s)
           .with_padding(Padding::all(pixels(12 * s))).with_debug_name("nested_item_" + std::to_string(i + 1)));
       child_label(item.ent(), "Item " + std::to_string(i + 1), 28, 22,
-          afterhours::colors::auto_text_color(theme.from_usage(item_roles[i]), theme.font, theme.darkfont),
+          afterhours::colors::auto_text_color(theme.from_usage(item_roles[i]), theme.font, theme.surface),
           "nested_item_label_" + std::to_string(i + 1));
     }
     child_label(nested.ent(), "Parent padding: 16 px / item gap: 12 px", 23, 19, theme.font_muted, "nested_metrics");
@@ -137,14 +141,14 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             for (float x = 0; x < r.width; x += cell) {
               const bool alternate = (static_cast<int>(x / cell) + static_cast<int>(y / cell)) % 2;
               afterhours::draw_rectangle({r.x + x, r.y + y, std::min(cell, r.width - x), std::min(cell, r.height - y)},
-                  alternate ? afterhours::Color{210, 188, 164, 255} : afterhours::Color{255, 250, 242, 255});
+                  alternate ? afterhours::Color{228, 213, 196, 255} : afterhours::Color{253, 248, 240, 255});
             }
         }));
     // Info panel with different opacity
     const float opacity = compare_opaque ? 1.f : .3f;
     const auto fill = afterhours::colors::opacity_pct(theme.primary, opacity);
     auto info = vstack(context, mk(panels.ent()), box(588, 0, 556, 170)
-        .with_custom_background(fill).with_corner_radius(6 * s)
+        .with_custom_background(fill).with_corner_radius(8 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
         .with_no_wrap().with_debug_name("info_panel"));
     const auto info_ink = compare_opaque ? header_ink : theme.font;
@@ -160,14 +164,14 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(content.ent()), box(0, 568, 182, 34)
         .with_label(show_guides ? "Hide guides" : "Show guides")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
-        .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_guides")))
+        .with_custom_text_color(header_ink).with_corner_radius(4 * s).with_debug_name("cards_guides")))
       show_guides = !show_guides;
     label(content.ent(), show_guides ? "Guides on / content padding: 12 px" : "Guides off / content padding: 12 px",
           198, 572, 374, 27, 19, theme.font_muted, "cards_guide_status");
     if (button(context, mk(content.ent()), box(588, 568, 260, 34)
         .with_label(compare_opaque ? "Restore 30% fill" : "Compare opaque fill")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
-        .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_opacity")))
+        .with_custom_text_color(header_ink).with_corner_radius(4 * s).with_debug_name("cards_opacity")))
       compare_opaque = !compare_opaque;
     label(content.ent(), "Fill alpha only; text is 100%.", 864, 572, 280, 27, 18, theme.font_muted);
 
@@ -184,7 +188,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_background(roles[i]).with_border(card_border, s).with_corner_radius(4 * s)
           .with_debug_name("cards_swatch_" + std::to_string(i)));
       label(swatch.ent(), names[i], 12, 2, 192, 28, 22,
-            afterhours::colors::auto_text_color(theme.from_usage(roles[i]), theme.font, theme.darkfont));
+            afterhours::colors::auto_text_color(theme.from_usage(roles[i]), theme.font, theme.surface));
       label(palette.ent(), hex(theme.from_usage(roles[i])), x, 35, 216, 23, 18, theme.font_muted,
             "cards_palette_value_" + std::to_string(i), true);
     }

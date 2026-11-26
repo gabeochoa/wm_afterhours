@@ -1,0 +1,21 @@
+goto_screen blend_examples
+resize 1280 720
+wait 0.4
+expect_text "Blend mode examples"
+expect_text "Alpha"
+expect_text "Additive"
+expect_text "Multiplied"
+expect_text "AlphaPremultiply"
+expect_text "Overlaps add light, run to white."
+expect_text "Overlaps multiply, darken."
+assert_ui blend_examples_stage_0 w=250 h=170
+assert_ui blend_examples_stage_1 w=250 h=170
+assert_ui blend_examples_stage_2 w=250 h=170
+assert_ui blend_examples_stage_3 w=250 h=170
+assert_within_parents
+screenshot blend_examples
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3

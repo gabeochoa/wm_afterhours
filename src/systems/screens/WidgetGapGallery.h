@@ -105,7 +105,6 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
       child.addComponentIfMissing<UIComponentDebug>(debug).set(debug);
       if (child.has<HasLabel>()) {
         auto &label = child.get<HasLabel>();
-        label.font_name = "AtkinsonMock";
         label.explicit_text_color = selected ? ink : white;
       }
     };
@@ -185,12 +184,10 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
     const std::array<afterhours::texture_manager::Rectangle, 4> frames{{{0, 0, 100, 100}, {100, 0, 100, 100}, {200, 0, 100, 100}, {300, 0, 100, 100}}};
     auto icon_region = div(context, mk(root.ent(), 51), box(668, 370, 360, 50));
     auto icons = icon_row(context, mk(icon_region.ent(), 0), sheet, frames, 0.5f * s,
-        ComponentConfig{}.with_size({percent(1.f), pixels(50 * s)}).with_transparent_bg().with_debug_name("wg_iconrow"));
-    icons.cmp().desired_gap = pixels(18 * s);
-    for (const auto id : icons.cmp().children) {
-      auto child = UICollectionHolder::getEntityForID(id);
-      if (child) child.asE().get<UIComponent>().skip_grid_snap = true;
-    }
+        ComponentConfig{}.with_size({percent(1.f), pixels(50 * s)})
+            .with_gap(pixels(18 * s)).with_skip_grid_snap()
+            .with_transparent_bg().with_debug_name("wg_iconrow"));
+    (void)icons;
     const std::array<const char *, 4> icon_names{"Home", "Star", "Gear", "Trophy"};
     for (size_t i = 0; i < icon_names.size(); ++i) text(52 + static_cast<int>(i), icon_names[i], 664 + static_cast<float>(i) * 68, 425, 76, 25, 17, white);
     text(56, fmt::format("400 × 100 atlas / {:.0f} px icons / {:.0f} px gaps", 50 * s, 18 * s), 668, 457, 540, 25, 17, muted, "wg_atlas_size");

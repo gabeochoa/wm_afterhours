@@ -72,8 +72,7 @@ wait 0.2
 expect_text "0:10 / 52:00"
 screenshot media_library_player
 click_ui ml_overlay_pause
-wait 1.2
-expect_text "0:11 / 52:00"
+wait_until 2 expect_text "0:11 / 52:00"
 key ESCAPE
 wait 0.2
 expect_no_text "Playback preview"

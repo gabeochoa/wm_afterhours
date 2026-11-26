@@ -331,9 +331,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     caption(851, "Top 4 of 8 / cumulative points", 854, 269, 348, 26, 18, white);
     caption(852, "4 points behind the leader", 854, 460, 348, 26, 20, yellow);
     caption(853, "+2.362 behind the race winner", 841, 207, 372, 26, 19, white);
-    caption(854, "Player 1 / Blaze", 54, 600, 280, 30, 22, dark_text);
-    caption(855, status, 344, 600, 455, 30, 21, dark_text);
-    caption(856, "Demo continuation / final race", 1010, 632, 246, 26, 18, dark_text);
+    caption(854, "Player 1 / Blaze", 54, 600, 280, 30, 22, white);
+    caption(855, status, 344, 600, 455, 30, 21, white);
+    caption(856, "Final race · Rainbow Circuit", 980, 628, 256, 26, 17, white);
     div(context, mk(root.ent()), box(scale, 117, 215, 18, 22)
         .with_label("1").with_font("ArchivoMockBold", pixels(16 * scale))
         .with_custom_background(teal).with_custom_text_color(white)

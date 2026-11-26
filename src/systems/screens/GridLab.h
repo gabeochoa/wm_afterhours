@@ -111,7 +111,7 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
         .with_corner_radius(0).with_debug_name("gl_b_0_0"));
     grid_cell(context, t2, 0, 1, ComponentConfig{}
         .with_label("one cell, spanning three tracks").with_font("AtkinsonMockBold", pixels(22 * scale))
-        .with_custom_text_color(ink).with_custom_background(head_bg).with_alignment(TextAlignment::Center)
+        .with_custom_text_color(ink).with_custom_background({48, 72, 106, 255}).with_alignment(TextAlignment::Center)
         .with_text_inset(12 * scale, 0).with_corner_radius(0).with_debug_name("gl_b_0_1"), 3);
     for (int r = 1; r < 4; ++r) {
       for (int c = 0; c < 4; ++c) {
@@ -133,7 +133,9 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background(zebra).with_corner_radius(0).with_text_inset(0, 0));
     detail_cell.ent().get<HasLabel>().text_x_offset = 12 * scale;
     div(context, mk(root.ent()), box(824, 483, 300, 88)
-        .with_ignore_pointer_events().with_on_draw_fg([scale, outer_line, zebra](RectangleType r) {
+        .with_label("16px preview = 8× 2px").with_font("AtkinsonMock", pixels(18 * scale))
+        .with_custom_text_color(muted).with_alignment(TextAlignment::Center)
+        .with_ignore_pointer_events().with_on_draw_bg([scale, outer_line, zebra](RectangleType r) {
           afterhours::draw_rectangle(r, outer_line);
           afterhours::draw_rectangle({r.x + 16 * scale, r.y + 16 * scale,
                                       r.width - 32 * scale, r.height - 32 * scale}, zebra);

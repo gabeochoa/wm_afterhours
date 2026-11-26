@@ -410,7 +410,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
            1135, y, 84, 26, 22, white, TextAlignment::Right, "ArchivoMockBold",
            "kart_stat_value_" + std::to_string(i));
     }
-    text(220, "Weight is mass, not a handling bonus. Karts are cosmetic.", 680, 619, 542, 22, 18, cyan_line);
+    text(220, "Weight reflects mass. Vehicle styles are cosmetic.", 680, 616, 542, 22, 17, cyan_line);
 
     auto back =
         button(context, mk(root.ent(), 230),
@@ -441,8 +441,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     text(232, "Left / Right: Racer", 219, 663, 252, 27, 22, navy);
     text(233, "Up / Down: Vehicle", 219, 691, 252, 27, 22, navy);
     text(234, "Tab / Enter: Activate", 490, 675, 314, 32, 22, navy);
-    text(235, "Confirm this lineup", 842, 663, 188, 24, 18, navy, TextAlignment::Right);
-    text(236, "Selection demo", 842, 691, 188, 23, 18, navy, TextAlignment::Right);
+    text(235, "Confirm lineup", 842, 676, 188, 24, 19, navy, TextAlignment::Right);
 
     auto ready_button =
         button(context, mk(root.ent(), 240),

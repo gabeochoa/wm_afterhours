@@ -106,8 +106,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
     const float top = (context.screen_height / s - 720.f) / 2.f;
     const float left = (context.screen_width / s - 1144.f) / 2.f;
-    const auto muted = afterhours::Color{183, 194, 214, 255};
-    const auto border = afterhours::Color{75, 87, 108, 255};
+    const auto muted = afterhours::Color{168, 180, 202, 255};
+    const auto border = afterhours::Color{54, 63, 82, 255};
     const auto box = [s, top](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, (y + top) * s).with_corner_radius(0)
@@ -189,9 +189,12 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
       if (i == 3) {
         div(context, mk(root.ent(), id++), box(left + x + 58, 248, 100, 100)
             .with_on_draw_fg([s](RectangleType r) {
-              afterhours::draw_rectangle_rounded_lines_ex(r, .15f, 12, s, {88, 117, 68, 255});
+              afterhours::draw_rectangle_rounded_lines_ex(r, .15f, 12, s, {96, 134, 72, 255});
             }).with_ignore_pointer_events());
-        label("start", x + 58, 246, 100, 23, 16, muted);
+        div(context, mk(root.ent(), id++), box(left + x + 58, 252, 100, 22)
+            .with_label("start").with_font("AtkinsonMock", pixels(15 * s))
+            .with_custom_text_color({168, 214, 118, 255})
+            .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
       }
       if (button(context, mk(root.ent(), id++), box(left + x + 58 + dx, 298 + dy, 100, height)
           .with_scale(scale).with_custom_background(colors[i])
@@ -215,8 +218,9 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
       label(primary[i], x + 14, 433, 188, 24, 19, text_light);
       label(secondary[i], x + 14, 461, 188, 24, 18, muted);
       label(tertiary[i], x + 14, 487, 188, 24, 17, muted);
-      const char *phase = t < 0.f ? "Waiting" : t < settled_after[i] ? "Moving" : "Settled";
-      label(phase, x + 14, 521, 188, 24, 20, text_light, "spring_phase_" + std::to_string(i + 1));
+      const bool is_moving = t >= 0.f && t < settled_after[i];
+      const char *phase = t < 0.f ? "Waiting" : is_moving ? "Moving" : "Settled";
+      label(phase, x + 14, 521, 188, 24, 19, is_moving ? colors[i] : muted, "spring_phase_" + std::to_string(i + 1));
     }
     // ========== Bounce Counter ==========
     label(fmt::format("Activations: {}", activation_count), 492, 586, 260, 33, 25, text_light, "activation_count");
