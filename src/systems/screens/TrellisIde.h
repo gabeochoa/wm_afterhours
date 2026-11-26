@@ -83,16 +83,16 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     ws.defs["file_readme"] = {"README.md", {120, 200, 120, 255}, editor("README.md"), 260.f, 170.f};
     ws.defs["terminal"] = {"Terminal", {45, 52, 72, 255},
                            [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_terminal(c, p, r); },
-                           280.f, 150.f};
+                           280.f, 130.f};
     ws.defs["problems"] = {"Problems", {214, 24, 60, 255},
                            [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_problems(c, p, r); },
                            220.f, 120.f};
     ws.defs["outline"] = {"Outline", {248, 185, 40, 255},
                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_outline(c, p, r); },
-                          200.f, 210.f};
+                          200.f, 190.f};
     ws.defs["preview"] = {"Live Preview", {23, 86, 227, 255},
                           [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_preview(c, p, r); },
-                          200.f, 180.f};
+                          200.f, 160.f};
     reset_layout();
   }
 

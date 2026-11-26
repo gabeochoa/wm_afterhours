@@ -221,6 +221,23 @@ inline std::string serialize_doc(const Doc &d) {
   return s;
 }
 
+// Move a tab within its Tabs node. `insertion` is counted against the
+// original strip (0 = before the first tab), matching pointer-over-centers
+// hit testing during a tab drag.
+inline bool move_tab_to(Node &tabs, const std::string &panel, int insertion) {
+  if (tabs.kind != Node::Kind::Tabs) return false;
+  auto it = std::find(tabs.panels.begin(), tabs.panels.end(), panel);
+  if (it == tabs.panels.end()) return false;
+  const int from = static_cast<int>(std::distance(tabs.panels.begin(), it));
+  tabs.panels.erase(it);
+  insertion = std::clamp(insertion, 0, static_cast<int>(tabs.panels.size()) + 1);
+  if (insertion > from) --insertion;
+  insertion = std::clamp(insertion, 0, static_cast<int>(tabs.panels.size()));
+  tabs.panels.insert(tabs.panels.begin() + insertion, panel);
+  tabs.active = insertion;
+  return true;
+}
+
 // --- Global chrome safe areas (gallery shell) ---
 // ScreenNavigator's "Browse screens" launcher (layer 2000) sits at the
 // top-right: x = screen_width - 212, y = 8, 200x32. Trellis toolbars that
@@ -302,6 +319,16 @@ template <typename Ctx> struct Workspace {
   int stable_drop_edge = -1;
   std::string stable_drop_target;
   RectangleType stable_drop_preview{0, 0, 0, 0};
+  // Tab-strip dragging: the grabbed tab may differ from the panel that was
+  // active when layout was solved, so track its host/index explicitly.
+  bool drag_from_tab = false;
+  Node *drag_tab_host = nullptr;
+  int drag_tab_index = -1;
+  float drag_tab_width = 0.f;
+  Vector2Type drag_start{0, 0};
+  Node *drop_tab_host = nullptr;
+  int drop_tab_index = -1;  // insertion index for edge 10/11
+  bool suppress_tab_click = false;
 
   static constexpr float kToolbarWidth = 452.f;  // 5 buttons * 84 + 4 * 8
 
@@ -323,6 +350,14 @@ template <typename Ctx> struct Workspace {
     stable_drop_edge = -1;
     stable_drop_target.clear();
     stable_drop_preview = {0, 0, 0, 0};
+    drag_from_tab = false;
+    drag_tab_host = nullptr;
+    drag_tab_index = -1;
+    drag_tab_width = 0.f;
+    drag_start = {0, 0};
+    drop_tab_host = nullptr;
+    drop_tab_index = -1;
+    suppress_tab_click = false;
     drag_divider_split = nullptr;
     drag_divider_index = -1;
     drag_float_move = false;
@@ -343,11 +378,76 @@ template <typename Ctx> struct Workspace {
       case 7: edge = "Dock right"; break;
       case 8: edge = "Dock top"; break;
       case 9: edge = "Dock bottom"; break;
+      case 10: edge = "Reorder tab"; break;
+      case 11: edge = "Tab"; break;
       default: break;
     }
     std::string label = edge;
     if (!drop_target.empty()) label += " onto " + drop_target;
     return label;
+  }
+
+  struct TabHit {
+    std::string panel;
+    int index = 0;
+    RectangleType rect{0, 0, 0, 0};  // screen coords
+  };
+
+  // One source of tab-strip geometry for both drawing and input. Only the
+  // tabs that fit before the header-controls reserve are hit-testable.
+  std::vector<TabHit> tab_strip_hits(Node *host, RectangleType sr, float k,
+                                     float header_h) const {
+    std::vector<TabHit> hits;
+    if (!host) return hits;
+    if (host->kind == Node::Kind::Leaf) {
+      hits.push_back({host->panel, 0,
+                      {sr.x + 6.f, sr.y + 4.f,
+                       std::max(sr.width - kHeaderControlsReserve - 6.f, 0.f),
+                       header_h - 8.f}});
+      return hits;
+    }
+    if (host->kind != Node::Kind::Tabs) return hits;
+    float tx = sr.x + 6.f;
+    for (int i = 0; i < static_cast<int>(host->panels.size()); ++i) {
+      const std::string &pid = host->panels[static_cast<size_t>(i)];
+      auto pd = defs.find(pid);
+      const std::string title = pd != defs.end() ? pd->second.title : pid;
+      float tw = 26.f + static_cast<float>(title.size()) * 7.5f *
+                            std::min(k, 1.f) +
+                 18.f;
+      const float avail = sr.x + sr.width - kHeaderControlsReserve - tx;
+      if (avail < 40.f) break;
+      tw = std::min(tw, avail);
+      hits.push_back({pid, i, {tx, sr.y + 4.f, tw, header_h - 8.f}});
+      tx += tw + 4.f;
+    }
+    return hits;
+  }
+
+  static int tab_insertion_index(const std::vector<TabHit> &hits, float x) {
+    int insertion = 0;
+    for (const TabHit &hit : hits)
+      if (x >= hit.rect.x + hit.rect.width / 2.f) insertion = hit.index + 1;
+    return insertion;
+  }
+
+  void clear_drag_state() {
+    dragging = false;
+    drag_moved = false;
+    drag_panel.clear();
+    drag_from_tab = false;
+    drag_tab_host = nullptr;
+    drag_tab_index = -1;
+    drag_tab_width = 0.f;
+    drag_float_move = false;
+    drop_edge = -1;
+    drop_target.clear();
+    drop_preview = {0, 0, 0, 0};
+    stable_drop_edge = -1;
+    stable_drop_target.clear();
+    stable_drop_preview = {0, 0, 0, 0};
+    drop_tab_host = nullptr;
+    drop_tab_index = -1;
   }
 
   void clamp_floating_to_root() {
@@ -395,11 +495,7 @@ template <typename Ctx> struct Workspace {
     for (RectangleType &h : history) h = scale(h);
     for (FloatWin &f : doc.floating) f.rect = scale(f.rect);
     root_rect = desired;
-    dragging = false;
-    drag_moved = false;
-    drop_edge = -1;
-    stable_drop_edge = -1;
-    drop_target.clear();
+    clear_drag_state();
     drag_divider_split = nullptr;
     drag_divider_index = -1;
     clamp_floating_to_root();
@@ -592,44 +688,57 @@ template <typename Ctx> struct Workspace {
               .with_corner_radius(6.f)
               .with_ignore_pointer_events()
               .with_debug_name("dock_preview"));
-      // Readable target label, centered in the preview.
-      const float label_w = std::min(drop_preview.width, 300.f);
-      div(ctx, mk(parent, 9002),
-          ComponentConfig{}
-              .with_absolute_position(
-                  drop_preview.x + (drop_preview.width - label_w) / 2.f,
-                  drop_preview.y + std::max(drop_preview.height / 2.f - 16.f, 4.f))
-              .with_size({pixels(label_w), pixels(32.f)})
-              .with_custom_background(Color{20, 28, 45, 245})
-              .with_border(Color{120, 180, 255, 255}, 1.5f)
-              .with_corner_radius(8.f)
-              .with_label(drop_label())
-              .with_font("FredokaMockBold", pixels(14.f))
-              .with_custom_text_color(Color{255, 255, 255, 255})
-              .with_alignment(TextAlignment::Center)
-              .with_ignore_pointer_events()
-              .with_debug_name("dock_preview_label"));
+      // Readable target label, centered in the preview. Tab insertion
+      // previews are only a few px wide, so give the label a minimum width
+      // and keep it inside the workspace area.
+      if (drop_edge != 10 && drop_edge != 11) {
+        const float label_w = std::clamp(drop_preview.width, 140.f, 300.f);
+        const float label_x = std::clamp(
+            drop_preview.x + (drop_preview.width - label_w) / 2.f,
+            area.x + 4.f, area.x + area.width - label_w - 4.f);
+        div(ctx, mk(parent, 9002),
+            ComponentConfig{}
+                .with_absolute_position(
+                    label_x,
+                    drop_preview.y + std::max(drop_preview.height / 2.f - 16.f, 4.f))
+                .with_size({pixels(label_w), pixels(32.f)})
+                .with_custom_background(Color{20, 28, 45, 245})
+                .with_border(Color{120, 180, 255, 255}, 1.5f)
+                .with_corner_radius(8.f)
+                .with_label(drop_label())
+                .with_font("FredokaMockBold", pixels(14.f))
+                .with_custom_text_color(Color{255, 255, 255, 255})
+                .with_alignment(TextAlignment::Center)
+                .with_ignore_pointer_events()
+                .with_debug_name("dock_preview_label"));
+      }
     }
     if (dragging && drag_moved) {
       auto it = defs.find(drag_panel);
       const std::string title = it != defs.end() ? it->second.title : drag_panel;
-      const float ghost_w =
-          std::clamp(drop_preview.width, 200.f, 340.f);
+      const bool tab_chip = drag_from_tab;
+      const float ghost_w = tab_chip
+                                ? std::clamp(drag_tab_width, 80.f, 180.f)
+                                : std::clamp(drop_preview.width, 200.f, 340.f);
+      const float ghost_h = tab_chip ? 30.f : 48.f;
+      const std::string ghost_label =
+          tab_chip ? title : title + " \u2014 " + drop_label();
       div(ctx, mk(parent, 9001),
           ComponentConfig{}
               .with_absolute_position(drag_pos.x - drag_grab.x,
                                       drag_pos.y - drag_grab.y)
-              .with_size({pixels(ghost_w), pixels(48.f)})
+              .with_size({pixels(ghost_w), pixels(ghost_h)})
               .with_custom_background(Color{25, 32, 48, 245})
               .with_border(Color{120, 180, 255, 255}, 2.f)
               .with_corner_radius(8.f)
-              .with_label(title + " \u2014 " + drop_label())
+              .with_label(ghost_label)
               .with_font("FredokaMockBold", pixels(14.f))
               .with_custom_text_color(Color{255, 255, 255, 255})
               .with_alignment(TextAlignment::Center)
               .with_ignore_pointer_events()
               .with_debug_name("dock_ghost"));
     }
+    suppress_tab_click = false;
   }
 
   void collect_dividers(Node *n, RectangleType area) {
@@ -689,11 +798,7 @@ template <typename Ctx> struct Workspace {
     // Esc: cancel drag or step out
     if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       if (dragging) {
-        dragging = false;
-        drag_moved = false;
-        drop_edge = -1;
-        stable_drop_edge = -1;
-        drop_target.clear();
+        clear_drag_state();
       } else {
         step_out();
       }
@@ -759,14 +864,17 @@ template <typename Ctx> struct Workspace {
 
     if (dragging) {
       drag_pos = mpos;
-      drag_moved = drag_moved || std::abs(ctx.mouse.delta.x) + std::abs(ctx.mouse.delta.y) > 0.f;
+      const float dx = mpos.x - drag_start.x;
+      const float dy = mpos.y - drag_start.y;
+      drag_moved = drag_moved || ctx.mouse.press_moved ||
+                   dx * dx + dy * dy > 36.f;
       update_drop_target(area, mpos, k);
       if (ctx.mouse.just_released) {
-        apply_drop(area);
-        dragging = false;
-        drag_moved = false;
-        drop_edge = -1;
-        stable_drop_edge = -1;
+        if (drag_moved) {
+          suppress_tab_click = drag_from_tab;
+          apply_drop(area);
+        }
+        clear_drag_state();
       }
       return;
     }
@@ -797,6 +905,41 @@ template <typename Ctx> struct Workspace {
       if (!inside(mpos, header)) continue;
       // let header buttons (right side) have their clicks
       if (mpos.x > sr.x + sr.width - kHeaderControlsReserve) continue;
+
+      Node *host = hosts.count(id) ? hosts[id] : nullptr;
+      if (host && host->kind == Node::Kind::Tabs) {
+        for (const TabHit &hit : tab_strip_hits(host, sr, k, header_h)) {
+          if (!inside(mpos, hit.rect)) continue;
+          focused = hit.panel;
+          if (last_click_panel == hit.panel && clock_s - last_click_t < 0.35f) {
+            RectangleType wr = it->second;
+            const bool framed =
+                std::abs(view_target.x - wr.x) < 2.f &&
+                std::abs(view_target.width - wr.width) < 2.f;
+            if (framed)
+              step_out();
+            else
+              frame_rect(wr);
+            last_click_t = -10.f;
+            return;
+          }
+          last_click_t = clock_s;
+          last_click_panel = hit.panel;
+          dragging = true;
+          drag_panel = hit.panel;
+          drag_from_tab = true;
+          drag_tab_host = host;
+          drag_tab_index = hit.index;
+          drag_tab_width = hit.rect.width;
+          drag_moved = false;
+          drag_float_move = false;
+          drag_grab = {mpos.x - hit.rect.x, mpos.y - hit.rect.y};
+          drag_start = mpos;
+          drag_pos = mpos;
+          return;
+        }
+      }
+
       focused = id;
       if (is_floating(id)) raise_float(id);
 
@@ -818,9 +961,14 @@ template <typename Ctx> struct Workspace {
 
       dragging = true;
       drag_panel = id;
+      drag_from_tab = false;
+      drag_tab_host = nullptr;
+      drag_tab_index = -1;
+      drag_tab_width = 0.f;
       drag_moved = false;
       drag_float_move = is_floating(id);
       drag_grab = {mpos.x - sr.x, mpos.y - sr.y};
+      drag_start = mpos;
       drag_pos = mpos;
       return;
     }
@@ -830,51 +978,111 @@ template <typename Ctx> struct Workspace {
     const int prev_edge = drop_edge;
     const std::string prev_target = drop_target;
     const RectangleType prev_preview = drop_preview;
+    Node *prev_tab_host = drop_tab_host;
+    const int prev_tab_index = drop_tab_index;
+
+    drop_tab_host = nullptr;
+    drop_tab_index = -1;
+    if (!drag_moved) {
+      drop_edge = -1;
+      drop_target.clear();
+      drop_preview = {0, 0, 0, 0};
+      stable_drop_edge = -1;
+      stable_drop_target.clear();
+      stable_drop_preview = drop_preview;
+      return;
+    }
+
     drop_edge = 5;  // float
     drop_target = "";
     drop_preview = {mpos.x - drag_grab.x, mpos.y - drag_grab.y, 220.f, 40.f};
 
-    // workspace edges -> dock to root (44px bands: easy to hit at 720p)
-    const float edge_band = 44.f;
-    if (mpos.x < area.x + edge_band) { drop_edge = 6; drop_preview = {area.x, area.y, area.width * 0.3f, area.height}; }
-    else if (mpos.x > area.x + area.width - edge_band) { drop_edge = 7; drop_preview = {area.x + area.width * 0.7f, area.y, area.width * 0.3f, area.height}; }
-    else if (mpos.y < area.y + edge_band) { drop_edge = 8; drop_preview = {area.x, area.y, area.width, area.height * 0.3f}; }
-    else if (mpos.y > area.y + area.height - edge_band) { drop_edge = 9; drop_preview = {area.x, area.y + area.height * 0.7f, area.width, area.height * 0.3f}; }
-    else {
-      for (auto &[id, wr] : rects) {
-        if (id == drag_panel || is_floating(id)) continue;
+    bool header_target = false;
+    if (drag_from_tab) {
+      const float header_h = std::clamp(34.f * k, 24.f, 40.f);
+      for (auto &[active_id, wr] : rects) {
+        if (is_floating(active_id)) continue;
+        Node *host = hosts.count(active_id) ? hosts[active_id] : nullptr;
+        if (!host) continue;
         RectangleType sr = to_screen(area, wr);
-        if (!inside(mpos, sr)) continue;
-        const float fx = (mpos.x - sr.x) / std::max(sr.width, 1.f);
-        const float fy = (mpos.y - sr.y) / std::max(sr.height, 1.f);
-        const float dmin = std::min({fx, 1.f - fx, fy, 1.f - fy});
-        drop_target = id;
-        // Wide center zone (34%): tabify is the default drop, edges split.
-        if (dmin > 0.34f) {
-          drop_edge = 4;
-          drop_preview = sr;
-        } else if (fx == dmin) {
-          drop_edge = 0;
-          drop_preview = {sr.x, sr.y, sr.width / 2.f, sr.height};
-        } else if (1.f - fx == dmin) {
-          drop_edge = 1;
-          drop_preview = {sr.x + sr.width / 2.f, sr.y, sr.width / 2.f, sr.height};
-        } else if (fy == dmin) {
-          drop_edge = 2;
-          drop_preview = {sr.x, sr.y, sr.width, sr.height / 2.f};
+        RectangleType strip{sr.x, sr.y,
+                            std::max(sr.width - kHeaderControlsReserve, 0.f),
+                            header_h};
+        if (!inside(mpos, strip)) continue;
+        auto hits = tab_strip_hits(host, sr, k, header_h);
+        if (hits.empty()) continue;
+        const int insertion = tab_insertion_index(hits, mpos.x);
+        float line_x = 0.f;
+        if (insertion <= 0) {
+          line_x = hits.front().rect.x - 2.f;
+        } else if (insertion >= static_cast<int>(hits.size())) {
+          line_x = hits.back().rect.x + hits.back().rect.width + 2.f;
         } else {
-          drop_edge = 3;
-          drop_preview = {sr.x, sr.y + sr.height / 2.f, sr.width, sr.height / 2.f};
+          line_x = hits[static_cast<size_t>(insertion)].rect.x - 2.f;
         }
+        drop_tab_host = host;
+        drop_tab_index = insertion;
+        drop_preview = {line_x - 2.f, sr.y + 3.f, 4.f, header_h - 6.f};
+        if (host == drag_tab_host) {
+          drop_edge = 10;  // reorder inside the source strip
+          drop_target.clear();
+        } else {
+          drop_edge = 11;  // insert as a tab in another host
+          drop_target = active_id;
+        }
+        header_target = true;
         break;
       }
     }
-    (void)k;
+
+    if (!header_target) {
+      // workspace edges -> dock to root (44px bands: easy to hit at 720p)
+      const float edge_band = 44.f;
+      if (mpos.x < area.x + edge_band) { drop_edge = 6; drop_preview = {area.x, area.y, area.width * 0.3f, area.height}; }
+      else if (mpos.x > area.x + area.width - edge_band) { drop_edge = 7; drop_preview = {area.x + area.width * 0.7f, area.y, area.width * 0.3f, area.height}; }
+      else if (mpos.y < area.y + edge_band) { drop_edge = 8; drop_preview = {area.x, area.y, area.width, area.height * 0.3f}; }
+      else if (mpos.y > area.y + area.height - edge_band) { drop_edge = 9; drop_preview = {area.x, area.y + area.height * 0.7f, area.width, area.height * 0.3f}; }
+      else {
+        for (auto &[id, wr] : rects) {
+          if (id == drag_panel || is_floating(id)) continue;
+          if (drag_from_tab && hosts.count(id) &&
+              hosts[id] == drag_tab_host)
+            continue;
+          RectangleType sr = to_screen(area, wr);
+          if (!inside(mpos, sr)) continue;
+          const float fx = (mpos.x - sr.x) / std::max(sr.width, 1.f);
+          const float fy = (mpos.y - sr.y) / std::max(sr.height, 1.f);
+          const float dmin = std::min({fx, 1.f - fx, fy, 1.f - fy});
+          drop_target = id;
+          // Wide center zone (34%): tabify is the default drop, edges split.
+          if (dmin > 0.34f) {
+            drop_edge = 4;
+            drop_preview = sr;
+          } else if (fx == dmin) {
+            drop_edge = 0;
+            drop_preview = {sr.x, sr.y, sr.width / 2.f, sr.height};
+          } else if (1.f - fx == dmin) {
+            drop_edge = 1;
+            drop_preview = {sr.x + sr.width / 2.f, sr.y, sr.width / 2.f, sr.height};
+          } else if (fy == dmin) {
+            drop_edge = 2;
+            drop_preview = {sr.x, sr.y, sr.width, sr.height / 2.f};
+          } else {
+            drop_edge = 3;
+            drop_preview = {sr.x, sr.y + sr.height / 2.f, sr.width, sr.height / 2.f};
+          }
+          break;
+        }
+      }
+    }
+
     // Hysteresis: while the pointer stays inside the committed preview
     // (inflated 14px), keep that target even if raw geometry now prefers a
     // neighbour — no twitchy switching near boundaries.
     if (prev_edge >= 0 && prev_preview.width > 0.f &&
-        (drop_edge != prev_edge || drop_target != prev_target)) {
+        (drop_edge != prev_edge || drop_target != prev_target ||
+         drop_tab_host != prev_tab_host ||
+         drop_tab_index != prev_tab_index)) {
       const RectangleType inflated{prev_preview.x - 14.f, prev_preview.y - 14.f,
                                    prev_preview.width + 28.f,
                                    prev_preview.height + 28.f};
@@ -882,6 +1090,8 @@ template <typename Ctx> struct Workspace {
         drop_edge = prev_edge;
         drop_target = prev_target;
         drop_preview = prev_preview;
+        drop_tab_host = prev_tab_host;
+        drop_tab_index = prev_tab_index;
       }
     }
     stable_drop_edge = drop_edge;
@@ -897,6 +1107,44 @@ template <typename Ctx> struct Workspace {
     RectangleType float_ws = to_ws_rect(area, drop_preview);
     if (float_ws.width < 40.f) float_ws.width = 360.f;
     if (float_ws.height < 40.f) float_ws.height = 260.f;
+
+    if (drop_edge == 10) {  // reorder inside the source tab strip
+      if (drag_tab_host && move_tab_to(*drag_tab_host, id, drop_tab_index))
+        focused = id;
+      return;
+    }
+    if (drop_edge == 11) {  // insert as a tab in another host
+      const std::string target_panel = drop_target;
+      const int insertion = drop_tab_index;
+      if (target_panel.empty()) return;
+      std::erase_if(doc.floating,
+                    [&](const FloatWin &f) { return f.id == id; });
+      if (doc.root && !remove_panel_from(doc.root, id)) doc.root.reset();
+      if (!doc.root) {
+        doc.root = Node::leaf(id);
+        focused = id;
+        return;
+      }
+      Node *host_after = find_host(doc.root.get(), target_panel);
+      if (host_after && host_after->kind == Node::Kind::Tabs) {
+        const int at = std::clamp(
+            insertion, 0, static_cast<int>(host_after->panels.size()));
+        host_after->panels.insert(host_after->panels.begin() + at, id);
+        host_after->active = at;
+        focused = id;
+        return;
+      }
+      insert_beside(doc.root, target_panel, Node::leaf(id), 4);
+      Node *joined = find_host(doc.root.get(), id);
+      if (joined && joined->kind == Node::Kind::Tabs) {
+        if (insertion == 0)
+          std::reverse(joined->panels.begin(), joined->panels.end());
+        for (int i = 0; i < static_cast<int>(joined->panels.size()); ++i)
+          if (joined->panels[static_cast<size_t>(i)] == id) joined->active = i;
+      }
+      focused = id;
+      return;
+    }
 
     if (drop_edge == 5) {  // float (or move float)
       RectangleType wr = float_ws;
@@ -1049,39 +1297,39 @@ template <typename Ctx> struct Workspace {
             .with_debug_name("dock_header_" + id));
 
     if (tabbed) {
-      float tx = 6.f;
-      int ti = 0;
       // Truncate the strip before the header controls (F/x, 80px reserve)
       // so tabs never run under them; remaining tabs stay reachable by
       // dragging the panel wider or tabifying elsewhere.
-      for (const std::string &pid : host->panels) {
+      for (const TabHit &hit : tab_strip_hits(host, sr, k, header_h)) {
+        const std::string &pid = hit.panel;
         auto pd = defs.find(pid);
         const std::string title = pd != defs.end() ? pd->second.title : pid;
-        float tw = 26.f + (float)title.size() * 7.5f * std::min(k, 1.f) + 18.f;
-        const float avail = sr.width - kHeaderControlsReserve - tx;
-        if (avail < 40.f) break;
-        tw = std::min(tw, avail);
         const bool active_tab = pid == id;
+        const bool being_dragged =
+            dragging && drag_from_tab && drag_moved && drag_panel == pid;
         auto tab = button(
-            ctx, mk(frame.ent(), 10 + ti),
+            ctx, mk(frame.ent(), 10 + hit.index),
             ComponentConfig{}
-                .with_absolute_position(tx, 4.f)
-                .with_size({pixels(tw), pixels(header_h - 8.f)})
+                .with_absolute_position(hit.rect.x - sr.x, hit.rect.y - sr.y)
+                .with_size({pixels(hit.rect.width), pixels(hit.rect.height)})
                 .with_label(title)
                 .with_font("FredokaMockBold", pixels(12.f))
                 .with_custom_text_color(active_tab ? Color{20, 28, 44, 255}
                                                    : Color{62, 72, 92, 255})
-                .with_custom_background(active_tab ? Color{255, 255, 255, 255}
-                                                   : Color{198, 208, 228, 255})
-                .with_border(Color{110, 122, 148, 255}, 1.f)
+                .with_custom_background(being_dragged
+                                            ? Color{170, 182, 205, 255}
+                                            : active_tab
+                                                  ? Color{255, 255, 255, 255}
+                                                  : Color{198, 208, 228, 255})
+                .with_border(being_dragged ? Color{40, 110, 230, 255}
+                                            : Color{110, 122, 148, 255},
+                             being_dragged ? 2.f : 1.f)
                 .with_corner_radius(6.f)
                 .with_debug_name("dock_tab_" + pid));
-        if (tab) {
-          host->active = ti;
+        if (tab && !suppress_tab_click) {
+          host->active = hit.index;
           focused = pid;
         }
-        tx += tw + 4.f;
-        ++ti;
       }
     } else {
       div(ctx, mk(frame.ent(), 3),

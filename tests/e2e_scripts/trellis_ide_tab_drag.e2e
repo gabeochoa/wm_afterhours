@@ -1,0 +1,26 @@
+goto_screen trellis_ide
+resize 1280 720
+wait 0.5
+expect_text "#include"
+click_ui dock_tab_file_ui
+wait 0.2
+expect_text "#pragma once"
+click_ui dock_reset
+wait 0.3
+expect_text "#include"
+drag_to 477 69 240 69
+wait 0.3
+expect_text "# Pulse"
+assert_ui dock_tab_file_readme x=235 y=56 w=112 h=26
+assert_ui dock_tab_file_main x=351 y=56 w=104 h=26
+screenshot trellis_ide_tab_reordered
+click_ui dock_reset
+wait 0.3
+expect_text "#include"
+drag_to 380 69 640 660
+wait 0.3
+expect_text "#pragma once"
+screenshot trellis_ide_tab_dragged_out
+click_ui dock_overview
+wait 0.3
+assert_within_parents
