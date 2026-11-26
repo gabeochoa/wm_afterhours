@@ -98,6 +98,30 @@ int main() {
     assert(ws.doc.floating[0].rect.y == 180.f);
   }
 
+  // Tab reorder math: insertion is counted against the original strip,
+  // so dragging right across your own center is a no-op until the next tab.
+  {
+    using dock::Node;
+    auto tabs = Node::tabs({"a", "b", "c"}, 0);
+    assert(dock::move_tab_to(*tabs, "c", 0));
+    assert(tabs->panels[0] == "c" && tabs->active == 0);
+    assert(dock::move_tab_to(*tabs, "c", 3));
+    assert(tabs->panels[2] == "c" && tabs->active == 2);
+    assert(dock::move_tab_to(*tabs, "b", 2));
+    assert(tabs->panels[1] == "b" && tabs->active == 1);
+    assert(!dock::move_tab_to(*tabs, "missing", 0));
+
+    struct Dummy {};
+    using Hits = std::vector<dock::Workspace<Dummy>::TabHit>;
+    Hits hits{{"a", 0, {0, 0, 100, 26}},
+              {"b", 1, {104, 0, 80, 26}},
+              {"c", 2, {188, 0, 90, 26}}};
+    assert(dock::Workspace<Dummy>::tab_insertion_index(hits, 10.f) == 0);
+    assert(dock::Workspace<Dummy>::tab_insertion_index(hits, 60.f) == 1);
+    assert(dock::Workspace<Dummy>::tab_insertion_index(hits, 150.f) == 2);
+    assert(dock::Workspace<Dummy>::tab_insertion_index(hits, 260.f) == 3);
+  }
+
   // Drop labels are readable (owner: drop preview wasn't obvious).
   {
     struct Dummy {};
