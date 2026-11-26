@@ -49,13 +49,22 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     ws.frame_all();
   }
 
-  void build() {
-    built = true;
+  // Every editable value back to its first-run default (seed sketch
+  // included). Called by build() and by reset_all(); leaving the screen
+  // recreates the system, so build() alone already defaults a re-entry —
+  // reset_all makes the same guarantee explicit for the Reset button and
+  // for any future in-place reuse.
+  void seed_defaults() {
     const char *names[3] = {"Sketch", "Color", "Highlights"};
     for (int i = 0; i < 3; ++i) {
       layers[i].name = names[i];
+      layers[i].visible = true;
       layers[i].cells.assign(GW * GH, afterhours::Color{0, 0, 0, 0});
     }
+    active_layer = 0;
+    brush_size = 1;
+    tool = 0;
+    brush = {214, 24, 60, 255};
     // seed a little flower sketch on layer 0 so the stage isn't empty
     auto dot = [&](int x, int y, afterhours::Color c) {
       if (x >= 0 && x < GW && y >= 0 && y < GH)
@@ -71,6 +80,17 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     for (int dx = -1; dx <= 1; ++dx)
       for (int dy = -1; dy <= 1; ++dy) dot(24 + dx, 13 + dy, {248, 185, 40, 255});
     for (int y = 17; y < 26; ++y) dot(24, y, {62, 178, 32, 255});
+  }
+
+  void reset_all() {
+    seed_defaults();
+    reset_layout();
+    ws.reset_camera_history();
+  }
+
+  void build() {
+    built = true;
+    seed_defaults();
 
     ws.defs["canvas"] = {"Untitled-1", {214, 24, 60, 255},
                          [this](Ctx &ctx, afterhours::Entity &parent,
@@ -162,7 +182,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             .with_size({pixels(220.f), pixels(22.f)})
             .with_label(text)
             .with_font("FredokaMockBold", pixels(pt))
-            .with_custom_text_color(afterhours::Color{60, 68, 84, 255})
+            .with_custom_text_color(afterhours::Color{28, 36, 54, 255})
             .with_transparent_bg()
             .with_ignore_pointer_events());
   }
@@ -180,10 +200,10 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                           .with_font("FredokaMockBold", pixels(13.f))
                           .with_custom_text_color(tool == i
                                                       ? afterhours::Color{255, 255, 255, 255}
-                                                      : afterhours::Color{60, 68, 84, 255})
+                                                      : afterhours::Color{28, 36, 54, 255})
                           .with_custom_background(tool == i
                                                       ? afterhours::Color{23, 86, 227, 255}
-                                                      : afterhours::Color{232, 236, 244, 255})
+                                                      : afterhours::Color{205, 214, 232, 255})
                           .with_corner_radius(8.f)
                           .with_debug_name("paint_tool"));
       if (b) tool = i;
@@ -198,7 +218,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                             .with_corner_radius(8.f)
                             .with_debug_name("paint_brush_minus"));
     if (minus && brush_size > 1) --brush_size;
-    small_label(ctx, parent, 7, 62.f, 92.f, std::to_string(brush_size), 20.f);
+    small_label(ctx, parent, 7, 10.f, 140.f, "Size: " + std::to_string(brush_size), 20.f);
     auto plus = button(ctx, mk(parent, 8),
                        ComponentConfig{}
                            .with_absolute_position(96.f, 86.f)
@@ -208,8 +228,8 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                            .with_corner_radius(8.f)
                            .with_debug_name("paint_brush_plus"));
     if (plus && brush_size < 5) ++brush_size;
-    small_label(ctx, parent, 9, 10.f, 140.f, "Drag headers to dock.");
-    small_label(ctx, parent, 10, 10.f, 162.f, "Double-click zooms in.");
+    small_label(ctx, parent, 9, 10.f, 170.f, "Drag headers to dock.");
+    small_label(ctx, parent, 10, 10.f, 192.f, "Double-click zooms in.");
   }
 
   static bool same_color(afterhours::Color a, afterhours::Color b) {
@@ -228,7 +248,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                            .with_custom_background(palette[static_cast<size_t>(i)])
                            .with_border(same_color(palette[static_cast<size_t>(i)], brush)
                                             ? afterhours::Color{30, 38, 52, 255}
-                                            : afterhours::Color{210, 214, 224, 255},
+                                            : afterhours::Color{105, 118, 145, 255},
                                         same_color(palette[static_cast<size_t>(i)], brush) ? 3.f : 1.f)
                            .with_corner_radius(10.f)
                            .with_debug_name("paint_swatch"));
@@ -255,7 +275,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{40, 48, 64, 255})
               .with_custom_background(active_layer == i
                                           ? afterhours::Color{214, 232, 255, 255}
-                                          : afterhours::Color{240, 242, 246, 255})
+                                          : afterhours::Color{205, 214, 232, 255})
               .with_corner_radius(8.f)
               .with_debug_name("paint_layer"));
       if (rowb) active_layer = i;
@@ -303,17 +323,20 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     div(ctx, mk(page.ent(), 900),
         ComponentConfig{}
             .with_absolute_position(16.f * s, 10.f * s)
-            .with_size({pixels(400.f * s), pixels(34.f * s)})
+            .with_size({pixels(330.f * s), pixels(34.f * s)})
             .with_label("Paint — Trellis workspace")
             .with_font("FredokaMockBold", pixels(22.f * s))
             .with_custom_text_color(afterhours::Color{45, 52, 72, 255})
             .with_transparent_bg()
             .with_ignore_pointer_events());
+    // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_layout(); });
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+    // Bottom 48px of the page is reserved for the global HUD
+    // (bottom-left name + bottom-right index) so panels never hide under it.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,
-               1256.f * s, 656.f * s},
+               1256.f * s, 620.f * s},
               dt);
   }
 };

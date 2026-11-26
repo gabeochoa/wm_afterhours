@@ -34,8 +34,22 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     ws.frame_all();
   }
 
+  void seed_defaults() {
+    t_accum = 0.f;
+    note_text = "Ship the fractal desktop.";
+    counter = 0;
+    music_playing = false;
+  }
+
+  void reset_all() {
+    seed_defaults();
+    reset_layout();
+    ws.reset_camera_history();
+  }
+
   void build() {
     built = true;
+    seed_defaults();
     ws.defs["notes"] = {"Notes", {248, 185, 40, 255},
                         [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_notes(c, p, r); }};
     ws.defs["clock"] = {"Clock", {23, 86, 227, 255},
@@ -71,9 +85,9 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     line(ctx, parent, 0, 10.f, 6.f, r.width - 20.f, note_text,
          {60, 52, 20, 255}, 15.f);
     line(ctx, parent, 1, 10.f, 34.f, r.width - 20.f,
-         "Drag me onto an edge to dock.", {120, 105, 60, 255});
+         "Drag me onto an edge to dock.", {85, 70, 30, 255});
     line(ctx, parent, 2, 10.f, 56.f, r.width - 20.f,
-         "Double-click my header to zoom.", {120, 105, 60, 255});
+         "Double-click my header to zoom.", {85, 70, 30, 255});
     auto add = button(ctx, mk(parent, 3),
                       ComponentConfig{}
                           .with_absolute_position(10.f, r.height - 46.f)
@@ -149,7 +163,7 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
         ComponentConfig{}
             .with_absolute_position(10.f, 44.f)
             .with_size({pixels(r.width - 20.f), pixels(14.f)})
-            .with_custom_background(afterhours::Color{226, 230, 238, 255})
+            .with_custom_background(afterhours::Color{185, 193, 212, 255})
             .with_corner_radius(7.f)
             .with_ignore_pointer_events());
     div(ctx, mk(parent, 2),
@@ -207,17 +221,19 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     div(ctx, mk(page.ent(), 900),
         ComponentConfig{}
             .with_absolute_position(16.f * s, 10.f * s)
-            .with_size({pixels(440.f * s), pixels(34.f * s)})
+            .with_size({pixels(330.f * s), pixels(34.f * s)})
             .with_label("Desktop — Trellis fractal windows")
             .with_font("FredokaMockBold", pixels(22.f * s))
             .with_custom_text_color(afterhours::Color{235, 240, 250, 255})
             .with_transparent_bg()
             .with_ignore_pointer_events());
+    // Toolbar clamps itself left of the global launcher (see DockWorkspace);
+    // +Counter sits between the title and the toolbar, clear of both.
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_layout(); });
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
     auto spawn = button(ctx, mk(page.ent(), 910),
                         ComponentConfig{}
-                            .with_absolute_position(560.f * s, 10.f * s)
+                            .with_absolute_position(352.f * s, 10.f * s)
                             .with_size({pixels(150.f * s), pixels(30.f * s)})
                             .with_label("+ Counter")
                             .with_font("FredokaMockBold", pixels(13.f * s))
@@ -226,9 +242,10 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     if (spawn && !ws.is_floating("counter") &&
         !(ws.doc.root && ws.doc.root->contains("counter")))
       ws.doc.floating.push_back({"counter", {520.f, 200.f, 300.f, 200.f}});
+    // Bottom 48px of the page is reserved for the global HUD.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,
-               1256.f * s, 656.f * s},
+               1256.f * s, 620.f * s},
               dt);
   }
 };
