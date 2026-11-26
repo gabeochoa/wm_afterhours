@@ -25,16 +25,23 @@ int main() {
   const auto original = afterhours::files::read_string("settings.json");
   assert(original);
   settings.update_music_volume(.9f);
-  const auto blocker = std::string("settings.json") + afterhours::files::TEMP_SUFFIX;
-  fs::create_directory(blocker);
+  // Block the atomic write by making the temp dir read-only. The temp name
+  // is PID-suffixed ("settings.json.<pid>.<counter>.afh-tmp"), so a fixed
+  // "settings.json.afh-tmp" blocker no longer collides with it. Same
+  // pattern as the vendored settings_save_test.
+  using std::filesystem::perms;
+  fs::permissions(temporary, perms::owner_read | perms::owner_exec);
   assert(!settings.write_save_file());
   assert(afterhours::files::read_string("settings.json") == original);
-  fs::remove(blocker);
+  fs::permissions(temporary, perms::owner_all);
   assert(settings.write_save_file());
   const auto saved = nlohmann::json::parse(*afterhours::files::read_string("settings.json"));
   assert(saved["audio"]["music_volume"].get<float>() == .9f);
   assert(saved["project"].get<std::string>() == "wm_afterhours");
-  assert(!fs::exists(blocker));
+  // No leftover temp file after a successful atomic write.
+  for (const auto &entry : fs::directory_iterator(temporary))
+    assert(entry.path().filename().string().find(afterhours::files::TEMP_SUFFIX) ==
+           std::string::npos);
 
   const bool os_reduced = afterhours::os::reduced_motion_enabled();
   auto without_key = saved;
