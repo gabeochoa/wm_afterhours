@@ -2,6 +2,8 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../plugins/file_tree/file_tree_preview.h"
+#include "../../plugins/file_tree/file_tree_source.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
@@ -13,15 +15,13 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
-  struct FileEntry {
-    std::string name;
-    std::string path;
-    bool is_directory = false;
-    uintmax_t file_size = 0;
-  };
+  // Data model lives in the WM-local file_tree plugin
+  // (src/plugins/file_tree/); presentation stays here.
+  using FileEntry = wm::plugins::file_tree::FileEntry;
+  using Node = wm::plugins::file_tree::Node;
 
   std::string current_root;
-  std::vector<TreeNode<FileEntry>> cached_roots;
+  std::vector<Node> cached_roots;
   bool needs_refresh = true;
   // Off by default: scanning the real cwd made this screen's baseline change
   // whenever anything appeared in the repo root, including our own build dirs.
@@ -32,167 +32,52 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
   std::string preview_status;
   std::vector<std::string> preview_lines;
 
-  static std::string project_root() { return std::filesystem::current_path().string(); }
+  static std::string project_root() {
+    return wm::plugins::file_tree::project_root();
+  }
 
   FileTreeShowcase() { current_root = project_root(); }
 
-  static TreeNode<FileEntry> make_dir(const std::string &parent,
-                                      const std::string &name,
-                                      std::vector<TreeNode<FileEntry>> kids) {
-    TreeNode<FileEntry> n;
-    n.data.name = name;
-    n.data.path = parent + "/" + name;
-    n.data.is_directory = true;
-    n.is_leaf = false;
-    n.children = std::move(kids);
-    return n;
+  static Node make_dir(const std::string &parent,
+                       const std::string &name,
+                       std::vector<Node> kids) {
+    return wm::plugins::file_tree::make_dir(parent, name, std::move(kids));
   }
 
-  static TreeNode<FileEntry> make_file(const std::string &parent,
-                                       const std::string &name,
-                                       uintmax_t size) {
-    TreeNode<FileEntry> n;
-    n.data.name = name;
-    n.data.path = parent + "/" + name;
-    n.data.is_directory = false;
-    n.data.file_size = size;
-    n.is_leaf = true;
-    return n;
+  static Node make_file(const std::string &parent,
+                        const std::string &name,
+                        uintmax_t size) {
+    return wm::plugins::file_tree::make_file(parent, name, size);
   }
 
-  static std::vector<TreeNode<FileEntry>> synthetic_tree() {
-    const std::string r = project_root();
-    const auto source = [](const std::string &parent, const std::string &name) {
-      std::error_code ec;
-      const auto bytes = std::filesystem::file_size(parent + "/" + name, ec);
-      return make_file(parent, name, ec ? 0 : bytes);
-    };
-    return {
-        make_dir(r, "src", {
-            make_dir(r + "/src", "engine", {
-                source(r + "/src/engine", "input_injector.cpp"),
-                source(r + "/src/engine", "input_injector.h")}),
-            make_dir(r + "/src", "systems", {
-                make_dir(r + "/src/systems", "screens", {
-                    source(r + "/src/systems/screens", "FileTreeShowcase.h"),
-                    source(r + "/src/systems/screens", "Forms.h"),
-                    source(r + "/src/systems/screens", "DividerShowcase.h"),
-                    source(r + "/src/systems/screens", "KirbyOptions.h")})}),
-            source(r + "/src", "main.cpp"),
-            source(r + "/src", "settings.cpp")}),
-        make_dir(r, "tests", {
-            make_dir(r + "/tests", "e2e_scripts", {
-                source(r + "/tests/e2e_scripts", "199_file_tree_design.e2e"),
-                source(r + "/tests/e2e_scripts", "204_forms_design.e2e")})}),
-        source(r, "makefile"),
-        source(r, "todo.md")};
+  static std::vector<Node> synthetic_tree() {
+    return wm::plugins::file_tree::synthetic_tree();
   }
 
   void read_preview(const FileEntry *selected) {
     const auto path = selected && !selected->is_directory ? selected->path : "";
     if (path == preview_path) return;
-    preview_path = path;
-    preview_lines.clear();
-    preview_status.clear();
-    if (path.empty()) return;
-    std::ifstream input(path, std::ios::binary);
-    if (!input) {
-      preview_status = "Could not open this file.";
-      return;
-    }
-    constexpr size_t limit = 128 * 1024;
-    std::string contents(limit, '\0');
-    input.read(contents.data(), static_cast<std::streamsize>(contents.size()));
-    contents.resize(static_cast<size_t>(input.gcount()));
-    if (contents.find('\0') != std::string::npos) {
-      preview_status = "Binary file / text preview unavailable";
-      return;
-    }
-    std::istringstream lines(contents);
-    for (std::string line; std::getline(lines, line);) {
-      if (!line.empty() && line.back() == '\r') line.pop_back();
-      for (size_t i = 0; (i = line.find('\t', i)) != std::string::npos; i += 4)
-        line.replace(i, 1, "    ");
-      preview_lines.push_back(std::move(line));
-    }
-    preview_status = contents.size() == limit ? "Preview limited to first 128 KB" : "Read only";
+    auto preview = wm::plugins::file_tree::preview::load_for_selection(selected);
+    preview_path = preview.path;
+    preview_status = preview.status;
+    preview_lines = preview.lines;
   }
 
-  std::vector<TreeNode<FileEntry>> scan_directory(const std::string &dir_path) {
-    std::vector<TreeNode<FileEntry>> nodes;
-    std::error_code ec;
-
-    for (const auto &entry :
-         std::filesystem::directory_iterator(dir_path, ec)) {
-      if (ec)
-        break;
-
-      std::string name = entry.path().filename().string();
-      // Skip hidden files/dirs
-      if (!name.empty() && name[0] == '.')
-        continue;
-
-      FileEntry fe;
-      fe.name = name;
-      fe.path = entry.path().string();
-      fe.is_directory = entry.is_directory(ec);
-
-      if (!fe.is_directory) {
-        fe.file_size = entry.file_size(ec);
-        if (ec)
-          fe.file_size = 0;
-      }
-
-      TreeNode<FileEntry> node;
-      node.data = fe;
-      node.is_leaf = !fe.is_directory;
-      nodes.push_back(std::move(node));
-    }
-
-    // Sort: directories first, then alphabetically
-    std::sort(nodes.begin(), nodes.end(),
-              [](const TreeNode<FileEntry> &a, const TreeNode<FileEntry> &b) {
-                if (a.data.is_directory != b.data.is_directory)
-                  return a.data.is_directory > b.data.is_directory;
-                return a.data.name < b.data.name;
-              });
-
-    return nodes;
+  std::vector<Node> scan_directory(const std::string &dir_path) {
+    return wm::plugins::file_tree::scan_directory(dir_path);
   }
 
-  void lazy_load_children(TreeNode<FileEntry> &node, HasTreeViewState &state) {
-    // The curated tree already contains the source files selected for this demo.
-    if (!use_real_fs)
-      return;
-    if (!node.data.is_directory)
-      return;
-    if (!state.is_expanded(node.data.path))
-      return;
-    if (node.children.empty())
-      node.children = scan_directory(node.data.path);
-    // Recursively load expanded children
-    for (auto &child : node.children) {
-      lazy_load_children(child, state);
-    }
+  void lazy_load_children(Node &node, HasTreeViewState &state) {
+    wm::plugins::file_tree::lazy_load_children(node, state.expanded_nodes,
+                                               use_real_fs);
   }
 
   static std::string format_size(uintmax_t bytes) {
-    if (bytes < 1024)
-      return fmt::format("{} B", bytes);
-    if (bytes < 1024 * 1024)
-      return fmt::format("{:.1f} KB", static_cast<double>(bytes) / 1024.0);
-    if (bytes < 1024 * 1024 * 1024)
-      return fmt::format("{:.1f} MB",
-                         static_cast<double>(bytes) / (1024.0 * 1024.0));
-    return fmt::format("{:.1f} GB",
-                       static_cast<double>(bytes) / (1024.0 * 1024.0 * 1024.0));
+    return wm::plugins::file_tree::format_size(bytes);
   }
 
   static std::string relative_label(const std::string &path) {
-    const std::string root = project_root();
-    if (path == root) return "wm_afterhours/";
-    if (path.rfind(root + "/", 0) == 0) return "wm_afterhours/" + path.substr(root.size() + 1);
-    return path;
+    return wm::plugins::file_tree::relative_label(path);
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -298,37 +183,28 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       seeded_expansion = true;
       state.selected_node_id.clear();
       state.expanded_nodes.clear();
-      const std::function<void(const std::vector<TreeNode<FileEntry>> &)> open =
-          [&](const std::vector<TreeNode<FileEntry>> &nodes) {
-        for (const auto &node : nodes) {
-          if (!node.data.is_directory) continue;
-          state.expanded_nodes.insert(node.data.path);
-          open(node.children);
-        }
-      };
-      open(cached_roots);
+      wm::plugins::file_tree::expand_all(cached_roots, state.expanded_nodes);
     }
     for (auto &node : cached_roots) lazy_load_children(node, state);
+    const auto counts = wm::plugins::file_tree::count_nodes(cached_roots);
+    const size_t folders = counts.folders;
+    const size_t files = counts.files;
+    const FileEntry *selected = wm::plugins::file_tree::find_by_path(
+        cached_roots, state.selected_node_id);
+    const auto plugin_visible = wm::plugins::file_tree::visible_rows(
+        cached_roots, state.expanded_nodes);
     std::vector<std::pair<const FileEntry *, int>> visible;
-    size_t folders = 0;
-    size_t files = 0;
-    const FileEntry *selected = nullptr;
-    const std::function<void(const std::vector<TreeNode<FileEntry>> &, int, bool)> walk =
-        [&](const std::vector<TreeNode<FileEntry>> &nodes, int depth, bool shown) {
-      for (const auto &node : nodes) {
-        node.data.is_directory ? ++folders : ++files;
-        if (node.data.path == state.selected_node_id) selected = &node.data;
-        if (shown) visible.emplace_back(&node.data, depth);
-        walk(node.children, depth + 1, shown && state.is_expanded(node.data.path));
-      }
-    };
-    walk(cached_roots, 0, true);
+    visible.reserve(plugin_visible.size());
+    for (const auto &row : plugin_visible)
+      visible.emplace_back(row.entry, row.depth);
     TreeViewConfig<FileEntry> config;
     config.indent_width = 20 * s;
     config.row_height = 23 * s;
     config.get_label = [](const FileEntry &entry) { return entry.name; };
     config.get_id = [](const FileEntry &entry) { return entry.path; };
-    config.is_expandable = [](const FileEntry &entry) { return entry.is_directory; };
+    config.is_expandable = [](const FileEntry &entry) {
+      return wm::plugins::file_tree::is_expandable(entry);
+    };
     auto result = tree_view(context, tree_pair, cached_roots, config,
         box(24, 186, 500, 430).with_font("AtkinsonMock", pixels(17 * s))
           .with_custom_text_color(theme.font).with_custom_background(theme.surface)
