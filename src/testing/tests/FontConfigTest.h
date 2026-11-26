@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../../plugins/font_registry/font_config.h"
+#include "../../plugins/theme_pack/theme_presets.h"
+#include "../../plugins/theme_pack/wm_defaults.h"
 #include "../../theme_presets.h"
 #include "../test_macros.h"
 #include <afterhours/ah.h>
@@ -198,6 +201,67 @@ TEST(theme_presets_font_names) {
   auto ja_config = theme.get_font_config(Language::Japanese);
   assert_true(ja_config.font_name == theme_presets::FONT_JAPANESE,
               "Japanese font should match FONT_JAPANESE constant");
+
+  co_return;
+}
+
+// Batch 2 Lane F: canonical plugin headers compile directly and the
+// constants / codepoint packs are unchanged from the pre-move values.
+TEST(plugin_canonical_theme_font_identity) {
+  // theme_pack canonical constants (via the canonical header, not the shim).
+  assert_true(theme_presets::FONT_ENGLISH == std::string("Gaegu-Bold"),
+              "canonical FONT_ENGLISH must stay Gaegu-Bold");
+  assert_true(theme_presets::FONT_KOREAN == std::string("NotoSansKR"),
+              "canonical FONT_KOREAN must stay NotoSansKR");
+  assert_true(theme_presets::FONT_JAPANESE == std::string("Sazanami"),
+              "canonical FONT_JAPANESE must stay Sazanami");
+  assert_true(theme_presets::THEME_CORNER_RADIUS == 10.f,
+              "canonical THEME_CORNER_RADIUS must stay 10px");
+
+  // wm_defaults canonical stamps.
+  Theme stamped;
+  apply_wm_defaults(stamped);
+  assert_true(stamped.click_activation_mode ==
+                  afterhours::ui::ClickActivationMode::Release,
+              "wm_defaults must stay Release activation");
+  assert_true(stamped.focus_ring_thickness == 2.0f,
+              "wm_defaults focus_ring_thickness must stay 2.0");
+  assert_true(stamped.focus_ring_offset == -3.0f,
+              "wm_defaults focus_ring_offset must stay -3.0");
+  assert_true(stamped.text_area_line_height_ratio == 1.45f,
+              "wm_defaults line height must stay 1.45");
+
+  // font_registry canonical codepoint packs: exact sizes pin the ranges.
+  const auto kr = font_config::get_korean_codepoints();
+  assert_true(kr.size() == 11632,
+              "korean codepoint count must stay 11632");
+  assert_true(kr.front() == 0x0020 && kr.back() == 0xFF60,
+              "korean codepoints must span ASCII..fullwidth");
+  const auto jp = font_config::get_japanese_codepoints();
+  assert_true(jp.size() == 21376,
+              "japanese codepoint count must stay 21376");
+  assert_true(jp.front() == 0x0020 && jp.back() == 0xFF60,
+              "japanese codepoints must span ASCII..fullwidth");
+  assert_true(font_config::get_language_japanese_codepoints().size() == 133,
+              "language-japanese pack must stay 133");
+  assert_true(font_config::get_inline_prompt_codepoints().size() == 120,
+              "inline-prompt pack must stay 120");
+
+  // Registry + alias table unchanged (names and mock raster sizes).
+  const auto &fonts = font_config::get_all_fonts();
+  bool has_atkinson_mock = false;
+  bool has_korean_32 = false;
+  for (const auto &def : fonts) {
+    if (def.name == "AtkinsonMock")
+      has_atkinson_mock = def.raster_size == 192;
+    if (def.name == "NotoSansKR")
+      has_korean_32 = def.raster_size == 32;
+  }
+  assert_true(has_atkinson_mock,
+              "AtkinsonMock must stay at raster 192");
+  assert_true(has_korean_32, "NotoSansKR must stay at raster 32");
+  assert_true(sizeof(font_config::aliases) / sizeof(font_config::aliases[0]) == 6,
+              "alias table must stay 6 entries");
 
   co_return;
 }
