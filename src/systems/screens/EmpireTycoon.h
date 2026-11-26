@@ -401,15 +401,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_border(active ? afterhours::Color{255, 248, 181, 255}
                                          : afterhours::Color{72, 107, 131, 255},
                                   active ? 4.f : 2.f)
-                     .with_corner_radius(11.f * scale)
+                     .with_corner_radius(4.f * scale)
                      .with_font("FredokaMockBold", pixels(18.f * scale))
                      .with_custom_text_color(white)
                      .with_text_stroke(stroke, 1.3f)
                      .with_alignment(TextAlignment::Center)
                      .with_on_draw_fg([=, this](RectangleType r) {
-                       outline(r, 11.f * scale, 2.f * scale, stroke);
+                       outline(r, 4.f * scale, 2.f * scale, stroke);
                        if (active) outline({r.x + 5 * scale, r.y + 5 * scale, r.width - 10 * scale, r.height - 10 * scale},
-                                           7 * scale, 3 * scale, {255, 253, 220, 255});
+                                           4 * scale, 3 * scale, {255, 253, 220, 255});
                      })
                      .with_debug_name("empire_tab_" + std::to_string(i)))) {
         select_tab(i);
@@ -508,7 +508,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(content.ent(), 260 + static_cast<int>(i) * 6),
           box(scale, 751, y, 405, 70)
               .with_border(afterhours::Color{116, 164, 191, 255}, 1.5f)
-              .with_corner_radius(11.f * scale)
+              .with_corner_radius(8.f * scale)
               .with_custom_background(i == selected_project ? afterhours::Color{222, 240, 250, 255} : card_bg)
               .with_debug_name("empire_project_" + std::to_string(i)))) {
         selected_project = i;
@@ -632,7 +632,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_font("FredokaMockBold", pixels(21.f * scale))
               .with_custom_text_color(ink)
               .with_custom_background({244, 252, 255, 230})
-              .with_corner_radius(6 * scale)
+              .with_corner_radius(4 * scale)
               .with_ignore_pointer_events()
               .with_alignment(TextAlignment::Center));
     }

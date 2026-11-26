@@ -190,36 +190,32 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       choose_tab((selected_tab + 5) % 6);
     if (action(21, "R", 1152, 83, 32, 32, "kirby_next_tab", true, 17))
       choose_tab((selected_tab + 1) % 6);
-    div(context, mk(root.ent(), 160), box(scale, 940, 144, 198, 34)
-        .with_custom_background(purple).with_debug_name("kirby_banner"));
-    label(22, tab_names[selected_tab], 940, 145, 198, 32, 19,
-          raylib::WHITE, "kirby_title");
     label(23, profile.name, 635, 207, 326, 46, 34, ink, "kirby_profile_name");
     label(161, "Edit name", 635, 253, 326, 28, 16, ink, "kirby_edit_name", "FredokaMockBold");
     label(24, "Delete Data", 1056, 252, 124, 32, 16, {120, 67, 83, 255}, "kirby_delete_label");
-    div(context, mk(root.ent()), box(scale, 414, 308, 130, 28)
+    div(context, mk(root.ent()), box(scale, 414, 304, 130, 28)
         .with_custom_background({112, 102, 84, 255}));
-    label(25, "Common", 414, 308, 130, 28, 17, raylib::WHITE, "kirby_common", "FredokaMockBold");
+    label(25, "Common", 414, 304, 130, 28, 17, raylib::WHITE, "kirby_common", "FredokaMockBold");
     if (action(26, "", 556, 198, 426, 96, "kirby_name", false, 22, help[1], 48)) open(Detail::Name);
     if (action(27, "", 1052, 198, 132, 94, "kirby_data", false, 22, help[7])) open(Detail::Data);
     if (action(28, "", 212, 269, 106, 56, "kirby_customize", false, 22, help[1])) open(Detail::Name);
-    label(163, "Profile customization", 39, 332, 292, 31, 15, ink, "kirby_profile_caption", "FredokaMockBold");
+    label(163, "Profile customization", 50, 332, 282, 31, 15, ink, "kirby_profile_caption", "FredokaMockBold");
     if (detail == Detail::None) {
       constexpr std::array<const char *, 5> names{"Controller", "Display", "Accessibility", "Sound", "Online"};
       constexpr std::array<std::array<float, 4>, 5> cells{{
           {414, 340, 258, 130}, {672, 340, 258, 130}, {930, 340, 258, 130},
           {414, 500, 387, 130}, {801, 500, 387, 130}}};
-      label(164, "Controls & visibility", 572, 310, 578, 25, 15, ink, "", "FredokaMockBold");
-      label(165, "Sound & connection", 414, 473, 774, 25, 15, ink, "", "FredokaMockBold");
+      label(164, "Controls & visibility", 572, 304, 578, 28, 15, ink, "", "FredokaMockBold");
+      label(165, "Sound & connection", 414, 469, 774, 25, 15, ink, "", "FredokaMockBold");
       for (size_t i = 0; i < 5; ++i) {
         const auto &c = cells[i];
         div(context, mk(root.ent(), 170 + static_cast<int>(i)), box(scale, c[0], c[1], c[2], c[3])
-            .with_border({162, 151, 125, 255}, scale).with_ignore_pointer_events());
+            .with_border({162, 151, 125, 255}, scale).with_corner_radius(6 * scale).with_ignore_pointer_events());
         decoration(8 + i);
         label(30 + static_cast<int>(i), names[i], c[0] + 10, c[1] + 75,
               c[2] - 20, 44, 22, ink, "kirby_option_label_" + std::to_string(i));
         if (action(40 + static_cast<int>(i), "", c[0], c[1], c[2], c[3],
-                   "kirby_option_" + std::to_string(i), false, 22, help[i + 2]))
+                   "kirby_option_" + std::to_string(i), false, 22, help[i + 2], 6))
           open(static_cast<Detail>(static_cast<int>(Detail::Controller) + i));
       }
     } else {
@@ -300,7 +296,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           profile.favorite = (profile.favorite + 1) % modes.size();
       }
     }
-    div(context, mk(root.ent()), box(scale, 414, 646, 774, 36)
+    div(context, mk(root.ent()), box(scale, 414, 642, 774, 36)
         .with_label(!status.empty() ? status : !hover_help.empty() ? hover_help : help[static_cast<size_t>(detail)])
         .with_font("FredokaMockBold", pixels(21 * scale)).with_text_overflow(TextOverflow::Wrap).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Left).with_ignore_pointer_events()

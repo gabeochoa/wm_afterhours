@@ -5,13 +5,13 @@ resize 1280 720
 wait 1
 
 expect_text "MORE SETTINGS"
-expect_text "INITIAL SETTINGS > MORE SETTINGS"
+expect_text "// SETTINGS"
 expect_text "INITIAL SETTINGS"
 expect_text "More Settings"
 expect_text "Gameplay"
 
 assert_ui ds_root x=0 y=0 w=1280 h=720
-assert_ui ds_back_layer x=64 y=188 w=325 h=350
+assert_ui ds_back_layer x=48 y=188 w=290 h=350
 assert_ui ds_front_header x=338 y=114 w=465 h=40
 assert_ui ds_category_1 x=338 y=213 w=465 h=44
 assert_ui ds_front_footer x=338 y=586 w=465 h=54
@@ -44,7 +44,7 @@ screenshot deadspace_settings_review
 resize 1920 1080
 wait 0.3
 assert_ui ds_root x=0 y=0 w=1920 h=1080
-assert_ui ds_back_layer x=96 y=282 w=488 h=525
+assert_ui ds_back_layer x=72 y=282 w=435 h=525
 assert_ui ds_front_header x=507 y=171 w=698 h=60
 assert_ui ds_category_4 x=507 y=531 w=698 h=66
 assert_ui ds_front_footer x=507 y=879 w=698 h=81

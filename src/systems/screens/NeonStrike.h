@@ -134,14 +134,17 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     picture(70, 1, 594, 42, 92, 92);
     text(71, "N", 632, 40, 22, 23, 18, ink);
     text(72, "S", 632, 112, 22, 23, 17, muted);
-    text(73, "W", 591, 76, 24, 23, 17, muted);
-    text(74, "E", 670, 76, 24, 23, 17, muted);
+    text(73, "W", 587, 76, 24, 23, 17, muted);
+    text(74, "E", 674, 76, 24, 23, 17, muted);
     text(80, "SCORE 15,000", 1016, 25, 220, 32, 27, ink, "neon_score");
     panel(82, 970, 67, 266, 38, {28, 30, 21, 220}, {133, 115, 75, 190});
     text(83, "SECURE OBJECTIVE B", 982, 73, 242, 26, 23, gold, "neon_objective");
-    text(84, "HUD PREVIEW", 32, 26, 250, 30, 23, ink);
-    text(85, "Select equipment / reload the sample magazine", 32, 61, 370, 24, 17, muted, "", false);
-    panel(90, 410, 148, 480, 117, {13, 18, 16, 225}, {0, 0, 0, 0});
+    text(84, "MISSION STATUS", 32, 26, 250, 30, 23, ink);
+    text(85, "Equipment ready", 32, 61, 370, 24, 17, muted, "", false);
+    panel(90, 410, 148, 480, 117, {13, 18, 16, 225}, {81, 92, 76, 255});
+    div(context, mk(entity, 91), box(410, 148, 480, 117)
+        .with_corner_radius(4 * sy).with_border({81, 92, 76, 255}, sy)
+        .with_ignore_pointer_events());
     text(94, "EVENT HISTORY", 430, 152, 420, 23, 16, muted);
     const std::array<const char *, 3> actors{"Alpha_Six", "Tsha_Rio", "Alpha_Six"};
     const std::array<const char *, 3> events{"eliminated Emepine / M4", "eliminated Emepine / SCAR", "radio: requested cover"};
@@ -227,8 +230,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     text(193, "M4 / AUTOMATIC", 290, 544, 190, 24, 18, ink);
     if (button(context, mk(entity), box(282, 565, 316, 60)
         .with_custom_background({15, 23, 19, 140}).with_debug_name("neon_reload"))) reload();
-    text(191, std::to_string(ammo_clip), 290, 565, 78, 58, 48, ink, "neon_magazine");
-    text(192, "/ " + std::to_string(ammo_reserve), 370, 581, 102, 38, 28, muted, "neon_reserve", false);
+    text(191, std::to_string(ammo_clip), 290, 565, 52, 58, 48, ink, "neon_magazine");
+    text(192, "/ " + std::to_string(ammo_reserve), 346, 581, 102, 38, 28, muted, "neon_reserve", false);
     keycap(430, "R", 491, 575);
     text(196, "Reload", 526, 576, 64, 27, 17, ink);
     picture(201, 14, 290, 635, 23, 23);
@@ -270,13 +273,13 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             line(10, 18, 30, 18); line(9, 27, 31, 27);
             line(13, 4, 26, 4); line(12, 8, 27, 8); line(26, 4, 33, 11);
           }));
-      text(230 + i, i == 0 ? "x2" : "x1", x + 54, 658, 30, 24, 19, ink,
+      text(230 + i, i == 0 ? "x2" : "x1", x + 50, 656, 30, 24, 19, ink,
            i == 0 ? "neon_grenade_count" : "neon_melee_count");
-      text(232 + i, i == 0 ? "GRENADE" : "MELEE", x + 6, 667, 50, 21, 12, ink);
+      text(232 + i, i == 0 ? "GRENADE" : "MELEE", x + 8, 663, 50, 21, 12, ink);
       keycap(440 + i * 2, i == 0 ? "G" : "V", x + 8, 599, 26);
     }
     if (!status.empty()) text(250, status, 644, 653, 365, 30, 22, gold, "neon_status");
-    text(251, "Sample combat values / keys 1-4 select streaks", 644, 689, 365, 22, 16, muted, "", false);
+    text(251, "Streaks: keys 1-4", 644, 689, 365, 22, 16, muted, "", false);
   }
 };
 REGISTER_EXAMPLE_SCREEN(neon_strike, "Game Mockups",

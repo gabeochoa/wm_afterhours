@@ -1,66 +1,40 @@
 goto_screen angry_birds_settings
 resize 1280 720
 wait 0.3
-expect_text "ABOUT"
-expect_text "SOUND EFFECTS"
-expect_text "All changes saved"
-expect_text "SAVE & CLOSE"
+expect_text "SETTINGS"
+expect_text "SAVE/LOAD PROGRESS"
+expect_text "NOTIFICATIONS: OFF"
+expect_no_text "SAVE & CLOSE"
+expect_no_text "APPLY"
+assert_ui ab_board x=170 y=60 w=940 h=600
+assert_ui ab_music x=220 y=185 w=126 h=72
 assert_within_parents
 screenshot angry_birds_design
-click_ui ab_vibration_toggle
+click_ui ab_vibration
 wait 0.2
-expect_text "Unsaved changes"
-click_ui ab_apply
+expect_text "Vibration disabled"
+click_ui ab_vibration
 wait 0.2
-expect_text "Settings applied"
-focus_ui ab_music_toggle
-key ENTER
-wait 0.2
-expect_text "Unsaved changes"
-click_ui ab_cancel
-wait 0.2
-expect_text "Changes restored"
+expect_text "Vibration enabled"
 click_ui ab_music
 wait 0.2
-click_ui ab_ok
-wait 0.2
-expect_text "SETTINGS CLOSED"
-click_ui ab_reopen
-wait 0.2
-expect_text "All changes saved"
+expect_text "Music disabled"
 click_ui ab_music
 wait 0.2
 expect_text "Music enabled"
-expect_text "Unsaved changes"
-screenshot angry_birds_design_pending
-click_ui ab_apply
-wait 0.2
-click_ui ab_tab_general
-wait 0.2
 click_ui ab_language
 wait 0.2
 click_ui ab_language_german
 wait 0.2
+expect_text "CURRENT LANGUAGE: DEUTSCH"
 click_ui ab_detail_back
-wait 0.2
-expect_text "Unsaved changes"
-click_ui ab_cancel
 wait 0.2
 click_ui ab_language
 wait 0.2
-expect_text "CURRENT LANGUAGE: ENGLISH"
 click_ui ab_language_spanish
-wait 0.2
-click_ui ab_detail_back
-wait 0.2
-click_ui ab_apply
-wait 0.2
-click_ui ab_language
 wait 0.2
 expect_text "CURRENT LANGUAGE: ESPAÑOL"
 click_ui ab_detail_back
-wait 0.2
-click_ui ab_tab_audio
 wait 0.2
 resize 1920 1080
 wait 0.3

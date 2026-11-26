@@ -2,17 +2,15 @@ goto_screen deadspace_settings
 resize 1280 720
 wait 0.4
 expect_text "MORE SETTINGS"
-expect_text "INITIAL SETTINGS > MORE SETTINGS"
-expect_text "INFORMATION"
+expect_text "// SETTINGS"
 expect_text "Enter"
 expect_text "Esc"
-expect_text "Set difficulty, objectives,"
-expect_text "4 entries / Enter to open"
+expect_no_text "INFORMATION"
+expect_no_text "Set difficulty, objectives,"
 assert_ui ds_root x=0 y=0 w=1280 h=720
 assert_ui ds_front_header x=338 y=114 w=465 h=40
-assert_ui ds_category_7 x=338 y=517 w=465 h=44
+assert_ui ds_category_7 x=338 y=495 w=465 h=44
 assert_ui ds_front_footer x=338 y=586 w=465 h=54
-assert_ui ds_preview_panel x=844 y=164 w=380 h=248
 assert_within_parents
 screenshot deadspace_design
 click_ui ds_category_3
@@ -27,7 +25,7 @@ wait 0.2
 expect_text "Full"
 click_ui ds_detail_back
 wait 0.2
-expect_text "Balance music and effects,"
+expect_no_text "Balance music and effects,"
 expect_no_text "Master volume"
 click_ui ds_category_3
 wait 0.2
@@ -46,7 +44,7 @@ click_ui ds_detail_back
 wait 0.2
 action WidgetUp
 wait 0.2
-expect_text "Choose voice and text languages,"
+expect_no_text "Choose voice and text languages,"
 action WidgetPress
 wait 0.2
 expect_text "Voice language"
@@ -60,20 +58,19 @@ expect_no_text "Subtitle size"
 expect_text "MORE SETTINGS"
 key ESCAPE
 wait 0.2
-expect_no_text "INITIAL SETTINGS > MORE SETTINGS"
-assert_ui ds_back_layer x=448 y=188 w=325 h=350
-assert_ui ds_initial_7 x=448 y=487 w=325 h=31
+expect_no_text "// SETTINGS"
+assert_ui ds_back_layer x=448 y=188 w=290 h=350
+assert_ui ds_initial_7 x=448 y=487 w=290 h=31
 expect_text "More Settings / Enter to return"
 screenshot deadspace_initial_back
 click_ui ds_initial_7
 wait 0.2
-expect_text "INITIAL SETTINGS > MORE SETTINGS"
-expect_text "Choose voice and text languages,"
+expect_text "// SETTINGS"
+expect_no_text "Choose voice and text languages,"
 resize 1920 1080
 wait 0.3
 assert_ui ds_root x=0 y=0 w=1920 h=1080
 assert_ui ds_front_header x=507 y=171 w=698 h=60
-assert_ui ds_preview_panel x=1266 y=246 w=570 h=372
 assert_within_parents
 screenshot deadspace_design_1080
 resize 1024 768
@@ -81,7 +78,6 @@ wait 0.3
 assert_ui ds_root x=0 y=0 w=1024 h=768
 assert_ui ds_front_header x=270 y=187 w=372 h=32
 assert_ui ds_front_footer x=270 y=565 w=372 h=43
-assert_ui ds_preview_panel x=675 y=227 w=304 h=198
 assert_within_parents
 click_ui ds_category_5
 wait 0.2

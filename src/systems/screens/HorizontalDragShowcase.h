@@ -75,7 +75,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(964, 4, 196, 40)
         .with_label("Reset example").with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background({45, 67, 95, 255}).with_custom_text_color(ink)
-        .with_corner_radius(8 * s).with_debug_name("hdrag_reset"))) {
+        .with_corner_radius(4 * s).with_debug_name("hdrag_reset"))) {
       lanes = initial_lanes;
       status = "Reset / 7 tags restored to their starting lanes";
     }
@@ -83,13 +83,13 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
         .with_label(ghost_preview ? "Translucent preview: On" : "Translucent preview: Off")
         .with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background({45, 67, 95, 255}).with_custom_text_color(ink)
-        .with_corner_radius(8 * s).with_debug_name("hdrag_ghost")))
+        .with_corner_radius(4 * s).with_debug_name("hdrag_ghost")))
       ghost_preview = !ghost_preview;
     for (size_t lane = 0; lane < lanes.size(); ++lane) {
       const float top = 118 + static_cast<float>(lane) * 148;
       auto panel = div(context, mk(root.ent(), 10 + static_cast<int>(lane)), box(0, top, 1160, 136)
           .with_background(Theme::Usage::Surface).with_border({74, 92, 117, 255}, 1)
-          .with_corner_radius(10 * s).with_debug_name("hdrag_lane_" + std::to_string(lane)));
+          .with_corner_radius(12 * s).with_debug_name("hdrag_lane_" + std::to_string(lane)));
       div(context, mk(panel.ent(), 0), box(16, 13, 4, 22).with_custom_background(accents[lane]));
       div(context, mk(panel.ent(), 1), box(30, 10, 264, 30)
           .with_label(names[lane]).with_font("AtkinsonMockBold", pixels(24 * s))
@@ -97,7 +97,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(panel.ent(), 2), box(300, 12, 42, 26)
           .with_label(std::to_string(lanes[lane].size())).with_font("AtkinsonMock", pixels(18 * s))
           .with_custom_background({47, 60, 80, 255}).with_custom_text_color(accents[lane])
-          .with_corner_radius(5 * s).with_alignment(TextAlignment::Center));
+          .with_corner_radius(4 * s).with_alignment(TextAlignment::Center));
       auto group = hstack(context, mk(panel.ent(), 3), box(16, 48, 1128, 76)
           .with_align_items(AlignItems::FlexStart).with_flex_wrap(FlexWrap::Wrap)
           .with_draggable_children().with_gap(pixels(8 * s))
@@ -110,7 +110,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size({pixels(width * s), pixels(34 * s)}).with_label(name)
             .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
             .with_custom_background({47, 62, 82, 255}).with_border({88, 107, 132, 255}, 1)
-            .with_corner_radius(6 * s).with_debug_name("tag_" + name)
+            .with_corner_radius(4 * s).with_debug_name("tag_" + name)
             .with_on_draw_fg([s, muted](RectangleType r) {
               for (int dy = -1; dy <= 1; ++dy)
                 for (int dx = 0; dx < 2; ++dx)

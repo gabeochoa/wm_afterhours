@@ -240,7 +240,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}.with_size({pixels(524 * s), pixels(40 * s)})
             .with_font("AtkinsonMock", pixels(20 * s))
             .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
-            .with_corner_radius(6 * s).with_debug_name("language_dropdown"));
+            .with_corner_radius(4 * s).with_debug_name("language_dropdown"));
     const float max_scroll = std::max(0.f, scroll.content_size.y - options.cmp().rect().height);
     text(72, scroll.scroll_offset.y + s < max_scroll ? "More options below / scroll this list"
                                                    : "End of options / scroll up to Audio",
@@ -249,7 +249,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         "% | Resolution: " + resolutions[resolution_index] +
         " | Quality: " + quality_options[quality_index];
     div(context, mk(entity), at(48, 516, 564, 186)
-        .with_custom_background(panel).with_corner_radius(10 * s)
+        .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("forms_status_panel"));
     text(81, "Live preview", 64, 522, 200, 28, 22, ink, "forms_status_heading");
     text(82, bloom_effect ? "Bloom on" : "Bloom off", 432, 522, 160, 28,
@@ -329,7 +329,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
           .with_debug_name("forms_preview_subtitle"));
     }
     div(context, mk(entity), at(636, 516, 596, 186)
-        .with_custom_background(panel).with_corner_radius(10 * s)
+        .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("clipboard_row"));
     text(86, "Display & Export", 652, 522, 340, 26, 20, ink, "forms_export_heading");
     text(87, auto_save ? fmt::format("Saved {:.0f}s", saved_preview_time) : "Autosave off",
@@ -347,7 +347,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity), at(652, 650, 162, 36)
         .with_label("Copy Status").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({85, 181, 176, 255}).with_custom_text_color({12, 30, 38, 255})
-        .with_corner_radius(6 * s).with_debug_name("copy_btn"))) {
+        .with_corner_radius(4 * s).with_debug_name("copy_btn"))) {
       afterhours::clipboard::set_text(status);
       clipboard_display = "Copied!";
     }
@@ -355,7 +355,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity), at(826, 650, 128, 36)
         .with_label("Paste").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({48, 71, 93, 255}).with_custom_text_color(ink)
-        .with_corner_radius(6 * s).with_debug_name("paste_btn"))) {
+        .with_corner_radius(4 * s).with_debug_name("paste_btn"))) {
       clipboard_display = afterhours::clipboard::has_text()
           ? afterhours::clipboard::get_text() : "(clipboard empty)";
     }
@@ -366,7 +366,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         .with_label(display_text).with_font("AtkinsonMock", pixels(16 * s))
         .with_custom_background({14, 25, 38, 255}).with_custom_text_color(ink)
         .with_text_overflow(TextOverflow::Ellipsis).with_text_inset(6 * s)
-        .with_corner_radius(6 * s).with_debug_name("forms_clipboard_output"));
+        .with_corner_radius(4 * s).with_debug_name("forms_clipboard_output"));
   }
 };
 

@@ -6,14 +6,18 @@ expect_text "Common"
 expect_text "Poppy"
 expect_text "Controller"
 expect_text "Accessibility"
+expect_text "Delete Data"
+expect_text "Enter a new name and customize your controls."
+expect_no_text "Edit name"
+expect_no_text "Controls & visibility"
+expect_no_text "Sound & connection"
+expect_no_text "Profile customization"
 assert_ui kirby_root x=0 y=0 w=1280 h=720
 assert_ui kirby_name x=556 y=198 w=426 h=96
 assert_ui kirby_option_0 x=414 y=340 w=258 h=130
 assert_no_overflow
 assert_within_parents
 screenshot kirby_options_initial
-
-# Name editing is native text input, with save and cancel.
 click_ui kirby_name
 wait 0.2
 expect_text "Your name"
@@ -35,8 +39,6 @@ click_ui kirby_name_cancel
 wait 0.2
 expect_text "Aster"
 expect_no_text "Discard me"
-
-# Every Common category has live preference values.
 click_ui kirby_option_0
 wait 0.2
 expect_text "Control style"
@@ -90,8 +92,6 @@ wait 0.2
 expect_text "Player visibility: Private"
 key ESCAPE
 wait 0.2
-
-# Icon tabs and bumper buttons navigate to real views.
 click_ui kirby_tab_3
 wait 0.2
 expect_text "No messages"
@@ -107,11 +107,8 @@ expect_text "Common"
 click_ui kirby_option_0
 wait 0.2
 expect_text "Alternate"
-expect_text "Off"
 key ESCAPE
 wait 0.2
-
-# Reset has a confirmation and actually clears saved profile state.
 click_ui kirby_data
 wait 0.2
 expect_text "Rider: Aster"
@@ -128,7 +125,6 @@ click_ui kirby_delete_confirm
 wait 0.2
 expect_text "Rider: Poppy"
 expect_text "Races completed: 0"
-expect_text "Records: 0"
 expect_text "Data deleted."
 screenshot kirby_options_data_reset
 key ESCAPE
@@ -146,9 +142,7 @@ assert_ui kirby_option_0 x=621 y=510 w=387 h=195
 assert_no_overflow
 assert_within_parents
 screenshot kirby_options_1080p
-
 resize 1280 720
-
 goto_screen forms
 wait 0.2
 goto_screen kirby_options

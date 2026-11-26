@@ -1,9 +1,23 @@
 #pragma once
 
+// DialogPresentation.h -- the wm-side presentation layer for library widgets.
+//
+// The afterhours library builds its modal/stepper widgets with its own
+// default styling; this app restyles them after build by walking the built
+// entity tree (the library has no presentation-config hook for this yet --
+// that half lives in a future afterhours lane and is out of scope here).
+// This header is the ONLY place that tree-walk restyling pattern lives:
+// screens call the helpers below instead of open-coding their own
+// getEntityForIDEnforce walks. If you find yourself reaching for
+// UICollectionHolder::getEntityForIDEnforce in a screen to restyle a
+// library widget, add the walk here instead.
+
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include <afterhours/ah.h>
 #include <afterhours/src/plugins/modal.h>
 #include <span>
+#include <string>
 
 namespace dialog_presentation {
 using namespace afterhours::ui;
@@ -83,4 +97,76 @@ inline void style(UIContext<InputAction> &context, afterhours::Entity &root,
   };
   visit(visit, root);
 }
+
+// Chevron geometry + palette for style_stepper_arrows, in design units
+// (pre-scale). The defaults are the SettingRowShowcase look; StepperShowcase
+// overrides line_width / tip_offset / half_height for its chunkier arrows.
+struct StepperArrowStyle {
+  float scale = 1.f;
+  afterhours::Color ink{235, 241, 250, 255};
+  afterhours::Color background{47, 64, 86, 255};
+  float width = 44.f;
+  float line_width = 2.f;
+  float tip_offset = 4.f;
+  float back_offset = 4.f;
+  float half_height = 8.f;
+};
+
+// Restyle a built stepper's arrows: fixed width, no text label, a flat
+// background, and a hand-drawn chevron (the library's "<" / ">" glyphs do
+// not match the gallery's icon style). `row` may be the stepper itself
+// (StepperShowcase: HasStepperState lives on the result entity, arrows are
+// its direct clickable children) or a setting_row wrapping one
+// (SettingRowShowcase: the stepper is a child control). Both shapes are
+// recognised so callers do not re-implement the walk. Arrows are named
+// `<name>_previous` / `<name>_next` in tree order -- e2e scripts click
+// them by those debug names.
+inline void style_stepper_arrows(imm::ElementResult row,
+                                 const std::string &name,
+                                 const StepperArrowStyle &style) {
+  const float s = style.scale;
+  int direction = 0;
+  const auto restyle_arrow = [&](afterhours::Entity &arrow) {
+    const bool previous = direction++ == 0;
+    arrow.get<UIComponent>().set_desired_width(pixels(style.width * s));
+    arrow.get<HasLabel>().label.clear();
+    arrow.addComponentIfMissing<UIComponentDebug>(name)
+        .set(name + (previous ? "_previous" : "_next"));
+    arrow.addComponentIfMissing<afterhours::HasColor>(style.background)
+        .set(style.background);
+    const afterhours::Color ink = style.ink;
+    arrow.addComponentIfMissing<HasOnDraw>().fg =
+        [s, previous, ink, style](RectangleType r) {
+          const float dir = previous ? -1.f : 1.f;
+          const float cx = r.x + r.width / 2;
+          const float cy = r.y + r.height / 2;
+          afterhours::draw_line_ex(
+              {cx - dir * style.back_offset * s, cy - style.half_height * s},
+              {cx + dir * style.tip_offset * s, cy}, style.line_width * s,
+              ink);
+          afterhours::draw_line_ex(
+              {cx + dir * style.tip_offset * s, cy},
+              {cx - dir * style.back_offset * s, cy + style.half_height * s},
+              style.line_width * s, ink);
+        };
+  };
+  const auto scan = [&](afterhours::Entity &host) {
+    for (const auto child_id : host.get<UIComponent>().children) {
+      auto &child = UICollectionHolder::getEntityForIDEnforce(child_id);
+      if (child.has<HasClickListener>()) restyle_arrow(child);
+    }
+  };
+  if (row.ent().has<HasStepperState>()) {
+    scan(row.ent());
+    return;
+  }
+  for (const auto child_id : row.cmp().children) {
+    auto &child = UICollectionHolder::getEntityForIDEnforce(child_id);
+    if (child.has<HasStepperState>()) {
+      scan(child);
+    } else if (child.has<HasClickListener>()) {
+      restyle_arrow(child);
+    }
+  }
 }
+} // namespace dialog_presentation

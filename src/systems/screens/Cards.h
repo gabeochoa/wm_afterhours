@@ -107,7 +107,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     label(content.ent(), "Nested cards and transparent panels", 0, 350, 900, 28, 25, theme.font);
     auto panels = div(context, mk(content.ent(), id++), box(0, 386, 1144, 170).with_debug_name("row2_nested"));
     auto nested = vstack(context, mk(panels.ent(), id++), box(0, 0, 556, 170)
-        .with_background(Theme::Usage::Surface).with_corner_radius(6 * s)
+        .with_background(Theme::Usage::Surface).with_corner_radius(8 * s)
         .with_border(card_border, 2 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
         .with_no_wrap().with_debug_name("nested_container"));
@@ -120,7 +120,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < item_roles.size(); ++i) {
       auto item = div(context, mk(inner_row.ent(), id++), ComponentConfig{}
           .with_size({pixels((500.f / 3.f) * s), pixels(55 * s)})
-          .with_background(item_roles[i]).with_corner_radius(1.65f * s)
+          .with_background(item_roles[i]).with_corner_radius(8 * s)
           .with_padding(Padding::all(pixels(12 * s))).with_debug_name("nested_item_" + std::to_string(i + 1)));
       child_label(item.ent(), "Item " + std::to_string(i + 1), 28, 22,
           afterhours::colors::auto_text_color(theme.from_usage(item_roles[i]), theme.font, theme.surface),
@@ -148,7 +148,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     const float opacity = compare_opaque ? 1.f : .3f;
     const auto fill = afterhours::colors::opacity_pct(theme.primary, opacity);
     auto info = vstack(context, mk(panels.ent()), box(588, 0, 556, 170)
-        .with_custom_background(fill).with_corner_radius(6 * s)
+        .with_custom_background(fill).with_corner_radius(8 * s)
         .with_padding(Padding::all(pixels(16 * s))).with_gap(pixels(12 * s))
         .with_no_wrap().with_debug_name("info_panel"));
     const auto info_ink = compare_opaque ? header_ink : theme.font;
@@ -164,14 +164,14 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(content.ent()), box(0, 568, 182, 34)
         .with_label(show_guides ? "Hide guides" : "Show guides")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
-        .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_guides")))
+        .with_custom_text_color(header_ink).with_corner_radius(4 * s).with_debug_name("cards_guides")))
       show_guides = !show_guides;
     label(content.ent(), show_guides ? "Guides on / content padding: 12 px" : "Guides off / content padding: 12 px",
           198, 572, 374, 27, 19, theme.font_muted, "cards_guide_status");
     if (button(context, mk(content.ent()), box(588, 568, 260, 34)
         .with_label(compare_opaque ? "Restore 30% fill" : "Compare opaque fill")
         .with_font("AtkinsonMock", pixels(21 * s)).with_background(Theme::Usage::Primary)
-        .with_custom_text_color(header_ink).with_corner_radius(7 * s).with_debug_name("cards_opacity")))
+        .with_custom_text_color(header_ink).with_corner_radius(4 * s).with_debug_name("cards_opacity")))
       compare_opaque = !compare_opaque;
     label(content.ent(), "Fill alpha only; text is 100%.", 864, 572, 280, 27, 18, theme.font_muted);
 

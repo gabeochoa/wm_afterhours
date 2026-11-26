@@ -46,10 +46,20 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
                              context.screen_height / 720.f);
     const float ox = (context.screen_width - 1280 * s) / 2;
     const float oy = (context.screen_height - 720 * s) / 2;
-    const auto white = afterhours::Color{235, 240, 250, 255};
-    const auto muted = afterhours::Color{167, 182, 206, 255};
-    const auto base = afterhours::Color{48, 56, 78, 255};
-    const auto wash = afterhours::Color{88, 108, 155, 255};
+    // Surface/text/hover tokens derive from ctx.theme; the star gold and
+    // pointer-triangle white stay as two semantic accents (single definitions).
+    const auto white = context.theme.font;
+    const auto muted = context.theme.font_muted;
+    const auto base = afterhours::colors::mix(context.theme.surface, context.theme.background, 0.5f);
+    const auto wash = afterhours::colors::lighten(context.theme.surface, 0.25f);
+    const auto panel = context.theme.surface;
+    const auto star_fill_idle = afterhours::colors::lighten(context.theme.surface, 0.18f);
+    const auto star_fill_hot = afterhours::colors::lighten(context.theme.surface, 0.35f);
+    const auto badge_on = afterhours::colors::lighten(context.theme.primary, 0.25f);
+    const auto badge_off = afterhours::colors::mix(context.theme.surface, context.theme.background, 0.5f);
+    const auto pass_note = afterhours::colors::lighten(context.theme.surface, 0.5f);
+    const auto star_gold = afterhours::Color{245, 210, 124, 255};
+    const auto reset_bg = afterhours::colors::lighten(context.theme.surface, 0.2f);
     const auto at = [=](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(ox + x * s, oy + y * s).with_corner_radius(0);
@@ -64,7 +74,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
     };
     div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_custom_background({16, 22, 33, 255}).with_corner_radius(0)
+        .with_custom_background(context.theme.background).with_corner_radius(0)
         .with_debug_name("hv_canvas"));
     text(1, "Hover Lab", 48, 20, 946, 44, 34, white, "hv_title");
     text(2, "Compare direct hover, subtree hover and pointer passthrough.",
@@ -73,7 +83,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
          48, 99, 1184, 25, 18, muted, "hv_hint");
     if (button(context, mk(entity), at(1032, 26, 200, 40)
         .with_label("Reset click counts").with_font("AtkinsonMock", pixels(19 * s))
-        .with_custom_background({47, 68, 97, 255}).with_custom_text_color(white)
+        .with_custom_background(reset_bg).with_custom_text_color(white)
         .with_corner_radius(8 * s).with_debug_name("hv_reset"))) {
       std::fill(std::begin(star_clicks), std::end(star_clicks), 0);
     }
@@ -93,7 +103,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
       const bool star_hot = star_id[n] >= 0 && context.was_hot(star_id[n]);
       const int id = 100 + n * 30;
       div(context, mk(entity, id), at(48, y, 648, 184)
-          .with_custom_background({25, 34, 50, 255}).with_corner_radius(12 * s)
+          .with_custom_background(panel).with_corner_radius(12 * s)
           .with_debug_name(fmt::format("hv_case_{}", n)));
       text(id + 1, fmt::format("{}. {}", n + 1, names[n]), 68, y + 10, 608, 29,
            24, white, fmt::format("hv_case_title_{}", n));
@@ -111,17 +121,17 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
       auto star = div(context, mk(row.ent(), 0), ComponentConfig{}
           .with_size({pixels(STAR * s), pixels(STAR * s)})
           .with_absolute_position((ROW_W - STAR - 6) * s, 6 * s)
-          .with_custom_background(star_hot ? afterhours::Color{110, 125, 162, 255}
-                                           : afterhours::Color{66, 78, 109, 255})
+          .with_custom_background(star_hot ? star_fill_hot
+                                           : star_fill_idle)
           // Row 3: star stops taking the hit, so the row keeps it.
           .with_ignore_pointer_events(n == 2).with_corner_radius(0)
-          .with_on_draw_fg([](RectangleType r) { draw_star(r, {245, 210, 124, 255}); })
+          .with_on_draw_fg([star_gold](RectangleType r) { draw_star(r, star_gold); })
           .with_debug_name(fmt::format("hv_star_{}", n)));
       star.ent().addComponentIfMissing<afterhours::ui::HasClickListener>(
           [this, n](afterhours::Entity &) { star_clicks[n]++; });
       star_id[n] = star.ent().id;
       text(id + 4, n == 2 ? "Pointer\npassthrough" : "Interactive\nstar", 508, y + 70,
-           168, 48, 18, n == 2 ? afterhours::Color{182, 212, 216, 255} : muted,
+           168, 48, 18, n == 2 ? pass_note : muted,
            fmt::format("hv_star_kind_{}", n));
       // What each row believes vs what the hit test chose.
       text(id + 5, "Case / live state", 68, y + 123, 192, 20, 15, muted, "");
@@ -135,9 +145,9 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, child), at(x, y + 145, 66, 25)
             .with_label(value).with_font("AtkinsonMock", pixels(19 * s))
             .with_alignment(TextAlignment::Center).with_custom_text_color(white)
-            .with_custom_background(active ? afterhours::Color{46, 96, 108, 255}
-                                            : afterhours::Color{43, 53, 72, 255})
-            .with_corner_radius(5 * s).with_ignore_pointer_events().with_debug_name(name));
+            .with_custom_background(active ? badge_on
+                                            : badge_off)
+            .with_corner_radius(4 * s).with_ignore_pointer_events().with_debug_name(name));
       };
       badge(id + 10, 278, lit[n] ? "Yes" : "No", lit[n], fmt::format("hv_lit_{}", n));
       badge(id + 11, 400, star_hot ? "Yes" : "No", star_hot, fmt::format("hv_hot_{}", n));
@@ -145,7 +155,7 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
             fmt::format("hv_clicks_{}", n));
     }
     div(context, mk(entity, 300), at(720, 128, 512, 414)
-        .with_custom_background({25, 34, 50, 255}).with_corner_radius(12 * s)
+        .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("hv_reference"));
     text(301, "Pointer over the star", 740, 144, 472, 31, 25, white, "hv_expected_title");
     text(302, "Expected states / reference diagrams, not controls", 740, 181,
@@ -164,19 +174,18 @@ struct HoverLab : ScreenSystem<UIContext<InputAction>> {
           .with_on_draw_fg([=](RectangleType r) {
             const float unit = r.height / 36;
             const RectangleType child{r.x + r.width - 34 * unit, r.y + 4 * unit, 28 * unit, 28 * unit};
-            raylib::DrawRectangleRec(child, n == 2 ? raylib::Color{66, 78, 109, 255}
-                                                   : raylib::Color{110, 125, 162, 255});
-            draw_star(child, {245, 210, 124, 255});
+            raylib::DrawRectangleRec(child, n == 2 ? star_fill_idle : star_fill_hot);
+            draw_star(child, star_gold);
             const raylib::Vector2 tip{child.x + 14 * unit, child.y + 14 * unit};
             raylib::DrawTriangle(tip, {tip.x + 3 * unit, tip.y + 17 * unit},
-                                 {tip.x + 12 * unit, tip.y + 12 * unit}, {248, 249, 253, 255});
+                                 {tip.x + 12 * unit, tip.y + 12 * unit}, white);
           }).with_debug_name(fmt::format("hv_expected_{}", n)));
       text(id + 2, n == 0 ? "No" : "Yes", 952, y + 30, 76, 30, 21, white, "");
       text(id + 3, n == 2 ? "No" : "Yes", 1040, y + 30, 76, 30, 21, white, "");
       text(id + 4, n == 2 ? "No" : "Yes", 1128, y + 30, 84, 30, 21, white, "");
     }
     div(context, mk(entity), at(720, 562, 512, 138)
-        .with_custom_background({25, 34, 50, 255}).with_corner_radius(12 * s)
+        .with_custom_background(panel).with_corner_radius(12 * s)
         .with_debug_name("hv_api_panel"));
     text(371, "Hover queries used by these rows", 740, 572, 472, 27,
          22, white, "hv_api_heading");

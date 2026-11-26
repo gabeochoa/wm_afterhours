@@ -50,7 +50,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 3; ++i) {
       const float x = 842 + static_cast<float>(i) * 122;
       div(context, mk(entity, 10 + i), at(x, 88, 16, 16)
-          .with_custom_background(colors[i]).with_corner_radius(3 * s));
+          .with_custom_background(colors[i]).with_corner_radius(4 * s));
       text(13 + i, fmt::format("Item {}", i + 1), x + 24, 82, 94, 27,
            18, muted, fmt::format("layout_key_{}", i));
     }
@@ -59,7 +59,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     const auto card_border = afterhours::Color{178, 198, 173, 255};
     // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container = hstack(context, mk(entity, 21), at(72, 156, 1136, 120)
-        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(10 * s)
+        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(12 * s)
         .with_padding(Padding::all(pixels(12 * s)))
         .with_justify_content(JustifyContent::Center).with_align_items(AlignItems::Center)
         .with_debug_name("row_container"));
@@ -70,7 +70,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
           .with_label(fmt::format("Item {}", i + 1)).with_font("AtkinsonMock", pixels(22 * s))
           .with_custom_background(colors[i]).with_custom_text_color({255, 255, 244, 255})
           .with_alignment(TextAlignment::Center).with_text_inset(12 * s)
-          .with_corner_radius(8 * s)
+          .with_corner_radius(4 * s)
           .with_border(selected_item == i ? ink : colors[i], 2 * s)
           .with_margin(Margin{.left = pixels(28 * s), .right = pixels(28 * s)})
           .with_debug_name(fmt::format("layout_row_item_{}", i)));
@@ -111,7 +111,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     text(31, "Parent frame", 1004, 334, 204, 24, 18, muted, "layout_parent_label");
     // Column layout demo - stacked items demonstration
     auto col_container = hstack(context, mk(entity), at(72, 364, 1136, 220)
-        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(10 * s)
+        .with_custom_background(card_bg).with_border(card_border, s).with_corner_radius(12 * s)
         .with_padding(Padding::all(pixels(20 * s)))
         .with_justify_content(JustifyContent::Center).with_debug_name("col_demo_container"));
     // Column with stacked items - centered within container
@@ -128,7 +128,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
           .with_label(fmt::format("Item {}", i + 1)).with_font("AtkinsonMock", pixels(22 * s))
           .with_custom_background(colors[i]).with_custom_text_color({255, 255, 244, 255})
           .with_alignment(TextAlignment::Center).with_text_inset(12 * s, 2 * s)
-          .with_corner_radius(7 * s).with_border(selected_item == i ? ink : colors[i], 2 * s)
+          .with_corner_radius(4 * s).with_border(selected_item == i ? ink : colors[i], 2 * s)
           .with_margin(Margin{.bottom = pixels(i == 2 ? 0 : 3)})
           .with_debug_name(fmt::format("layout_column_item_{}", i)));
       column_rects[i] = result.cmp().rect();

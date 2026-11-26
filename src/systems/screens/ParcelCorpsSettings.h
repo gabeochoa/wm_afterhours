@@ -24,7 +24,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   float music_volume = 0.75f;
   size_t msaa_idx = 1;
   size_t texture_idx = 2;
-  std::string status = "Changes apply locally";
+  std::string status = "Saved locally";
   bool settings_open = true;
   bool texture_loaded = false;
   raylib::Texture2D town_texture{};
@@ -268,7 +268,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     hud_text(1203, "First business signed up", 558, 109, 334, 25, 18, white);
     div(context, mk(root.ent()), box(scale, 864, 46, 42, 28)
         .with_label("Lv 0").with_font("ArchivoMockBold", pixels(18 * scale))
-        .with_custom_background({24, 54, 67, 255}).with_custom_text_color(white)
+        .with_custom_background({6, 24, 32, 255}).with_border({255, 255, 255, 255}, scale)
+        .with_corner_radius(4 * scale)
+        .with_custom_text_color(white)
         .with_alignment(TextAlignment::Center).with_render_layer(1).with_debug_name("parcel_level"));
     div(context, mk(root.ent()), box(scale, 538, 114, 13, 14)
         .with_render_layer(1).with_on_draw_fg([scale](RectangleType r) {
@@ -276,7 +278,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_line_ex({r.x + 4 * scale, r.y + 12 * scale}, {r.x + 12 * scale, r.y}, 2 * scale, {230, 255, 238, 255});
         }));
     div(context, mk(root.ent()), box(scale, 944, 34, 288, 212)
-        .with_custom_background({32, 56, 57, 245}).with_render_layer(1).with_debug_name("parcel_chat"));
+        .with_custom_background({32, 56, 57, 245}).with_corner_radius(12 * scale)
+        .with_render_layer(1).with_debug_name("parcel_chat"));
     hud_text(1301, "LIVE · EDDCOATES", 960, 43, 258, 28, 20, white);
     hud_text(1302, "8 viewers · 10 messages", 960, 72, 258, 25, 17, muted);
     for (size_t i = 0; i < chat_messages.size(); ++i) {
@@ -289,8 +292,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 1400), box(scale, 1104, 592, 128, 96)
         .with_custom_background({17, 26, 27, 245}).with_corner_radius(12 * scale)
         .with_render_layer(1).with_debug_name("parcel_speed"));
-    hud_text(1401, "9", 1124, 603, 56, 49, 38, {227, 194, 174, 255});
-    hud_text(1402, "mph", 1182, 625, 42, 27, 19, {227, 194, 174, 255});
+    hud_text(1401, "9", 1124, 603, 34, 49, 38, {227, 194, 174, 255});
+    hud_text(1402, "mph", 1160, 625, 42, 27, 19, {227, 194, 174, 255});
     hud_text(1403, "GAMON", 1124, 656, 100, 24, 16, {227, 194, 174, 255});
     if (!settings_open) {
       if (button(context, mk(root.ent()), box(scale, 48, 48, 224, 48)
@@ -342,7 +345,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     text(17, "AUDIO", 68, 536, 384, 23, 16, {237, 155, 147, 255});
     const auto icon = [&](int id, float y, Icon symbol, afterhours::Color color) {
       div(context, mk(phone.ent(), id), box(scale, 76, y + 7, 24, 24)
-          .with_custom_background(color).with_corner_radius(5 * scale)
+          .with_custom_background(color).with_corner_radius(4 * scale)
           .with_ignore_pointer_events().with_on_draw_fg([symbol](RectangleType r) { draw_icon(r, symbol); }));
     };
     const auto row = [&](int id, float y, float h, const std::string &label,
@@ -355,7 +358,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     const auto toggle = [&](int id, float y, bool &value, const std::string &debug) {
       if (button(context, mk(phone.ent(), id), box(scale, 392, y + 6, 48, 26)
           .with_custom_background(value ? green : afterhours::Color{82, 94, 82, 255})
-          .with_corner_radius(13 * scale).with_debug_name(debug))) value = !value;
+          .with_corner_radius(12 * scale).with_debug_name(debug))) value = !value;
       div(context, mk(phone.ent(), id + 1), box(scale, 395 + (value ? 23 : 0), y + 9, 20, 20)
           .with_custom_background(white).with_corner_radius(10 * scale).with_ignore_pointer_events());
       text(id + 2, value ? "On" : "Off", 345, y + 6, 38, 26, 18, white, debug + "_state", TextAlignment::Right);
@@ -381,7 +384,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(id + 3, values[index], 318, y + 4, 88, 32, 21, white, debug + "_value", TextAlignment::Center);
     };
     selector(1040, 364, 46, "Anti-aliasing", msaa_idx, msaa_options, "parcel_msaa");
-    text(1046, "MSAA", 108, 391, 164, 17, 14, muted);
+    text(1046, "MSAA", 108, 387, 164, 17, 14, muted);
     selector(1050, 412, 38, "Texture Quality", texture_idx, texture_options, "parcel_texture");
     row(1060, 452, 38, "Motion Blur", Icon::Motion, orange, "parcel_motion_row");
     toggle(1064, 452, motion_blur, "parcel_motion_toggle");
@@ -417,9 +420,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(id + 5, fmt::format("{:.0f}%", value * 100), 389, y + 5, 51, 30, 18, white, debug + "_value", TextAlignment::Right);
       if (input) status = fmt::format("{}: {:.0f}%", label, value * 100);
     };
-    volume(1080, 564, "Audio Volume", audio_volume, "parcel_audio");
-    volume(1090, 608, "Music Volume", music_volume, "parcel_music");
-    text(1500, status, 68, 652, 384, 25, 17, muted, "parcel_status");
+    volume(1080, 556, "Audio Volume", audio_volume, "parcel_audio");
+    volume(1090, 600, "Music Volume", music_volume, "parcel_music");
+    text(1500, status, 68, 644, 384, 25, 17, muted, "parcel_status");
   }
 };
 

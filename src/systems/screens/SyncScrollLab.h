@@ -37,9 +37,9 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
             float *out_y) {
     const auto white = afterhours::Color{235, 240, 250, 255};
     const auto muted = afterhours::Color{181, 196, 219, 255};
-    const auto tint = afterhours::Color{slot == 1 ? 68 : 32,
-                                        slot == 1 ? 34 : 62,
-                                        slot == 1 ? 38 : 42, 255};
+    const auto tint = afterhours::Color{static_cast<unsigned char>(slot == 1 ? 68 : 32),
+                                        static_cast<unsigned char>(slot == 1 ? 34 : 62),
+                                        static_cast<unsigned char>(slot == 1 ? 38 : 42), 255};
 
     div(context, mk(parent, 100 + slot),
         ComponentConfig{}

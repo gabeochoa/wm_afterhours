@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "DialogPresentation.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -95,25 +96,21 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     label(20, 20, 171, 512, 37, "Stepper Variants", 28, ink);
     label(21, 612, 171, 512, 37, "Card Selector", 28, ink);
     const auto style_stepper = [&](ElementResult &result, const std::string &name, bool neighbors) {
-      int arrow_index = 0;
+      // Arrow restyling is shared with SettingRowShowcase via
+      // DialogPresentation.h; only the neighbour-underline below is local
+      // to this screen.
+      dialog_presentation::style_stepper_arrows(
+          result, name,
+          dialog_presentation::StepperArrowStyle{.scale = scale,
+                                                 .ink = ink,
+                                                 .background = field,
+                                                 .line_width = 2.5f,
+                                                 .tip_offset = 5.f,
+                                                 .half_height = 9.f});
       for (const auto child_id : result.cmp().children) {
         auto &child = UICollectionHolder::getEntityForIDEnforce(child_id);
         auto &cmp = child.get<UIComponent>();
-        if (child.has<HasClickListener>()) {
-          const bool previous = arrow_index++ == 0;
-          cmp.set_desired_width(pixels(44 * scale));
-          child.addComponentIfMissing<UIComponentDebug>(name).set(name + (previous ? "_previous" : "_next"));
-          child.get<HasLabel>().label.clear();
-          child.addComponentIfMissing<afterhours::HasColor>(field).set(field);
-          child.addComponentIfMissing<HasOnDraw>().fg = [previous, scale, ink](RectangleType r) {
-            const float dir = previous ? -1.f : 1.f;
-            const float x = r.x + r.width / 2;
-            const float y = r.y + r.height / 2;
-            afterhours::draw_line_ex({x - dir * 4 * scale, y - 9 * scale}, {x + dir * 5 * scale, y}, 2.5f * scale, ink);
-            afterhours::draw_line_ex({x + dir * 5 * scale, y}, {x - dir * 4 * scale, y + 9 * scale}, 2.5f * scale, ink);
-          };
-          continue;
-        }
+        if (child.has<HasClickListener>()) continue;
         if (!neighbors) continue;
         size_t index = 0;
         for (const auto label_id : cmp.children) {

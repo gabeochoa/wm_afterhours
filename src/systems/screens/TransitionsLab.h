@@ -323,7 +323,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
     if (reduced_btn) Settings::get().set_reduced_motion_enabled(!reduced);
 
     auto stage = div(context, mk(entity), box(40, 180, 1200, 460).with_custom_background({36, 33, 44, 255})
-                                                  .with_corner_radius(16 * s).with_debug_name("stage"));
+                                                  .with_corner_radius(12 * s).with_debug_name("stage"));
     if (current.examples.empty()) {
       label(stage.ent(), 0, "No examples in this group yet.", 24, 24, 600, 22, true);
       return;
@@ -356,12 +356,12 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         effect_shader->set("extent", fb_extent(card));
         effect_shader->set("progress", p);
         effect_shader->set("mode", static_cast<float>(fx->shader));
-        auto cfg = box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(14 * s)
+        auto cfg = box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(12 * s)
                        .with_debug_name("fx_card").with_ignore_pointer_events();
         if (effect_shader->ok()) cfg.with_shader(effect_shader->shader);
         div(context, mk(stage.ent(), 1), cfg);
       } else if (fx && (fx->id == afterhours::presets::EffectId::Blur || fx->id == afterhours::presets::EffectId::Unblur)) {
-        div(context, mk(stage.ent(), 1), box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(14 * s)
+        div(context, mk(stage.ent(), 1), box(100, 120, 300, 190).with_custom_background(accent).with_corner_radius(12 * s)
                                              .with_blur(afterhours::presets::effect_blur_radius(*fx, p))
                                              .with_debug_name("fx_card").with_ignore_pointer_events());
       } else if (fx) {
@@ -384,7 +384,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto &draw = motion::anim(Key::CheckDraw);
       const float p = draw.value();
       auto boxr = button(context, mk(stage.ent(), 1),
-                         box(60, 90, 44, 44).with_corner_radius(10 * s).with_debug_name("check_box")
+                         box(60, 90, 44, 44).with_corner_radius(4 * s).with_debug_name("check_box")
                              .with_custom_background(paper).with_border(muted, 2 * s)
                              .with(um::on_state(checked, {.background = {paper, accent}}, motion::Spring::snappy()))
                              .with(um::on_press({.scale = 0.92f}))
@@ -629,7 +629,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig cfg = ComponentConfig{}.with_size({pixels(204 * s), pixels(40 * s)}).with_label(items[i])
                                   .with_font("AtkinsonMock", pixels(18 * s)).with_custom_text_color(ink)
                                   .with_alignment(TextAlignment::Left).with_padding(Padding::all(pixels(8 * s)))
-                                  .with_custom_background(afterhours::colors::transparent()).with_corner_radius(6 * s)
+                                  .with_custom_background(afterhours::colors::transparent()).with_corner_radius(4 * s)
                                   .with_debug_name(std::string("menu_item_") + std::to_string(i))
                                   .with(um::on_state(item_hot, {.background = {afterhours::colors::transparent(), chip}}, motion::Spring::snappy()));
         if (!menu_open) cfg.with_ignore_pointer_events().with_skip_tabbing(true);
@@ -736,7 +736,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       static const float widths[] = {110.f, 80.f, 90.f};
       float xs[3]; float run = 0.f;
       for (int i = 0; i < 3; ++i) { xs[i] = run; run += widths[i] + 6.f; }
-      auto bar = div(context, mk(stage.ent()), box(60, 84, run + 6.f, 44).with_debug_name("tabs_bar").with_corner_radius(10 * s)
+      auto bar = div(context, mk(stage.ent()), box(60, 84, run + 6.f, 44).with_debug_name("tabs_bar").with_corner_radius(8 * s)
                                                        .with_custom_background(chip));
       auto &px = motion::anim(Key::PillX);
       auto &pw = motion::anim(Key::PillW);
@@ -883,7 +883,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       auto wrap = div(context, mk(bell.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(36 * s, -6 * s)
                                                       .with_background(Theme::Usage::None).with_debug_name("badge_wrap").with_ignore_pointer_events());
       div(context, mk(wrap.ent(), 0), ComponentConfig{}.with_size({pixels(18 * s), pixels(18 * s)}).with_absolute_position(0.f, 0.f)
-                                          .with_custom_background(coral).with_corner_radius(9 * s).with_debug_name("badge_dot").with_ignore_pointer_events()
+                                          .with_custom_background(coral).with_corner_radius(8 * s).with_debug_name("badge_dot").with_ignore_pointer_events()
                                           .with_label("3").with_font("AtkinsonMockBold", pixels(11 * s)).with_custom_text_color(white).with_alignment(TextAlignment::Center)
                                           .with(um::on_appear({.scale = 0.f, .opacity = 0.f}))
                                           .with(um::on_state(badge_shown, {.scale = {0.f, 1.f}, .opacity = {0.f, 1.f}}, motion::Spring{.response = 0.5f, .bounce = 0.35f})));
@@ -1113,7 +1113,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       if (tab(stage.ent(), 1, card_expanded ? "Compact" : "Expand", 60, 84, 140, false, "card_btn")) card_expanded = !card_expanded;
       auto card = div(context, mk(stage.ent(), 2),
                       ComponentConfig{}.with_size({pixels(cw.value()), pixels(ch.value())}).with_absolute_position(60 * s, 140 * s)
-                          .with_custom_background(paper).with_border(line, 1.f * s).with_corner_radius(14 * s)
+                          .with_custom_background(paper).with_border(line, 1.f * s).with_corner_radius(12 * s)
                           .with_soft_shadow(2 * s, 6 * s, 16 * s, {80, 60, 100, 30}).with_padding(Padding::all(pixels(0)))
                           .with_clip_children().with_debug_name("resize_card"));
       div(context, mk(card.ent(), 0), ComponentConfig{}.with_size({pixels(cw.value() - 28.f * s), pixels(ch.value() - 28.f * s)}).with_absolute_position(14 * s, 14 * s)
@@ -1138,7 +1138,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         const int i = stack_order[rank];
         auto card = button(context, mk(zone.ent(), i),
                            ComponentConfig{}.with_size({pixels(150 * s), pixels(200 * s)}).with_absolute_position((130 + base_x[i]) * s, 30 * s)
-                               .with_custom_background(tints[i]).with_corner_radius(14 * s).with_padding(Padding::all(pixels(0)))
+                               .with_custom_background(tints[i]).with_corner_radius(12 * s).with_padding(Padding::all(pixels(0)))
                                .with_render_layer(5 + rank)
                                .with_soft_shadow(2 * s, 8 * s, 18 * s, {40, 30, 60, 50}).with_debug_name(std::string("stack_card_") + std::to_string(i))
                                .with_label(std::string("Card ") + std::to_string(i + 1)).with_font("AtkinsonMock", pixels(18 * s))
@@ -1357,7 +1357,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         auto &reel = motion::anim(static_cast<Key>(static_cast<size_t>(Key::Reel0) + col));
         if (!reel.started()) reel.from(0.f);
         auto cell = div(context, mk(stage.ent(), 10 + col), box(60 + col * 34.f, 150, 30, 30).with_debug_name(std::string("reel_") + std::to_string(col))
-                                                              .with_custom_background(chip).with_corner_radius(6 * s).with_clip_children());
+                                                              .with_custom_background(chip).with_corner_radius(4 * s).with_clip_children());
         const int first = std::max(0, int(std::floor(reel.value() / cell_h)) - 1);
         for (int k = first; k < std::min(40, first + 4); ++k)
           div(context, mk(cell.ent(), k), ComponentConfig{}.with_size({pixels(30 * s), pixels(cell_h)}).with_absolute_position(0.f, float(k) * cell_h - reel.value())
@@ -1609,7 +1609,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         else load.from(0.f);
       }
       const bool loading = gen_phase == 1, revealed = gen_phase == 2;
-      auto frame = div(context, mk(stage.ent()), box(60, 140, 142, 142).with_debug_name("gen_frame").with_corner_radius(10 * s)
+      auto frame = div(context, mk(stage.ent()), box(60, 140, 142, 142).with_debug_name("gen_frame").with_corner_radius(8 * s)
                                                          .with_custom_background(chip).with_clip_children());
       const float pitch = 10.f * s;
       for (int i = 0; i < 14 * 14; ++i) {
@@ -1666,7 +1666,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
       dissolve_effect->set("extent", fb_extent(card_r));
       dissolve_effect->set("progress", prog.value());
       if (del_phase != 2) {
-        ComponentConfig cfg = box(60, 150, 120, 120).with_debug_name("dissolve_card").with_corner_radius(14 * s)
+        ComponentConfig cfg = box(60, 150, 120, 120).with_debug_name("dissolve_card").with_corner_radius(12 * s)
                                   .with_custom_background({80, 120, 220, 255}).with_label("Photo").with_font("AtkinsonMockBold", pixels(18 * s))
                                   .with_custom_text_color(white).with_alignment(TextAlignment::Center).with_ignore_pointer_events()
                                   .with(um::on_appear({.scale = {0.8f, 1.f}, .opacity = {0.f, 1.f}}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}, .curve = motion::curves::ease_out_quad}))
@@ -1856,7 +1856,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
         hold.from(0.f);
       }
       auto target = div(context, mk(stage.ent()), ComponentConfig{}.with_size({pixels(target_l.width), pixels(target_l.height)}).with_absolute_position(target_l.x, target_l.y)
-                                                         .with_custom_background(chip).with_border(slate, 2.f * s).with_corner_radius(14 * s)
+                                                         .with_custom_background(chip).with_border(slate, 2.f * s).with_corner_radius(12 * s)
                                                          .with_label(drop_phase == 2 ? "Dropped" : "Drop here").with_font("AtkinsonMock", pixels(16 * s))
                                                          .with_custom_text_color(muted).with_alignment(TextAlignment::Center).with_ignore_pointer_events().with_debug_name("drop_target")
                                                          .with(um::on_change(static_cast<size_t>(drops), {.scale = 0.97f}, motion::Timeline{.keys = {{0.f, 0.f}, {0.25f, 1.f}}})));

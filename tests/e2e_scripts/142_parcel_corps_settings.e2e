@@ -43,8 +43,8 @@ click_ui parcel_texture_next
 wait 0.2
 expect_text "Ultra"
 
-assert_ui parcel_audio_slider x=280 y=569 w=100 h=30
-assert_ui parcel_music_slider x=280 y=613 w=100 h=30
+assert_ui parcel_audio_slider x=280 y=561 w=100 h=30
+assert_ui parcel_music_slider x=280 y=605 w=100 h=30
 set_slider parcel_audio_slider 0.50
 wait 0.2
 expect_text "Audio Volume: 50%"
@@ -76,8 +76,8 @@ assert_ui parcel_language_row x=102 y=261 w=576 h=57
 assert_ui parcel_quest x=780 y=51 w=600 h=162
 assert_ui parcel_chat x=1416 y=51 w=432 h=318
 assert_ui parcel_speed x=1656 y=888 w=192 h=144
-assert_ui parcel_audio_slider x=420 y=854 w=150 h=45
-assert_ui parcel_status x=102 y=978 w=576 h=38
+assert_ui parcel_audio_slider x=420 y=842 w=150 h=45
+assert_ui parcel_status x=102 y=966 w=576 h=38
 set_slider parcel_music_slider 0.75
 wait 0.2
 expect_text "Music Volume: 75%"

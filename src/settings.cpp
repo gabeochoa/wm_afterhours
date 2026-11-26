@@ -246,7 +246,7 @@ bool Settings::load_save_file(int width, int height) {
           saw_unusable_settings = true;
           log_warn("Settings::load_save_file: skipping {} because it belongs "
                    "to a different project",
-                   place);
+                   place.string());
           continue;
         }
       }
