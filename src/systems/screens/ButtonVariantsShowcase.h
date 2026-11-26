@@ -70,7 +70,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     label("Variant = appearance     Role = color     Size = geometry     Availability = enabled or disabled",
           20, 77, 1104, 25, 19, muted);
     if (button(context, mk(root.ent()), specimen(show_bounds ? "Hide bounds" : "Show bounds",
-          950, 38, 174, 36, 20, ButtonVariant::Outline, Theme::Usage::Primary, "bv_toggle_bounds")))
+          814, 38, 174, 36, 20, ButtonVariant::Outline, Theme::Usage::Primary, "bv_toggle_bounds")))
       show_bounds = !show_bounds;
     const std::array<ButtonVariant, 3> variants{ButtonVariant::Filled, ButtonVariant::Outline, ButtonVariant::Ghost};
     const std::array<const char *, 3> variant_names{"Filled", "Outline", "Ghost"};
