@@ -58,7 +58,7 @@ screenshot shop_item_selected
 # =========================================================================
 click_ui shop_tab_1
 wait 0.3
-expect_text "Selling is unavailable in this demo."
+expect_text "Selling is closed for now."
 screenshot shop_sell_tab
 
 click_ui shop_tab_0

@@ -93,7 +93,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         .with_label(compact_preview ? "Widen preview" : "Narrow preview")
         .with_font("AtkinsonMock", pixels(18 * s))
         .with_custom_background(quiet_btn).with_border(quiet_border, s)
-        .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
+        .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
         .with_debug_name("language_preview_width")))
       compact_preview = !compact_preview;
     for (size_t i = 0; i < languages.size(); ++i) {
@@ -103,7 +103,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
       auto picker = button(context, mk(root.ent(), 10 + static_cast<int>(i)), box(static_cast<float>(i) * 392, 86, 376, 50)
           .with_padding(Padding{}).with_label(names[i]).with_font(font.font_name, pixels(22 * font.size_scale * s))
           .with_custom_background(active ? theme.primary : quiet_btn)
-          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(8 * s)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
           .with_border(active ? afterhours::Color{132, 220, 224, 255} : quiet_border, active ? 1.5f * s : s)
           .with_debug_name("language_" + std::to_string(i)));
       if (picker) current_language = lang;
@@ -135,7 +135,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
       auto btn_cfg = box(20, y, control_width, height)
           .with_label(value).with_font(font.font_name, pixels(22 * font.size_scale * s))
           .with_custom_background(index == 3 ? quiet_btn : theme.primary)
-          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
           .with_debug_name(name);
       if (index == 3) btn_cfg.with_border(quiet_border, s);
       auto control = button(context, mk(root.ent(), id), btn_cfg);

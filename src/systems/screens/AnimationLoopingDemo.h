@@ -70,7 +70,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
       return button(context, mk(root.ent(), id++), box(left + x, 132, width, 44)
           .with_label(text).with_font("AtkinsonMock", pixels(21 * s))
           .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light)
-          .with_corner_radius(8 * s).with_debug_name(name));
+          .with_corner_radius(4 * s).with_debug_name(name));
     };
     if (control(paused ? "Resume all" : "Pause all", 0, 156, "pause_cycles")) paused = !paused;
     if (control("Restart cycles", 168, 180, "restart_cycles")) time_elapsed = 0.f;
@@ -216,13 +216,13 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         }));
     // Spinning indicator
     div(context, mk(root.ent()), box(indicator_x, indicator_y, indicator_size, indicator_size)
-        .with_custom_background(box_orange).with_corner_radius(5 * s)
+        .with_custom_background(box_orange).with_corner_radius(4 * s)
         .with_border({255, 236, 209, 255}, 2 * s).with_ignore_pointer_events().with_debug_name("rotate_indicator"));
     label("Clockwise / fixed base", 895, 508, 234, 24, 18, muted);
 
     // Info footer
     div(context, mk(root.ent()), box(left, 626, 1144, 68)
-        .with_custom_background({36, 43, 57, 255}).with_corner_radius(10 * s));
+        .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     label("phase = 2 pi t / period    |    Breathe: 10 sin(phase)    |    Glow: 0.5 + 0.5 sin(phase)",
           16, 632, 1112, 25, 20, text_light);
     label(show_trails ? "Cycle overlay: 8 equally spaced phases. Bounce: 50(1 - cos(phase)). Spin: radius 40."

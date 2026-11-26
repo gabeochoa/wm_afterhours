@@ -60,7 +60,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     label(2, "Choose a page or one option. Each row keeps its own selection.", 20, 83, 1104, 27, 21, muted);
     const auto panel_at = [&](int id, float y, const std::string &name) {
       div(context, mk(root.ent(), id), box(0, y, 1144, 166)
-          .with_custom_background(panel).with_corner_radius(10 * scale).with_debug_name(name));
+          .with_custom_background(panel).with_corner_radius(12 * scale).with_debug_name(name));
       div(context, mk(root.ent(), id + 1), box(704, y + 16, 420, 134)
           .with_custom_background({32, 47, 68, 255}).with_corner_radius(8 * scale));
     };
@@ -70,7 +70,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto arrow = [&](int id, bool previous, bool disabled, float x, float y, const std::string &name) {
       auto result = button(context, mk(root.ent(), id), box(x, y, 48, 48)
           .with_custom_background(disabled ? afterhours::Color{32, 43, 58, 255} : afterhours::Color{48, 67, 94, 255})
-          .with_corner_radius(7 * scale).with_disabled(disabled).with_skip_tabbing(disabled)
+          .with_corner_radius(4 * scale).with_disabled(disabled).with_skip_tabbing(disabled)
           .with_debug_name(name).with_on_draw_fg([previous, disabled, scale, ink, muted](RectangleType r) {
             const float direction = previous ? -1.f : 1.f;
             const float cx = r.x + r.width / 2;
@@ -93,7 +93,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(ink)
           .with_custom_background(selected ? afterhours::Color{50, 76, 112, 255}
                                            : afterhours::Color{38, 55, 77, 255})
-          .with_corner_radius(7 * scale)
+          .with_corner_radius(4 * scale)
           .with_debug_name(name).with_on_draw_fg([selected, swatch, scale, ink](RectangleType r) {
             if (swatch.a > 0)
               afterhours::draw_rectangle({r.x + 7 * scale, r.y + 18 * scale, 12 * scale, 12 * scale}, swatch);
@@ -169,7 +169,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
           20, 613, 662, 27, 22, ink, "pag3_result");
     label(33, boundary(color_idx, color_options.size()), 20, 642, 662, 22, 18, muted);
     div(context, mk(root.ent()), box(724, 535, 86, 98).with_custom_background(swatches[color_idx])
-        .with_corner_radius(7 * scale).with_debug_name("pag3_swatch"));
+        .with_corner_radius(8 * scale).with_debug_name("pag3_swatch"));
     label(35, color_options[color_idx], 830, 533, 274, 36, 29, ink);
     const auto color = swatches[color_idx];
     label(36, fmt::format("#{:02X}{:02X}{:02X}", color.r, color.g, color.b), 830, 577, 274, 30, 22, muted);

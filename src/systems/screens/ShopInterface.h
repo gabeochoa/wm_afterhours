@@ -145,7 +145,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
 
   void add_selected_to_cart() {
     if (selected_tab != 0) {
-      status = "Selling is unavailable in this demo.";
+      status = "Selling is closed for now.";
       return;
     }
     if (selected_item >= buy_items.size())
@@ -505,7 +505,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         box(scale, 290, 181, 470, 28)
             .with_label(selected_tab == 0 ? "Goods for the road ahead"
-                                          : "Selling is unavailable in this demo.")
+                                          : "Selling is closed for now.")
             .with_font("Garamond", pixels(21.f * scale))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)
@@ -652,7 +652,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(
             context, mk(root.ent()),
             box(scale, 831, 319, 392, 38)
-                .with_label(selected_tab == 0 ? "Add to basket" : "Sell preview only")
+                .with_label(selected_tab == 0 ? "Add to basket" : "Sell selected")
                 .with_on_draw_bg([](RectangleType r) { draw_wood_button(r); })
                 .with_font("Garamond", pixels(25.f * scale))
                 .with_custom_text_color(cream)

@@ -119,7 +119,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
           .with_label("Press").with_scale(scale)
           .with_font("AtkinsonMock", pixels(25 * s))
           .with_custom_background(colors[i]).with_custom_text_color({12, 23, 40, 255})
-          .with_corner_radius(7.5f * s).with_click_activation(ClickActivationMode::Press)
+          .with_corner_radius(4 * s).with_click_activation(ClickActivationMode::Press)
           .with_debug_name("btn" + std::to_string(i + 1)))) {
         ++activation_counts[i];
         last_pressed = static_cast<int>(i);
@@ -127,7 +127,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
       }
       label("100% > 85% > 110% > 100%", x + 20, 391, 328, 27, 22, text_light);
       div(context, mk(root.ent(), id++), box(x + 20, 430, 328, 34)
-          .with_custom_background({23, 29, 40, 255}).with_corner_radius(6 * s));
+          .with_custom_background({23, 29, 40, 255}).with_corner_radius(8 * s));
       label(fmt::format("Scale: {:3.0f}%", get_anim_value(keys[i]) * 100),
             x + 32, 430, 304, 34, 27, text_light, prefix + "_scale", true);
       label(fmt::format("{} activations: {}", names[i], activation_counts[i]),
@@ -141,13 +141,13 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent(), id++), box(0, 564, 280, 42)
         .with_label("Preview all at 1/4 speed").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light)
-        .with_corner_radius(8 * s).with_debug_name("interactive_preview"))) {
+        .with_corner_radius(4 * s).with_debug_name("interactive_preview"))) {
       for (size_t i = 0; i < keys.size(); ++i) animate_button_press(i, true);
     }
     if (button(context, mk(root.ent()), box(296, 564, 180, 42)
         .with_label("Reset counts").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light)
-        .with_corner_radius(8 * s).with_debug_name("interactive_reset"))) {
+        .with_corner_radius(4 * s).with_debug_name("interactive_reset"))) {
       activation_counts.fill(0);
       last_pressed = -1;
     }

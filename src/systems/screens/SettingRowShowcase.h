@@ -92,7 +92,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     volume(30,"Master Volume",master_volume,502,"master_vol_slider");
     volume(40,"Music Volume",music_volume,554,"music_vol_slider");
     label(5,fmt::format("Music preview: {:.0f}% = master x music; Music off mutes it.",music_enabled?master_volume*music_volume*100:0),32,610,1016,26,18,true);
-    label(6,"Defaults: On / On / Off; English; High; Master 80%; Music 65%. Session-local preview.",32,644,1016,26,17,true);
+    label(6,"Defaults: On / On / Off; English; High; Master 80%; Music 65%.",32,644,1016,26,17,true);
   }
 };
 

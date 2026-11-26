@@ -58,6 +58,8 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     theme.font = {237, 244, 251, 255};
     theme.font_muted = {183, 205, 224, 255};
     theme.focus = {165, 201, 248, 255};
+    const auto quiet_btn = afterhours::colors::mix(theme.surface, theme.background, 0.45f);
+    const auto quiet_border = afterhours::colors::opacity_pct(theme.font, 0.18f);
     theme.corner_radius = 6;
     theme.roundness = 0;
     context.theme = theme;
@@ -201,7 +203,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent()),
                  ComponentConfig{}
                      .with_label("Cancel").with_debug_name("rw_delete_cancel")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(quiet_btn).with_border(quiet_border, s)
                      .with_size(ComponentSize{pixels(180.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         show_delete = false;
@@ -331,7 +333,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent()),
                  ComponentConfig{}
                      .with_label("Decline").with_debug_name("rw_terms_decline")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(quiet_btn).with_border(quiet_border, s)
                      .with_size(ComponentSize{pixels(200.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         status = "Terms declined.";
@@ -438,7 +440,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent()),
                  ComponentConfig{}
                      .with_label("Reject").with_debug_name("rw_cookie_reject")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(quiet_btn).with_border(quiet_border, s)
                      .with_size(ComponentSize{pixels(140.f * s), pixels(40.f * s)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL))) {
