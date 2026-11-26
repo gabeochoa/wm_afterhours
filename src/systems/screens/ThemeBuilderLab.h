@@ -2,6 +2,7 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../devtools/theme_builder/theme_builder_model.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/color_swatch.h>
@@ -11,36 +12,26 @@
 
 // Theme builder lab: token table + live preview + inspector + links.
 // Undo/redo over edits; export/import as a .theme file.
+
+// The token table, link graph, resolved-theme math, export-path
+// resolution and history live in the WM-local plugin model; the
+// screen keeps every UI/rendering/popover behavior byte-for-byte.
+namespace theme_builder_model = wm::devtools::theme_builder;
+
 struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
-  struct TokenRow {
-    Theme::Usage usage;
-    const char *name;
-    const char *debug;
-    const char *category;
-  };
-  // Order is the table order; the category header prints on change.
-  static constexpr TokenRow kTokens[] = {
-      {Theme::Usage::Font, "Text", "text", "Text"},
-      {Theme::Usage::DarkFont, "Dark font", "darkfont", "Text"},
-      {Theme::Usage::FontMuted, "Muted text", "muted", "Text"},
-      {Theme::Usage::Background, "Background", "background", "Surfaces"},
-      {Theme::Usage::Surface, "Surface", "surface", "Surfaces"},
-      {Theme::Usage::Primary, "Primary", "primary", "Brand"},
-      {Theme::Usage::Secondary, "Secondary", "secondary", "Brand"},
-      {Theme::Usage::Accent, "Accent", "accent", "Brand"},
-      {Theme::Usage::Error, "Error", "error", "Status"},
-      {Theme::Usage::Success, "Success", "success", "Status"},
-      {Theme::Usage::Warning, "Warning", "warning", "Status"},
-      {Theme::Usage::Focus, "Focus ring", "focus", "Focus"},
-  };
-  static constexpr int kTokenCount = 12;
+  // Token table lives in the plugin model (theme_builder_model.h);
+  // order is the table order, category header prints on change.
+  using TokenRow = theme_builder_model::TokenRow;
+  static constexpr int kTokenCount = theme_builder_model::kTokenCount;
+  static constexpr const TokenRow (&kTokens)[theme_builder_model::kTokenCount] =
+      theme_builder_model::kTokens;
 
   Theme edited;
   bool open[kTokenCount] = {};
   // Token index this token follows, or nothing for an independent color.
   // The swatch edits the independent color; the resolved color below is
   // what the preview shows, so unlinking restores the token's own color.
-  std::optional<int> link[kTokenCount] = {};
+  theme_builder_model::LinkTable link{};
   // One shared link picker (a second popover panel breaks later clicks):
   // the row whose picker is open, and its anchor rect (stored per frame).
   int link_picker_for = -1;
@@ -61,58 +52,10 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
   bool export_path_set = false;
   std::string file_status = "Export or import a .theme file.";
 
-  // Export/import path: absolute as typed, relative against the save dir.
-  // (The default is a bare filename, so it lands in the save dir.)
-  std::string resolved_export_path() const {
-    const std::filesystem::path p(export_path);
-    if (p.is_absolute())
-      return export_path;
-    const auto dir = afterhours::files::get_save_path();
-    return dir.empty() ? export_path : (dir / p).string();
-  }
-
-  struct ThemeSnapshot {
-    afterhours::Color color[kTokenCount];
-    float radius01;
-    float ring01;
-    std::optional<int> link[kTokenCount];
-  };
-  std::vector<ThemeSnapshot> undo_stack;
-  std::vector<ThemeSnapshot> redo_stack;
-  bool history_gesture_open = false;
-
-  ThemeSnapshot theme_snapshot() {
-    ThemeSnapshot s{};
-    s.radius01 = radius01;
-    s.ring01 = ring01;
-    for (int i = 0; i < kTokenCount; i++) {
-      s.color[i] = edited.color_ref(kTokens[i].usage);
-      s.link[i] = link[i];
-    }
-    return s;
-  }
-  void apply_snapshot(const ThemeSnapshot &s) {
-    for (int i = 0; i < kTokenCount; i++) {
-      edited.color_ref(kTokens[i].usage) = s.color[i];
-      link[i] = s.link[i];
-    }
-    radius01 = s.radius01;
-    ring01 = s.ring01;
-  }
-  static bool snapshots_equal(const ThemeSnapshot &a,
-                              const ThemeSnapshot &b) {
-    if (a.radius01 != b.radius01 || a.ring01 != b.ring01)
-      return false;
-    for (int i = 0; i < kTokenCount; i++) {
-      const afterhours::Color &x = a.color[i];
-      const afterhours::Color &y = b.color[i];
-      if (x.r != y.r || x.g != y.g || x.b != y.b || x.a != y.a)
-        return false;
-      if (a.link[i] != b.link[i])
-        return false;
-    }
-    return true;
-  }
+  // Snapshot frames and the undo/redo history are the model's; the
+  // model owns capture/restore/coalescing (theme_builder_model.h).
+  using ThemeSnapshot = theme_builder_model::Snapshot;
+  theme_builder_model::History history;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &ctx, float) override {
@@ -120,7 +63,8 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
 
-    const ThemeSnapshot frame_start = theme_snapshot();
+    const ThemeSnapshot frame_start = theme_builder_model::capture_snapshot(
+        edited, link, radius01, ring01);
     bool history_suppressed = false;
     if (!export_path_set) {
       export_path_set = true;
@@ -129,21 +73,8 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
       export_path = "theme_builder_export.theme";
     }
 
-    Theme resolved = edited;
-    resolved.panel_corner_radius = radius01 * 24.f;
-    resolved.focus_ring_thickness = ring01 * 6.f;
-    for (int i = 0; i < kTokenCount; i++) {
-      if (link[i]) {
-        int cur = i;
-        bool seen[kTokenCount] = {};
-        while (link[cur] && !seen[cur]) {
-          seen[cur] = true;
-          cur = *link[cur];
-        }
-        resolved.color_ref(kTokens[i].usage) =
-            edited.color_ref(kTokens[cur].usage);
-      }
-    }
+    Theme resolved = theme_builder_model::resolve_theme(edited, link, radius01,
+                                                        ring01);
     ctx.set_theme(resolved);
     ctx.scaling_mode = ScalingMode::Proportional;
 
@@ -193,13 +124,14 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                    .with_font("AtkinsonMock", FontSize::Small)
                    .with_custom_background(swatch_bg)
                    .with_custom_text_color(chrome_text)
-                   .with_disabled(undo_stack.empty())
+                   .with_disabled(!history.can_undo())
                    .with_debug_name("tb_undo"))) {
-      redo_stack.push_back(theme_snapshot());
-      apply_snapshot(undo_stack.back());
-      undo_stack.pop_back();
+      auto current = theme_builder_model::capture_snapshot(
+          edited, link, radius01, ring01);
+      history.undo_to(current);
+      theme_builder_model::restore_snapshot(current, edited, link, radius01,
+                                            ring01);
       history_suppressed = true;
-      history_gesture_open = false;
     }
     if (button(ctx, mk(title_row.ent()),
                ComponentConfig{}
@@ -208,13 +140,14 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                    .with_font("AtkinsonMock", FontSize::Small)
                    .with_custom_background(swatch_bg)
                    .with_custom_text_color(chrome_text)
-                   .with_disabled(redo_stack.empty())
+                   .with_disabled(!history.can_redo())
                    .with_debug_name("tb_redo"))) {
-      undo_stack.push_back(theme_snapshot());
-      apply_snapshot(redo_stack.back());
-      redo_stack.pop_back();
+      auto current = theme_builder_model::capture_snapshot(
+          edited, link, radius01, ring01);
+      history.redo_to(current);
+      theme_builder_model::restore_snapshot(current, edited, link, radius01,
+                                            ring01);
       history_suppressed = true;
-      history_gesture_open = false;
     }
     div(ctx, mk(header.ent()),
         layout(1232, 20)
@@ -240,18 +173,6 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     bool was_link_picker_open = link_picker_open;
     for (int i = 0; i < kTokenCount; i++)
       was_open[i] = open[i];
-    // Linking from -> to cycles if to's chain reaches from.
-    const auto can_link = [&](int from, int to) {
-      bool seen[kTokenCount] = {};
-      int cur = to;
-      while (cur >= 0 && !seen[cur]) {
-        if (cur == from)
-          return false;
-        seen[cur] = true;
-        cur = link[cur].value_or(-1);
-      }
-      return true;
-    };
     const auto token_column = [&](afterhours::Entity &col, int begin,
                                   int end) {
       int child = 0;
@@ -379,7 +300,7 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     if (picker_for >= 0) {
       picker_option_count = link[picker_for] ? 1 : 0;
       for (int j = 0; j < kTokenCount; j++)
-        if (can_link(picker_for, j))
+        if (theme_builder_model::can_link(link, picker_for, j))
           picker_option_count++;
       if (picker_option_count == 0)
         picker_option_count = 1;
@@ -417,7 +338,7 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
         }
       }
       for (int j = 0; j < kTokenCount; j++) {
-        if (!can_link(picker_for, j))
+        if (!theme_builder_model::can_link(link, picker_for, j))
           continue;
         if (button(ctx, mk(body.ent(), option++),
                    ComponentConfig{}
@@ -569,16 +490,15 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(swatch_bg)
                    .with_custom_text_color(chrome_text)
                    .with_debug_name("tb_export"))) {
-      Theme to_save = edited;
-      for (int i = 0; i < kTokenCount; i++)
-        to_save.color_ref(kTokens[i].usage) =
-            resolved.color_ref(kTokens[i].usage);
-      to_save.panel_corner_radius = radius01 * 24.f;
-      to_save.focus_ring_thickness = ring01 * 6.f;
+      // Export flattens links into a plain theme: the same resolved
+      // theme the preview renders.
+      Theme to_save = theme_builder_model::resolve_theme(edited, link,
+                                                         radius01, ring01);
       const std::string name =
           std::filesystem::path(export_path).filename().string();
       file_status =
-          theme_io::save(to_save, resolved_export_path())
+          theme_io::save(to_save, theme_builder_model::resolve_export_path(
+                                  export_path, afterhours::files::get_save_path()))
               ? fmt::format("Exported {}", name)
               : fmt::format("Export failed: {}", name);
     }
@@ -592,14 +512,17 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("tb_import"))) {
       const std::string name =
           std::filesystem::path(export_path).filename().string();
-      if (const auto text = files::read_string(resolved_export_path())) {
+      if (const auto text = files::read_string(
+              theme_builder_model::resolve_export_path(
+                  export_path, afterhours::files::get_save_path()))) {
         Theme incoming = edited;
         const auto result = theme_io::read_into(*text, incoming);
         edited = incoming;
-        radius01 = std::clamp(incoming.panel_corner_radius / 24.f, 0.f, 1.f);
-        ring01 = std::clamp(incoming.focus_ring_thickness / 6.f, 0.f, 1.f);
-        for (int i = 0; i < kTokenCount; i++)
-          link[i].reset();
+        radius01 = theme_builder_model::radius01_for(
+            incoming.panel_corner_radius);
+        ring01 = theme_builder_model::ring01_for(
+            incoming.focus_ring_thickness);
+        link.fill(std::nullopt);
         file_status =
             result.errors == 0
                 ? fmt::format("Imported {}", name)
@@ -835,19 +758,10 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
     }
     // History: edits on consecutive frames are one gesture (a slider
     // drag, a typed hex), so one undo step reverts the whole gesture.
-    if (!history_suppressed) {
-      const ThemeSnapshot frame_end = theme_snapshot();
-      if (!snapshots_equal(frame_start, frame_end)) {
-        if (!history_gesture_open) {
-          undo_stack.push_back(frame_start);
-          if (undo_stack.size() > 100)
-            undo_stack.erase(undo_stack.begin());
-          redo_stack.clear();
-          history_gesture_open = true;
-        }
-      } else {
-        history_gesture_open = false;
-      }
+    {
+      const ThemeSnapshot frame_end = theme_builder_model::capture_snapshot(
+          edited, link, radius01, ring01);
+      history.record_edit(frame_start, frame_end, history_suppressed);
     }
   }
 };
