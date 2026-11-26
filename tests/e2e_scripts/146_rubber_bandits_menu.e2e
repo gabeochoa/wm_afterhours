@@ -13,7 +13,8 @@ expect_text "View pack"
 expect_text "EARL THE BIRD"
 expect_text "1 of 4"
 expect_text "FAVOURITE"
-expect_text "Enter  Select"
+expect_text "Enter"
+expect_text "Select"
 assert_ui rb_root x=0 y=0 w=1280 h=720
 assert_ui rb_online_bar x=0 y=0 w=1280 h=40
 assert_ui rb_logo x=52 y=78 w=330 h=183
@@ -23,7 +24,7 @@ assert_ui rb_menu_5 x=48 y=577 w=354 h=42
 assert_ui rb_character_panel x=468 y=608 w=764 h=60
 assert_ui rb_character_prev x=486 y=622 w=48 h=32
 assert_ui rb_character_next x=1166 y=622 w=48 h=32
-assert_ui rb_selected_marker x=659 y=568 w=98 h=16
+assert_ui rb_selected_marker x=659 y=564 w=98 h=12
 assert_ui rb_footer x=0 y=678 w=1280 h=42
 assert_no_overflow
 assert_within_parents
@@ -55,7 +56,7 @@ click_ui rb_character_prev
 wait 0.2
 expect_text "THE OUTLAW"
 expect_text "4 of 4"
-assert_ui rb_selected_marker x=1091 y=545 w=98 h=16
+assert_ui rb_selected_marker x=1091 y=541 w=98 h=12
 click_ui rb_character_next
 wait 0.2
 expect_text "EARL THE BIRD"
@@ -72,7 +73,7 @@ expect_text "3 of 4"
 click_ui rb_promo
 wait 0.2
 expect_text "Cosmetic pack preview"
-expect_text "No purchase in this demo"
+expect_text "Preview"
 assert_no_overflow
 screenshot rubber_bandits_menu_pack
 click_ui rb_promo

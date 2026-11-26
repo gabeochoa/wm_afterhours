@@ -55,11 +55,16 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     stroke(20,123.2f,386,273.6f,3,colors[2],"separator_partial");
     label(21,"Labeled specimens",32,412,456,32,25);
     stroke(22,32,468,198,3,line);
-    label(23,"OR",235,454,50,28,19);
+    div(context,mk(root.ent(),23),box(230,454,60,28).with_label("OR")
+        .with_font("AtkinsonMockBold",pixels(19*s)).with_custom_text_color(ink)
+        .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events());
     stroke(24,290,468,198,3,line);
     label(25,"Fixed 60 px label gap",32,486,456,26,17,true);
     stroke(26,32,540,158,3,colors[0],"settings_line1");
-    label(27,"Settings",205,526,110,30,21,false,"settings_labeled");
+    div(context,mk(root.ent(),27),box(190,526,140,30).with_label("Settings")
+        .with_font("AtkinsonMockBold",pixels(21*s)).with_custom_text_color(ink)
+        .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None)
+        .with_ignore_pointer_events().with_debug_name("settings_labeled"));
     stroke(28,330,540,158,3,colors[0]);
     label(29,"Long label / fixed 140 px gap / blue accent",32,568,456,26,17,true);
     label(30,"Mixed separator examples",592,106,456,34,25);
@@ -69,8 +74,10 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     const std::array<std::string,4> names{"Home","Settings","Profile","Help"};
     const std::array<afterhours::Color,3> nav_colors{muted,colors[1],colors[3]};
     for(int i=0;i<4;++i) {
-      label(40+i,names[i],604+static_cast<float>(i)*110,204,86,30,19);
-      if(i<3) stroke(50+i,697+static_cast<float>(i)*110,200,3,40,nav_colors[i],"vsep_"+std::to_string(i));
+      div(context,mk(root.ent(),40+i),box(592+static_cast<float>(i)*114,204,110,30).with_label(names[i])
+          .with_font("AtkinsonMock",pixels(19*s)).with_custom_text_color(ink)
+          .with_alignment(TextAlignment::Center).with_background(Theme::Usage::None).with_ignore_pointer_events());
+      if(i<3) stroke(50+i,704+static_cast<float>(i)*114,200,3,40,nav_colors[i],"vsep_"+std::to_string(i));
     }
     label(54,"Slate / Green / Orange",592,258,456,26,17,true);
     label(55,"Color gallery",592,292,456,32,25);

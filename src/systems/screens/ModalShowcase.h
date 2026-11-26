@@ -126,23 +126,23 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     row(20, 264, 136, "row2_helpers");
     text(21, "Standard\ndialog types", 68, 280, 176, 70, 23);
-    if (launch(22, "Info Dialog", 264, 280, 240, "btn_info")) {
+    if (launch(22, "Info Dialog", 264, 280, 290, "btn_info")) {
       show_info_modal = true;
       info_status = "Open";
     }
-    if (launch(23, "Confirmation", 532, 280, 280, "btn_confirm")) {
+    if (launch(23, "Confirmation", 578, 280, 290, "btn_confirm")) {
       show_confirm_modal = true;
       confirm_opened = true;
       last_confirm_result = afterhours::DialogResult::Pending;
     }
-    if (launch(24, "Notice", 840, 280, 360, "btn_notice")) {
+    if (launch(24, "Notice", 892, 280, 290, "btn_notice")) {
       show_fyi_modal = true;
       notice_opened = true;
       last_fyi_result = afterhours::DialogResult::Pending;
     }
-    text(25, "Acknowledge information", 264, 331, 240, 26, 18);
-    text(26, "Proceed or cancel an action", 532, 331, 280, 26, 18);
-    text(27, "Choose now, later or more detail", 840, 331, 360, 26, 18);
+    text(25, "Acknowledge information", 264, 331, 290, 26, 18);
+    text(26, "Proceed or cancel an action", 578, 331, 290, 26, 18);
+    text(27, "Choose now, later or more detail", 892, 331, 290, 26, 18);
 
     // =========================================================================
     // Row 3: Modal Stacking
@@ -351,8 +351,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (last_fyi_result == afterhours::DialogResult::Confirmed && !show_fyi_modal) notice_name = "Install Now";
     if (last_fyi_result == afterhours::DialogResult::Cancelled && !show_fyi_modal) notice_name = "Later";
     text(60, "Info: " + info_status, 264, 364, 240, 27, 18, "modals_info_result");
-    text(61, "Confirmation: " + confirm_name, 532, 364, 280, 27, 18, "modals_confirm_result");
-    text(62, "Notice: " + notice_name, 840, 364, 360, 27, 18, "modals_notice_result");
+    text(61, "Confirmation: " + confirm_name, 578, 364, 290, 27, 18, "modals_confirm_result");
+    text(62, "Notice: " + notice_name, 892, 364, 290, 27, 18, "modals_notice_result");
     text(63, "Confirmed: " + std::to_string(confirm_count), 48, 663, 240, 28, 18, "modals_confirm_count");
     text(64, "Cancelled: " + std::to_string(cancel_count), 308, 663, 240, 28, 18, "modals_cancel_count");
     text(65, "Form: " + form_status, 568, 663, 440, 28, 18, "modals_form_result");

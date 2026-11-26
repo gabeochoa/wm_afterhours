@@ -49,7 +49,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(946, 42, 178, 40)
         .with_label(show_guides ? "Bounds: on" : "Bounds: off").with_font("Archivo", pixels(22 * scale))
         .with_custom_text_color(white).with_custom_background({46, 68, 100, 255})
-        .with_corner_radius(7 * scale).with_debug_name("fw_guides"))) show_guides = !show_guides;
+        .with_corner_radius(4 * scale).with_debug_name("fw_guides"))) show_guides = !show_guides;
     label(5, "Requested weight", 36, 138, 158, 30, 20, muted);
     label(6, "Rendered weight", 218, 138, 156, 30, 20, muted);
     label(7, "Rendered sample / 22px", 384, 138, 440, 30, 20, muted);
@@ -80,7 +80,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
       const bool fallback = row.number != 400 && face == "Archivo";
       div(context, mk(root.ent(), 20 + static_cast<int>(i)), box(16, y, 822, 58)
           .with_custom_background(i % 2 == 0 ? afterhours::Color{28, 38, 54, 255} : afterhours::Color{23, 32, 47, 255})
-          .with_corner_radius(5 * scale));
+          .with_corner_radius(8 * scale));
       label(30 + static_cast<int>(i), std::to_string(row.number) + " " + row.name,
             36, y + 5, 158, 28, 22, white, "fw_name_" + std::to_string(row.number));
       label(40 + static_cast<int>(i), fallback ? "400 / fallback" : std::to_string(row.number),
@@ -113,7 +113,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_line_ex({r.x, r.y + r.height}, {r.x + r.width, r.y + r.height}, scale, accent);
         }));
     div(context, mk(root.ent()), box(858, 138, 286, 356)
-        .with_custom_background({29, 42, 61, 255}).with_corner_radius(10 * scale).with_debug_name("fw_closeup"));
+        .with_custom_background({29, 42, 61, 255}).with_corner_radius(12 * scale).with_debug_name("fw_closeup"));
     label(73, "500 / 600 close-up", 874, 151, 254, 32, 24, white);
     for (int i = 0; i < 2; ++i) {
       const auto weight = i == 0 ? afterhours::colors::FontWeight::Medium : afterhours::colors::FontWeight::SemiBold;
@@ -130,7 +130,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
     // The case that motivated the request: a heavier run has to sit next to a
     // regular one on the same row and still line up.
     div(context, mk(root.ent()), box(0, 522, 1144, 150)
-        .with_custom_background({27, 38, 55, 255}).with_corner_radius(10 * scale));
+        .with_custom_background({27, 38, 55, 255}).with_corner_radius(12 * scale));
     label(81, "Mixed weights on one baseline", 20, 536, 1104, 34, 26, white);
     auto mixed = div(context, mk(root.ent()), box(20, 578, 1104, 32)
         .with_flex_direction(FlexDirection::Row).with_transparent_bg().with_debug_name("fw_mixed"));

@@ -155,18 +155,18 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             }).with_ignore_pointer_events());
       auto specimen = box(left + base_x + (i == 0 ? value : 0.f), 262, 120, 120)
           .with_custom_background(i == 1 ? afterhours::colors::opacity_pct(colors[i], value) : colors[i])
-          .with_corner_radius(9 * s).with_ignore_pointer_events().with_debug_name(std::string(names[i]) + "_box");
+          .with_corner_radius(8 * s).with_ignore_pointer_events().with_debug_name(std::string(names[i]) + "_box");
       if (i == 2) specimen.with_scale(value);
       div(context, mk(root.ent(), id++), specimen);
       const std::string metric = i == 0 ? fmt::format("x offset: {:.0f}px", value)
                                 : i == 1 ? fmt::format("opacity: {:.0f}%", value * 100)
                                          : fmt::format("scale: {:.0f}%", value * 100);
       div(context, mk(root.ent(), id++), box(left + x + 20, 397, 328, 32)
-          .with_custom_background({23, 29, 40, 255}).with_corner_radius(6 * s));
+          .with_custom_background({23, 29, 40, 255}).with_corner_radius(8 * s));
       label(metric, x + 32, 397, 304, 32, 27, text_light, std::string(names[i]) + "_metric", true);
       if (button(context, mk(root.ent(), id++), box(left + x + 20, 439, 144, 35)
           .with_label("Replay " + std::string(names[i])).with_font("AtkinsonMock", pixels(20 * s))
-          .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light).with_corner_radius(7 * s)
+          .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light).with_corner_radius(4 * s)
           .with_debug_name("replay_" + std::string(names[i])))) start_animations(keys[i]);
       label(active ? "Running" : "Complete", x + 184, 442, 164, 28, 19, muted,
             std::string(names[i]) + "_phase");
@@ -199,7 +199,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== Restart Button ==========
     if (button(context, mk(root.ent()), box(left, 636, 240, 44)
         .with_label("Replay all animations").with_font("AtkinsonMock", pixels(23 * s))
-        .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light).with_corner_radius(8 * s)
+        .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light).with_corner_radius(4 * s)
         .with_debug_name("restart_btn"))) {
       animations_started = false;
       start_animations();

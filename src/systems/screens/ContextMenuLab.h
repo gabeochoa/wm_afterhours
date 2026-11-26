@@ -150,8 +150,22 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       if (mid_open && outside(mid_at)) mid_open = false;
       if (corner_open && outside(corner_at)) corner_open = false;
     }
-    const auto white = afterhours::Color{240, 245, 253, 255};
-    const auto muted = afterhours::Color{181, 195, 216, 255};
+    // Surface/text tokens derive from ctx.theme. File-state chips are semantic
+    // (staged/modified/untracked/clean) so they stay a 4-token palette.
+    const auto white = theme.font;
+    const auto muted = theme.font_muted;
+    const auto panel = afterhours::colors::mix(theme.surface, theme.background, 0.5f);
+    const auto edge = afterhours::colors::opacity_pct(theme.font, 0.25f);
+    const auto control_bg = afterhours::colors::lighten(theme.primary, 0.15f);
+    const auto selected_row = afterhours::colors::lighten(theme.primary, 0.2f);
+    const auto idle_row = theme.surface;
+    const auto diagram_bg = afterhours::colors::darken(theme.surface, 0.85f);
+    const auto anchor = afterhours::Color{255, 210, 126, 255};
+    const auto state_staged = afterhours::Color{68, 99, 74, 255};
+    const auto state_modified = afterhours::Color{91, 75, 45, 255};
+    const auto state_untracked = afterhours::Color{62, 77, 112, 255};
+    const auto state_clean = afterhours::Color{58, 68, 82, 255};
+    const auto menu_hover = afterhours::colors::lighten(theme.surface, 0.1f);
     const auto box = [s, top](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, (y + top) * s).with_corner_radius(0)
@@ -163,7 +177,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     }
     auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_custom_background({18, 23, 33, 255}).with_corner_radius(0).with_debug_name("cm_root"));
+        .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("cm_root"));
     int id = 0;
     const auto label = [&](const std::string &value, float x, float y, float w, float h,
                            float size, afterhours::Color color, const std::string &name = "", bool emphasis = false) {
@@ -174,11 +188,11 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     };
     const auto control = [&](float x, float y, float w, float h, const std::string &value, const std::string &name) {
       return box(left + x, y, w, h).with_label(value).with_font("AtkinsonMock", pixels(22 * s))
-          .with_custom_background({49, 67, 94, 255}).with_custom_text_color(white)
-          .with_corner_radius(7 * s).with_debug_name(name);
+          .with_custom_background(control_bg).with_custom_text_color(white)
+          .with_corner_radius(8 * s).with_debug_name(name);
     };
     div(context, mk(root.ent()), box(left, 24, 1144, 90)
-        .with_custom_background({34, 42, 57, 255}).with_corner_radius(12 * s));
+        .with_custom_background(theme.surface).with_corner_radius(12 * s));
     label("Context menus", 20, 34, 1104, 42, 34, white, "cm_title");
     label("Right-click any file row. The menu opens at the pointer and adapts to the file state.",
           20, 79, 1104, 27, 21, muted);
@@ -186,16 +200,16 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     // A file list, because right-clicking a row is the real shape of this
     // feature and a screen with one lone button showed none of it.
     div(context, mk(root.ent()), box(left, 132, 604, 390)
-        .with_custom_background({26, 33, 46, 255}).with_corner_radius(12 * s).with_debug_name("cm_filepanel"));
+        .with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("cm_filepanel"));
     label("File", 30, 150, 390, 30, 23, white);
     label("State", 448, 150, 126, 30, 23, white);
     for (size_t f = 0; f < files.size(); ++f) {
       const float y = 194 + static_cast<float>(f) * 50;
       const bool target = target_file == f;
       auto config = box(left + 16, y, 572, 44)
-          .with_custom_background(target ? afterhours::Color{47, 66, 94, 255} : afterhours::Color{33, 41, 56, 255})
+          .with_custom_background(target ? selected_row : idle_row)
           .with_corner_radius(4 * s).with_debug_name(fmt::format("cm_file_{}", f));
-      if (target) config.with_border({151, 182, 224, 255}, s);
+      if (target) config.with_border(theme.focus, s);
       auto row = button(context, mk(root.ent(), id++), config);
       if (context.is_right_click(row.ent().id)) {
         target_file = f;
@@ -207,12 +221,12 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
       }
       label(files[f], 30, y + 5, 390, 34, 18, white, fmt::format("cm_filename_{}", f), true);
       const auto state = file_state(f);
-      const auto state_color = state == "Staged" ? afterhours::Color{68, 99, 74, 255}
-                             : state == "Modified" ? afterhours::Color{91, 75, 45, 255}
-                             : state == "Untracked" ? afterhours::Color{62, 77, 112, 255}
-                                                     : afterhours::Color{58, 68, 82, 255};
+      const auto state_color = state == "Staged" ? state_staged
+                             : state == "Modified" ? state_modified
+                             : state == "Untracked" ? state_untracked
+                                                     : state_clean;
       div(context, mk(root.ent(), id++), box(left + 448, y + 6, 126, 32)
-          .with_custom_background(state_color).with_corner_radius(6 * s).with_ignore_pointer_events());
+          .with_custom_background(state_color).with_corner_radius(8 * s).with_ignore_pointer_events());
       label(state, 454, y + 8, 114, 28, 18, white, fmt::format("cm_state_{}", f));
     }
     label("Discard is disabled: this fixture never deletes files.", 20, 493, 568, 24, 18, muted, "cm_discard_reason");
@@ -228,23 +242,23 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     label("Right-click or activate; uses the selected file.", 20, 601, 584, 25, 18, muted);
 
     div(context, mk(root.ent()), box(left + 624, 132, 520, 390)
-        .with_custom_background({26, 33, 46, 255}).with_corner_radius(12 * s).with_debug_name("cm_notes"));
+        .with_custom_background(panel).with_corner_radius(12 * s).with_debug_name("cm_notes"));
     label("Point anchoring", 644, 148, 480, 32, 27, white);
     label("The click position is the anchor.", 644, 191, 480, 27, 21, muted);
     label("The menu prefers below that point.", 644, 222, 480, 27, 21, muted);
     label("Near an edge, it flips or clamps to fit.", 644, 253, 480, 27, 21, muted);
     for (int side = 0; side < 2; ++side) {
       div(context, mk(root.ent(), id++), box(left + 648 + side * 244, 302, 226, 120)
-          .with_custom_background({20, 26, 37, 255}).with_border({79, 95, 119, 255}, s)
-          .with_ignore_pointer_events().with_on_draw_fg([side, s](RectangleType r) {
+          .with_custom_background(diagram_bg).with_border(edge, s)
+          .with_ignore_pointer_events().with_on_draw_fg([side, s, edge, muted, anchor](RectangleType r) {
             const float anchor_y = r.y + (side == 0 ? 22.f : 100.f) * s;
             const float anchor_x = r.x + 30 * s;
-            afterhours::draw_rectangle({anchor_x, anchor_y + (side == 0 ? 7.f : -77.f) * s, 140 * s, 70 * s}, {67, 87, 119, 255});
+            afterhours::draw_rectangle({anchor_x, anchor_y + (side == 0 ? 7.f : -77.f) * s, 140 * s, 70 * s}, edge);
             for (int row = 0; row < 3; ++row)
               afterhours::draw_rectangle({anchor_x + 12 * s, anchor_y + (side == 0 ? 22.f : -62.f) * s + row * 18 * s,
-                                         114 * s, 2 * s}, {160, 180, 208, 255});
-            afterhours::draw_line_ex({anchor_x - 8 * s, anchor_y}, {anchor_x + 8 * s, anchor_y}, 2 * s, {255, 206, 113, 255});
-            afterhours::draw_line_ex({anchor_x, anchor_y - 8 * s}, {anchor_x, anchor_y + 8 * s}, 2 * s, {255, 206, 113, 255});
+                                         114 * s, 2 * s}, muted);
+            afterhours::draw_line_ex({anchor_x - 8 * s, anchor_y}, {anchor_x + 8 * s, anchor_y}, 2 * s, anchor);
+            afterhours::draw_line_ex({anchor_x, anchor_y - 8 * s}, {anchor_x, anchor_y + 8 * s}, 2 * s, anchor);
           }));
       label(side == 0 ? "Room below" : "Flipped above", 648 + side * 244, 428, 226, 27, 20, muted);
     }
@@ -288,10 +302,10 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           20, 679, 730, 25, 18, muted, "cm_target_status");
 
     const auto menu_config = ComponentConfig{}.with_size({pixels(340 * s), pixels(44 * s)})
-        .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color({255, 255, 255, 255})
-        .with_custom_background(theme.surface).with_custom_hover_bg({56, 73, 98, 255})
+        .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(theme.font)
+        .with_custom_background(theme.surface).with_custom_hover_bg(menu_hover)
         .with_alignment(TextAlignment::Left)
-        .with_border({83, 96, 115, 255}, 2 * s).with_render_layer(20);
+        .with_border(edge, 2 * s).with_render_layer(20);
     const auto items = file_items();
     const auto render_menu = [&](Vector2Type at, bool &open, bool reopened, const std::string &name) {
       auto pair = mk(root.ent(), id++);
@@ -311,30 +325,8 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           auto &text = row.get<HasLabel>();
           text.text_x_offset = 12 * s;
           if (!text.is_disabled) continue;
-          text.set_explicit_text_color({165, 177, 193, 255});
+          text.set_explicit_text_color(theme.font_muted);
           text.is_disabled = false;
-          row.removeComponentIfExists<HasClickListener>();
-        }
-        const auto placed = overlay::place({at.x, at.y, 0, 0}, 340 * s, 242 * s,
-                                            context.screen_width, context.screen_height,
-                                            overlay::Placement::Below);
-        const auto holder_rect = holder.get<UIComponent>().rect();
-        float row_y = 2 * s;
-        for (size_t index = 0; index < items.size(); ++index) {
-          const auto &item = items[index];
-          const float height = (item.separator ? 11.f : 44.f) * s;
-          if (item.disabled && !item.separator) {
-            auto shield = button(context, mk(holder, 50000 + static_cast<int>(index)),
-                ComponentConfig{}.with_size({pixels(336 * s), pixels(height)})
-                    .with_absolute_position(placed.x - holder_rect.x + 2 * s,
-                                            placed.y - holder_rect.y + row_y)
-                    .with_custom_background({0, 0, 0, 0}).with_custom_hover_bg({0, 0, 0, 0}).with_corner_radius(0)
-                    .with_skip_tabbing(true).with_render_layer(23));
-            shield.ent().get<HasClickListener>().cb = [&context, list_id](afterhours::Entity &) {
-              context.set_focus(list_id);
-            };
-          }
-          row_y += height;
         }
       }
       return picked;
@@ -376,11 +368,11 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()), ComponentConfig{}.with_size({pixels(20 * s), pixels(20 * s)})
         .with_absolute_position(at.x - 10 * s, at.y - 10 * s).with_background(Theme::Usage::None)
         .with_ignore_pointer_events().with_render_layer(30).with_debug_name("cm_anchor")
-        .with_on_draw_fg([s](RectangleType r) {
+        .with_on_draw_fg([s, anchor](RectangleType r) {
           const float x = r.x + r.width / 2;
           const float y = r.y + r.height / 2;
-          afterhours::draw_line_ex({r.x, y}, {r.x + r.width, y}, s, {255, 210, 126, 255});
-          afterhours::draw_line_ex({x, r.y}, {x, r.y + r.height}, s, {255, 210, 126, 255});
+          afterhours::draw_line_ex({r.x, y}, {r.x + r.width, y}, s, anchor);
+          afterhours::draw_line_ex({x, r.y}, {x, r.y + r.height}, s, anchor);
         }));
   }
 };

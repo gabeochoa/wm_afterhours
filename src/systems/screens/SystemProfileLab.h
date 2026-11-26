@@ -92,7 +92,6 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       node.get<UIComponent>().enable_font("AtkinsonMock", pixels(size * scale), true);
       if (!node.has<HasLabel>()) return;
       auto &text = node.get<HasLabel>();
-      text.font_name = "AtkinsonMock";
       text.explicit_text_color = color;
       text.text_inset = afterhours::Vector2Type{0, 0};
       text.text_x_offset = 8 * scale;
@@ -126,9 +125,12 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     }
     const auto &snapshot = state.snapshot;
     const bool sampled = !snapshot.frame_ms.empty();
-    div(context, mk(root.ent()), box(212, 126, 112, 44).with_custom_background(collector.recording() ? afterhours::Color{28, 85, 64, 255} : field)
-        .with_corner_radius(6 * scale));
-    label(23, 216, 133, 104, 29, collector.recording() ? "Recording" : "Stopped", 18, ink, "spl_state", true);
+    div(context, mk(root.ent()), box(212, 126, 112, 44)
+        .with_custom_background(collector.recording() ? afterhours::Color{24, 74, 56, 255} : panel)
+        .with_border(collector.recording() ? afterhours::Color{56, 152, 112, 255} : afterhours::Color{56, 72, 96, 255}, scale)
+        .with_corner_radius(22 * scale));
+    label(23, 216, 133, 104, 29, collector.recording() ? "Recording" : "Stopped", 17,
+          collector.recording() ? ink : muted, "spl_state", true);
     const std::array<std::string, 7> names{"FPS", "Avg / frame", "p50 / ms", "p95 / ms", "p99 / ms", "Process CPU", "Resident memory"};
     const std::array<std::string, 7> values{
         sampled ? fmt::format("{:.1f}", snapshot.fps) : "No data",
@@ -140,12 +142,16 @@ struct SystemProfileLab : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
         snapshot.resident_mb ? fmt::format("{:.1f} MiB", *snapshot.resident_mb) : "Unavailable"};
     for (size_t i = 0; i < names.size(); ++i) {
       const float x = static_cast<float>(i) * 165;
-      div(context, mk(root.ent(), 30 + static_cast<int>(i)), box(x, 186, 154, 77).with_custom_background(panel).with_corner_radius(7 * scale));
-      label(40 + static_cast<int>(i), x + 7, 190, 140, 28, names[i], 16, muted);
-      label(50 + static_cast<int>(i), x + 7, 222, 140, 32, values[i], 22, ink, "spl_metric_" + std::to_string(i));
+      const bool has_val = i < 5 ? sampled : (i == 5 ? snapshot.cpu_percent.has_value() : snapshot.resident_mb.has_value());
+      div(context, mk(root.ent(), 30 + static_cast<int>(i)), box(x, 186, 154, 77)
+          .with_custom_background(panel).with_border({44, 58, 80, 255}, scale).with_corner_radius(7 * scale));
+      label(40 + static_cast<int>(i), x + 10, 192, 134, 26, names[i], 15, muted);
+      label(50 + static_cast<int>(i), x + 10, 224, 134, 30, values[i], 21, has_val ? ink : muted, "spl_metric_" + std::to_string(i));
     }
     label(60, 0, 316, 790, 28, "Frame time history / ms", 23, ink);
-    label(61, 890, 317, 254, 26, "Frame number / increasing", 18, muted);
+    div(context, mk(root.ent(), 61), box(890, 317, 254, 26)
+        .with_label("Frame number / increasing").with_font("AtkinsonMock", pixels(18 * scale))
+        .with_custom_text_color(muted).with_alignment(TextAlignment::Right).with_ignore_pointer_events());
     size_t table_row = 0;
     for (size_t i = 0; i < view.get<UIComponent>().children.size(); ++i) {
       auto &child = UICollectionHolder::getEntityForIDEnforce(view.get<UIComponent>().children[i]);

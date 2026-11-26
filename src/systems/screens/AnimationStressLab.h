@@ -187,7 +187,7 @@ struct AnimationStressLab : ScreenSystem<UIContext<InputAction>> {
     label("Rows: OKLab colour conversion / char text-unit batching / effect-quad corners / blur "
           "passes / width relayout / ui_motion spring state. Restart replays text units; Reduced "
           "makes every track instant.",
-          48, 520, 1180, 15, true);
+          48, 520, 1180, 14, true);
     label(paused ? "paused" : "running", 48, 552, 200, 15, true, "anim_stress_state");
   }
 };

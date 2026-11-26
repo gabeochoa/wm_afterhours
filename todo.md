@@ -3,6 +3,189 @@
 Remaining library work and external checks follow.
 See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
 
+## Screen polish & duplicate consolidation (intern handoff)
+
+Full per-screen recommendations (all 156 screens × 5 items): [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md).
+Full duplicate / merge analysis (156 → ~115 screens): [DUPLICATE_SCREENS_AUDIT.md](docs/DUPLICATE_SCREENS_AUDIT.md).
+
+**How to verify any screen change locally:**
+- Build: `make output` (or if `pkg-config` is slow, pass explicit `RAYLIB_FLAGS` / `RAYLIB_LIB`).
+- Capture one screen headlessly: `./output/ui_tester.exe --headless-screenshots /tmp/check --screen <flag_name>` and inspect `/tmp/check/<flag_name>_720p.png` (also check stderr for `LOG_WARN`).
+- Run unit + layout tests: `./output/ui_tester.exe --run-all-tests && make test-layout`.
+- Design bar: quiet surface layering over harsh 1px borders; reserve saturated color for active marks/selection (avoid `Theme::Usage::Secondary` bright-green fills on unselected `ocean_navy` controls); strip `"in this demo"` / `"local preview"` meta-disclaimers out of realistic mockups; avoid Unicode arrows (`←→↑↓─`) in `AtkinsonMock` labels (draw vector lines with `raylib::DrawLineEx` instead).
+
+### Completed
+- [x] Batches 1–9 visual polish (42 screens polished, 6 runtime layout/font warnings fixed, Escape closes interactive window unless modal/navigator/dropdown/text input is active).
+- [x] Codebase hygiene: deleted 5 dead legacy headers in `src/systems/` (`ExampleButtons.h`, `ExampleCheckboxes.h`, `ExampleDropdowns.h`, `ExampleSliders.h`, `ExampleComponentShowcase.h`) and stale checked-in `src/screen_includes.gen`.
+
+### P1 — Quick visual & copy wins (great first PRs)
+- [ ] **Strip `"in this demo"` / `"local preview"` meta-disclaimers from realistic mockups & dialogs:** `DialogInfoShowcase.h`, `IslandsTrainsSettings.h`, `RubberBanditsMenu.h`, `SettingRowShowcase.h`, `ShopInterface.h` (Sell tab), `OffsiteBackupApp.h` (Restore detail), `AIMChatDemo.h` (Help/Info copy), `SecureTunnelMockup.h` (Settings modal).
+- [ ] **Audit `ocean_navy` screens using `Theme::Usage::Secondary` (bright `#0C5E2A` green) on non-primary buttons/tabs** (same fix we applied to `Themes.h` and `LanguageDemo.h`): `AutoTextColorShowcase.h`, `ButtonVariantsShowcase.h`, `Buttons.h`, `ModalAdvanced.h`, `RealWorldModals.h`.
+- [ ] **Check remaining `─` box-drawing chars in comments vs labels:** verify `AdaptiveScalingDemo.h`, `ScrollClipBugRepro.h`, and `ToggleSwitchShowcase.h` emit zero missing-glyph warnings in `make run`.
+- [ ] **Fix leaf-label `with_padding` warning candidate:** audit `PseudoLocaleLab.h` (swap `with_padding` on leaf labels to `with_text_inset`).
+- [ ] **Normalize mixed corner radii (`>=4` distinct 1–14px values in one screen)** to a clean 3-step scale (`4px` controls / `8px` inner cards / `12px` outer panels): `AnimationBasicDemo.h`, `AnimationInteractiveDemo.h`, `AnimationLoopingDemo.h`, `Cards.h`, `CheckboxShowcase.h`, `ContextMenuLab.h`, `DecoratorShowcase.h`, `DragDropShowcase.h`, `EmpireTycoon.h`, `EntityIndexLab.h`, `ExampleColors.h`, `ExampleLayout.h`, `FitContentLab.h`, `FontWeightShowcase.h`, `Forms.h`, `GuessWhoLab.h`, `HorizontalDragShowcase.h`, `ImageShowcase.h`, `LanguageDemo.h`, `PaginationShowcase.h`, `ParcelCorpsSettings.h`, `PseudoLocaleLab.h`, `RubberBanditsMenu.h`, `ScrollViewShowcase.h`, `TabContainerShowcase.h`, `TransitionsLab.h`.
+- [ ] **Check & fix any remaining `LOG_WARN` messages across all 156 screens:** run `./output/ui_tester.exe --headless-screenshots /tmp/all_check` (or cycle through screens in `make run`) and fix any unintentional `Layout overflow`, `Container too small for text`, or `sets padding on a label with no children` warnings. (Note: warnings in `validation_throttle_lab`, `touch_targets`, `text_cache_lab`, and `styled_text_lab` are intentional test fixtures.)
+
+### P1.5 — Pixel-verified corners, padding & alignment issues (16 screens × 5 issues)
+Every item below was verified directly in `output/*_720p.png` screenshots.
+
+- [ ] **`casual_settings` (`src/systems/screens/CasualSettings.h`)**
+  1. `"Preferences apply immediately. Kept for this session."` collides with the curved bottom peach rim — add bottom padding or lift it `12px` inside the inner card.
+  2. `VIBRATION` icon stays bright blue while OFF — dim/desaturate OFF icons (matching `AngryBirdsSettings.h`).
+  3. `"NOTIFICATIONS / OFF"` text sits off-center next to the toggle switch — left-align cleanly with symmetric horizontal padding inside the blue pill.
+  4. `Build / Version / Player ID` block sits tight below `LANGUAGE` — increase top gap by `10–12px` and align values on a clean left column.
+  5. Top-right `1000 +` coin pill is barely readable dark-on-dark — raise text contrast or add a lighter border.
+- [ ] **`flight_options` (`src/systems/screens/FlightOptions.h`)**
+  1. `"Standard"` inside the right `CURRENT SELECTION` box is randomly indented `~50px` right relative to `"Control Type"` and `"Saved: Standard"` — align flush left with the card's inner padding.
+  2. Left nav column has no border while the right card has a bright `1px` cyan outline — unify border/elevation strategy across all 3 columns.
+  3. `"Enter activates the focused control."` sits cramped under `[Enter]` with tiny bottom padding inside the footer bar — give the footer symmetrical top/bottom padding.
+  4. `"APPLY & CLOSE"` and `"BACK"` float in the footer without consistent button frames or right-edge alignment.
+  5. `AUDIO / LANGUAGE` section header crowds `GRAPHICS` above it — normalize vertical section-header spacing (`+8px` top margin).
+- [ ] **`islands_trains_settings` (`src/systems/screens/IslandsTrainsSettings.h`)**
+  1. Strip `"Changes apply immediately in this demo."` meta-copy beneath `SETTINGS`.
+  2. `"PLAY TUTORIAL"` has its `▶` triangle pinned far left while the label is centered — place icon `10px` to the left of the centered text.
+  3. Align `"RESET TO DEFAULTS"` and `"All six settings"` symmetrically on the bottom row (right-align `"All six settings"` flush with the controls above).
+  4. Right-align `"Low 0 / 10 High"` flush with the right edge of the `Pan speed` segmented bar.
+  5. Unify border/corner styling across `Keyboard controls >` (borderless) and `PLAY TUTORIAL` (`1px` dark outline).
+- [ ] **`kirby_options` (`src/systems/screens/KirbyOptions.h`)**
+  1. Remove the duplicate overlapping purple `"Options"` banner glued onto the top of the white card (the purple `"Options"` tab directly above already names the active tab).
+  2. Add vertical breathing room between the dark-brown `"Common"` pill and the top border of the `Controller` tile, and align `"Common"` + `"Controls & visibility"` on one clean baseline.
+  3. Match corner radii: `Delete Data` uses `6px` rounded corners while the 5 big category tiles (`Controller`, `Display`, `Accessibility`, `Sound`, `Online`) use sharp `0px` corners.
+  4. Give `"Choose a category to customize your rider."` clean vertical padding above the bottom purple hairline rule.
+  5. Align left notepad `"Profile customization"` header and `"Race day notes"` list lines to a consistent inner padding inset.
+- [ ] **`parcel_corps_settings` (`src/systems/screens/ParcelCorpsSettings.h`)**
+  1. `"MSAA"` sub-label under `Anti-aliasing` touches the bottom row divider — increase row height or shift `Anti-aliasing` up `4px` for balanced vertical padding.
+  2. `"Changes apply locally"` sits tight against the curved bottom phone bezel — add `10px` bottom safe-area inset (and trim meta-copy).
+  3. Unify overlay card corner radii: `"LIVE · EDDCOATES"` uses sharp `0px` corners while `"Grow your delivery network"` and `"9 mph"` use `8px` rounded corners.
+  4. Tighten the huge horizontal gap in `"9       mph"` inside the bottom-right speedometer card.
+  5. Boost contrast on the `"Lv 0"` dark-on-dark-blue badge inside `"Grow your delivery network"`.
+- [ ] **`potion_crafting` (`src/systems/screens/PotionCrafting.h`)**
+  1. `"Marked tiles are used by this recipe."` touches the top border of the `Moonpetal / Fire Root / Sea Salt` cards — add `6–8px` vertical gap.
+  2. Add inner top/bottom padding to the `Sea Salt × 3` and `Star Dust × 1` requirement boxes and strip `"Instant demo"` from `"45 s recipe / Instant demo / Makes 1 potion"`.
+  3. Add subtle breathing room above the bottom hairline rule under `"Four recipes, one workbench."`.
+  4. Round the sharp `0px` `Tab` / `Enter` keycaps slightly (`4px`) and center their labels with consistent horizontal padding.
+  5. Tighten the `Gold 2,450` top-right box width so there isn't an oversized empty gap between `"Gold"` and `"2,450"`.
+- [ ] **`rubber_bandits_menu` (`src/systems/screens/RubberBanditsMenu.h`)**
+  1. Remove or reposition the stray cyan oval outline overlapping Earl the Bird's feet and the dollar bills.
+  2. Center `"EARL THE BIRD / FAVOURITE"` cleanly between `LB` and `RB` and align `"1 of 4"` symmetrically inside the brown bar.
+  3. Vertically center `"thia9uers"` and the `"Online"` pill inside the top cyan header bar.
+  4. Give the top-right `"Supporter pack"` card symmetrical padding around the circular lightning badge on its right edge.
+  5. Style `Enter` and `Esc` in the bottom cyan bar as snug keycap pills for instant scannability.
+- [ ] **`neon_strike` (`src/systems/screens/NeonStrike.h`)**
+  1. Close the oversized horizontal gap in `"35       / 210"` ammo readout.
+  2. Replace meta-copy (`"HUD PREVIEW"`, `"Select equipment / reload the sample magazine"`, `"Sample combat values / keys 1-4 select streaks"`) with clean tactical HUD labels.
+  3. Add bottom/right inner padding inside the bottom-right `GRENADE x2` and `MELEE x1` cards so text doesn't hug the border.
+  4. Offset top compass `W` and `E` markers `4px` outward so they don't touch the circular compass ring.
+  5. Give `EVENT HISTORY` a subtle `1px` border and `4px` corner radius so it separates cleanly from the dark canvas.
+- [ ] **`buttons` (`src/systems/screens/Buttons.h`)**
+  1. **Critical contrast bug:** `"Disabled"` text inside Row 1's disabled button is invisible dark-on-dark — raise disabled label contrast to readable muted foreground.
+  2. Align Row 2 (`Sizes`) captions (`Small / 90 x 45`, `Medium / 120 x 45`, `Large / 180 x 60`) directly to the left edge (or center) of each button above them.
+  3. Add subtle `1px` vertical dividers between `Day | Week | Month | Year` in Row 3 (`View selection`) so the segmented group reads as 4 distinct buttons.
+  4. Restyle `"Guides: off"` at top-right as a quiet secondary bordered button so it doesn't compete with the `Primary` specimen.
+  5. Center the vertical divider in Row 4 (`Custom`) evenly between `Teal` and `Rounded`.
+- [ ] **`button_variants` (`src/systems/screens/ButtonVariantsShowcase.h`)**
+  1. Replace bright `#0C5E2A` green on `"Show bounds"` (`Theme::Usage::Secondary`) with a quiet bordered navy button.
+  2. Soften the bright `1px` white borders on the `Ghost / Disabled` button so it doesn't look *more* prominent than `Ghost / Enabled`.
+  3. Align `"214 x 40px"` column spec cleanly over the button columns instead of above `"Filled"`.
+  4. Vertically align `Small`, `Medium`, `Large`, and `Large outline` in the `Sizes` row on a shared centerline with even bottom padding above their captions.
+  5. Add `6–8px` extra bottom padding inside the `Neon Dark`, `Cozy Kraft`, and `Sage` theme preview cards below the hex strings.
+- [ ] **`dropdowns` (`src/systems/screens/DropdownShowcase.h`)**
+  1. Add bottom padding inside `Gemstone / style comparison` card so `"2px requested border / 12px corners"` doesn't hug the bottom edge.
+  2. Label the two small `"Placement: below, flip, then clamp"` wireframe diagrams (`Below`, `Flipped`) so the schematic is self-explanatory.
+  3. Match left text inset on `"Pet"` (`Pet / built-in label`) with `"Alpha"` and `"January"` in neighboring cards.
+  4. Right-align `[+]` in `Preset / custom markers` (`"Option A"` left, `"[+]"` right) to match the chevron alignment of all other dropdowns.
+  5. Soften the `Disabled example` fill from near-black (`#0D1117`) to a muted surface with a subtle border so it matches the dark-card depth language.
+- [ ] **`drag_drop` (`src/systems/screens/DragDropShowcase.h`)**
+  1. Align `Earlier`, `Later`, `<`, `>`, and `To do / In progress / Done` onto one clean horizontal baseline inside the `Move task` bottom bar (fix the staggered staircase).
+  2. Left-align card titles (`Design mockups`, `API endpoints`, `Setup CI`) beside the 6-dot grip to match `SPR-01 / Design` and `Medium priority`.
+  3. Align `"2 of 8 completed"` cleanly under `"Board / Lanes"` or right-aligned under `"Reset board"` in the header.
+  4. Boost contrast on disabled `Up` / `Down` pagination buttons at the bottom of each column.
+  5. Add a matching subtle `1px` border to the `Move task` bottom bar so it matches the 3 column cards above.
+- [ ] **`file_tree` (`src/systems/screens/FileTreeShowcase.h`)**
+  1. Remove `"Switch data source at right"` pointer copy and add a subtle chevron on `"Project sources"`.
+  2. Right-align the `Size` column header flush with the right edge of the file sizes (`19.4 KB`, `704 B`).
+  3. Deduplicate the empty preview state (`"Select a file to read its source"` + `"Select a source file on the left"`) and replace the hardcoded local path `/Users/gabeochoa/p/wm_afterhours` with a relative project root label (`wm_afterhours/`).
+  4. Equalize horizontal gaps between `Home`, `Up`, and `Refresh` toolbar buttons.
+  5. Soften the hollow sharp-cornered `[]` file icons with `2px` rounded corners or a subtle document fold.
+- [ ] **`meters_gauges` (`src/systems/screens/MetersGaugesShowcase.h`)**
+  1. Increase bottom padding inside `Animated Progress` card below `"Pause"` / `"Restart"` to match its top padding.
+  2. Increase bottom padding inside `Circular Gauges` card below `"Color names these fixtures; no live thresholds."`.
+  3. Add bottom viewport breathing room below the footer line (`"Native progress bars + circular progress + slider..."`) and align `0%` / `100%` flush with the slider track ends.
+  4. Format integer slider percentages cleanly (`65%`, `39%`) instead of noisy trailing `.00%`.
+  5. Add subtle `1px` borders to all 5 dark section cards for crisp surface layering.
+- [ ] **`stepper_showcase` (`src/systems/screens/StepperShowcase.h`)**
+  1. Fix the doubled bottom-edge line inside the 5 left steppers (`Resolution`, `Quality`, `Language`, `Difficulty`, `Framerate`) so borders are crisp and uniform.
+  2. Round or taper the square `0px` connector notch on top of the terracotta `Warrior` card so it harmonizes with the card's rounded corners.
+  3. Tighten internal alignment inside the `Warrior` card (align shield icon and title/description neatly without a giant empty left column underneath the shield).
+  4. Increase vertical spacing between `"3 / 4 | Default"` captions and the next stepper row below.
+  5. Add a subtle `1px` border to `"Restore defaults"` at top-right so it reads clearly as a button.
+- [ ] **`toasts` (`src/systems/screens/ToastShowcase.h`)**
+  1. **Semantic color bug:** change `"[+] Success Toast"` from dark purple to semantic emerald green, and `"[!] Warning Toast"` from crimson-magenta to semantic amber (distinct from `"[x] Error Toast"` red).
+  2. Add bottom padding inside `Simple toasts` card so `"Operation completed successfully!"` doesn't touch the bottom card edge.
+  3. Match corner radius (`6px`) on `"<  Bottom center  >"` (currently sharp `0px`) with the buttons on the left, and close the `~70px` empty vertical gap between `"Last notification"` and `"None yet"`.
+  4. Replace bright purple `"Clear toasts"` (`Theme::Usage::Secondary`) at top-right with a quiet bordered secondary button.
+  5. Wire `"Sample deletion"` to a real 1-item undoable toast/counter instead of `"No item is deleted and no undo action is attached."`.
+
+### P2 — Remaining per-screen polish (~114 screens)
+- [ ] **Game & App Mockups:** `CasualSettings.h`, `FlightOptions.h`, `IslandsTrainsSettings.h`, `KirbyOptions.h`, `MarloKart.h`, `MediaLibraryGrid.h`, `NeonStrike.h`, `ParcelCorpsSettings.h`, `PodcastLibrary.h`, `PotionCrafting.h`, `RubberBanditsMenu.h` (see exact 5 items per screen in [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md)).
+- [ ] **Component Galleries:** `Buttons.h`, `ButtonVariantsShowcase.h`, `ConfigGapGallery.h`, `DecorativeFrameShowcase.h`, `DecoratorShowcase.h`, `DefaultTheme.h`, `DialogDangerShowcase.h`, `DialogFyiShowcase.h`, `DialogInfoShowcase.h`, `DialogPromptShowcase.h`, `DisclosureShowcase.h`, `DragDropShowcase.h`, `DropdownShowcase.h`, `ExampleBevelBorders.h`, `ExampleBorders.h`, `ExampleNineSliceBorders.h`, `FileTreeShowcase.h`, `FontWeightShowcase.h`, `ImageShowcase.h`, `MetersGaugesShowcase.h`, `ModalAdvanced.h`, `RealWorldModals.h`, `ScrollViewShowcase.h`, `SettingRowShowcase.h`, `StepperShowcase.h`, `TextInputDemo.h`, `TextInputSizes.h`, `ToastShowcase.h`, `TransparentControlsLab.h`, `WidgetGapGallery.h`.
+- [ ] **Animations & System Demos & Tools:** work through remaining items in [SCREEN_POLISH_AUDIT.md](docs/SCREEN_POLISH_AUDIT.md), prioritizing adding live sliders/toggles + `"Copy config/snippet"` buttons to technical labs (`AnimationBasicDemo.h`, `AnimationDeclarativeDemo.h`, `AnimationLoopingDemo.h`, `ChartLab.h`, `ContextMenuLab.h`, `HoverLab.h`, `PopoverLab.h`, `PseudoLocaleLab.h`, `TextInputLab.h`, `VirtualListLab.h`).
+- [ ] **Tone down heavy raw `Color{}` palettes (>=8 hardcoded colors)** into cohesive surface tokens: `AbsolutePositioningShowcase.h` (18), `AdaptiveScalingDemo.h` (16), `ContextMenuLab.h` (8), `EntityIndexLab.h` (8), `HStackShowcase.h` (8), `HoverLab.h` (11), `ModalAdvanced.h` (16), `PinchZoomLab.h` (10), `PopoverLab.h` (8), `PseudoLocaleLab.h` (16), `ScrollClickBug.h` (10), `SyncScrollLab.h` (10).
+
+### P3 — Duplicate-screen consolidation (156 → ~115 screens)
+See full rationale and screenshot-baseline caveats in [DUPLICATE_SCREENS_AUDIT.md](docs/DUPLICATE_SCREENS_AUDIT.md). Update any `.e2e` test scripts referencing merged screen flags.
+- [ ] **Clean 1-for-1 pair merges:**
+  - `ActiveTabStyles.h` → fold into `TabContainerShowcase.h`
+  - `HorizontalDragShowcase.h` → fold into `DragDropShowcase.h`
+  - `HStackShowcase.h` + `VStackShowcase.h` → single `StackShowcase.h` (axis toggle)
+  - `TextAreaStatesLab.h` → fold into `TextAreaLab.h` (and fold `ComposerLab.h` as a tab)
+  - `ButtonVariantsShowcase.h` → fold into `Buttons.h` (archive `ExampleSimpleButton.h` to tests)
+  - `RotatedControlsShowcase.h` + `RotatedSubtreeShowcase.h` → single `RotationLab.h`
+  - `SelfAlignShowcase.h` + `BaselineAlignShowcase.h` → fold into `ExampleFlexAlignment.h`
+  - `SmallComponentsLab.h` → fold into `SettingRowShowcase.h`
+  - `ExampleColors.h` → fold into `Themes.h` as a swatches tab
+  - `TransparentControlsLab.h` + `AutoTextColorShowcase.h` → single contrast/legibility lab
+  - `ConfigGapGallery.h` + `WidgetGapGallery.h` → single `GapGallery.h`
+  - `CircularProgressShowcase.h` + `MetersGaugesShowcase.h` → single progress/gauges gallery
+- [ ] **Larger cluster consolidations:**
+  - **Animations (14 → ~6):** merge `AnimationBasicDemo` + `AnimationInteractiveDemo` + `AnimationLoopingDemo` + `AnimationSpringDemo` → `AnimationLab`; fold `AnimationDeclarativeDemo` → `TransitionsLab`; fold `CurvedTextStressLab` → `CurvedTextLab`; archive `MotionButtonCheckpoint` + `MotionModalCheckpoint` to tests.
+  - **Dialogs & Modals (8 → 3):** merge `ModalAdvanced` + `RealWorldModals`; optionally unify the 5 `Dialog*Showcase` files into `DialogGallery` once the screenshot harness supports per-mode baselines.
+  - **Text Input (3 → 1):** merge `TextInputDemo` + `TextInputSizes` + `TextInputLab` into tabbed `TextInput`.
+  - **Typography & i18n (14 → ~7):** merge `ExampleTextShadow` + `ExampleTextStroke` + `FontWeightShowcase` + `StyledTextLab`; merge `MultiLineTextLab` + `ExampleTextOverflow`; merge `LanguageDemo` + `PseudoLocaleLab` + `LocalizedInputPrompts`.
+  - **Scroll & Virtual Lists (8 → 3 + fixtures):** merge `ScrollViewShowcase` + `SyncScrollLab` + `ScrollbarStyleLab`; merge `VirtualListLab` + `VirtualListHeightsLab`; move `ScrollClickBug` + `ScrollClipBugRepro` into `LayoutBugRepros.h`.
+  - **Borders & Dividers (7 → 2):** merge `ExampleBorders` + `ExampleBevelBorders` + `ExampleNineSliceBorders` + `DecorativeFrameShowcase` → `BorderLab`; merge `ExampleSeparators` + `DividerShowcase` → `DividerLab`.
+- [ ] **Keep separate (do not merge):** the 10 bespoke game settings mockups (`AngryBirdsSettings`, `CasualSettings`, `DeadSpaceSettings`, `FlightOptions`, `IslandsTrainsSettings`, `KirbyOptions`, `MiniMotorwaysSettings`, `ParcelCorpsSettings`, `PowerWashSettings`, `SportsSettings`) and distinct game/app mockups (`CozyCafe`, `EmpireTycoon`, `FighterMenu`, `MarloKart`, `ShopInterface`, `OffsiteBackupApp`, `SecureTunnelMockup`, `AIMChatDemo`, `MediaLibraryGrid`, `MinesweeperLab`, `GuessWhoLab`).
+
+### P4 — Baselines & CI
+- [ ] Run `make update-baselines` and `make validate-screenshots` after polish & consolidation passes settle.
+- [ ] Run full E2E suite (`make test`) and update any `.e2e` scripts whose screen names or labels changed.
+
+## Pluginization candidates from the last 150 commits (audit only — no moves yet)
+
+Scope: reviewed `origin/main` `2943d9e9` back through `669cf4f9` (150 commits, 2026-09-20 → 2026-11-25) on 2026-11-26, focusing on non-screen `src/` helpers, testing/headless harness code, and reusable patterns embedded in screens. Excluded `.agents/` skill bulk, baseline PNG churn, vendor bumps, and one-off mockup content. **Do not implement these moves from this list alone:** each item is only identified/logged as a candidate gap. Preferred path is local plugin/file in `wm/src/` first (so Gabe can test it in WM), then upstream to an afterhours plugin only if it proves useful beyond WM. Do not edit afterhours for these without separate review/testing. Respect CORRECT C1: do not add new files to `src/ui_workarounds/`; a reusable local plugin with tests is different from a one-off workaround, but primitives that belong upstream should still be filed as afterhours gaps.
+
+- [ ] **Rolling number / odometer state** — evidence: `src/rolling_number.h` (79 lines, `sync`/`settle`/`retarget`/`advance`, reduced-motion aware) + `RollingNumberLab` from `2b39bcf8`. Destination: keep as a local WM plugin/header first; **afterhours gap candidate** for a small `ui/rolling_number` or animation helper (AH has generic animation tracks/springs, but no odometer/count-up state machine found in the plugin inventory). Useful for scores, counters, money, timers.
+- [ ] **Pixel-preserving padded artwork atlas + frame tables** — evidence: `src/artwork_atlas.h`, `src/artwork_frames.h`, atlas commits `f1b9dbf4` and `d0e07d29`. Destination: local WM asset plugin first; **afterhours gap candidate** only if `texture_manager` cannot already express padded atlases + named frame rect metadata for mockup/game artwork. Useful for sprite/icon-heavy screens and games that need deterministic frame tables.
+- [ ] **Headless screenshot + baseline validation harness** — evidence: `src/headless_screenshots.*`, `src/testing/screenshot_validation.*`, per-screen tolerance work in `59d141e8`, baseline workflow in `869b8e33`. Destination: local WM devtools plugin first; **afterhours gap candidates** for multi-resolution capture stability (already noted in gaps), per-screen tolerance config, and a reusable baseline-compare API if `e2e_testing/screenshot_baseline.h` does not cover WM's flow.
+- [ ] **Layout summary + UI-tree intent dump** — evidence: `src/testing/layout_summary.*` (`072b7c79`), `src/testing/ui_tree_dump.h` (`2a365c95`, dumps geometry *and* layout intent for an independent solver). Destination: local WM devtools plugin first; **afterhours gap candidate** for a supported layout-intent dump / named-element bounds API for agent layout QA and external layout-engine comparisons.
+- [ ] **Focus geometry / popup interaction audit** — evidence: `src/testing/focus_audit.*` (`477106ae`) plus focus-ring work in `9b0fb61b`/`586f015f`. Destination: local WM devtools plugin first; **afterhours gap candidate** for repeatable focus-order/geometry audit helpers beyond the existing focus-ring demos/tests.
+- [ ] **Theme builder devtool kit** — evidence: `ThemeBuilderLab` pieces in `cebeaa44`, `4b7db56c`, `a6ac1f5e`, `441468c5` (token table, inspector jump-to-token, token links with cycle prevention, coalesced undo/redo, `.theme` export/import). Destination: local WM devtools plugin/screen kit first; **afterhours gap candidates** only for missing primitives it exposed (non-inheritable gap behaviour, text-inset charged as both-side margin, shared-popover click suppression), not necessarily the whole ThemeBuilder UI upstream.
+- [ ] **Example-gallery shell: registry + navigator + HUD + tree** — evidence: `src/systems/ExampleScreenRegistry.h`, `src/systems/ScreenNavigator.h` (`b6713ce2`), `src/systems/ScreenTree.h` (`0b068a05`), `src/systems/RenderScreenHUD.h`. Destination: local WM showcase plugin first; **afterhours gap candidate** for an optional examples/devtools gallery harness (screen registry, searchable navigator, HUD) if other afterhours consumers build similar labs. Align with open WM PRs #2/#3 instead of duplicating scaffold work.
+- [ ] **Profiler overlay presentation + frame stats snapshot** — evidence: `src/frame_stats.h` (`632870e5`), `src/systems/ProfilerOverlay.h` (`2823ec74`), `SystemProfileLab` curation (`b3916728`). Destination: local WM devtools plugin first; **afterhours gap candidate** only for a curated overlay/snapshot presentation layer if AH `profiling.h` / `ui/profiler.h` / `process_metrics.h` do not already expose the same ready-to-render summary.
+- [ ] **Post-UI blur pass system wrapper** — evidence: `src/systems/ApplyBlurPass.h` (25 lines, `e5692c4f`). Destination: local WM render plugin first; **afterhours gap candidate** for a documented post-UI effect-pass system/bridge order if `effects::BlurPass` still requires each app to hand-wire render order.
+- [ ] **Font registry / codepoint packs / deterministic mock fonts** — evidence: `src/font_config.h` (FontDef single source of truth, Korean/Japanese/inline-prompt codepoint generators, aliases/mock fonts), font-loading refactor `d4dee09b`, headless font use. Destination: local WM plugin first; **afterhours gap candidate** for reusable font-definition registry + codepoint-pack helpers + deterministic screenshot mock-font fixtures if AH font helpers do not cover that layer.
+- [ ] **Theme presets + WM default stamping as a theme pack** — evidence: `src/theme_presets.h` (`8867a8e2`, language font constants/defaults, `THEME_CORNER_RADIUS` rationale) and `src/wm_defaults.h` (`1ee811ca`, explicitly says values proven here are candidates for promotion later). Destination: local WM theme pack; **afterhours gap candidates** only for generic pieces (language-font defaults, px-based radius token guidance), not WM's exact palettes. Coordinate with open WM PR #1 (preset surface tokens/shapes/raw-colour lint) to avoid duplicate token work.
+- [ ] **App-level E2E navigation command pack** — evidence: `src/testing/e2e_integration.h`, `src/testing/e2e_commands.h` (`open_screen`/`next_screen`/`prev_screen`/`goto_screen`/`validate_screen`/resize-with-settings), `88e10926`. Destination: local WM testing plugin first; **afterhours gap candidate** for a generic screen-registry E2E command pack if hanabi/wordproc/floatinghotel adopt the same registry pattern. Do not duplicate AH `e2e_testing/screen_commands.h` without diffing it first.
+- [ ] **Scheduled synthetic input injector audit** — evidence: `src/engine/input_injector.*` (`39e1c010`, scheduled mouse clicks, key holds, synthetic press consumption). Destination: audit against AH `e2e_testing/input_injector.h`, `test_input.h`, and `mcp_server.h` before any plugin call; **gap only for unique scheduled-click/key-hold semantics** not already upstream, otherwise retire the local bridge in favour of AH on a future bump.
+- [ ] **Runtime log-level override shim audit** — evidence: `src/log/log_runtime.h` (`c0d37648`, runtime level for quiet modes). Destination: likely retire locally once the afterhours default-logger work lands/bumps; **gap candidate only if** AH still lacks a runtime minimum log level + `log_once_per` equivalent after re-checking current AH main/open PRs.
+- [ ] **LetterboxLayout duplicate audit** — evidence: `src/systems/LetterboxLayout.h` plus existing todo for its 0×0 divide-by-zero. Destination: do **not** pluginize blindly; first diff against AH `window_manager::content_viewport` / letterboxing docs already cited in gaps. **Gap candidate only if** WM's helper covers a case AH content viewport does not; otherwise migrate WM callers upstream-API-first in a separate change.
+- [ ] **Frozen UI workarounds → upstream primitives** — evidence: `src/ui_workarounds/GradientBackground.h` and `src/ui_workarounds/NotificationBadge.h`, both self-described workarounds with migration notes, frozen by CORRECT C1 (`3da1ea23`). Destination: **afterhours gaps** for a native gradient background primitive and a proper notification/badge primitive; keep local files untouched until an upstream primitive is tested and WM bumps.
+- [ ] **Settings foreign-file refusal policy** — evidence: `src/settings.cpp` refuses foreign/corrupt `settings.json` and avoids launch-directory fallback overwriting it (`f8766588`). Destination: local app policy unless AH settings loaders need a reusable schema/foreign-file detection hook; **gap candidate** for an opt-in settings-file identity/schema guard if other consumers hit the same footgun.
+- [ ] **Motion recipe catalog from TransitionsLab / checkpoints** — evidence: `TransitionsLab.h` was the most-edited screen in the window (25 touches), plus `MotionButtonCheckpoint.h` / `MotionModalCheckpoint.h`. Destination: local WM motion cookbook/examples first; **afterhours gap candidates** only for specific missing primitives/recipes not already covered by AH `ui_motion`, `animation_presets`, `effects`, or `particles`. Do not propose a new motion runtime from the lab.
+- [ ] **File-tree data source / showcase model** — evidence: `FileTreeShowcase.h` repeated polish + tree interactions. Destination: local WM plugin candidate for filesystem-backed tree data (expand/collapse, sizes, preview, icons) on top of AH `ui/tree_view.h`; **afterhours gap candidate** only for a reusable file-tree data-source adapter if `tree_view` consumers keep hand-rolling it.
+- [ ] **Screen scaffold / settings-page kit alignment** — evidence: repeated screen preambles across the last-150 polish passes, but already in flight as open WM PR #3 (`begin_screen`) and PR #4 (`SettingsPage` kit). Destination: do not start a competing extraction; after those land, re-audit whether the scaffold/kit should become a named local WM plugin and whether any generic piece is an **afterhours gap** (e.g. data-driven settings rows beyond vendored `setting_row`).
+- [ ] **Already upstream — do not re-file as new plugins without a diff:** terminal + command picker (AH `terminal/*`, `command_picker/*`), charts (`charts.h`, `ui/line_chart.h`), pseudo-locale (`ui/pseudo_locale.h`), settings (`settings.h`, `settings_json_preserve.h`, `settings_table.h`), E2E core (`e2e_testing/*`), models/house-of-cards/particles/effects. For these, file only narrow missing-adapter gaps found while consuming them in WM.
+
 ## UI element follow-ups from the lab review
 
 - [x] `with_padding` on a label with no children does nothing (it warns); leaf text spacing is `with_text_inset`/`Theme::text_inset`, while padding remains container spacing. Covered by `label_inset_test` and the ranked text-inset item below.

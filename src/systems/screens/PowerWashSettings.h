@@ -36,7 +36,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Target Framerate", {"30", "60", "120", "Unlimited"}, 3},
       {"VSync", {"Off", "On"}, 1},
       {"Anti-Aliasing", {"Off", "2x", "4x", "8x"}, 1},
-      {"Ambient occlusion", {"Off", "2x", "4x"}, 1},
+      {"Ambient Occlusion", {"Off", "2x", "4x"}, 1},
       {"Render Scale", {"100% (native)", "75%", "125%"}, 0},
       {"Model Quality", {"Low", "Medium", "High", "Ultra"}, 2},
       {"Texture Quality", {"Low", "Medium", "High", "Ultra"}, 3},
@@ -458,7 +458,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       help = "Vertical synchronization matches frame presentation to the display refresh cycle.";
       detail = "It can reduce screen tearing. The best choice depends on your display and rendering setup.";
     }
-    if (selected_setting.label == "Ambient occlusion") {
+    if (selected_setting.label == "Ambient Occlusion") {
       help = "SSAO means screen-space ambient occlusion. It adds contact shading where surfaces meet.";
       detail = "Higher settings increase the occlusion sampling level in the mock's options.";
     }
@@ -469,7 +469,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(400, 725, 143, 460, 39, selected_setting.label, 29, white, true, "pw_help_title");
     label(401, 725, 192, 446, 97, help, 25, white);
     label(402, 725, 300, 446, 150, detail, 24, afterhours::Color{215, 231, 253, 255});
-    label(404, 725, 456, 461, 50, "Changes apply immediately in this preview.", 21, white);
+    label(404, 725, 456, 461, 50, "Changes apply immediately.", 21, white);
     label(405, 725, 510, 461, 45, status, 21, muted, false, "pw_status");
     label(403, 861, 555, 337, 21, "FUTURLAB / POWERWASH SIMULATOR", 18, afterhours::Color{143, 172, 205, 255});
 

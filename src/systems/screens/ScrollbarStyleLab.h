@@ -38,7 +38,7 @@ struct ScrollbarStyleLab : ScreenSystem<UIContext<InputAction>> {
     label(1, "Compare color sources and thickness using the same 24 rows.", 16, 56, 900, 28, 20, true);
     const std::array<const char *, 3> presets{"Start", "Middle", "End"};
     for (int i = 0; i < 3; ++i) {
-      if (button(context, mk(root.ent(), 2 + i), box(924 + static_cast<float>(i) * 114, 52, 104, 36)
+      if (button(context, mk(root.ent(), 2 + i), box(932 + static_cast<float>(i) * 114, 52, 104, 36)
           .with_label(presets[static_cast<size_t>(i)]).with_font("AtkinsonMock", pixels(18 * s))
           .with_custom_text_color(ink).with_custom_background({43, 65, 93, 255})
           .with_corner_radius(6 * s).with_debug_name("sbs_preset_" + std::to_string(i))))
@@ -51,7 +51,8 @@ struct ScrollbarStyleLab : ScreenSystem<UIContext<InputAction>> {
       const int id = 20 + i * 20;
       label(id, names[static_cast<size_t>(i)], x, 104, 300, 30, 23);
       auto view = div(context, mk(root.ent(), id + 1), box(x, 144, 300, 340)
-          .with_background(Theme::Usage::Surface).with_overflow(Overflow::Scroll, Axis::Y)
+          .with_background(Theme::Usage::Surface).with_border({48, 62, 84, 255}, s)
+          .with_corner_radius(6 * s).with_overflow(Overflow::Scroll, Axis::Y)
           .with_padding(Padding::all(pixels(6 * s))).with_debug_name("sbs_view_" + std::to_string(i)));
       auto &scroll = view.ent().get<HasScrollView>();
       scroll.show_scrollbar = true;
@@ -70,11 +71,15 @@ struct ScrollbarStyleLab : ScreenSystem<UIContext<InputAction>> {
         scroll.scroll_offset.y = *pending_fraction * range;
         scroll.scroll_target.y = scroll.scroll_offset.y;
       }
-      for (int r = 0; r < 24; ++r)
-        div(context, mk(view.ent(), r), ComponentConfig{}
+      for (int r = 0; r < 24; ++r) {
+        auto row_cfg = ComponentConfig{}
             .with_label(fmt::format("Row {:02d}", r)).with_size({percent(1), pixels(24 * s)})
             .with_font("AtkinsonMock", pixels(14 * s)).with_custom_text_color(ink)
-            .with_background(Theme::Usage::None).with_debug_name(fmt::format("sbs_{}_{}", i, r)));
+            .with_text_inset(6 * s, 0).with_debug_name(fmt::format("sbs_{}_{}", i, r));
+        if (r % 2 == 0) row_cfg.with_custom_background({30, 40, 56, 255});
+        else row_cfg.with_background(Theme::Usage::None);
+        div(context, mk(view.ent(), r), row_cfg);
+      }
       label(id + 2, fmt::format("24 rows / Offset {:.0f}px", scroll.scroll_offset.y), x, 488, 300, 28, 18);
       const float ratio = scroll.viewport_size && scroll.content_size.y > 0
           ? scroll.viewport_size->y / scroll.content_size.y : 0;

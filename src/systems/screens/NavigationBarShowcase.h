@@ -39,14 +39,18 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
                                 (context.screen_height - 636 * s) / 2)
         .with_background(Theme::Usage::None).with_debug_name("navbar_bg"));
     const auto label = [&](int id, const std::string &value, float x, float y,
-                           float w, float h, float size, bool subdued = false) {
+                           float w, float h, float size, bool subdued = false,
+                           TextAlignment align = TextAlignment::Left) {
       return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(value)
           .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(subdued ? muted : ink)
-          .with_background(Theme::Usage::None).with_alignment(TextAlignment::Left)
+          .with_background(Theme::Usage::None).with_alignment(align)
           .with_ignore_pointer_events());
     };
     label(0, "Cycle selectors", 0, 0, 880, 44, 32);
     label(1, "Navigation bar / use the arrows to cycle through each example.", 0, 50, 880, 30, 21, true);
+    div(context, mk(root.ent(), 20), box(28, 92, 824, 492)
+        .with_background(Theme::Usage::Surface).with_border({54, 78, 104, 255}, s)
+        .with_corner_radius(12 * s).with_ignore_pointer_events());
     const auto selector = [&](int id, float y, const std::vector<std::string> &options,
                               size_t &selected, const std::string &name) {
       auto result = navigation_bar(context, mk(root.ent(), id), options, selected,
@@ -63,17 +67,17 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         item.addComponentIfMissing<UIComponentDebug>(name + "_" + std::to_string(i)).set(name + "_" + std::to_string(i));
       }
     };
-    label(2, "Settings category", 60, 112, 600, 30, 24);
-    label(3, fmt::format("{} of {} / Wraps", category_idx + 1, categories.size()), 610, 112, 210, 30, 19, true);
+    label(2, "Settings category", 60, 112, 540, 30, 24);
+    label(3, fmt::format("{} of {} / Wraps", category_idx + 1, categories.size()), 600, 114, 220, 28, 18, true, TextAlignment::Right);
     selector(10, 150, categories, category_idx, "navbar_category");
     label(4, "Selected category: " + categories[category_idx], 60, 212, 760, 30, 20, true);
-    label(5, "Game mode", 60, 274, 600, 30, 24);
-    label(6, fmt::format("{} of {} / Wraps", mode_idx + 1, modes.size()), 610, 274, 210, 30, 19, true);
+    label(5, "Game mode", 60, 274, 540, 30, 24);
+    label(6, fmt::format("{} of {} / Wraps", mode_idx + 1, modes.size()), 600, 276, 220, 28, 18, true, TextAlignment::Right);
     selector(11, 312, modes, mode_idx, "navbar_mode");
     const std::array<const char *, 3> descriptions{"Follow a sequence of story chapters.", "Quick rounds with a score to beat.", "Play together with other players."};
     label(7, descriptions[mode_idx], 60, 374, 760, 30, 20, true);
-    label(8, "Level", 60, 436, 600, 30, 24);
-    label(9, "6 options / Wraps", 610, 436, 210, 30, 19, true);
+    label(8, "Level", 60, 436, 540, 30, 24);
+    label(9, "6 options / Wraps", 600, 438, 220, 28, 18, true, TextAlignment::Right);
     selector(12, 474, levels, level_idx, "navbar_level");
     const std::array<const char *, 6> names{"Harbour approach", "Forest trail", "Cliffside road", "Moonlit valley", "Highland crossing", "Summit finish"};
     label(13, std::string("Sample level: ") + names[level_idx], 60, 536, 760, 30, 20, true);

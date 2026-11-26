@@ -5,6 +5,7 @@
 #include "../../settings.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include <array>
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -22,19 +23,28 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
+    // Surface/text tokens derive from ctx.theme; the 5 demo hues are the point
+    // of this screen, kept as one named palette. Flow blocks use darkened
+    // palette entries so they read as the same family. Radius scale is
+    // 4/8/12 (controls / inner wells / outer sections).
     const auto teal = afterhours::Color{0, 180, 220, 255};
     const auto pink = afterhours::Color{220, 60, 120, 255};
     const auto green = afterhours::Color{50, 210, 130, 255};
     const auto orange = afterhours::Color{250, 140, 40, 255};
     const auto purple = afterhours::Color{160, 100, 255, 255};
-    const auto panel_bg = afterhours::Color{20, 26, 40, 255};
+    const auto panel_bg = theme.surface;
     const float sw = static_cast<float>(Settings::get().get_screen_width());
     const float sh = static_cast<float>(Settings::get().get_screen_height());
     const float scale = sh / 720.f;
     const float well_width = sw - 64.f * scale;
-    const auto ink = afterhours::Color{220, 230, 243, 255};
-    const auto muted = afterhours::Color{157, 178, 202, 255};
-    const auto edge = afterhours::Color{74, 95, 120, 255};
+    const auto ink = theme.font;
+    const auto muted = theme.font_muted;
+    const auto edge = afterhours::colors::opacity_pct(theme.font, 0.25f);
+    const auto well_bg = afterhours::colors::mix(theme.surface, theme.background, 0.5f);
+    const auto on_demo = theme.darkfont;
+    const std::array<afterhours::Color, 3> flow{
+        afterhours::colors::darken(teal, 0.55f), afterhours::colors::darken(green, 0.55f),
+        afterhours::colors::darken(pink, 0.55f)};
     auto text = [&](afterhours::Entity &parent, int id,
                     const std::string &label, float height,
                     const std::string &name, Size width = percent(1.f)) {
@@ -129,9 +139,9 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(section1.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(66.f * scale)})
-                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_custom_background(well_bg)
                 .with_border(edge, 1.f * scale)
-                .with_corner_radius(6.f * scale)
+                .with_corner_radius(8.f * scale)
                 .with_debug_name("s1_container"));
 
     // Absolute box positioned via translate
@@ -215,9 +225,9 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(section2.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(corner_w), pixels(corner_h)})
-                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_custom_background(well_bg)
                 .with_border(edge, 1.f * scale)
-                .with_corner_radius(6.f * scale)
+                .with_corner_radius(8.f * scale)
                 .with_debug_name("corner_area"));
 
     // Top-left
@@ -306,20 +316,16 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(section3.ent()),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(60.f * scale)})
-            .with_custom_background(afterhours::Color{30, 36, 50, 255})
+            .with_custom_background(well_bg)
             .with_border(edge, 1.f * scale)
-            .with_corner_radius(6.f * scale)
+            .with_corner_radius(8.f * scale)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("mixed_container"));
 
     // Three flow children
     const char *flow_labels[] = {"Flow A", "Flow B", "Flow C"};
-    afterhours::Color flow_colors[] = {
-        afterhours::Color{60, 80, 120, 255},
-        afterhours::Color{60, 100, 80, 255},
-        afterhours::Color{100, 60, 80, 255},
-    };
+    const auto &flow_colors = flow;
     for (int i = 0; i < 3; i++) {
       auto block =
           div(context, mk(mixed_container.ent(), i),
@@ -382,9 +388,9 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(section4.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(60.f * scale)})
-                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_custom_background(well_bg)
                 .with_border(edge, 1.f * scale)
-                .with_corner_radius(6.f * scale)
+                .with_corner_radius(8.f * scale)
                 .with_debug_name("s4_container"));
 
     // A box sized as 30% of screen width, 8% of screen height
@@ -404,7 +410,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("30% x 8% of screen")
             .with_size({percent(1.f), percent(1.f)})
             .with_font("AtkinsonMock", pixels(22.f * scale))
-            .with_custom_text_color(afterhours::Color{10, 20, 30, 255}));
+            .with_custom_text_color(on_demo));
 
     // Another box at a different position
     auto percentage_1 =
@@ -423,7 +429,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("20% x 8% of screen")
             .with_size({percent(1.f), percent(1.f)})
             .with_font("AtkinsonMock", pixels(22.f * scale))
-            .with_custom_text_color(afterhours::Color{10, 20, 30, 255}));
+            .with_custom_text_color(on_demo));
     auto percentage_ruler =
         hstack(context, mk(section4.ent()),
                ComponentConfig{}

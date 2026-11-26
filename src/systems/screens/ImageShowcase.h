@@ -76,11 +76,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(894, 42, 230, 42)
         .with_label(show_bounds ? "Hide image bounds" : "Show image bounds")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
-        .with_custom_background({49, 71, 100, 255}).with_corner_radius(7 * scale)
+        .with_custom_background({49, 71, 100, 255}).with_corner_radius(4 * scale)
         .with_debug_name("image_bounds"))) show_bounds = !show_bounds;
     const auto row = [&](int id, float y, float height, const std::string &name) {
       div(context, mk(root.ent(), id), box(0, y, 1144, height)
-          .with_custom_background({25, 34, 49, 255}).with_corner_radius(10 * scale).with_debug_name(name));
+          .with_custom_background({25, 34, 49, 255}).with_corner_radius(12 * scale).with_debug_name(name));
     };
     row(4, 140, 166, "row1_sprites");
     row(5, 320, 136, "row2_buttons");
@@ -95,7 +95,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       const auto &specimen = specimens[i];
       const float x = 196 + static_cast<float>(i) * 124;
       div(context, mk(root.ent(), 20 + static_cast<int>(i)), box(x, 151, 104, 94)
-          .with_custom_background({35, 48, 66, 255}).with_corner_radius(6 * scale));
+          .with_custom_background({35, 48, 66, 255}).with_corner_radius(8 * scale));
       auto config = box(x + 12, 158, 80, 80).with_ignore_pointer_events()
           .with_debug_name("sprite_icon_" + std::to_string(i + 1));
       if (tint_images) config.with_image_tint(tints[i]);
@@ -124,7 +124,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       const auto &specimen = specimens[static_cast<size_t>(specimen_index)];
       const float x = 196 + static_cast<float>(specimen_index) * 124;
       auto config = box(x + 20, 333, 64, 64)
-          .with_background(button_usage[i]).with_corner_radius(8 * scale)
+          .with_background(button_usage[i]).with_corner_radius(4 * scale)
           .with_debug_name("imgbtn_" + std::to_string(i + 1));
       if (tint_images) config.with_image_tint(tints[static_cast<size_t>(specimen_index)]);
       if (image_button(context, mk(root.ent(), 80 + static_cast<int>(i)),
@@ -146,7 +146,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent(), 116), box(844, 402, 280, 42)
         .with_label(tint_images ? "Reset image tint" : "Tint images")
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
-        .with_custom_background({49, 71, 100, 255}).with_corner_radius(7 * scale)
+        .with_custom_background({49, 71, 100, 255}).with_corner_radius(4 * scale)
         .with_debug_name("image_tint"))) tint_images = !tint_images;
     // Row 3: Image with background demo
     label(120, "Image + text", 20, 479, 166, 30, 24, ink);

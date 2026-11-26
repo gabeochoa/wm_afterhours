@@ -59,8 +59,8 @@ expect_text "0 items"
 expect_text "Basket empty"
 click_ui shop_tab_1
 wait 0.2
-expect_text "Selling is unavailable in this demo."
-expect_text "Sell preview only"
+expect_text "Selling is closed for now."
+expect_text "Sell selected"
 click_ui shop_add_cart
 wait 0.2
 expect_text "0 items"

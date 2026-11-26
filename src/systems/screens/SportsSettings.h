@@ -136,7 +136,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::string description_for(const SettingRow &row) const {
     if (row.label == "Max FPS")
-      return "The maximum frames displayed per second. This local preview does not change the running application's frame limit.";
+      return "The maximum frames displayed per second. Lowering this cap can reduce fan noise and heat.";
     if (row.label == "Framerate target")
       return "Dynamic resolution adjusts image quality to aim for this frame rate. It takes effect only while Dynamic resolution is On.";
     if (row.label == "Anti-Aliasing method") {
@@ -152,8 +152,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (row.label == "Texture quality" || row.label == "Graphics quality")
       return "Graphics quality is a preset preview. Texture quality is an independent override; changing one does not change the other.";
     if (row.label == "Resolution") return "Set the resolution of the rendered image in this local settings preview.";
-    if (row.label == "Gamma") return "Adjust the brightness response. The local preview range is 1.0 to 4.75; the default is 2.2.";
-    return "Adjust " + row.label + ". Changes apply to this local preview immediately.";
+    if (row.label == "Gamma") return "Adjust the brightness response. Range is 1.0 to 4.75; default is 2.2.";
+    return "Adjust " + row.label + ". Changes apply immediately.";
   }
 
   std::string range_for(const SettingRow &row) const {
@@ -351,8 +351,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(root.ent(), 400 + static_cast<int>(i)),
             box(scale, 282, y + 6, 96, 29)
                 .with_label(value_for(row))
-                .with_font("AtkinsonMock", pixels(21.f * scale))
-                .with_custom_text_color(active ? green_dark : green)
+                .with_font(active ? "AtkinsonMockBold" : "AtkinsonMock", pixels(21.f * scale))
+                .with_custom_text_color(active ? afterhours::Color{14, 24, 30, 255} : green)
                 .with_alignment(TextAlignment::Left)
                 .with_debug_name("sports_numeric_" + std::to_string(i)));
         float position = row.slider_value / 100.f;
@@ -468,7 +468,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Right).with_custom_text_color(white));
     }
     div(context, mk(root.ent()), box(scale, 680, 467, 510, 32)
-        .with_label("Settings preview / changes stay local")
+        .with_label("Changes apply immediately")
         .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(muted));
 
     div(context, mk(root.ent()),

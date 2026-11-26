@@ -70,8 +70,12 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         state.animation_progress = value ? 1.f : 0.f;
       }
       if (circle) {
+        const auto circle_bg = disabled ? afterhours::Color{18, 24, 34, 255}
+            : (value ? theme.primary : afterhours::Color{20, 28, 42, 255});
+        const auto circle_border = disabled ? afterhours::Color{70, 82, 98, 255}
+            : (value ? theme.primary : theme.font_muted);
         checkbox(context, ep, value, at(862, y + 1, 36, 36)
-            .with_custom_background(theme.primary).with_border(theme.font_muted, s)
+            .with_custom_background(circle_bg).with_border(circle_border, 2 * s)
             .with_rounded_corners(RoundedCorners().all_round()).with_corner_radius(18 * s)
             .with_checkbox_indicators("", "").with_disabled(disabled).with_debug_name(name));
         if (value)
@@ -112,7 +116,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     label(11, "Managed by administrator", 344, 576, 400, 22, 16);
     // Disabled circle checkbox (OFF state, non-interactive)
     row(7, "Unavailable Option", disabled_off, 603, true, true, "toggle_unavailable");
-    label(12, "Not available in this demo", 344, 644, 330, 22, 16);
+    label(12, "Unavailable in read-only mode", 344, 644, 330, 22, 16);
     reset_pending = false;
     if (button(context, mk(root.ent()), at(706, 649, 246, 32)
         .with_label("Reset demo defaults").with_font("AtkinsonMock", pixels(19 * s))

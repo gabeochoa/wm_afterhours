@@ -17,14 +17,18 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
-    theme.background = afterhours::Color{239, 243, 248, 255};
-    theme.surface = afterhours::Color{255, 255, 255, 255};
-    theme.primary = afterhours::Color{43, 99, 149, 255};
-    theme.secondary = afterhours::Color{220, 230, 240, 255};
-    theme.accent = afterhours::Color{0, 100, 185, 255};
-    theme.font = afterhours::Color{29, 43, 59, 255};
-    theme.font_muted = afterhours::Color{75, 93, 114, 255};
+    theme.background = {239, 243, 248, 255};
+    theme.surface = {255, 255, 255, 255};
+    theme.primary = {43, 99, 149, 255};
+    theme.secondary = {220, 230, 240, 255};
+    theme.accent = {0, 100, 185, 255};
+    theme.font = {29, 43, 59, 255};
+    theme.font_muted = {75, 93, 114, 255};
     context.theme = theme;
+    // Surface/text already use ctx.theme tokens above; these two are the
+    // semantic result marks (single definitions, not scattered literals).
+    const auto pressed = afterhours::Color{24, 110, 89, 255};
+    const auto error_text = afterhours::Color{173, 37, 37, 255};
     context.scaling_mode = ScalingMode::Adaptive;
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const float left = (context.screen_width - 1280 * s) / 2;
@@ -89,8 +93,8 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
       auto btn = button(context, mk(scroll_area.ent(), i), ComponentConfig{}
           .with_size({percent(0.98f), pixels(40)})
           .with_label(fmt::format("{:02d}    Button {}", i, i)).with_alignment(TextAlignment::Left)
-          .with_custom_background(i == last_clicked ? afterhours::Color{24, 110, 89, 255} : theme.primary)
-          .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
+          .with_custom_background(i == last_clicked ? pressed : theme.primary)
+          .with_custom_text_color(theme.surface)
           .with_font("AtkinsonMock", pixels(20 * s)).with_skip_grid_snap(true)
           .with_margin(Margin{.top = pixels(2), .bottom = pixels(2)})
           .with_corner_radius(4).with_debug_name(fmt::format("scroll_btn_{}", i)));
@@ -128,7 +132,7 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
     text(16, last_clicked >= 0 ? fmt::format("Button {}", last_clicked) : "No result",
          902, 495, 310, 32, 23, theme.font, "scroll_click_actual", true);
     text(17, expected_clicked < 0 ? "Pointer comparison pending" : expected_clicked == last_clicked ? "MATCH" : "MISMATCH",
-         902, 547, 310, 32, 23, expected_clicked >= 0 && expected_clicked != last_clicked ? afterhours::Color{173, 37, 37, 255} : theme.font,
+         902, 547, 310, 32, 23, expected_clicked >= 0 && expected_clicked != last_clicked ? error_text : theme.font,
          "scroll_click_comparison", true);
     text(18, "300 px viewport / bottom edge intentionally clips partial rows", 64, 618, 810, 28, 18, theme.font_muted);
     text(19, "Keyboard activation reports an actual result; compare pointer clicks here.",

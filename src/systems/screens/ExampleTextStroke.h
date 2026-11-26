@@ -59,9 +59,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     label(14, 356, 201, 304, 28, fmt::format("T2 / {:.1f}px stroke / 13.9% of font", 5 * scale), 18, muted);
     backing(20, 249, 140);
     sample(21, 20, 258, 306, 91, "BOLD", 72, {255, 50, 150, 255}, {40, 0, 60, 255}, 8, "stroke_bold");
-    sample(22, 326, 270, 334, 78, "CONTRAST", 56, {80, 255, 255, 255}, {180, 20, 20, 255}, 8, "stroke_contrast");
+    sample(22, 326, 270, 334, 78, "CONTRAST", 56, {255, 244, 210, 255}, {158, 27, 50, 255}, 8, "stroke_contrast");
     label(23, 20, 348, 306, 36, fmt::format("T3 / {:.1f}px font, {:.1f}px stroke\nOutline is 11.1% of font size", 72 * scale, 8 * scale), 18, muted);
-    label(24, 356, 348, 304, 36, fmt::format("T4 / #50FFFF + #B41414\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 18, muted);
+    label(24, 356, 348, 304, 36, fmt::format("T4 / #FFF4D2 + #9E1B32\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 18, muted);
     backing(30, 403, 112);
     sample(31, 20, 414, 306, 77, "GLOW", 56, {20, 20, 40, 255}, {80, 220, 255, 255}, 8, "stroke_bright");
     label(32, 356, 419, 304, 84, fmt::format("T5 / Bright outline\n#141428 + #50DCFF\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 21, muted);
@@ -78,8 +78,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         const float y = 185 + static_cast<float>(i) * 70;
         sample(60 + static_cast<int>(i), 724, y, 247, 62, "STROKE", 40, {255, 180, 60, 255}, {80, 40, 0, 255}, thicknesses[i],
                i == 0 ? "stroke_zero" : "thickness_" + std::to_string(i - 1));
-        label(70 + static_cast<int>(i), 987, y + 6, 137, 49,
-              fmt::format("{:.1f} px\n{:.0f}% of font", thicknesses[i] * scale, thicknesses[i] / 40 * 100), 20, muted);
+        div(context, mk(root.ent(), 70 + static_cast<int>(i)), box(987, y + 6, 137, 49)
+            .with_label(fmt::format("{:.1f} px\n{:.0f}% of font", thicknesses[i] * scale, thicknesses[i] / 40 * 100))
+            .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_text_color(muted)
+            .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Right)
+            .with_ignore_pointer_events());
       }
       label(80, 724, 611, 400, 23, "10px at 1× is an extreme specimen.", 18, muted);
     }

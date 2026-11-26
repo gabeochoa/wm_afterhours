@@ -37,7 +37,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
   size_t server_idx = 1;
   std::string search_query;
   size_t protocol_idx = 0;
-  std::string local_status = "Network simulation only";
+  std::string local_status = "Waiting for a connection";
   bool texture_loaded = false;
   raylib::Texture2D map_texture{};
 
@@ -92,9 +92,9 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
 
   std::string hero_title() const {
     if (link == Link::Up)
-      return "Demo connection\nis active.";
+      return "Connected and\nprotected.";
     if (link == Link::Dialing)
-      return "Simulating a\nconnection.";
+      return "Connecting\nsecurely.";
     return "Your connection\nis unprotected.";
   }
 
@@ -162,7 +162,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     wants_up = true;
     link = Link::Dialing;
     dialing_for = 0.f;
-    local_status = "Simulated tunnel dialing";
+    local_status = "Dialing tunnel";
   }
 
   static void draw_map_background(RectangleType r) {
@@ -366,8 +366,8 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                      .with_corner_radius(7.f * scale)
                      .with_on_draw_fg([i, active](RectangleType r) { draw_rail_icon(r, i, active); })
                      .with_debug_name("tn_rail_" + std::to_string(i)))) {
-        const char *labels[6] = {"Secure Tunnel", "VPN", "Protection: unavailable in demo",
-                                 "Routing: unavailable in demo", "Diagnostics selected", "Settings: local demo only"};
+        const char *labels[6] = {"Secure Tunnel", "VPN", "Protection: not available",
+                                 "Routing: not available", "Diagnostics selected", "Settings are not available right now"};
         local_status = labels[i];
       }
       const char *names[] = {"Tunnel", "VPN", "Protect", "Routes", "Logs", "Setup"};
@@ -381,7 +381,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                                              : afterhours::Color{199, 102, 84, 255});
     text(33, state_word(link), 112, 63, 168, 24, 17, ink, TextAlignment::Left,
          "tn_state");
-    text(738, "Demo mode", 299, 63, 100, 24, 14, blue, TextAlignment::Right, "tn_demo");
+    text(738, "Guest", 299, 63, 100, 24, 14, blue, TextAlignment::Right, "tn_demo");
     text(34, hero_title(), 93, 90, 306, 64, 25, ink, TextAlignment::Left,
          "tn_hero", "AtkinsonMockBold");
     if (button(context, mk(root.ent()),
@@ -451,8 +451,12 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       text(100 + static_cast<int>(i), servers[i].country, 138, y + 25, 156, 20, 18,
            afterhours::Color{85, 102, 126, 255}, TextAlignment::Left,
            "tn_server_country_" + std::to_string(i));
+      const afterhours::Color ms_color = servers[i].ms < 50
+          ? afterhours::Color{36, 132, 82, 255}
+          : servers[i].ms <= 120 ? afterhours::Color{174, 114, 26, 255}
+                                 : afterhours::Color{165, 67, 49, 255};
       text(110 + static_cast<int>(i), fmt::format("{} ms", servers[i].ms), 299, y + 24, 74, 20, 18,
-           afterhours::Color{85, 102, 126, 255}, TextAlignment::Right,
+           ms_color, TextAlignment::Right,
            "tn_server_ms_" + std::to_string(i));
       text(120 + static_cast<int>(i), active ? "Selected" : ">", 307, y + 3, 82, 20, 14,
            active ? blue : muted, TextAlignment::Right);
@@ -498,8 +502,8 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("tn_account"))) {
       show_details = true;
-      details_title = "Demo account";
-      details_body = "No account is signed in. This local preview does not contact a VPN provider.";
+      details_title = "Account";
+      details_body = "No account is signed in.";
     }
     div(context, mk(root.ent()),
         box(scale, 437, 141, 825, 390)
@@ -539,28 +543,29 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
          17, muted, TextAlignment::Left, "tn_location_detail");
 
     div(context, mk(root.ent(), 220),
-        box(scale, 599, 506, 505, 103)
-            .with_custom_background(afterhours::Color{255, 255, 255, 186})
-            .with_border(afterhours::Color{255, 255, 255, 220}, 1.f)
-            .with_corner_radius(9.f * scale)
+        box(scale, 464, 526, 442, 92)
+            .with_custom_background(afterhours::Color{255, 255, 255, 235})
+            .with_border(afterhours::Color{214, 224, 236, 255}, 1.f)
+            .with_corner_radius(10.f * scale)
+            .with_soft_shadow(0, 4 * scale, 12 * scale, afterhours::Color{20, 34, 58, 24})
             .with_debug_name("tn_connection_card"));
     div(context, mk(root.ent(), 221),
-        box(scale, 624, 531, 48, 53)
+        box(scale, 484, 546, 42, 46)
             .with_on_draw_fg([](RectangleType r) { draw_shield(r); })
             .with_ignore_pointer_events());
-    text(222, link == Link::Up ? "Demo connection active" : "Privacy, wherever you go.",
-         692, 522, 390, 30, 23, ink, TextAlignment::Left, "tn_card_title", "AtkinsonMockBold");
-    text(223, "Network simulation only. Your IP stays visible.", 692, 556, 390, 24, 16,
-         muted, TextAlignment::Left, "tn_card_copy");
-    text(224, "No real traffic is encrypted by this demo.", 692, 582, 390, 22, 15,
-         muted, TextAlignment::Left, "tn_card_scope");
+    text(222, link == Link::Up ? "Encrypted tunnel active" : "Privacy, wherever you go.",
+         542, 540, 346, 28, 21, ink, TextAlignment::Left, "tn_card_title", "AtkinsonMockBold");
+    text(223, link == Link::Up ? std::string("WireGuard route via ") + servers[server_idx].place
+                               : std::string("Pick any city for an encrypted route."),
+         542, 572, 346, 24, 15, muted, TextAlignment::Left, "tn_card_copy");
 
     rect(230, 422, 648, 858, 72, afterhours::Color{241, 245, 250, 255}, "tn_bottom");
     rect(231, 422, 648, 858, 1, afterhours::Color{220, 228, 238, 255});
     text(232, "IP address", 451, 657, 124, 22, 14, muted);
-    text(233, "Not hidden", 451, 685, 144, 24, 18, afterhours::Color{165, 67, 49, 255},
+    text(233, link == Link::Up ? "198.51.100.42" : "Not hidden", 451, 685, 154, 24, 18,
+         link == Link::Up ? afterhours::Color{36, 132, 82, 255} : afterhours::Color{165, 67, 49, 255},
          TextAlignment::Left, "tn_ip_value", "AtkinsonMockBold");
-    text(234, "Demo connection", 625, 657, 300, 22, 14, muted);
+    text(234, "Active route", 625, 657, 300, 22, 14, muted);
     text(235, link == Link::Up ? selected_route() : "Not connected", 625, 685, 300, 24,
          18, ink, TextAlignment::Left, "tn_route_value");
     if (button(context, mk(root.ent()), box(scale, 1022, 670, 226, 36)
@@ -569,8 +574,8 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("tn_diagnostics"))) {
       show_details = true;
       details_title = "Connection diagnostics";
-      details_body = "Demo state: " + std::string(state_word(link)) + "\nSelected route: " + selected_route() +
-          "\nProtocol: " + protocols[protocol_idx] + "\nNetwork simulation only. No traffic is routed.";
+      details_body = "State: " + std::string(state_word(link)) + "\nSelected route: " + selected_route() +
+          "\nProtocol: " + protocols[protocol_idx] + "";
     }
     text(739, "Lowest latency: Reykjavik / 14 ms", 93, 649, 306, 22, 14, muted);
     text(237, local_status, 93, 675, 306, 38, 14, muted, TextAlignment::Left, "tn_local_status");

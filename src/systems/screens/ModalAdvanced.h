@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include "DialogPresentation.h"
 #include <afterhours/ah.h>
+#include <array>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
 
@@ -86,16 +87,30 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     const float scale = sh / 720.f;
     const float panel_width = std::min(sw - 64.f * scale, 1120.f * scale);
     const float card_width = (panel_width - 64.f * scale) / 2.f;
-    const auto ink = afterhours::Color{231, 237, 248, 255};
-    const auto muted = afterhours::Color{174, 190, 212, 255};
-    const auto surface = afterhours::Color{29, 40, 59, 255};
-    const auto action = afterhours::Color{57, 99, 168, 255};
+    // Surface/text tokens derive from ctx.theme. The 4 launcher accents are
+    // the deliberate card identity palette (single definitions, curated).
+    const auto ink = theme.font;
+    const auto muted = theme.font_muted;
+    const auto surface = theme.surface;
+    const auto action = theme.primary;
+    // Quiet secondary (Themaz/LanguageDemo fix): non-primary controls on
+    // ocean_navy must not use Theme::Usage::Secondary bright fills.
+    const auto idle_surface = afterhours::colors::mix(theme.surface, theme.background, 0.4f);
+    const auto subtle_border = afterhours::colors::opacity_pct(theme.font, 0.22f);
+    const auto input_border = afterhours::colors::opacity_pct(theme.font, 0.35f);
+    const auto modal_border = afterhours::colors::opacity_pct(theme.font, 0.28f);
+    const auto modal_bg = afterhours::colors::mix(theme.surface, theme.background, 0.5f);
+    const auto error_text = afterhours::Color{255, 100, 100, 255};
+    const auto backdrop = afterhours::Color{0, 0, 0, 180};
+    const std::array<afterhours::Color, 4> launcher_accents{
+        afterhours::Color{95, 160, 255, 255}, afterhours::Color{226, 180, 98, 255},
+        afterhours::Color{88, 195, 157, 255}, afterhours::Color{208, 143, 186, 255}};
 
     auto root =
         div(context, mk(entity),
             ComponentConfig{}
                 .with_size({screen_pct(1.f), screen_pct(1.f)})
-                .with_custom_background(afterhours::Color{9, 14, 24, 255})
+                .with_custom_background(theme.background)
                 .with_corner_radius(0.f)
                 .with_debug_name("adv_modal_bg"));
     auto main =
@@ -104,7 +119,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                    .with_size({pixels(panel_width), pixels(500.f * scale)})
                    .with_absolute_position((sw - panel_width) / 2.f,
                                            (sh - 500.f * scale) / 2.f)
-                   .with_custom_background(afterhours::Color{20, 28, 43, 255})
+                   .with_custom_background(modal_bg)
                    .with_padding(Padding::all(pixels(24.f * scale)))
                    .with_corner_radius(12.f * scale)
                    .with_no_wrap()
@@ -169,7 +184,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_text_color(ink)
                         .with_font("AtkinsonMock", pixels(22.f * scale))
                         .with_alignment(TextAlignment::Center)
-                        .with_corner_radius(8.f * scale)
+                        .with_corner_radius(4.f * scale)
                         .with_cursor(CursorType::Pointer)
                         .with_debug_name(debug_name));
     };
@@ -184,13 +199,13 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                                .with_debug_name("grid_top"));
     if (launcher(grid_top.ent(), 0, "Login Form",
                  "Required username and password.",
-                 afterhours::Color{95, 160, 255, 255}, "btn_login")) {
+                 launcher_accents[0], "btn_login")) {
       show_login = true;
       login_error.clear();
     }
     if (launcher(grid_top.ent(), 1, "Setup Wizard",
                  "Three-step account and preference setup.",
-                 afterhours::Color{226, 180, 98, 255}, "btn_wizard")) {
+                 launcher_accents[1], "btn_wizard")) {
       show_wizard = true;
       wizard_step = 0;
     }
@@ -203,11 +218,11 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                                .with_debug_name("grid_bot"));
     if (launcher(grid_bot.ent(), 0, "Settings Panel",
                  "Volume, language, theme, and notifications.",
-                 afterhours::Color{88, 195, 157, 255}, "btn_settings"))
+                 launcher_accents[2], "btn_settings"))
       show_settings = true;
     if (launcher(grid_bot.ent(), 1, "Feedback Form",
                  "Category, severity rating, and a written message.",
-                 afterhours::Color{208, 143, 186, 255}, "btn_feedback")) {
+                 launcher_accents[3], "btn_feedback")) {
       show_feedback = true;
       feedback_error.clear();
     }
@@ -251,11 +266,11 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_size(pixels(420), pixels(400))
                 .with_title("Login")
                 .with_closed_by(afterhours::ClosedBy::Any)
-                .with_backdrop_color({0, 0, 0, 180}))) {
+                .with_backdrop_color(backdrop))) {
       dialog_presentation::style_title(m.ent());
       m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
       m.ent().addComponentIfMissing<HasBorder>().border =
-          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
+          Border::all(modal_border, pixels(scale));
 
       // Username label + input
       div(context, mk(m.ent()),
@@ -271,10 +286,10 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent()), login_username,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Secondary)
-                     .with_border({99, 117, 142, 255}, pixels(1))
+                     .with_background(Theme::Usage::Surface)
+                     .with_border(input_border, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(6.f)
+                     .with_corner_radius(4.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("login_username_input"));
@@ -293,10 +308,10 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent()), login_password,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Secondary)
-                     .with_border({99, 117, 142, 255}, pixels(1))
+                     .with_background(Theme::Usage::Surface)
+                     .with_border(input_border, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(6.f)
+                     .with_corner_radius(4.f)
                      .with_mask_char('*')
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -318,7 +333,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(login_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
-                .with_custom_text_color(afterhours::Color{255, 100, 100, 255})
+                .with_custom_text_color(error_text)
                 .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_render_layer(CL));
@@ -336,7 +351,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(idle_surface).with_border(subtle_border, pixels(1))
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -371,11 +386,11 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_size(pixels(480), pixels(500))
                 .with_title("Setup Wizard")
                 .with_closed_by(afterhours::ClosedBy::Any)
-                .with_backdrop_color({0, 0, 0, 180}))) {
+                .with_backdrop_color(backdrop))) {
       dialog_presentation::style_title(m.ent());
       m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
       m.ent().addComponentIfMissing<HasBorder>().border =
-          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
+          Border::all(modal_border, pixels(scale));
 
       // Progress bar
       float progress = static_cast<float>(wizard_step + 1) / 3.0f;
@@ -414,9 +429,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         text_input(context, mk(m.ent()), wizard_name,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                       .with_background(Theme::Usage::Secondary)
+                       .with_background(Theme::Usage::Surface)
                        .with_font("AtkinsonMock", pixels(20.f))
-                       .with_corner_radius(0.f)
+                       .with_corner_radius(4.f)
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_render_layer(CL)
                        .with_debug_name("wizard_name_input"));
@@ -434,9 +449,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         text_input(context, mk(m.ent()), wizard_email,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                       .with_background(Theme::Usage::Secondary)
+                       .with_background(Theme::Usage::Surface)
                        .with_font("AtkinsonMock", pixels(20.f))
-                       .with_corner_radius(0.f)
+                       .with_corner_radius(4.f)
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_render_layer(CL)
                        .with_debug_name("wizard_email_input"));
@@ -567,11 +582,11 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_size(pixels(460), pixels(440))
                 .with_title("Settings")
                 .with_closed_by(afterhours::ClosedBy::Any)
-                .with_backdrop_color({0, 0, 0, 180}))) {
+                .with_backdrop_color(backdrop))) {
       dialog_presentation::style_title(m.ent());
       m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
       m.ent().addComponentIfMissing<HasBorder>().border =
-          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
+          Border::all(modal_border, pixels(scale));
 
       // Volume slider
       div(context, mk(m.ent()),
@@ -668,7 +683,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(right_btns.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(idle_surface).with_border(subtle_border, pixels(1))
                      .with_size(ComponentSize{pixels(80), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -706,11 +721,11 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_size(pixels(480), pixels(580))
                 .with_title("Submit Feedback")
                 .with_closed_by(afterhours::ClosedBy::Any)
-                .with_backdrop_color({0, 0, 0, 180}))) {
+                .with_backdrop_color(backdrop))) {
       dialog_presentation::style_title(m.ent());
       m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
       m.ent().addComponentIfMissing<HasBorder>().border =
-          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
+          Border::all(modal_border, pixels(scale));
 
       // Subject
       div(context, mk(m.ent()),
@@ -726,10 +741,10 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent()), feedback_subject,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Secondary)
-                     .with_border({99, 117, 142, 255}, pixels(1))
+                     .with_background(Theme::Usage::Surface)
+                     .with_border(input_border, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(6.f)
+                     .with_corner_radius(4.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("feedback_subject_input"));
@@ -805,7 +820,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(feedback_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
-                .with_custom_text_color(afterhours::Color{255, 100, 100, 255})
+                .with_custom_text_color(error_text)
                 .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_render_layer(CL));
@@ -823,7 +838,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(btn_row.ent()),
                  ComponentConfig{}
                      .with_label("Cancel")
-                     .with_background(Theme::Usage::Secondary)
+                     .with_custom_background(idle_surface).with_border(subtle_border, pixels(1))
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)

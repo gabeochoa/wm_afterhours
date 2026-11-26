@@ -4,7 +4,6 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
-#include "../screen_scaffold.h"
 #include <afterhours/ah.h>
 #include <array>
 
@@ -27,26 +26,25 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     // Apply ocean navy theme with explicit specimen fonts
     const auto theme = afterhours::ui::theme_presets::ocean_navy();
-    auto scr = begin_screen(context, entity, theme,
-                            {.background = theme.background,
-                             .ink = afterhours::Color{242, 247, 255, 255},
-                             .muted = afterhours::Color{185, 200, 222, 255},
-                             .bg_name = "buttons_canvas"});
-    const float s = scr.s;
+    context.theme = theme;
+    context.scaling_mode = ScalingMode::Proportional;
+    const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
     const float top = (context.screen_height / s - 720.f) / 2.f;
     const float left = (context.screen_width / s - 1144.f) / 2.f;
-    const auto text = scr.ink;
-    const auto muted = scr.muted;
+    const auto text = afterhours::Color{242, 247, 255, 255};
+    const auto muted = afterhours::Color{185, 200, 222, 255};
     const auto line = afterhours::Color{81, 109, 146, 255};
-    // This screen letterboxes vertically inside the stage; the scaffold
-    // root is the stage, so box only adds the letterbox offset.
-    const auto box = [&scr, top](float x, float y, float w, float h) {
-      return scr.layout(x, y + top, w, h);
+    const auto box = [s, top](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, (y + top) * s).with_corner_radius(0)
+          .with_background(Theme::Usage::None);
     };
     const auto hex = [](afterhours::Color color) {
       return fmt::format("#{:02X}{:02X}{:02X}", color.r, color.g, color.b);
     };
-    auto root = scr.root;
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("buttons_canvas"));
     int id = 0;
     const auto label = [&](const std::string &value, float x, float y, float w, float h,
                            float size, afterhours::Color color, const std::string &name = "") {

@@ -281,6 +281,8 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 4; ++i)
       if (action(c, p, i, menus[i], 11 + i * 48, 32, 45, 23, "aim_menu_" + std::to_string(i), false, selected == 3 && i == 3, true)) dialog = dialogs[i];
     image(c, p, 10, 1, 15, 66, 44, 44);
+    div(c, mk(p, 15), box(15, 66, 44, 44).with_ignore_pointer_events()
+        .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, true, s); }));
     label(c, p, 11, buddy.name, 72, 68, 235, 25, 14, ink, "", true);
     label(c, p, 12, selected == 3 ? "Local chat room" : buddy.blocked ? "Blocked" : "Available", 82, 94, 186, 20, 11, ink, "aim_buddy_status");
     div(c, mk(p, 13), box(73, 101, 7, 7).with_custom_background(buddy.blocked ? afterhours::Color{160, 160, 160, 255} : afterhours::Color{0, 140, 0, 255}).with_roundness(1));
@@ -308,7 +310,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events());
     }
     div(c, mk(history.ent()), ComponentConfig{}.with_size({percent(1), pixels(32 * scale)})
-        .with_label(buddy.messages.empty() ? "Local conversation. Messages stay in this demo." : "Last message received at 2:02 PM.")
+        .with_label(buddy.messages.empty() ? "No messages yet. Start the conversation." : "Last message received at 2:02 PM.")
         .with_font("AtkinsonMock", h720(15)).with_custom_text_color({88, 88, 88, 255})
         .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
     if (scroll_bottom && history.ent().has<HasScrollView>()) {
@@ -344,7 +346,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 2; ++i)
       div(c, mk(p, 80 + i), box(i == 0 ? 123 : 189, format_y + 6, 1, 19)
           .with_custom_background({128, 128, 128, 255}).with_ignore_pointer_events());
-    if (action(c, p, 82, show_log ? "Hide demo log" : "Demo log...", w - 134, format_y + 4, 120, 23,
+    if (action(c, p, 82, show_log ? "Hide Chat Log" : "Chat Log", w - 122, format_y + 4, 108, 23,
                "aim_demo_log", show_log, false, true)) show_log = !show_log;
     label(c, p, 37, "Send to: " + buddy.name, 16, h - 184, w - 30, 20, 12, ink);
     const std::string replacement = replace_composer ? message_input : std::string{};
@@ -369,7 +371,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     if (action(c, p, 52, "Send", w - 89, h - 79, 70, 39, "aim_send", false,
                buddy.blocked || dialog != Dialog::None)) send_message(composer.ent());
     div(c, mk(p), box(17, h - 23, 7, 7).with_custom_background({0, 140, 0, 255}).with_ignore_pointer_events());
-    label(c, p, 53, "Direct Connection Established (local demo)", 28, h - 31, w - 42, 22, 12, ink, "aim_connection");
+    label(c, p, 53, "Direct Connection Established", 28, h - 31, w - 42, 22, 12, ink, "aim_connection");
   }
 
   void build_dialog(UIContext<InputAction> &c, afterhours::Entity &root) {
@@ -377,12 +379,12 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     const bool menu = dialog == Dialog::File || dialog == Dialog::Edit || dialog == Dialog::Insert || dialog == Dialog::People || dialog == Dialog::Start;
     std::string heading, body;
     switch (dialog) {
-    case Dialog::Warn: heading = "Warn " + buddy.name + "?"; body = "Raise this buddy's warning level by 20%. This changes only the local demo; no warning is sent over a network."; break;
-    case Dialog::Block: heading = (buddy.blocked ? "Unblock " : "Block ") + buddy.name + "?"; body = buddy.blocked ? "Allow composing messages to this buddy again. Your conversation history is preserved." : "Block this buddy in the local Buddy List. Sending is disabled until you unblock them. Conversation history is preserved."; break;
-    case Dialog::Info: heading = buddy.name + " - Buddy Info"; body = fmt::format("Status: {}\nWarning level: {}%\n{} messages in this local conversation.", buddy.blocked ? "Blocked" : "Available", buddy.warning, buddy.messages.size()); break;
-    case Dialog::Help: heading = "AOL Instant Messenger - Help"; body = "This is a local AIM-style demo. Enter sends; Shift+Enter inserts a new line. Select buddies to keep separate conversations. Warn and Block affect this demo only."; break;
+    case Dialog::Warn: heading = "Warn " + buddy.name + "?"; body = "Raise this buddy's warning level by 20%."; break;
+    case Dialog::Block: heading = (buddy.blocked ? "Unblock " : "Block ") + buddy.name + "?"; body = buddy.blocked ? "Allow composing messages to this buddy again. Your conversation history is preserved." : "Block this buddy in your Buddy List. Sending is disabled until you unblock them. Conversation history is preserved."; break;
+    case Dialog::Info: heading = buddy.name + " - Buddy Info"; body = fmt::format("Status: {}\nWarning level: {}%\n{} messages in this conversation.", buddy.blocked ? "Blocked" : "Available", buddy.warning, buddy.messages.size()); break;
+    case Dialog::Help: heading = "AOL Instant Messenger - Help"; body = "Enter sends; Shift+Enter inserts a new line. Select buddies to keep separate conversations. Warn and Block change what you see from that buddy."; break;
     case Dialog::Fonts: heading = "Message formatting"; body = "Use Aa to change composing size, B for bold, and the underlined A to cycle blue, red, and green sender colors. Italic and underline are unavailable with the bundled fonts."; break;
-    case Dialog::Clear: heading = "Clear conversation?"; body = "Remove the displayed messages from this local conversation. Your unsent draft will be kept."; break;
+    case Dialog::Clear: heading = "Clear conversation?"; body = "Remove the displayed messages from this conversation. Your unsent draft will be kept."; break;
     case Dialog::File: heading = "File"; break;
     case Dialog::Edit: heading = "Edit"; break;
     case Dialog::Insert: heading = "Insert"; break;

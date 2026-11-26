@@ -392,7 +392,7 @@ struct ThemeBuilderLab : ScreenSystem<UIContext<InputAction>> {
                                           1.f)
                              .with_corner_radius(4.f)
                              .with_render_layer(1);
-    if (auto pop = popover(ctx, mk(table.ent(), 2),
+    if (auto pop = popover(ctx, mk(entity, 200),
                            picker_for >= 0 ? link_anchor[picker_for]
                                            : RectangleType{},
                            link_picker_open, overlay::Placement::Below,

@@ -39,7 +39,7 @@ struct TextCacheLab : ScreenSystem<UIContext<InputAction>> {
     text(0, "Text cache lab", 16, 0, 700, 44, 30);
     text(1, "Same styled text, two sizes, one memo: each box wraps for its own size. "
             "Styled runs are placed by the joined line's measurement, so the code row's columns hold.",
-         16, 48, 1180, 28, 19);
+         16, 48, 1180, 56, 19);
 
     const std::vector<TextSpan> probe_text{
         {"alpha beta gamma delta epsilon", theme.font}};

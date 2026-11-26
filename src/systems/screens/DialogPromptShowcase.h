@@ -104,6 +104,7 @@ struct DialogPromptShowcase : ScreenSystem<UIContext<InputAction>> {
     prompt.ent().addComponentIfMissing<UIComponentDebug>("dp_panel").set("dp_panel");
     const auto place = [s](UIComponent &cmp, float x, float y, float w, float h) {
       cmp.absolute = true;
+      cmp.absolute_offset_is_size = false;
       cmp.absolute_pos_x = x * s;
       cmp.absolute_pos_y = y * s;
       cmp.desired[Axis::X] = pixels(w * s);

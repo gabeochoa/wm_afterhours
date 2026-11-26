@@ -33,11 +33,11 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
       dialog_backdrop::draw_context(
           context, entity, "Main menu",
           {{"Multiplayer", "No active session", true},
-           {"Last demo lobby", "North pier co-op / host Alex"},
+           {"Last lobby", "North pier co-op / host Alex"},
            {"Match state", "Never started"},
            {"Match progress", "None to recover"},
-           {"Saved games", "None in this demo"}},
-          "Returned to the main menu. Open the demo lobby to view it again.");
+           {"Saved games", "None saved"}},
+          "Returned to the main menu. Open the lobby to view it again.");
     } else {
       dialog_backdrop::draw_context(
           context, entity, "Multiplayer",
@@ -45,15 +45,15 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
            {"Session mode", "Co-op lobby"},
            {"Match state", "Not started"},
            {"Match progress", "None"},
-           {"Saved games", "None in this demo"},
-           {"Connection", "Offline demo / reconnect unavailable"}},
+           {"Saved games", "None saved"},
+           {"Connection", "Offline"}},
           "The disconnected lobby remains here until you return to the menu.");
     }
     if (button(context, mk(entity),
                ComponentConfig{}
                    .with_size({pixels(270 * scale), pixels(44 * scale)})
                    .with_absolute_position(942 * scale, 92 * scale)
-                   .with_label(main_menu ? "Open demo lobby" : "View connection notice")
+                   .with_label(main_menu ? "Open lobby" : "View connection notice")
                    .with_font("AtkinsonMock", pixels(21 * scale))
                    .with_debug_name("di_open_lobby"))) {
       main_menu = false;
@@ -63,11 +63,11 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
     const bool was_open = open;
     auto notice = afterhours::modal::info(
         context, mk(entity), open, "Connection lost",
-        "Demo lobby: North pier co-op / host Alex\n"
+        "North pier co-op / host Alex\n"
         "This session cannot continue while disconnected.\n"
         "No match was started, so there is no progress to lose.\n"
         "Choose Return to main menu below, or press Esc, to leave.\n"
-        "Reconnecting is not supported in this offline demo.",
+        "Reconnecting is unavailable while offline.",
         "Return to main menu");
     if (was_open && !open) main_menu = true;
     if (!notice) return;
