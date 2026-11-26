@@ -53,6 +53,14 @@ inline Theme cozy_kraft() {
                     .font_muted = {100, 85, 72, 255}, // medium brown (4.6:1)
                 })
                 .with_roundness(0.12f);
+  // Frozen results of Theme's fallback math (theme.h) for this palette:
+  // raised = mix(surface, auto_text, 0.06), border_muted = mix(..., 0.16),
+  // border = ensure_contrast(mix(..., 0.40), surface, 3:1). Pinning them here
+  // keeps screens that read the optionals on the colours they render today,
+  // even if the library fallback changes later.
+  t.surface_raised = Color{243, 237, 229, 255};
+  t.border = Color{153, 144, 138, 255};
+  t.border_muted = Color{224, 217, 208, 255};
   add_default_language_fonts(t);
   apply_wm_defaults(t);
   return t;
@@ -76,6 +84,14 @@ inline Theme neon_dark() {
       .font_muted = {140, 160, 180, 255}, // cool gray (4.8:1)
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
+  // Frozen results of Theme's fallback math (theme.h) for this palette:
+  // raised = mix(surface, auto_text, 0.06), border_muted = mix(..., 0.16),
+  // border = ensure_contrast(mix(..., 0.40), surface, 3:1). Pinning them here
+  // keeps screens that read the optionals on the colours they render today,
+  // even if the library fallback changes later.
+  t.surface_raised = Color{40, 46, 60, 255};
+  t.border = Color{108, 120, 130, 255};
+  t.border_muted = Color{60, 68, 81, 255};
   add_default_language_fonts(t);
   apply_wm_defaults(t);
   return t;
@@ -95,6 +111,14 @@ inline Theme ocean_navy() {
       .font_muted = {160, 175, 200, 255}, // light blue-gray
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
+  // Frozen results of Theme's fallback math (theme.h) for this palette:
+  // raised = mix(surface, auto_text, 0.06), border_muted = mix(..., 0.16),
+  // border = ensure_contrast(mix(..., 0.40), surface, 3:1). Pinning them here
+  // keeps screens that read the optionals on the colours they render today,
+  // even if the library fallback changes later.
+  t.surface_raised = Color{38, 57, 90, 255};
+  t.border = Color{117, 129, 150, 255};
+  t.border_muted = Color{61, 78, 108, 255};
   add_default_language_fonts(t);
   apply_wm_defaults(t);
   return t;
@@ -114,6 +138,14 @@ inline Theme midnight() {
       .font_muted = {140, 140, 140, 255}, // lighter gray (5.3:1)
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
+  // Frozen results of Theme's fallback math (theme.h) for this palette:
+  // raised = mix(surface, auto_text, 0.06), border_muted = mix(..., 0.16),
+  // border = ensure_contrast(mix(..., 0.40), surface, 3:1). Pinning them here
+  // keeps screens that read the optionals on the colours they render today,
+  // even if the library fallback changes later.
+  t.surface_raised = Color{34, 34, 34, 255};
+  t.border = Color{114, 114, 114, 255};
+  t.border_muted = Color{57, 57, 57, 255};
   add_default_language_fonts(t);
   apply_wm_defaults(t);
   return t;
@@ -134,6 +166,14 @@ inline Theme sage_natural() {
       .font_muted = {80, 90, 100, 255},   // darker gray (4.5:1)
   })
                 .with_corner_radius(THEME_CORNER_RADIUS);
+  // Frozen results of Theme's fallback math (theme.h) for this palette:
+  // raised = mix(surface, auto_text, 0.06), border_muted = mix(..., 0.16),
+  // border = ensure_contrast(mix(..., 0.40), surface, 3:1). Pinning them here
+  // keeps screens that read the optionals on the colours they render today,
+  // even if the library fallback changes later.
+  t.surface_raised = Color{237, 238, 237, 255};
+  t.border = Color{142, 146, 149, 255};
+  t.border_muted = Color{216, 218, 218, 255};
   add_default_language_fonts(t);
   apply_wm_defaults(t);
   return t;

@@ -110,10 +110,14 @@ struct BlendModeLab : ScreenSystem<UIContext<InputAction>> {
       label(fmt::format("{}  RGB {}, {}, {}", i + 1, inputs[i].r, inputs[i].g, inputs[i].b),
             x + 28, 126, 254, 28, 19, white);
     }
-    label("Alpha 170 / 255 = 66.7%", 858, 126, 286, 28, 19, white);
+    div(context, mk(root.ent(), id++), box(left + 858, 126, 286, 28)
+        .with_label("Alpha 170 / 255 = 66.7%").with_font("AtkinsonMock", pixels(19 * s))
+        .with_custom_text_color(white).with_alignment(TextAlignment::Right).with_ignore_pointer_events());
     label("Draw order: 1 > 2 > 3  |  radius 40px  |  centers (-24,-14), (24,-14), (0,22)",
           0, 158, 856, 26, 18, muted);
-    label("Destination RGB 28, 30, 40", 858, 158, 286, 26, 18, muted);
+    div(context, mk(root.ent(), id++), box(left + 858, 158, 286, 26)
+        .with_label("Destination RGB 28, 30, 40").with_font("AtkinsonMock", pixels(18 * s))
+        .with_custom_text_color(muted).with_alignment(TextAlignment::Right).with_ignore_pointer_events());
 
     static const std::array<ModeSwatch, 4> swatches{{
         {"Alpha", "S*a + D*(1-a)", blend::Mode::Alpha},
@@ -127,14 +131,14 @@ struct BlendModeLab : ScreenSystem<UIContext<InputAction>> {
       const bool prepare = index == 3 && prepare_rgb;
       const auto model = expected_center(swatch.mode, prepare);
       div(context, mk(root.ent(), id++), box(left + x, 194, 274, 270)
-          .with_custom_background({32, 38, 51, 255}).with_border(border, s).with_corner_radius(10 * s)
+          .with_custom_background({32, 38, 51, 255}).with_border({54, 64, 84, 255}, s).with_corner_radius(10 * s)
           .with_debug_name(fmt::format("bml_col_{}", index)));
       label(swatch.caption, x + 14, 203, 246, 31, index == 3 ? 23.f : 25.f, white, fmt::format("bml_cap_{}", index));
       label(swatch.formula, x + 14, 237, 246, 23, 19, muted);
       // Three overlapping discs, drawn in this swatch's mode. Overlap is what
       // makes the modes tell each other apart.
       div(context, mk(root.ent(), id++), box(left + x + 12, 264, 250, 160)
-          .with_custom_background(backing)
+          .with_custom_background(backing).with_border({48, 56, 74, 255}, s).with_corner_radius(6 * s)
           .with_on_draw_fg([this, mode = swatch.mode, index, prepare, s](RectangleType rr) {
             const size_t before = blend::transitions_this_frame();
             {
@@ -168,7 +172,7 @@ struct BlendModeLab : ScreenSystem<UIContext<InputAction>> {
       const float x = which * 580.f;
       const bool hoisted = which == 1;
       div(context, mk(root.ent(), id++), box(left + x, 482, 564, 146)
-          .with_custom_background({32, 38, 51, 255}).with_border(border, s).with_corner_radius(10 * s)
+          .with_custom_background({32, 38, 51, 255}).with_border({54, 64, 84, 255}, s).with_corner_radius(10 * s)
           .with_debug_name(fmt::format("bml_cmp_{}", which)));
       label(hoisted ? "One scope for the batch" : "One scope per blit", x + 16, 491, 532, 29, 24, white,
             fmt::format("bml_cmpcap_{}", which));

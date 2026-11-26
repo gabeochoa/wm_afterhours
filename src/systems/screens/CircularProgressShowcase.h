@@ -176,11 +176,11 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()), box(left + 796, 540, 348, 164)
         .with_custom_background(card_dark).with_corner_radius(10 * s));
     label("Thin detail", 808, 553, 156, 29, 23, text_light);
-    label("2x geometry", 808, 587, 156, 25, 19, muted);
-    label(fmt::format("{:.0f}px diameter", 160 * s), 808, 615, 156, 24, 17, muted);
-    label(fmt::format("{:.1f}px stroke", 6 * s), 808, 642, 156, 24, 17, muted);
+    label("1.75x geometry", 808, 587, 156, 25, 19, muted);
+    label(fmt::format("{:.0f}px diameter", 140 * s), 808, 615, 156, 24, 17, muted);
+    label(fmt::format("{:.1f}px stroke", 5.2f * s), 808, 642, 156, 24, 17, muted);
     label("Same ring component", 808, 673, 156, 23, 14, muted);
-    ring(972, 541, 160, 6, values[3], colors[3], "progress_thin_detail");
+    ring(982, 552, 140, 5.2f, values[3], colors[3], "progress_thin_detail");
   }
 };
 

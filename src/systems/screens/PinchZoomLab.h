@@ -28,11 +28,17 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const float left = (context.screen_width - 1280.f * s) / 2.f;
     const float top = (context.screen_height - 720.f * s) / 2.f;
-    const auto white = afterhours::Color{235, 240, 250, 255};
-    const auto muted = afterhours::Color{173, 188, 210, 255};
-    const auto ink = afterhours::Color{14, 21, 35, 255};
-    const auto panel = afterhours::Color{25, 37, 56, 255};
+    // Surface/text tokens derive from ctx.theme; cyan is the deliberate
+    // accent for the zoom readout and pinch state.
+    const auto white = context.theme.font;
+    const auto muted = context.theme.font_muted;
+    const auto ink = context.theme.darkfont;
+    const auto panel = context.theme.surface;
     const auto cyan = afterhours::Color{112, 218, 230, 255};
+    const auto grid = afterhours::colors::mix(context.theme.surface, context.theme.font, 0.12f);
+    const auto zoom_box = afterhours::colors::lighten(context.theme.primary, 0.35f);
+    const auto outline = afterhours::colors::opacity_pct(context.theme.font, 0.67f);
+    const auto idle_state = afterhours::colors::lighten(context.theme.surface, 0.15f);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
 
     // The whole integration: a delta composes, so there is no gesture-start
@@ -70,7 +76,7 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), box(1058, 132, 174, 44)
         .with_label("Reset to 1.00×").with_font("AtkinsonMock", pixels(20 * s))
         .with_custom_background(cyan).with_custom_text_color(ink)
-        .with_corner_radius(6).with_debug_name("pz_reset"))) zoom = 1.f;
+        .with_corner_radius(4).with_debug_name("pz_reset"))) zoom = 1.f;
     text(3, "Scale", 48, 120, 180, 24, 17, muted);
     text(4, fmt::format("{:.2f}×", zoom), 48, 148, 180, 42, 32, white, "pz_readout", true);
     text(5, "Width / design px", 252, 120, 220, 24, 17, muted);
@@ -84,23 +90,23 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background(panel).with_clip_children(true).with_debug_name("pz_stage"));
     for (int i = 0; i < 37; ++i) {
       div(context, mk(stage.ent(), 20 + i), box(12.f + static_cast<float>(i) * 22, 0, 1, 424)
-          .with_custom_background(afterhours::Color{40, 56, 77, 255}).with_ignore_pointer_events());
+          .with_custom_background(grid).with_ignore_pointer_events());
     }
     for (int i = 0; i < 19; ++i) {
       div(context, mk(stage.ent(), 60 + i), box(0, 14.f + static_cast<float>(i) * 22, 816, 1)
-          .with_custom_background(afterhours::Color{40, 56, 77, 255}).with_ignore_pointer_events());
+          .with_custom_background(grid).with_ignore_pointer_events());
     }
     // A square that scales, so the zoom is visible rather than just numeric.
     const float side = 220.f * zoom;
     div(context, mk(stage.ent()), box(408 - side / 2, 212 - side / 2, side, side)
-        .with_custom_background(afterhours::Color{66, 111, 185, 255})
+        .with_custom_background(zoom_box)
         .with_ignore_pointer_events().with_debug_name("pz_box"));
     const std::array<RectangleType, 4> reference{{
         {298, 102, 220, 1}, {298, 321, 220, 1}, {298, 102, 1, 220}, {517, 102, 1, 220}}};
     for (size_t i = 0; i < reference.size(); ++i) {
       const auto r = reference[i];
       div(context, mk(stage.ent(), 100 + static_cast<int>(i)), box(r.x, r.y, r.width, r.height)
-          .with_custom_background(afterhours::Color{193, 219, 247, 170}).with_ignore_pointer_events());
+          .with_custom_background(outline).with_ignore_pointer_events());
     }
     div(context, mk(stage.ent()), box(298, 194, 220, 36)
         .with_label(fmt::format("{:.2f}×", zoom)).with_alignment(TextAlignment::Center)
@@ -111,8 +117,8 @@ struct PinchZoomLab : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()), box(908, 234, 144, 34)
         .with_label(pinching ? "Pinching" : "Idle").with_alignment(TextAlignment::Center)
         .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(pinching ? ink : white)
-        .with_custom_background(pinching ? cyan : afterhours::Color{53, 70, 91, 255})
-        .with_corner_radius(6).with_debug_name("pz_state"));
+        .with_custom_background(pinching ? cyan : idle_state)
+        .with_corner_radius(4).with_debug_name("pz_state"));
     text(14, "Demo prerequisites", 908, 288, 304, 34, 26, white, "pz_requirements", true);
 #if defined(__APPLE__) && defined(AFTER_HOURS_ENABLE_MACOS_GESTURES)
     text(15, "Native backend compiled", 908, 332, 304, 30, 20, cyan, "pz_support");

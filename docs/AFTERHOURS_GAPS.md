@@ -1542,3 +1542,32 @@ I assumed modal layers covered every background visual and modal input gates cov
 Scrollbars now draw after their layer's content, before higher layers, respecting ancestor clipping and opacity. Wheel input obeys the existing gate, and blocked thumb drags cancel. Regression tests cover both renderers, stacked layers, wheel input, drag cancellation and text areas.
 
 Try **Tools → scrollbar_layer_repro → Open dialog**: the bar stays behind the dialog, background scrolling is blocked, and scrolling resumes after closing.
+
+## Tiling / dockable workspaces (Trellis) — local plugin ready to integrate
+
+Afterhours has no first-class dockable tiling workspace: no layout tree,
+camera/zoom navigation, drag-to-dock, tab groups, or floating layer. Apps
+that need IDE/desktop-style panels (hanabi, wordproc, floatinghotel) each
+hand-roll splits and drags today.
+
+**A working plugin file already exists locally in wm** and would like to be
+integrated once reviewed/tested — no afterhours changes were made to build it:
+
+- `src/systems/screens/trellis/DockWorkspace.h` — single-header engine on
+  public APIs only (`<afterhours/ah.h>` immediate UI + `ctx.mouse`): layout
+  tree (Split/Tabs/Leaf) + floating layer, rect solver, animated camera
+  (frame/overview/step-out/back-forward/zoom-to-pointer), drag-to-dock with
+  live previews (edge = split, center = tabify, workspace edge = dock to
+  root, free drop = float), divider resizing, double-click framing,
+  semantic-zoom tiles, spatial history, serializable document.
+- Four complete demo apps prove it end to end: `TrellisPaint.h`,
+  `TrellisIde.h`, `TrellisDesktop.h`, `TrellisOps.h` (screens
+  `trellis_paint`, `trellis_ide`, `trellis_desktop`, `trellis_ops`), each
+  with an e2e script exercising real drags and controls.
+
+Proposed integration: promote `DockWorkspace.h` to
+`afterhours/src/plugins/dock_workspace.h` (opt-in plugin, core untouched),
+then wire the 150-item follow-ups in `docs/TRELLIS_LEARNINGS.md`
+(allow-rules, snapshot rendering during motion, keymap/a11y, e2e dock
+commands). Until then it stays local to `wm/src/` per owner direction —
+test it here first.

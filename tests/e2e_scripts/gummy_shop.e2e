@@ -1,0 +1,36 @@
+goto_screen gummy_shop
+resize 1280 720
+wait 0.5
+expect_text "Sour cherry bears"
+expect_text "$4.50"
+expect_text "Free delivery at $25"
+click_ui gummy_star_4
+wait 0.2
+click_ui gummy_radio_1
+wait 0.2
+click_ui gummy_toggle_track
+wait 0.3
+click_ui gummy_seg_2
+wait 0.3
+click_ui gummy_qty_plus
+wait 0.2
+expect_text "2"
+click_ui gummy_qty_plus
+wait 0.2
+expect_text "3"
+click_ui gummy_qty_minus
+wait 0.2
+expect_text "2"
+click_ui gummy_chip_0
+wait 0.2
+click_ui gummy_chip_2
+wait 0.2
+click_ui gummy_gift_box
+wait 0.2
+click_ui gummy_heart
+wait 0.3
+expect_text "13"
+drag_to 1183 251 700 251
+wait 0.3
+screenshot gummy_shop_interacted
+assert_within_parents

@@ -42,6 +42,7 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(root.ent()), at(16, 203, 214, 36)
         .with_label(show_bounds ? "Hide edge guide" : "Show edge guide")
         .with_font("AtkinsonMock", pixels(18 * scale)).with_background(Theme::Usage::Surface)
+        .with_border({64, 80, 104, 255}, scale).with_corner_radius(6 * scale)
         .with_debug_name("ttl_bounds"))) show_bounds = !show_bounds;
     if (show_bounds)
       div(context, mk(entity), ComponentConfig{}
@@ -79,7 +80,10 @@ struct TooltipLab : ScreenSystem<UIContext<InputAction>> {
           .with_label(spot.expectation).with_font("AtkinsonMock", pixels(16 * scale))
           .with_custom_text_color(theme.font_muted).with_ignore_pointer_events());
     }
-    text(40, "Active case: " + active, 644, 0, 580, 44, 21, "ttl_active");
+    div(context, mk(root.ent(), 40), at(644, 0, 580, 44)
+        .with_label("Active case: " + active).with_font("AtkinsonMock", pixels(20 * scale))
+        .with_custom_text_color(theme.font).with_alignment(TextAlignment::Right)
+        .with_ignore_pointer_events().with_debug_name("ttl_active"));
     text(69, "Sizes: same words, caller font / padding / gap", 730, 374, 520, 30, 20);
     struct SizeSpot {
       const char *label;

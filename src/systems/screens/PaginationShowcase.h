@@ -60,7 +60,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     label(2, "Choose a page or one option. Each row keeps its own selection.", 20, 83, 1104, 27, 21, muted);
     const auto panel_at = [&](int id, float y, const std::string &name) {
       div(context, mk(root.ent(), id), box(0, y, 1144, 166)
-          .with_custom_background(panel).with_corner_radius(10 * scale).with_debug_name(name));
+          .with_custom_background(panel).with_corner_radius(12 * scale).with_debug_name(name));
       div(context, mk(root.ent(), id + 1), box(704, y + 16, 420, 134)
           .with_custom_background({32, 47, 68, 255}).with_corner_radius(8 * scale));
     };
@@ -70,7 +70,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto arrow = [&](int id, bool previous, bool disabled, float x, float y, const std::string &name) {
       auto result = button(context, mk(root.ent(), id), box(x, y, 48, 48)
           .with_custom_background(disabled ? afterhours::Color{32, 43, 58, 255} : afterhours::Color{48, 67, 94, 255})
-          .with_corner_radius(7 * scale).with_disabled(disabled).with_skip_tabbing(disabled)
+          .with_corner_radius(4 * scale).with_disabled(disabled).with_skip_tabbing(disabled)
           .with_debug_name(name).with_on_draw_fg([previous, disabled, scale, ink, muted](RectangleType r) {
             const float direction = previous ? -1.f : 1.f;
             const float cx = r.x + r.width / 2;
@@ -91,7 +91,9 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                             float width, const std::string &name, afterhours::Color swatch = afterhours::Color{0, 0, 0, 0}) {
       auto result = button(context, mk(root.ent(), id), box(x, y, width, 48).with_label(text)
           .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(ink)
-          .with_custom_background({38, 55, 77, 255}).with_corner_radius(7 * scale)
+          .with_custom_background(selected ? afterhours::Color{50, 76, 112, 255}
+                                           : afterhours::Color{38, 55, 77, 255})
+          .with_corner_radius(4 * scale)
           .with_debug_name(name).with_on_draw_fg([selected, swatch, scale, ink](RectangleType r) {
             if (swatch.a > 0)
               afterhours::draw_rectangle({r.x + 7 * scale, r.y + 18 * scale, 12 * scale, 12 * scale}, swatch);
@@ -150,8 +152,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     label(23, boundary(difficulty_idx, difficulties.size()), 20, 460, 662, 22, 18, muted);
     label(24, "Single-choice selector", 724, 346, 380, 34, 25, ink);
     const std::array<const char *, 4> difficulty_descriptions{"Easy / relaxed pace", "Medium / balanced challenge", "Hard / demanding play", "Expert / highest intensity"};
-    label(25, difficulty_descriptions[difficulty_idx], 724, 389, 380, 58, 22, muted, "pag2_preview");
-    label(26, "Same controls, independent selection.", 724, 451, 380, 24, 18, muted);
+    label(25, difficulty_descriptions[difficulty_idx], 724, 389, 380, 44, 22, muted, "pag2_preview");
+    label(26, "Same controls, independent selection.", 724, 439, 380, 24, 18, muted);
 
     label(30, "Named colors / 5 options", 20, 512, 662, 31, 25, ink);
     const std::array<afterhours::Color, 5> swatches{{{220, 65, 83, 255}, {73, 175, 112, 255},
@@ -167,7 +169,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
           20, 613, 662, 27, 22, ink, "pag3_result");
     label(33, boundary(color_idx, color_options.size()), 20, 642, 662, 22, 18, muted);
     div(context, mk(root.ent()), box(724, 535, 86, 98).with_custom_background(swatches[color_idx])
-        .with_corner_radius(7 * scale).with_debug_name("pag3_swatch"));
+        .with_corner_radius(8 * scale).with_debug_name("pag3_swatch"));
     label(35, color_options[color_idx], 830, 533, 274, 36, 29, ink);
     const auto color = swatches[color_idx];
     label(36, fmt::format("#{:02X}{:02X}{:02X}", color.r, color.g, color.b), 830, 577, 274, 30, 22, muted);

@@ -3,7 +3,7 @@ resize 1280 720
 wait 0.4
 expect_text "Secure Tunnel"
 expect_text "Disconnected"
-expect_text "Demo mode"
+expect_text "Guest"
 expect_text "Connect selected server"
 expect_text "Connect to Lisbon"
 expect_text "Lowest latency: Reykjavik / 14 ms"
@@ -13,7 +13,7 @@ expect_text "Change protocol"
 expect_text "VPN locations"
 expect_text "Account"
 expect_text "Not hidden"
-expect_text "No real traffic is encrypted by this demo."
+expect_text "Waiting for a connection"
 assert_ui tn_root x=0 y=0 w=1280 h=720
 assert_ui tn_connect x=93 y=157 w=306 h=44
 assert_ui tn_server_1 x=93 y=356 w=306 h=46
@@ -49,8 +49,8 @@ expect_text "Negotiating"
 expect_text "Connecting..."
 wait 1.2
 expect_text "Tunnel up"
-expect_text "Demo connection active"
-expect_text "Not hidden"
+expect_text "Encrypted tunnel active"
+expect_text "198.51.100.42"
 expect_text "Montreal - ca-02"
 screenshot secure_tunnel_design_connected
 click_ui tn_diagnostics
@@ -67,7 +67,7 @@ wait 0.2
 expect_text "Disconnected"
 click_ui tn_account
 wait 0.3
-expect_text "Demo account"
+expect_text "Account"
 expect_text "No account is signed in."
 key ESCAPE
 wait 0.3

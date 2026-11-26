@@ -47,7 +47,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Left).with_text_overflow(TextOverflow::Wrap)
           .with_ignore_pointer_events().with_debug_name(name));
     };
-    div(context, mk(root.ent()), box(0, 24, 1144, 124).with_custom_background(theme.surface).with_corner_radius(10 * scale));
+    div(context, mk(root.ent()), box(0, 24, 1144, 124).with_custom_background(theme.surface).with_corner_radius(12 * scale));
     label(1, 16, 34, 1112, 45, "Scroll View Demo", 35);
     checkbox(context, mk(root.ent()), invert_scroll, box(16, 95, 36, 36)
         .with_custom_background(theme.secondary).with_checkbox_indicators("", "").with_debug_name("scroll_invert")
@@ -62,14 +62,14 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto action = [&](int id, float x, float w, const std::string &value, const std::string &name) {
       return button(context, mk(root.ent(), id), box(x, 94, w, 39).with_label(value)
           .with_font("AtkinsonMock", pixels(22 * scale)).with_custom_text_color(theme.font)
-          .with_custom_background(theme.secondary).with_corner_radius(6 * scale).with_debug_name(name));
+          .with_custom_background(theme.secondary).with_corner_radius(4 * scale).with_debug_name(name));
     };
     if (action(4, 610, 239, "Reset position", "scroll_reset")) preset = 0;
     if (action(5, 865, 263, "Preview halfway", "scroll_halfway")) preset = 1;
     for (int i = 0; i < 2; ++i)
       div(context, mk(root.ent(), 10 + i), box(static_cast<float>(i) * 592, 165, 552, 509)
           .with_custom_background(theme.surface).with_border({179, 195, 210, 255}, 1)
-          .with_corner_radius(10 * scale).with_debug_name(i == 0 ? "vert_section" : "horiz_section"));
+          .with_corner_radius(12 * scale).with_debug_name(i == 0 ? "vert_section" : "horiz_section"));
     label(20, 20, 177, 512, 36, "Vertical Scroll / 20 items", 27);
     label(21, 20, 222, 512, 31, "Mouse wheel or vertical trackpad swipe", 21, "", true);
     label(30, 612, 177, 512, 36, "Horizontal Scroll / 15 items", 27);
@@ -108,7 +108,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(23 * scale)).with_custom_text_color({255, 255, 255, 255})
           .with_alignment(TextAlignment::Left).with_text_inset(0)
           .with_margin(Margin{.top = pixels(3 * scale), .bottom = pixels(3 * scale)})
-          .with_corner_radius(5 * scale).with_debug_name(fmt::format("vert_item_{}", i)));
+          .with_corner_radius(4 * scale).with_debug_name(fmt::format("vert_item_{}", i)));
       item.ent().get<HasLabel>().text_x_offset = 12 * scale;
       vertical_items[static_cast<size_t>(i)] = &item.ent();
     }
@@ -118,7 +118,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background(theme.accent).with_custom_text_color({255, 255, 255, 255})
           .with_font("AtkinsonMock", pixels(27 * scale)).with_alignment(TextAlignment::Center)
           .with_margin(Margin{.left = pixels(4 * scale), .right = pixels(4 * scale)})
-          .with_corner_radius(7 * scale).with_debug_name(fmt::format("horiz_item_{}", i)));
+          .with_corner_radius(4 * scale).with_debug_name(fmt::format("horiz_item_{}", i)));
       horizontal_items[static_cast<size_t>(i)] = &item.ent();
     }
     const auto range = [](ElementResult &view, const auto &items, bool x_axis) {

@@ -295,7 +295,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("bk_restore"))) {
-      action_status = "Restore preview opened";
+      action_status = "Restore details opened";
       detail = Detail::Restore;
       detail_open = true;
     }
@@ -322,16 +322,17 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(66, fmt::format("{} of 5 folders complete", complete_count()), 286, 335, 300, 26, 18, mid, TextAlignment::Left, "bk_folders_done");
     auto pause_button = button(context, mk(root.ent()), box(scale, 286, 365, 196, 34)
         .with_label(paused ? "Resume backup" : "Pause backup")
-        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(ink)
-        .with_custom_background({235, 239, 242, 255}).with_corner_radius(4 * scale)
+        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(afterhours::Color{255, 255, 255, 255})
+        .with_custom_background(paused ? afterhours::Color{72, 141, 101, 255} : ink).with_corner_radius(5 * scale)
         .with_text_inset(32 * scale, 0).with_alignment(TextAlignment::Left)
-        .with_on_draw_fg([paused = paused, scale, ink](RectangleType r) {
+        .with_on_draw_fg([paused = paused, scale](RectangleType r) {
+          const afterhours::Color fg{255, 255, 255, 255};
           if (paused) {
-            afterhours::draw_triangle({r.x + 12 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 25 * scale}, {r.x + 24 * scale, r.y + 17 * scale}, ink);
+            afterhours::draw_triangle({r.x + 12 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 25 * scale}, {r.x + 24 * scale, r.y + 17 * scale}, fg);
             return;
           }
-          afterhours::draw_rectangle({r.x + 12 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
-          afterhours::draw_rectangle({r.x + 20 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
+          afterhours::draw_rectangle({r.x + 12 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, fg);
+          afterhours::draw_rectangle({r.x + 20 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, fg);
         }).with_debug_name("bk_pause"));
     pause_button.ent().get<HasLabel>().text_x_offset = 32 * scale;
     if (pause_button) {
@@ -349,12 +350,13 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(84, "Size", 664, 452, 90, 25, 16, mid, TextAlignment::Right);
     auto rescan = button(context, mk(root.ent()), box(scale, 644, 365, 110, 34)
         .with_label("Rescan").with_font("AtkinsonMock", pixels(18 * scale))
-        .with_custom_text_color(red).with_custom_background({245, 238, 235, 255})
+        .with_custom_text_color(ink).with_custom_background({242, 245, 247, 255})
+        .with_border(line, scale).with_corner_radius(5 * scale)
         .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
-        .with_on_draw_fg([scale, red](RectangleType r) {
+        .with_on_draw_fg([scale, ink](RectangleType r) {
           const float x = r.x + 18 * scale, y = r.y + 17 * scale;
-          afterhours::draw_ring_segment(x, y, 6 * scale, 8 * scale, 40, 320, 24, red);
-          afterhours::draw_triangle({x + 6 * scale, y - 8 * scale}, {x + 1 * scale, y - 7 * scale}, {x + 6 * scale, y - 2 * scale}, red);
+          afterhours::draw_ring_segment(x, y, 6 * scale, 8 * scale, 40, 320, 24, ink);
+          afterhours::draw_triangle({x + 6 * scale, y - 8 * scale}, {x + 1 * scale, y - 7 * scale}, {x + 6 * scale, y - 2 * scale}, ink);
         }).with_debug_name("bk_rescan"));
     rescan.ent().get<HasLabel>().text_x_offset = 38 * scale;
     if (rescan) {
@@ -370,8 +372,14 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(root.ent(), 100 + static_cast<int>(i)), box(scale, 122, y + 7, 16, 12)
           .with_on_draw_fg([](RectangleType r) { draw_folder_icon(r); }));
       text(110 + static_cast<int>(i), folders[i].name, 146, y, 132, 24, 18, ink, TextAlignment::Left, "bk_name_" + std::to_string(i));
+      const bool queued = !done && !paused && !scanning && i != 1;
       div(context, mk(root.ent(), 120 + static_cast<int>(i)), box(scale, 290, y + 10, 158, 7)
-          .with_on_draw_fg([value = folder_now[i], done](RectangleType r) { draw_track(r, value, done ? afterhours::Color{72, 141, 101, 255} : afterhours::Color{219, 100, 88, 255}); })
+          .with_on_draw_fg([value = folder_now[i], done, queued](RectangleType r) {
+            const afterhours::Color bar_color = done ? afterhours::Color{72, 141, 101, 255}
+                : queued ? afterhours::Color{146, 162, 174, 255}
+                         : afterhours::Color{219, 100, 88, 255};
+            draw_track(r, value, bar_color);
+          })
           .with_debug_name("bk_bar_" + std::to_string(i)));
       text(130 + static_cast<int>(i), fmt::format("{:.0f}%", folder_now[i] * 100), 457, y, 58, 24, 17, mid, TextAlignment::Right, "bk_pct_" + std::to_string(i));
       text(150 + static_cast<int>(i), state, 547, y, 105, 24, 17, done ? afterhours::Color{45, 115, 77, 255} : mid, TextAlignment::Left, "bk_state_" + std::to_string(i));
@@ -470,7 +478,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         .with_debug_name("bk_manage"))) {
       detail = Detail::Account;
       detail_open = true;
-      action_status = "Account preview opened";
+      action_status = "Plan details opened";
     }
     panel(240, 90, 650, 1100, 37, {250, 250, 250, 255}, "bk_footer");
     panel(241, 90, 650, 1100, 1, line);
@@ -479,7 +487,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_rectangle({r.x + 2 * scale, r.y + 7 * scale, 12 * scale, 11 * scale}, {66, 112, 86, 255});
           raylib::DrawRectangleLinesEx({r.x + 4 * scale, r.y, 8 * scale, 11 * scale}, 2 * scale, {66, 112, 86, 255});
         }));
-    text(243, "Encrypted backup preview · no files are uploaded", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
+    text(243, "Encrypted backup · end-to-end encrypted", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
     if (button(context, mk(root.ent()), box(scale, 1144, 653, 34, 31)
         .with_label("?").with_font("AtkinsonMock", pixels(23 * scale))
         .with_custom_text_color(ink).with_custom_background({229, 236, 241, 255})
@@ -491,14 +499,14 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     text(245, action_status, 694, 656, 432, 27, 16, mid, TextAlignment::Right, "bk_action_status");
     std::string detail_title, detail_text;
     if (detail == Detail::Restore) {
-      detail_title = "Restore files preview";
-      detail_text = "Documents and Projects are complete in this demo. Restoring a file requires a connected backup service.";
+      detail_title = "Restore files";
+      detail_text = "Documents and Projects are ready. Connect a backup service to restore a file.";
     } else if (detail == Detail::Account) {
       detail_title = "Personal Backup plan";
-      detail_text = "All backup versions use 787 GB of a 2,000 GB account. The folder table shows this computer's current upload only. Account management is unavailable in this local demo.";
+      detail_text = "All backup versions use 787 GB of a 2,000 GB account. The folder table shows this computer's current upload only. Account management is unavailable right now.";
     } else {
       detail_title = "Backup help";
-      detail_text = "Pause stops the preview. Rescan replays folder discovery. The bandwidth slider sets the simulated transfer cap; no files leave this application.";
+      detail_text = "Pause halts the backup. Rescan reviews folder discovery. The bandwidth slider sets the transfer cap.";
     }
     if (auto dialog = afterhours::modal(context, mk(entity), detail_open,
           afterhours::ModalConfig{}.with_size(pixels(620 * scale), pixels(310 * scale)).with_title(detail_title))) {

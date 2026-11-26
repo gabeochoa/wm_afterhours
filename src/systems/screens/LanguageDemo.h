@@ -87,11 +87,13 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     const auto &heading_font = theme.get_font_config(current_language);
     label(0, get_sample(current_language).title, 0, 0, 1160, 42, 28 * heading_font.size_scale, heading_font.font_name);
     label(1, "Resize the menu preview and compare translated labels with their action icons.", 0, 46, 1160, 28, 20);
+    const auto quiet_btn = afterhours::Color{28, 46, 76, 255};
+    const auto quiet_border = afterhours::Color{62, 91, 124, 255};
     if (button(context, mk(root.ent()), box(928, 0, 232, 40)
         .with_label(compact_preview ? "Widen preview" : "Narrow preview")
         .with_font("AtkinsonMock", pixels(18 * s))
-        .with_background(Theme::Usage::Secondary)
-        .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
+        .with_custom_background(quiet_btn).with_border(quiet_border, s)
+        .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
         .with_debug_name("language_preview_width")))
       compact_preview = !compact_preview;
     for (size_t i = 0; i < languages.size(); ++i) {
@@ -100,9 +102,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
       const bool active = lang == current_language;
       auto picker = button(context, mk(root.ent(), 10 + static_cast<int>(i)), box(static_cast<float>(i) * 392, 86, 376, 50)
           .with_padding(Padding{}).with_label(names[i]).with_font(font.font_name, pixels(22 * font.size_scale * s))
-          .with_background(active ? Theme::Usage::Primary : Theme::Usage::Secondary)
-          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(8 * s)
-          .with_border(active ? afterhours::Color{132, 220, 224, 255} : afterhours::Color{62, 91, 114, 255}, 1)
+          .with_custom_background(active ? theme.primary : quiet_btn)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
+          .with_border(active ? afterhours::Color{132, 220, 224, 255} : quiet_border, active ? 1.5f * s : s)
           .with_debug_name("language_" + std::to_string(i)));
       if (picker) current_language = lang;
       div(context, mk(root.ent(), 70 + static_cast<int>(i)), box(static_cast<float>(i) * 392 + 12, 96, 30, 30)
@@ -130,11 +132,13 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto *fonts = afterhours::EntityHelper::get_singleton_cmp<FontManager>();
     const auto action = [&](int id, size_t index, const std::string &value,
                             float y, float height, const std::string &name) {
-      auto control = button(context, mk(root.ent(), id), box(20, y, control_width, height)
+      auto btn_cfg = box(20, y, control_width, height)
           .with_label(value).with_font(font.font_name, pixels(22 * font.size_scale * s))
-          .with_background(index == 3 ? Theme::Usage::Secondary : Theme::Usage::Primary)
-          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
-          .with_debug_name(name));
+          .with_custom_background(index == 3 ? quiet_btn : theme.primary)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(4 * s)
+          .with_debug_name(name);
+      if (index == 3) btn_cfg.with_border(quiet_border, s);
+      auto control = button(context, mk(root.ent(), id), btn_cfg);
       control.ent().get<HasLabel>().text_x_offset = 7 * s; // halved: centered labels now shift by the full offset (#471)
       const float text_width = afterhours::measure_text(fonts->get_font(font.font_name),
           value.c_str(), 22 * font.size_scale * s, 1.f).x;
@@ -201,7 +205,10 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         .ent().addComponentIfMissing<UIComponentDebug>("language_feedback").set("language_feedback");
     label(66, "Language: " + std::string(english_names[selected]) + " / Active font: " + font.font_name,
           0, 632, 660, 28, 18);
-    label(67, "1 English / 2 Korean / 3 Japanese", 700, 632, 460, 28, 18);
+    div(context, mk(root.ent(), 67), box(700, 632, 460, 28)
+        .with_label("1 English / 2 Korean / 3 Japanese").with_font("AtkinsonMock", pixels(18 * s))
+        .with_custom_text_color({170, 194, 218, 255}).with_alignment(TextAlignment::Right)
+        .with_background(Theme::Usage::None).with_ignore_pointer_events());
   }
 
 };

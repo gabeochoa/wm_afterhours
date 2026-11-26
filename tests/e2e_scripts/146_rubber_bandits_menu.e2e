@@ -1,25 +1,30 @@
 goto_screen rubber_bandits_menu
 resize 1280 720
 wait 0.4
-expect_text "thia9uers - Online"
+expect_text "thia9uers"
+expect_text "Online"
+expect_text "Players  1"
+expect_text "Coins  20"
 expect_text "OPTIONS"
-expect_text "PLAY CREDITS"
-expect_text "BACK"
-expect_text "Get more bandits!"
-expect_text "Buy the supporter pack"
+expect_text "CREDITS"
+expect_text "CLOSE MENU"
+expect_text "Supporter pack"
+expect_text "View pack"
 expect_text "EARL THE BIRD"
+expect_text "1 of 4"
 expect_text "FAVOURITE"
-expect_no_text "Enter  Select"
+expect_text "Enter"
+expect_text "Select"
 assert_ui rb_root x=0 y=0 w=1280 h=720
 assert_ui rb_online_bar x=0 y=0 w=1280 h=40
 assert_ui rb_logo x=52 y=78 w=330 h=183
-assert_ui rb_menu_0 x=48 y=300 w=354 h=42
-assert_ui rb_menu_2 x=48 y=380 w=354 h=42
-assert_ui rb_menu_5 x=48 y=500 w=354 h=42
-assert_ui rb_menu_6 x=48 y=560 w=354 h=42
+assert_ui rb_menu_0 x=48 y=324 w=354 h=42
+assert_ui rb_menu_2 x=48 y=416 w=354 h=42
+assert_ui rb_menu_5 x=48 y=577 w=354 h=42
 assert_ui rb_character_panel x=468 y=608 w=764 h=60
 assert_ui rb_character_prev x=486 y=622 w=48 h=32
 assert_ui rb_character_next x=1166 y=622 w=48 h=32
+assert_ui rb_selected_marker x=659 y=564 w=98 h=12
 assert_ui rb_footer x=0 y=678 w=1280 h=42
 assert_no_overflow
 assert_within_parents
@@ -33,14 +38,11 @@ wait 0.2
 expect_text "Choose your loadout"
 click_ui rb_menu_4
 wait 0.2
-expect_text "Report a player"
+expect_text "Meet the team"
 click_ui rb_menu_5
 wait 0.2
-expect_text "Meet the team"
-click_ui rb_menu_6
-wait 0.2
 expect_text "OPEN MENU"
-expect_no_text "PLAY CREDITS"
+expect_no_text "CREDITS"
 click_ui rb_open_menu
 wait 0.2
 expect_text "OPTIONS"
@@ -49,33 +51,38 @@ wait 0.2
 expect_text "OPEN MENU"
 key ESCAPE
 wait 0.2
-expect_text "BACK"
+expect_text "CLOSE MENU"
 click_ui rb_character_prev
 wait 0.2
 expect_text "THE OUTLAW"
+expect_text "4 of 4"
+assert_ui rb_selected_marker x=1091 y=541 w=98 h=12
 click_ui rb_character_next
 wait 0.2
 expect_text "EARL THE BIRD"
+expect_text "1 of 4"
 focus_ui rb_character_next
 key ENTER
 wait 0.2
 expect_text "THE GENTLEMAN"
+expect_text "2 of 4"
 click_ui rb_character_next
 wait 0.2
 expect_text "HOT HEAD"
+expect_text "3 of 4"
 click_ui rb_promo
 wait 0.2
 expect_text "Cosmetic pack preview"
-expect_text "No purchase in this demo"
+expect_text "Preview"
 assert_no_overflow
 screenshot rubber_bandits_menu_pack
 click_ui rb_promo
 wait 0.2
-expect_text "Get more bandits!"
+expect_text "View pack"
 resize 1920 1080
 wait 0.3
 assert_ui rb_root x=0 y=0 w=1920 h=1080
-assert_ui rb_menu_0 x=72 y=450 w=531 h=63
+assert_ui rb_menu_0 x=72 y=486 w=531 h=63
 assert_ui rb_character_panel x=702 y=912 w=1146 h=90
 assert_no_overflow
 assert_within_parents
@@ -83,6 +90,8 @@ screenshot rubber_bandits_menu_1080
 resize 1024 768
 wait 0.3
 assert_ui rb_root x=0 y=96 w=1024 h=576
+assert_ui rb_menu_0 x=38 y=355 w=283 h=34
+assert_ui rb_character_panel x=374 y=582 w=611 h=48
 assert_no_overflow
 assert_within_parents
 screenshot rubber_bandits_menu_narrow
