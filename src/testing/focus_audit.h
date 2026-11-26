@@ -1,13 +1,10 @@
 #pragma once
 
-#include <afterhours/ah.h>
-#include <filesystem>
-#include <nlohmann/json.hpp>
-
-namespace focus_audit {
-nlohmann::json snapshot(bool include_elements = false);
-void write(const std::filesystem::path &path, const nlohmann::json &data);
-bool capture_crop(const std::filesystem::path &path,
-                  const nlohmann::json &sample);
-void register_systems(afterhours::SystemManager &systems);
-}
+// Compatibility shim (Batch 3 Lane G pluginization): the canonical focus
+// audit now lives at src/devtools/layout_audit/focus_audit.h.
+// Makefile only globs src/testing/*.cpp, so the implementation translation
+// unit stays in this directory (see focus_audit.cpp transport TU below)
+// while the headers are canonicalized. This header keeps the historical
+// include path ("testing/focus_audit.h", "focus_audit.h") working
+// unchanged. Behavior and public API unchanged.
+#include "../devtools/layout_audit/focus_audit.h"
