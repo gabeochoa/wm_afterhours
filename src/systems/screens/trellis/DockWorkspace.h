@@ -366,6 +366,13 @@ template <typename Ctx> struct Workspace {
     }
     std::erase_if(doc.floating,
                   [&](const FloatWin &f) { return f.id == id; });
+    // Never lose a window: keep floats fully inside the workspace.
+    ws_rect.width = std::min(ws_rect.width, root_rect.width);
+    ws_rect.height = std::min(ws_rect.height, root_rect.height);
+    ws_rect.x = std::clamp(ws_rect.x, root_rect.x,
+                           root_rect.x + root_rect.width - ws_rect.width);
+    ws_rect.y = std::clamp(ws_rect.y, root_rect.y,
+                           root_rect.y + root_rect.height - ws_rect.height);
     doc.floating.push_back({id, ws_rect});
   }
   void close_panel(const std::string &id) {
