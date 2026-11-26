@@ -1,0 +1,42 @@
+{
+  "name": "wm_input_injector",
+  "kind": "local_wm_testing_plugin",
+  "disposition": "keep_local",
+  "implementation": {
+    "header": "src/engine/input_injector.h",
+    "source": "src/engine/input_injector.cpp",
+    "namespace": "input_injector"
+  },
+  "public_api": [
+    "schedule_mouse_click_at(const raylib::Rectangle&)",
+    "inject_scheduled_click()",
+    "release_scheduled_click()",
+    "inject_key_press(int)",
+    "hold_key_for_duration(int, float)",
+    "set_key_down(int)",
+    "set_key_up(int)",
+    "consume_synthetic_press(int)",
+    "update_key_hold(float)",
+    "is_key_synthetically_down(int)",
+    "set_mouse_position(int, int)",
+    "get_mouse_position() -> vec2",
+    "is_mouse_button_down(int)",
+    "is_mouse_button_pressed(int)",
+    "is_mouse_button_released(int)",
+    "reset_frame()"
+  ],
+  "callers": [
+    "src/testing/test_input.cpp",
+    "src/game.cpp"
+  ],
+  "upstream_comparison": {
+    "upstream": "vendor/afterhours/src/plugins/e2e_testing/input_injector.h + test_input.h (afterhours::testing::input_injector / test_input)",
+    "parity": "not_proven",
+    "differences": [
+      "rect-centred scheduled click vs (x,y,w,h) schedule_click_at",
+      "int-button mouse queries + vec2 positions with raylib fallback vs Position + no-arg button functions",
+      "consume_synthetic_press decrements count with 1-frame delay vs consume_press readable until reset_frame"
+    ]
+  },
+  "notes": "API and behavior frozen; no migration in audit lane P-B."
+}
