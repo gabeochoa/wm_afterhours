@@ -59,6 +59,7 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
   bool liked = false;
   int likes = 12;
   int rating = 0;  // stars start empty glass
+  bool tracks_seeded = false;  // motion::anim tracks are process-global
 
   void for_each_with(afterhours::Entity &entity,
                      afterhours::ui::UIContext<InputAction> &ctx,
@@ -114,6 +115,28 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     const float s =
         std::min(ctx.screen_width / 1280.f, ctx.screen_height / 720.f);
     auto *shader = &*fx;
+
+    // motion::anim tracks live on a process-global MotionRoot (see
+    // vendor/afterhours/src/plugins/animation/store.h) and survive screen
+    // switches. Re-seed from defaults once per screen instance (this system
+    // is recreated per switch in src/game.cpp) so leaving and returning
+    // restores default visuals instead of inheriting the previous visit's
+    // toggle/size/slider/heart/progress positions.
+    if (!tracks_seeded) {
+      tracks_seeded = true;
+      afterhours::motion::anim<afterhours::Color>(Key::HeartFill)
+          .from(red_core);
+      afterhours::motion::anim(Key::TogFront)
+          .from(toggle_on ? 1.f : 0.f);
+      afterhours::motion::anim(Key::TogBack)
+          .from(toggle_on ? 1.f : 0.f);
+      afterhours::motion::anim(Key::SliderBlob).from(volume);
+      afterhours::motion::anim(Key::SegFront)
+          .from(static_cast<float>(size_index));
+      afterhours::motion::anim(Key::SegBack)
+          .from(static_cast<float>(size_index));
+      afterhours::motion::anim(Key::ProgFill).from(0.f);
+    }
 
     auto jelly_uniforms = [=](float mode, afterhours::Color core,
                               afterhours::Color glow, float radius,
@@ -300,7 +323,6 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
 
     auto &heart_fill =
         afterhours::motion::anim<afterhours::Color>(Key::HeartFill);
-    if (!heart_fill.started()) heart_fill.from(red_core);
     const afterhours::Color heart_col = heart_fill.value();
     const bool heart_liked = liked;
     auto heart_btn = button(
@@ -387,10 +409,6 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     // ---- Toggle (toggle-morph: leading edge first) ------------------------
     auto &tog_front = afterhours::motion::anim(Key::TogFront);
     auto &tog_back = afterhours::motion::anim(Key::TogBack);
-    if (!tog_front.started()) {
-      tog_front.from(toggle_on ? 1.f : 0.f);
-      tog_back.from(toggle_on ? 1.f : 0.f);
-    }
     const float tog_travel = 70.f;  // 128 track, 50 knob, 4 inset each side
     const float tog_f = std::clamp(tog_front.value_or(1.f), 0.f, 1.f);
     const float tog_b = std::clamp(tog_back.value_or(1.f), 0.f, 1.f);
@@ -426,7 +444,6 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
 
     // ---- Slider (parameter scrub + goo trail) ------------------------------
     auto &blob = afterhours::motion::anim(Key::SliderBlob);
-    if (!blob.started()) blob.from(volume);
     if (std::abs(blob.target() - volume) > 0.0005f)
       blob.to(volume, afterhours::motion::Spring{.response = 0.16f,
                                                  .bounce = 0.35f});
@@ -504,10 +521,6 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     // ---- Size segmented (tab-underline-slide) + stepper --------------------
     auto &seg_front = afterhours::motion::anim(Key::SegFront);
     auto &seg_back = afterhours::motion::anim(Key::SegBack);
-    if (!seg_front.started()) {
-      seg_front.from(static_cast<float>(size_index));
-      seg_back.from(static_cast<float>(size_index));
-    }
     const float sf = seg_front.value_or(0.f);
     const float sb = seg_back.value_or(0.f);
     const float seg_w = 410.f / 3.f;
@@ -692,7 +705,6 @@ struct GummyShop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                        (gift_check ? 0.08f : 0.f),
                    0.f, 1.f);
     auto &prog = afterhours::motion::anim(Key::ProgFill);
-    if (!prog.started()) prog.from(0.f);
     if (std::abs(prog.target() - cart_target) > 0.001f)
       prog.to(cart_target, afterhours::motion::Timeline{
                                .keys = {{0.f, 0.f}, {0.85f, 1.f}},
