@@ -18,14 +18,14 @@ expect_text "VIDEO"
 assert_ui pw_root x=0 y=0 w=1280 h=720
 assert_ui pw_tablet x=56 y=62 w=1168 h=576
 assert_ui pw_header x=63 y=69 w=1154 h=54
-assert_ui pw_row_0 x=75 y=141 w=612 h=37
-assert_ui pw_row_4 x=75 y=333 w=612 h=37
-assert_ui pw_row_4_next x=667 y=341 w=24 h=28
+assert_ui pw_row_0 x=75 y=141 w=610 h=37
+assert_ui pw_row_4 x=75 y=325 w=610 h=37
+assert_ui pw_value_4 x=433 y=326 w=251 h=35
 assert_ui pw_scroll x=700 y=132 w=2 h=431
 assert_ui pw_tabs x=64 y=579 w=1152 h=47
-assert_ui pw_tab_2 x=533 y=583 w=198 h=36
+assert_ui pw_tab_2 x=531 y=583 w=198 h=36
 
-click_ui pw_row_4_next
+click_ui pw_value_4
 wait 0.2
 expect_text "4x"
 
@@ -39,7 +39,7 @@ expect_text "AUDIO"
 expect_text "Master Volume"
 expect_text "100%"
 
-click_ui pw_row_0_next
+click_ui pw_value_0
 wait 0.2
 expect_text "0%"
 
@@ -75,6 +75,6 @@ resize 1920 1080
 wait 0.3
 assert_ui pw_root x=0 y=0 w=1920 h=1080
 assert_ui pw_tablet x=84 y=93 w=1752 h=864
-assert_ui pw_row_0 x=113 y=212 w=918 h=56
-assert_ui pw_row_4 x=113 y=500 w=918 h=56
+assert_ui pw_row_0 x=113 y=212 w=915 h=56
+assert_ui pw_row_4 x=113 y=488 w=915 h=56
 assert_ui pw_tabs x=96 y=869 w=1728 h=71
