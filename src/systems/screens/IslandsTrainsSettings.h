@@ -244,22 +244,21 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_label("SETTINGS").with_font("Gaegu-Bold", pixels(38 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
         .with_debug_name("it_title"));
-    detail_label(context, root.ent(), scale, 11,
-                 "Changes apply immediately in this demo.", 352, 70, 576, 26, 21);
     render_section(context, root.ent(), scale, 20, "DISPLAY", 106);
     render_cycle_row(context, root.ent(), scale, 30, "Mode", display_mode, modes,
                      134, "it_mode");
     render_cycle_row(context, root.ent(), scale, 40, "Resolution", resolution,
                      resolutions, 180, "it_resolution");
     render_section(context, root.ent(), scale, 60, "CONTROLS", 238);
-    detail_label(context, root.ent(), scale, 61, "Low 0 / 10 High", 684, 240, 244, 23, 20);
+    detail_label(context, root.ent(), scale, 61, "Low 0 / 10 High", 684, 240, 244, 23, 20,
+                 TextAlignment::Right);
     render_step_row(context, root.ent(), scale, 70, "Pan speed", cam_pan_speed,
                     266, "it_pan");
     render_step_row(context, root.ent(), scale, 100, "Rotation speed", cam_rotate_speed,
                     312, "it_rotate");
     if (button(context, mk(root.ent()), box(scale, 352, 358, 576, 36)
         .with_label("Keyboard controls").with_custom_background({207, 219, 190, 255})
-        .with_corner_radius(6 * scale).with_font("Gaegu-Bold", pixels(25 * scale))
+        .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale).with_font("Gaegu-Bold", pixels(25 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
         .with_on_draw_fg([this, scale](RectangleType r) {
           const float x = r.x + r.width - 27 * scale, y = r.y + r.height / 2;
@@ -279,7 +278,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_custom_text_color(text).with_custom_background({231, 230, 184, 255})
         .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale)
         .with_alignment(TextAlignment::Center).with_on_draw_fg([this, scale](RectangleType r) {
-          const float x = r.x + 24 * scale, y = r.y + r.height / 2;
+          const float x = r.x + r.width / 2 - 88 * scale, y = r.y + r.height / 2;
           afterhours::draw_triangle({x - 5 * scale, y - 8 * scale},
                                     {x - 5 * scale, y + 8 * scale},
                                     {x + 8 * scale, y}, text);
@@ -293,15 +292,17 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_custom_text_color(text).with_border({139, 151, 111, 255}, scale)
         .with_corner_radius(6 * scale).with_alignment(TextAlignment::Center)
         .with_debug_name("it_reset"))) reset_defaults();
-    detail_label(context, root.ent(), scale, 231, "All six settings", 670, 668, 258, 30, 22);
+    detail_label(context, root.ent(), scale, 231, "All six settings", 670, 664, 258, 38, 22,
+                 TextAlignment::Right);
   }
 
   void detail_label(UIContext<InputAction> &c, afterhours::Entity &p, float scale,
                     int id, const std::string &label, float x, float y,
-                    float w, float h, float size) {
+                    float w, float h, float size,
+                    TextAlignment align = TextAlignment::Center) {
     div(c, mk(p, id), box(scale, x, y, w, h).with_label(label)
         .with_font("GaeguMock", pixels((size) * scale)).with_custom_text_color(text)
-        .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Wrap)
+        .with_alignment(align).with_text_overflow(TextOverflow::Wrap)
         .with_ignore_pointer_events());
   }
 
