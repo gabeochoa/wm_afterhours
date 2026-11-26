@@ -10,6 +10,7 @@
 #include <system_error>
 #include <vector>
 
+#include "plugins/settings_policy/settings_file_policy.h"
 #include "rl.h"
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/reduced_motion.h>
@@ -54,7 +55,8 @@ struct S_Data {
   bool save_blocked = false;
 };
 
-constexpr const char *kSettingsProject = "wm_afterhours";
+constexpr const char *kSettingsProject =
+    wm::plugins::settings_policy::kProjectMarker;
 
 void to_json(nlohmann::json &j,
              const afterhours::window_manager::Resolution &resolution) {
@@ -239,16 +241,15 @@ bool Settings::load_save_file(int width, int height) {
       continue;
     try {
       const auto settingsJSON = nlohmann::json::parse(ifs, nullptr, true, true);
-      if (settingsJSON.contains("project")) {
-        const auto &project = settingsJSON.at("project");
-        if (!project.is_string() ||
-            project.get<std::string>() != kSettingsProject) {
-          saw_unusable_settings = true;
-          log_warn("Settings::load_save_file: skipping {} because it belongs "
-                   "to a different project",
-                   place.string());
-          continue;
-        }
+      const auto marker =
+          wm::plugins::settings_policy::classify_marker(settingsJSON);
+      if (marker == wm::plugins::settings_policy::Marker::Foreign ||
+          marker == wm::plugins::settings_policy::Marker::Invalid) {
+        saw_unusable_settings = true;
+        log_warn("Settings::load_save_file: skipping {} because it belongs "
+                 "to a different project",
+                 place.string());
+        continue;
       }
       const bool stored_reduced_motion =
           settingsJSON.contains("reduced_motion_enabled");
@@ -281,14 +282,18 @@ bool Settings::load_save_file(int width, int height) {
     // corrupt settings.json that was just refused. Save to the first
     // app-owned candidate that does not exist yet; if every candidate
     // already exists but is unusable, run unsaved instead of overwriting it.
+    std::vector<bool> exists_flags(places.size(), false);
     for (size_t i = 1; i < places.size(); ++i) {
       std::error_code ec;
-      if (!std::filesystem::exists(places[i], ec)) {
-        data->save_to = places[i];
-        break;
-      }
+      exists_flags[i] = std::filesystem::exists(places[i], ec);
     }
-    data->save_blocked = data->save_to.empty();
+    const auto fallback_target =
+        wm::plugins::settings_policy::first_missing_candidate(places.size(),
+                                                              exists_flags);
+    if (fallback_target.has_target)
+      data->save_to = places[fallback_target.index];
+    data->save_blocked = wm::plugins::settings_policy::blocks_save(
+        saw_unusable_settings, fallback_target);
   }
   refresh_settings();
   return false;
