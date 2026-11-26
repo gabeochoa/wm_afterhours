@@ -8,20 +8,20 @@ expect_text "10.00"
 expect_text "200"
 expect_text "2560 × 1440"
 expect_text "VSync"
-expect_text "Ambient occlusion"
+expect_text "Ambient Occlusion"
 expect_text "100% (native)"
 expect_text "Anti-Aliasing"
 expect_text "reduce graphics processing load."
-expect_text "Changes apply immediately in this preview."
+expect_text "Changes apply immediately."
 expect_text "Reset video settings"
 expect_text "Change category"
 assert_ui pw_root x=0 y=0 w=1280 h=720
 assert_ui pw_header x=63 y=69 w=1154 h=54
-assert_ui pw_row_4 x=75 y=333 w=612 h=37
-assert_ui pw_row_4_next x=667 y=341 w=24 h=28
+assert_ui pw_row_4 x=75 y=325 w=610 h=37
+assert_ui pw_value_4 x=433 y=326 w=251 h=35
 assert_within_parents
 screenshot powerwash_settings_design
-click_ui pw_row_4_next
+click_ui pw_value_4
 wait 0.2
 expect_text "Anti-Aliasing: 4x"
 key LEFT
@@ -39,7 +39,7 @@ expect_text "SSAO means screen-space ambient occlusion."
 click_ui pw_row_6
 wait 0.2
 expect_text "100% uses the selected resolution without scaling."
-click_ui pw_row_6_next
+click_ui pw_value_6
 wait 0.2
 expect_text "Render Scale: 75%"
 click_ui pw_footer_reset
@@ -51,7 +51,7 @@ wait 0.2
 expect_text "Audio settings"
 expect_text "Master Volume"
 expect_text "Reset audio settings"
-click_ui pw_row_0_next
+click_ui pw_value_0
 wait 0.2
 expect_text "Master Volume: 0%"
 key R
@@ -65,7 +65,7 @@ click_ui pw_tab_0
 wait 0.2
 expect_text "General settings"
 expect_text "Colorblind Mode"
-click_ui pw_row_2_next
+click_ui pw_value_2
 wait 0.2
 expect_text "Deuteranopia"
 assert_within_parents
@@ -96,7 +96,7 @@ resize 1920 1080
 wait 0.3
 assert_ui pw_root x=0 y=0 w=1920 h=1080
 assert_ui pw_tablet x=84 y=93 w=1752 h=864
-assert_ui pw_row_4 x=113 y=500 w=918 h=56
+assert_ui pw_row_4 x=113 y=488 w=915 h=56
 assert_within_parents
 screenshot powerwash_settings_design_1080
 resize 1024 768
