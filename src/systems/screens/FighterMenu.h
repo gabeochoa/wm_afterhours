@@ -248,7 +248,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(root.ent()),
         box(scale, 26, 13, 480, 105)
-            .with_label("Main Menu")
+            .with_label("MainMenu")
             .with_font("Garamond", pixels(96.f * scale))
             .with_custom_text_color(white)
             .with_text_shadow(afterhours::Color{125, 230, 45, 255}, 2.f * scale,
@@ -273,7 +273,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("currency_panel"));
     div(context, mk(root.ent()),
         box(scale, 976, 52, 224, 44)
-            .with_label(fmt::format("{},{:03} P$", currency / 1000, currency % 1000))
+            .with_label(fmt::format("{} P$", currency))
             .with_font("Garamond", pixels(39.f * scale))
             .with_custom_text_color(afterhours::Color{241, 255, 199, 255})
             .with_alignment(TextAlignment::Right)
@@ -323,7 +323,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(tabs[i])
               .with_font("Garamond", pixels(30.f * scale))
               .with_letter_spacing(1.f * scale)
-              .with_custom_text_color(active ? ink : muted)
+              .with_custom_text_color(active ? ink : white)
               .with_alignment(TextAlignment::Center)
               .with_on_draw_bg([active, scale](RectangleType r) {
                 if (active) {
@@ -342,19 +342,17 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
         choose_tab(i);
     }
 
-    if (selected_tab <= 1) {
-      div(context, mk(root.ent()),
-          box(scale, 596, 214, 218, 34)
-              .with_label(selected_tab == 1 ? "Online Mode" : "Offline Mode")
-              .with_custom_background(afterhours::Color{238, 233, 203, 245})
-              .with_border(afterhours::Color{175, 163, 132, 255}, 2.f)
-              .with_corner_radius(7.f * scale)
-              .with_font("Garamond", pixels(25.f * scale))
-              .with_custom_text_color(afterhours::Color{56, 58, 46, 255})
-              .with_letter_spacing(2.f * scale)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("fighter_mode_tag"));
-    }
+    div(context, mk(root.ent()),
+        box(scale, 596, 214, 218, 34)
+            .with_label(selected_tab == 1 ? "Online Mode" : "Offline Mode")
+            .with_custom_background(afterhours::Color{238, 233, 203, 245})
+            .with_border(afterhours::Color{175, 163, 132, 255}, 2.f)
+            .with_corner_radius(7.f * scale)
+            .with_font("Garamond", pixels(25.f * scale))
+            .with_custom_text_color(afterhours::Color{56, 58, 46, 255})
+            .with_letter_spacing(2.f * scale)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("fighter_mode_tag"));
 
     const auto &options = selected_tab == 3 ? menu_options : tab_options[selected_tab];
     for (size_t i = 0; i < options.size(); ++i) {
@@ -365,7 +363,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(root.ent(), 100 + static_cast<int>(i)),
                  box(scale, 0, y, w, 48)
                      .with_label("")
-                     .with_custom_text_color(active ? ink : muted)
+                     .with_custom_text_color(active ? ink : white)
                      .with_alignment(TextAlignment::Left)
                      .with_on_draw_bg([active, scale](RectangleType r) {
                        draw_slanted_bar(
@@ -385,7 +383,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(opt.label)
               .with_font("Garamond", pixels(27.f * scale))
               .with_letter_spacing(.6f * scale)
-              .with_custom_text_color(active ? ink : muted)
+              .with_custom_text_color(active ? ink : white)
               .with_alignment(TextAlignment::Left)
               .with_ignore_pointer_events()
               .with_debug_name("fighter_option_label_" + std::to_string(i)));
@@ -446,10 +444,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                        {r.x + r.width, r.y - 5 * scale}, 2 * scale,
                                        {129, 215, 71, 200});
             }).with_debug_name("fighter_holo_card"));
-    div(context, mk(root.ent()), box(scale, 916, 225, 254, 37)
-        .with_label(current.short_label).with_font("Garamond", pixels(29 * scale))
-        .with_letter_spacing(2 * scale).with_custom_text_color({17, 52, 43, 255})
-        .with_alignment(TextAlignment::Center).with_debug_name("fighter_holo_label"));
     if (active_option == 5) {
       div(context, mk(root.ent()), box(scale, 953, 280, 140, 140)
           .with_on_draw_fg(draw_binding_icon).with_ignore_pointer_events()
@@ -464,11 +458,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
              box(scale, 1023 - width / 2, 345 - height / 2, width, height)
                  .with_ignore_pointer_events().with_debug_name("fighter_holo_gear"));
     }
-    div(context, mk(root.ent()), box(scale, 834, 434, 424, 54)
-        .with_label(current.label).with_font("Garamond", pixels(46 * scale))
-        .with_letter_spacing(-0.5f * scale).with_custom_text_color(white)
-        .with_alignment(TextAlignment::Left)
-        .with_text_stroke(black, 2.5f * scale).with_text_shadow(lime, 0, 2 * scale)
+    div(context, mk(root.ent()), box(scale, 826, 418, 432, 70)
+        .with_label(current.label).with_font("Garamond", pixels(54 * scale))
+        .with_letter_spacing(-1 * scale).with_custom_text_color(white)
+        .with_text_stroke(black, 3 * scale).with_text_shadow(lime, 0, 2 * scale)
         .with_debug_name("fighter_selected_name"));
     div(context, mk(root.ent()), box(scale, 804, 492, 476, 170)
         .with_on_draw_bg([scale, bg = deep_black](RectangleType r) {
@@ -476,13 +469,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
           draw_triangle_ccw({r.x + 24 * scale, r.y}, {r.x, r.y + r.height / 2},
                             {r.x + 24 * scale, r.y + r.height}, bg);
         }).with_debug_name("fighter_description"));
-    auto desc_title = div(context, mk(root.ent()), box(scale, 834, 501, 412, 30)
-        .with_label(std::array<const char *, 4>{"OFFLINE / ", "ONLINE / ", "CUSTOMIZE / ", "OPTIONS / "}[selected_tab] + std::string(current.short_label))
-        .with_custom_background(lime).with_font("Garamond", pixels(22 * scale))
-        .with_custom_text_color(black).with_alignment(TextAlignment::Left)
-        .with_debug_name("fighter_description_title"));
-    desc_title.ent().get<HasLabel>().text_x_offset = 10 * scale;
-    div(context, mk(root.ent(), 252), box(scale, 841, 542, 383, 106)
+    div(context, mk(root.ent(), 252), box(scale, 841, 512, 383, 106)
         .with_label(current.description).with_font("Garamond", pixels(23 * scale))
         .with_text_overflow(TextOverflow::Wrap).with_custom_text_color(white)
         .with_letter_spacing(0).with_alignment(TextAlignment::Left)
@@ -518,7 +505,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     keycap(314, "Esc", 637, 45);
     keycap(316, "L", 839, 32);
     keycap(318, "R", 879, 32);
-    const std::array<const char *, 4> labels{"Select", "Choose", "Reset", "Change tab"};
+    const std::array<const char *, 4> labels{"Select", "Confirm", "Return", "Change Entry"};
     const std::array<float, 4> positions{292, 502, 692, 921};
     for (size_t i = 0; i < labels.size(); ++i) {
       div(context, mk(root.ent(), 330 + static_cast<int>(i)),

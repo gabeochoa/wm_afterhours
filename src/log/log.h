@@ -62,22 +62,24 @@ inline void vlog(LogLevel level, const char *file, int line,
 template <typename... Args>
 inline void log_me(LogLevel level, const char *file, int line,
                    const char *format, Args &&...args) {
-  vlog(level, file, line, format,
-       fmt::make_args_checked<Args...>(format, args...));
+  // fmt >= 11 removed fmt::make_args_checked; make_format_args is the
+  // supported replacement (also available in the vendored fmt 8).
+  (void)format;
+  vlog(level, file, line, format, fmt::make_format_args(args...));
 }
 
 template <typename... Args>
 inline void log_me(LogLevel level, const char *file, int line,
                    const wchar_t *format, Args &&...args) {
-  vlog(level, file, line, format,
-       fmt::make_args_checked<Args...>(format, args...));
+  (void)format;
+  vlog(level, file, line, format, fmt::make_format_args(args...));
 }
 
 template <>
 inline void log_me(LogLevel level, const char *file, int line,
                    const char *format, const char *&&args) {
-  vlog(level, file, line, format,
-       fmt::make_args_checked<const char *>(format, args));
+  (void)format;
+  vlog(level, file, line, format, fmt::make_format_args(args));
 }
 
 // Thread-safe storage for log_once_per timing

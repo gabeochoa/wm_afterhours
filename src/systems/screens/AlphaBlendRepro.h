@@ -78,7 +78,7 @@ struct AlphaBlendRepro : ScreenSystem<UIContext<InputAction>> {
         const auto suffix = method == 0 ? fmt::format("a{}", static_cast<int>(alphas[row]))
                                        : fmt::format("o{:.0f}", opacities[row] * 100);
         label(method == 0 ? fmt::format("{}", static_cast<int>(alphas[row]))
-                          : fmt::format(row == 3 ? "{:.1f}%" : "{:.0f}%", opacities[row] * 100),
+                          : fmt::format(fmt::runtime(row == 3 ? "{:.1f}%" : "{:.0f}%"), opacities[row] * 100),
               x + 16, y, 104, 32, 18, row == 3 || row == 4 ? blue : white, "ab_label_" + suffix, true);
         // The content that must remain visible underneath.
         auto under = div(context, mk(root.ent(), id++), box(left + x + 126, y, 426, 32)

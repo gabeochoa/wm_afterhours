@@ -35,14 +35,11 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
   void pane(UIContext<InputAction> &context, afterhours::Entity &parent,
             int slot, const char *title, float x, float w, size_t rows,
             float *out_y) {
-    // Surface/text tokens derive from ctx.theme; removed/added row tints are
-    // the semantic diff palette (single definitions).
-    const auto white = context.theme.font;
-    const auto muted = context.theme.font_muted;
-    const auto tint_before = afterhours::Color{68, 34, 38, 255};
-    const auto tint_after = afterhours::Color{32, 62, 42, 255};
-    const auto tint = slot == 1 ? tint_before : tint_after;
-    const auto pane_bg = context.theme.surface;
+    const auto white = afterhours::Color{235, 240, 250, 255};
+    const auto muted = afterhours::Color{181, 196, 219, 255};
+    const auto tint = afterhours::Color{static_cast<unsigned char>(slot == 1 ? 68 : 32),
+                                        static_cast<unsigned char>(slot == 1 ? 34 : 62),
+                                        static_cast<unsigned char>(slot == 1 ? 38 : 42), 255};
 
     div(context, mk(parent, 100 + slot),
         ComponentConfig{}
@@ -59,7 +56,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(w * scale), pixels(300 * scale)})
                    .with_absolute_position(x * scale, 110.f * scale)
-                   .with_custom_background(pane_bg)
+                   .with_custom_background(afterhours::Color{22, 26, 38, 255})
                    .with_border(muted, 1.f)
                    .with_overflow(Overflow::Scroll, Axis::Y)
                    .with_padding(Padding::all(pixels(4 * scale)))
@@ -107,15 +104,8 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     context.theme = afterhours::ui::theme_presets::neon_dark();
 
-    // Surface/text tokens derive from ctx.theme; diff legend colors and the
-    // action/table fills are derived mixes of the theme surface.
-    const auto white = context.theme.font;
-    const auto muted = context.theme.font_muted;
-    const auto action_bg = afterhours::colors::lighten(context.theme.surface, 0.25f);
-    const auto panel_bg = context.theme.surface;
-    const auto diff_removed = afterhours::Color{238, 154, 162, 255};
-    const auto diff_added = afterhours::Color{147, 219, 169, 255};
-    const auto cell_edge = afterhours::colors::opacity_pct(context.theme.font, 0.25f);
+    const auto white = afterhours::Color{235, 240, 250, 255};
+    const auto muted = afterhours::Color{181, 196, 219, 255};
 
     scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const float left = (context.screen_width - 1280 * scale) / 2;
@@ -123,7 +113,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18 * scale));
     div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
-        .with_absolute_position(0, 0).with_custom_background(context.theme.background).with_corner_radius(0));
+        .with_absolute_position(0, 0).with_custom_background({15, 22, 35, 255}).with_corner_radius(0));
     auto root = div(context, mk(entity), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
         .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
@@ -145,7 +135,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
          48, 53, 1180, 28, 20, muted, "ss_hint");
     const auto action = [&](int id, const char *label, float x, float w, const char *debug) {
       return button(context, mk(root.ent(), id), box(x, 18, w, 34).with_label(label)
-          .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_background(action_bg)
+          .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_background({65, 89, 119, 255})
           .with_custom_text_color(white).with_corner_radius(6 * scale).with_debug_name(debug));
     };
     reset_offsets = action(10, "Reset all offsets", 992, 236, "ss_reset");
@@ -156,12 +146,12 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
     text(2, fmt::format("Before y: {:.0f} px", left_y), 48, 416, 330, 27, 19, white, "ss_readout_y");
     text(3, fmt::format("After y: {:.0f} px", right_y), 400, 416, 330, 27, 19, white, "ss_after_y");
     text(4, fmt::format("Short y: {:.0f} px", short_y), 752, 416, 200, 27, 19, white, "ss_short_y");
-    div(context, mk(root.ent()), box(980, 110, 248, 570).with_custom_background(panel_bg).with_corner_radius(8 * scale));
+    div(context, mk(root.ent()), box(980, 110, 248, 570).with_custom_background({28, 39, 57, 255}).with_corner_radius(8 * scale));
     text(21, "Sync rules", 992, 122, 224, 32, 26, white, "", true);
     text(22, "Same group, same offset.", 992, 166, 224, 25, 17, muted);
     text(23, "Each view keeps its limits.", 992, 196, 224, 25, 17, muted);
-    text(24, "- Before: removed", 992, 236, 224, 25, 18, diff_removed);
-    text(25, "+ After: added", 992, 266, 224, 25, 18, diff_added);
+    text(24, "- Before: removed", 992, 236, 224, 25, 18, {238, 154, 162, 255});
+    text(25, "+ After: added", 992, 266, 224, 25, 18, {147, 219, 169, 255});
     text(26, "Viewport / content height", 992, 309, 224, 25, 16, muted);
     for (size_t i = 0; i < viewport_h.size(); ++i) {
       const char *names[] = {"Before", "After", "Short"};
@@ -188,11 +178,8 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
   // Group 2: header synced on x only, over a wide scrolling table.
   void horizontal_group(UIContext<InputAction> &context,
                         afterhours::Entity &entity) {
-    const auto white = context.theme.font;
-    const auto muted = context.theme.font_muted;
-    const auto header_bg = afterhours::colors::lighten(context.theme.surface, 0.15f);
-    const auto table_bg = context.theme.surface;
-    const auto cell_edge = afterhours::colors::opacity_pct(context.theme.font, 0.25f);
+    const auto white = afterhours::Color{235, 240, 250, 255};
+    const auto muted = afterhours::Color{181, 196, 219, 255};
     const float table_w = 900.f * scale;
     const float col_w = 120.f * scale;
 
@@ -211,7 +198,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(table_w), pixels(26 * scale)})
                    .with_absolute_position(48.f * scale, 478.f * scale)
-                   .with_custom_background(header_bg)
+                   .with_custom_background(afterhours::Color{40, 48, 70, 255})
                    .with_border(muted, 1.f)
                    .with_overflow(Overflow::Scroll, Axis::X)
                    .with_debug_name("ss_header"));
@@ -244,7 +231,7 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(table_w), pixels(150 * scale)})
                    .with_absolute_position(48.f * scale, 506.f * scale)
-                   .with_custom_background(table_bg)
+                   .with_custom_background(afterhours::Color{22, 26, 38, 255})
                    .with_border(muted, 1.f)
                    .with_overflow(Overflow::Scroll, Axis::X)
                    .with_debug_name("ss_table"));
@@ -277,8 +264,8 @@ struct SyncScrollLab : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(muted)
                 .with_font("NotoSansKR", pixels(15.f * scale)).with_letter_spacing(-1.f)
                 .with_text_inset(8 * scale, 2 * scale)
-                .with_on_draw_fg([cell_edge](RectangleType cell_rect) {
-                  afterhours::draw_rectangle({cell_rect.x + cell_rect.width - 1, cell_rect.y, 1, cell_rect.height}, cell_edge);
+                .with_on_draw_fg([](RectangleType cell_rect) {
+                  afterhours::draw_rectangle({cell_rect.x + cell_rect.width - 1, cell_rect.y, 1, cell_rect.height}, afterhours::Color{48, 62, 81, 255});
                 })
                 .with_debug_name(fmt::format("ss_cell_{}_{}", r, c)));
     }
