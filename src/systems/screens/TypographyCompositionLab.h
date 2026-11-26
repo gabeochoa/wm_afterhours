@@ -56,14 +56,14 @@ struct TypographyCompositionLab
     label("Make waves", 36, 508, 660, 38, 27, ink, "type_reading_order", true);
     label("Big ideas deserve a little space. Start with yours.", 36, 550,
           1072, 32, 22, muted, "type_description");
-    if (button(context, mk(root.ent()), box(0, 610, 180, 52)
+    if (button(context, mk(root.ent()), box(0, 600, 180, 52)
         .with_label("Replay").with_font("AtkinsonMockBold", pixels(22 * s))
         .with_custom_background(teal).with_custom_text_color({255, 255, 255, 255})
         .with_corner_radius(8 * s).with_debug_name("type_replay"))) {
       ++replays;
       elapsed = reduced_motion ? 1.f : 0.f;
     }
-    if (button(context, mk(root.ent()), box(204, 610, 300, 52)
+    if (button(context, mk(root.ent()), box(204, 600, 300, 52)
         .with_label(reduced_motion ? "Reduced motion: on" : "Reduced motion: off")
         .with_font("AtkinsonMock", pixels(22 * s)).with_custom_text_color(ink)
         .with_custom_background({221, 229, 236, 255}).with_border(muted, s)
@@ -86,8 +86,8 @@ struct TypographyCompositionLab
         .with_opacity(.4f + .6f * second).with_ignore_pointer_events()
         .with_debug_name("type_waves"));
     label(reduced_motion ? "Still and clear" : elapsed < 1.f ? "Playing" : "At rest",
-          538, 614, 262, 42, 22, ink, "type_phase");
-    label(fmt::format("Replays: {}", replays), 866, 614, 278, 42,
+          538, 604, 262, 42, 22, ink, "type_phase");
+    label(fmt::format("Replays: {}", replays), 866, 604, 278, 42,
           20, muted, "type_replays");
     label("Replay any time. Reduced motion keeps the words in place.",
           0, 679, 1144, 25, 18, muted, "type_help");

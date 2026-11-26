@@ -317,11 +317,11 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
               e == example[group], std::string("ex_") + current.examples[e].slug, 32.f))
         example[group] = e;
 
-    if (tab(entity, 40, "Replay", 40, 660, 120, false, "replay_btn")) ++replay_stamp;
-    if (tab(entity, 41, "Reset", 172, 660, 120, false, "reset_btn")) reset_examples();
+    if (tab(entity, 40, "Replay", 40, 612, 120, false, "replay_btn")) ++replay_stamp;
+    if (tab(entity, 41, "Reset", 172, 612, 120, false, "reset_btn")) reset_examples();
     const bool reduced = Settings::get().get_reduced_motion_enabled();
     auto reduced_btn = button(context, mk(entity, 42),
-               box(320, 660, 260, 40).with_padding(Padding::all(pixels(0)))
+               box(320, 612, 260, 40).with_padding(Padding::all(pixels(0)))
                    .with_custom_background(chip).with_corner_radius(8 * s).with_debug_name("reduced_motion")
                    .with_on_draw_fg([reduced, s, ink, accent](RectangleType r) {
                      const RectangleType box_r{r.x + 12.f * s, r.y + r.height / 2.f - 10.f * s, 20.f * s, 20.f * s};
@@ -337,7 +337,7 @@ struct TransitionsLab : ScreenSystem<UIContext<InputAction>> {
                                               .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
     if (reduced_btn) Settings::get().set_reduced_motion_enabled(!reduced);
 
-    auto stage = div(context, mk(entity), box(40, 180, 1200, 460).with_custom_background({36, 33, 44, 255})
+    auto stage = div(context, mk(entity), box(40, 180, 1200, 430).with_custom_background({36, 33, 44, 255})
                                                   .with_corner_radius(12 * s).with_debug_name("stage"));
     if (current.examples.empty()) {
       label(stage.ent(), 0, "No examples in this group yet.", 24, 24, 600, 22, true);

@@ -13,13 +13,13 @@ expect_text "Tab selects all / arrow keys edit text"
 assert_ui cg_canvas w=1280 h=720
 assert_ui cg_root x=68 y=0 w=1144 h=720
 assert_ui cg_shadow_0 w=96 h=64
-assert_ui cg_reference_0 w=96 h=64
+assert_ui cg_reference_0 w=96 h=58
 assert_ui cg_clamp_0 w=90 h=34
 assert_ui cg_clamp_1 w=176 h=34
 assert_ui cg_clamp_2 w=200 h=34
 assert_ui cg_clip w=184 h=76
-assert_ui cg_wrap_child_0 x=476 y=632 w=90 h=27
-assert_ui cg_wrap_child_1 x=476 y=660 w=90 h=27
+assert_ui cg_wrap_child_0 x=476 y=604 w=90 h=27
+assert_ui cg_wrap_child_1 x=476 y=632 w=90 h=27
 click_ui cg_pause
 wait 0.2
 expect_text "Resume marquee"
@@ -36,14 +36,14 @@ expect_text "row 2 clipped"
 expect_text "Row 2 starts below the first two rows."
 click_ui cg_reset
 wait 0.2
-mouse_down 1028 477
+mouse_down 1028 449
 wait 0.2
 expect_text "On pointer down: 1"
 expect_text "On pointer up: 0"
 mouse_up
 wait 0.2
 expect_text "On pointer down: 1"
-mouse_down 1028 520
+mouse_down 1028 492
 wait 0.2
 expect_text "On pointer up: 0"
 mouse_up

@@ -11,8 +11,8 @@ assert_ui type_canvas w=1280 h=720
 assert_ui type_composition x=68 y=138 w=1144 h=350
 assert_ui type_make x=118 y=202 w=620 h=154
 assert_ui type_waves x=360 y=302 w=810 h=156
-assert_ui type_replay x=68 y=610 w=180 h=52
-assert_ui type_reduce_motion x=272 y=610 w=300 h=52
+assert_ui type_replay x=68 y=600 w=180 h=52
+assert_ui type_reduce_motion x=272 y=600 w=300 h=52
 assert_within_parents
 screenshot typography_composition_rest
 click_ui type_replay

@@ -56,7 +56,7 @@ struct MotionButtonCheckpoint : ScreenSystem<UIContext<InputAction>> {
                .with(um::on_hover({.scale = 1.1f, .corner_radius = 40.f * s, .background = ColorType{40, 60, 120, 255}})));
 
     auto slab = div(context, mk(entity),
-                    box(80, 640, 320, 56).with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
+                    box(80, 592, 320, 56).with_custom_background({230, 220, 235, 255}).with_corner_radius(8 * s)
                         .with_debug_name("slab").with(um::on_appear({.translate_x = 200.f * s}, motion::Spring::smooth())));
     if (button(context, mk(slab.ent()),
                ComponentConfig{}.with_size({pixels(120 * s), pixels(40 * s)}).with_absolute_position(8 * s, 8 * s)

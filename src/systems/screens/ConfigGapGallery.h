@@ -68,13 +68,13 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
     label(root.ent(), 2, "Compare requested settings with visible output. Measurements use 720p design pixels unless marked screen px.",
           20, 69, 1104, 23, 18);
     const auto make_row = [&](int index) {
-      return hstack(context, mk(root.ent(), 10 + index), box(0, 112 + index * 302.f, 1144, 286)
+      return hstack(context, mk(root.ent(), 10 + index), box(0, 112 + index * 274.f, 1144, 270)
           .with_no_wrap().with_gap(pixels(20 * s)).with_debug_wrap(index == 1)
           .with_debug_name("cg_row_" + std::to_string(index)));
     };
     const auto panel = [&](afterhours::Entity &row, int id, const std::string &title, const std::string &name) {
       auto result = div(context, mk(row, id), ComponentConfig{}
-          .with_size({pixels(368 * s), pixels(286 * s)})
+          .with_size({pixels(368 * s), pixels(270 * s)})
           .with_custom_background(theme.surface).with_corner_radius(12 * s).with_debug_name(name));
       label(result.ent(), 0, title, 12, 8, 344, 31, 20, "", true);
       return result;
@@ -100,13 +100,13 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       label(p.ent(), 40, "Matched pair: r18, offset 5, 5; soft blur 8", 14, 160, 340, 22, 16);
       for (int i = 0; i < 3; ++i) {
         const float x = 18 + i * 116.f;
-        auto config = box(x, 187, 96, 64).with_custom_background(i == 2 ? fills[2] : fills[0])
+        auto config = box(x, 187, 96, 58).with_custom_background(i == 2 ? fills[2] : fills[0])
             .with_corner_radius((i == 2 ? 20 : 18) * s).with_segments(12)
             .with_debug_name("cg_reference_" + std::to_string(i));
         if (i < 2) config.with_shadow(i == 0 ? ShadowStyle::Hard : ShadowStyle::Soft, 5 * s, 5 * s, 8 * s);
         div(context, mk(p.ent(), 50 + i), config);
         label(p.ent(), 60 + i, i == 0 ? "Hard" : i == 1 ? "Soft / blur 8" : "12 segments",
-              x - 4, 257, 116, 22, 15);
+              x - 4, 248, 116, 22, 15);
       }
     }
     {
@@ -234,10 +234,10 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(p.ent()), probe.with_absolute_position(20 * s, 165 * s)
           .with_custom_background({46, 62, 52, 255}).with_corner_radius(0).with_debug_name("cg_probe"));
       label(p.ent(), 6, fmt::format("Text {:.0f}x{:.0f} / children {:.0f}x{:.0f} screen px", measured.size.x,
-            measured.size.y, without_tree.size.x, without_tree.size.y), 16, 187, 336, 20, 16, "cg_measure");
-      label(p.ent(), 7, "Text uses the label; children needs a tree.", 16, 207, 336, 20, 16);
-      label(p.ent(), 8, "Tab selects all / arrow keys edit text", 16, 228, 336, 20, 16);
-      text_input(context, mk(p.ent()), field, box(20, 250, 328, 32)
+            measured.size.y, without_tree.size.x, without_tree.size.y), 16, 184, 336, 20, 16, "cg_measure");
+      label(p.ent(), 7, "Text uses the label; children needs a tree.", 16, 202, 336, 20, 16);
+      label(p.ent(), 8, "Tab selects all / arrow keys edit text", 16, 218, 336, 20, 16);
+      text_input(context, mk(p.ent()), field, box(20, 236, 328, 32)
           .with_font("AtkinsonMock", pixels(17 * s))
           .with_consumes_directional_input(true).with_corner_radius(6 * s).with_debug_name("cg_field"));
     }
