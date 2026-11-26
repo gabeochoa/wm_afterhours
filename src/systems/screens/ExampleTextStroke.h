@@ -46,7 +46,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     label(0, 0, 24, 884, 45, "Text stroke / outline", 35, white);
     label(1, 0, 79, 1144, 31, "Atkinson / continuous rounded outlines / cached glyph coverage", 22, muted);
     const std::array<const char *, 3> detail_labels{"Glyph detail: Off", "Glyph detail: 5px", "Glyph detail: 10px"};
-    if (button(context, mk(root.ent()), box(910, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
+    if (button(context, mk(root.ent()), box(754, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(panel).with_custom_text_color(white)
         .with_corner_radius(6 * scale).with_debug_name("stroke_detail_toggle"))) detail = (detail + 1) % 3;
     const auto backing = [&](int id, float y, float h) {

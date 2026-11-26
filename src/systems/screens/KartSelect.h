@@ -285,7 +285,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     text(2, "Grand Prix · Mushroom Cup", 44.f, 51.f, 660.f, 27.f, 23.f,
          navy, TextAlignment::Left);
     div(context, mk(root.ent()),
-        box(scale, 1198.f, 27.f, 32.f, 32.f)
+        box(scale, 1024.f, 27.f, 32.f, 32.f)
             .with_label("P1")
             .with_font("ArchivoMockBold", pixels(22.f * scale))
             .with_custom_background(yellow).with_border(navy, 2 * scale)

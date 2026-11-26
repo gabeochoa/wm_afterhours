@@ -54,7 +54,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     label(root.ent(), 1, "Decorative frames", 20, 28, 790, 40, 34, true);
     label(root.ent(), 2, "Identical content and dimensions. Original colors above; neutral colors below.",
           20, 72, 1104, 25, 19);
-    if (button(context, mk(root.ent()), box(874, 37, 250, 34)
+    if (button(context, mk(root.ent()), box(738, 37, 250, 34)
         .with_label(show_content_bounds ? "Hide content bounds" : "Show content bounds")
         .with_font("AtkinsonMock", pixels(18 * s)).with_alignment(TextAlignment::Center)
         .with_background(Theme::Usage::Primary).with_auto_text_color(true).with_corner_radius(8 * s)

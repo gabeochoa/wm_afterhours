@@ -62,13 +62,13 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background({52, 74, 105, 255})
           .with_custom_text_color(white).with_corner_radius(5 * s).with_debug_name(debug));
     };
-    if (preset(10, "Start", 696, "vl_start")) jump = 0;
-    if (preset(11, "Middle", 790, "vl_middle")) jump = kCount / 2;
-    if (preset(12, "End", 884, "vl_end")) jump = kCount - 1;
-    text_input(context, mk(root.ent()), index_text, box(986, 15, 144, 34)
+    if (preset(10, "Start", 524, "vl_start")) jump = 0;
+    if (preset(11, "Middle", 618, "vl_middle")) jump = kCount / 2;
+    if (preset(12, "End", 712, "vl_end")) jump = kCount - 1;
+    text_input(context, mk(root.ent()), index_text, box(814, 15, 144, 34)
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background({34, 46, 65, 255})
         .with_border(muted, 1.f).with_placeholder("0 to 9999").with_debug_name("vl_index"));
-    if (button(context, mk(root.ent()), box(1140, 15, 88, 34).with_label("Jump")
+    if (button(context, mk(root.ent()), box(968, 15, 88, 34).with_label("Jump")
         .with_font("AtkinsonMock", pixels(18 * s)).with_custom_background(cyan)
         .with_custom_text_color(ink).with_corner_radius(5 * s).with_debug_name("vl_jump"))) {
       size_t requested = 0;

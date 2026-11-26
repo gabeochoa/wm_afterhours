@@ -117,7 +117,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     // Title
     label(header.ent(), "Checkbox Components", 20, 8, 850, 40, 33, "checkbox_title");
     label(header.ent(), "Neon Dark / square marks, independent states, and group limits", 20, 52, 740, 26, 20, "", true);
-    if (button(context, mk(header.ent()), box(914, 10, 210, 36)
+    if (button(context, mk(header.ent()), box(778, 10, 210, 36)
         .with_label("Reset demo").with_font("AtkinsonMock", pixels(21 * s))
         .with_custom_background({53, 70, 97, 255}).with_custom_text_color(ink)
         .with_corner_radius(4 * s).with_debug_name("checkbox_reset"))) reset();
