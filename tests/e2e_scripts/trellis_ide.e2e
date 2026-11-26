@@ -6,9 +6,22 @@ expect_text "pulse shell"
 expect_text "TODO"
 click_ui ide_outline_1
 wait 0.2
+expect_text "#pragma once"
+click_ui dock_reset
+wait 0.3
+expect_text "#include"
 drag_to 1050 75 640 660
 wait 0.3
 screenshot trellis_ide_moved
 click_ui dock_overview
 wait 0.3
+assert_within_parents
+click_ui ide_outline_1
+wait 0.2
+expect_text "#pragma once"
+goto_screen trellis_paint
+wait 0.5
+goto_screen trellis_ide
+wait 0.5
+expect_text "#include"
 assert_within_parents

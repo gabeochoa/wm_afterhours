@@ -36,10 +36,26 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     ws.frame_all();
   }
 
-  void build() {
-    built = true;
+  void seed_defaults() {
+    t_accum = 0.f;
+    log_timer = 0.f;
+    log_seq = 0;
+    logs.clear();
     logs.push_back("ops: deploy pulse-api v1.4.2 started");
     logs.push_back("ops: health checks passing (12/12)");
+    runbook_done = {false, false, false, false};
+    paused = false;
+  }
+
+  void reset_all() {
+    seed_defaults();
+    reset_layout();
+    ws.reset_camera_history();
+  }
+
+  void build() {
+    built = true;
+    seed_defaults();
     ws.defs["chart"] = {"Latency (live)", {23, 86, 227, 255},
                         [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_chart(c, p, r); }};
     ws.defs["metrics"] = {"Metrics", {62, 178, 32, 255},
@@ -93,21 +109,21 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             })
             .with_debug_name("ops_chart_line"));
     line(ctx, parent, 1, 8.f, 2.f, r.width - 16.f,
-         "p99 latency — streaming, moves with the panel", {45, 52, 72, 255});
+         "p99 latency — streaming, moves with the panel", {28, 36, 54, 255});
   }
 
   void draw_metrics(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
     const int rps = 1200 + int(300.f * std::sin(t_accum * 0.7f));
     const int err = 2 + int(1.5f + 1.5f * std::sin(t_accum * 1.9f));
     line(ctx, parent, 0, 10.f, 8.f, r.width - 20.f,
-         "Requests: " + std::to_string(rps) + "/s", {45, 52, 72, 255}, 16.f);
+         "Requests: " + std::to_string(rps) + "/s", {28, 36, 54, 255}, 16.f);
     line(ctx, parent, 1, 10.f, 38.f, r.width - 20.f,
          "Errors: " + std::to_string(err) + "/min",
          err > 2 ? afterhours::Color{200, 70, 60, 255}
                  : afterhours::Color{62, 140, 60, 255},
          16.f);
     line(ctx, parent, 2, 10.f, 68.f, r.width - 20.f,
-         paused ? "Stream: paused" : "Stream: live", {118, 126, 150, 255});
+         paused ? "Stream: paused" : "Stream: live", {62, 70, 92, 255});
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
     auto b = button(ctx, mk(parent, 3),
@@ -126,7 +142,7 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     int start = std::max(0, (int)logs.size() - max_lines);
     for (int i = start; i < (int)logs.size(); ++i)
       line(ctx, parent, i, 8.f, 4.f + (i - start) * 20.f, r.width - 16.f,
-           logs[static_cast<size_t>(i)], {52, 60, 78, 255}, 12.f);
+           logs[static_cast<size_t>(i)], {28, 36, 54, 255}, 12.f);
   }
 
   void draw_runbook(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
@@ -144,7 +160,7 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                           .with_custom_text_color(afterhours::Color{40, 48, 64, 255})
                           .with_custom_background(runbook_done[static_cast<size_t>(i)]
                                                       ? afterhours::Color{214, 245, 190, 255}
-                                                      : afterhours::Color{240, 242, 246, 255})
+                                                      : afterhours::Color{205, 214, 232, 255})
                           .with_corner_radius(8.f)
                           .with_debug_name("ops_runbook_step_" + std::to_string(i)));
       if (b) runbook_done[static_cast<size_t>(i)] = !runbook_done[static_cast<size_t>(i)];
@@ -181,17 +197,19 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     div(ctx, mk(page.ent(), 900),
         ComponentConfig{}
             .with_absolute_position(16.f * s, 10.f * s)
-            .with_size({pixels(440.f * s), pixels(34.f * s)})
+            .with_size({pixels(330.f * s), pixels(34.f * s)})
             .with_label("Ops — Trellis dashboard")
             .with_font("FredokaMockBold", pixels(22.f * s))
             .with_custom_text_color(afterhours::Color{45, 52, 72, 255})
             .with_transparent_bg()
             .with_ignore_pointer_events());
+    // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_layout(); });
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+    // Bottom 48px of the page is reserved for the global HUD.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,
-               1256.f * s, 656.f * s},
+               1256.f * s, 620.f * s},
               dt);
   }
 };

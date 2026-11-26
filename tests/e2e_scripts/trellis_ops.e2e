@@ -7,9 +7,21 @@ wait 0.2
 click_ui ops_pause
 wait 0.2
 expect_text "Stream: paused"
+click_ui dock_reset
+wait 0.3
+expect_text "Stream: live"
 drag_to 300 75 640 660
 wait 0.3
 screenshot trellis_ops_moved
 click_ui dock_overview
 wait 0.3
+assert_within_parents
+click_ui ops_pause
+wait 0.2
+expect_text "Stream: paused"
+goto_screen trellis_paint
+wait 0.5
+goto_screen trellis_ops
+wait 0.5
+expect_text "Stream: live"
 assert_within_parents

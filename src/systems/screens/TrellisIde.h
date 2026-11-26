@@ -41,8 +41,23 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     ws.frame_all();
   }
 
+  void seed_defaults() {
+    t_accum = 0.f;
+    preview_ticks = 0;
+    current_file = "main.cpp";
+    term_log = {"pulse shell — try: help, build, clear"};
+    term_input.clear();
+  }
+
+  void reset_all() {
+    seed_defaults();
+    reset_layout();
+    ws.reset_camera_history();
+  }
+
   void build() {
     built = true;
+    seed_defaults();
     files["main.cpp"] = {
         "#include \"pulse.h\"", "", "int main() {", "  App app;",
         "  app.load_workspace(\"default\");", "  // TODO: restore camera",
@@ -95,7 +110,7 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
   void draw_explorer(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
-    line(ctx, parent, 0, 8.f, 4.f, r.width - 16.f, "PULSE", {45, 52, 72, 255});
+    line(ctx, parent, 0, 8.f, 4.f, r.width - 16.f, "PULSE", {28, 36, 54, 255});
     int i = 0;
     for (auto &[name, _] : files) {
       auto b = button(ctx, mk(parent, 10 + i),
@@ -107,7 +122,7 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                           .with_custom_text_color(afterhours::Color{40, 48, 64, 255})
                           .with_custom_background(name == current_file
                                                       ? afterhours::Color{214, 232, 255, 255}
-                                                      : afterhours::Color{240, 242, 246, 255})
+                                                      : afterhours::Color{205, 214, 232, 255})
                           .with_corner_radius(7.f)
                           .with_debug_name("ide_file"));
       if (b) {
@@ -132,9 +147,9 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     int i = 0;
     for (auto &ln : it->second) {
       line(ctx, parent, i, 34.f, 8.f + i * 21.f, r.width - 42.f, ln,
-           {52, 60, 78, 255}, 13.5f);
+           {28, 36, 54, 255}, 13.5f);
       line(ctx, parent, 100 + i, 4.f, 8.f + i * 21.f, 26.f,
-           std::to_string(i + 1), {150, 158, 175, 255}, 11.f);
+           std::to_string(i + 1), {105, 113, 135, 255}, 11.f);
       ++i;
       if (8.f + i * 21.f > r.height - 24.f) break;
     }
@@ -163,7 +178,7 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     int start = std::max(0, (int)term_log.size() - max_lines);
     for (int i = start; i < (int)term_log.size(); ++i)
       line(ctx, parent, i, 8.f, 4.f + (i - start) * 19.f, r.width - 16.f,
-           term_log[static_cast<size_t>(i)], {52, 60, 78, 255}, 12.5f);
+           term_log[static_cast<size_t>(i)], {28, 36, 54, 255}, 12.5f);
     afterhours::ui::form::text(
         ctx, mk(parent, 90), "", term_input,
         ComponentConfig{}
@@ -226,7 +241,7 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
     line(ctx, parent, 0, 8.f, 4.f, r.width - 16.f,
-         "Never reloads — drag it anywhere.", {45, 52, 72, 255});
+         "Never reloads — drag it anywhere.", {28, 36, 54, 255});
     const float cx = r.width / 2.f, cy = r.height / 2.f + 6.f;
     const float rad = std::min(r.width, r.height) * 0.28f;
     const float a = t_accum * 1.4f;
@@ -249,7 +264,7 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             })
             .with_debug_name("ide_preview_canvas"));
     line(ctx, parent, 2, 8.f, r.height - 26.f, r.width - 16.f,
-         "ticks: " + std::to_string(preview_ticks), {45, 52, 72, 255});
+         "ticks: " + std::to_string(preview_ticks), {28, 36, 54, 255});
   }
 
   void for_each_with(afterhours::Entity &entity, Ctx &ctx, float dt) override {
@@ -274,17 +289,19 @@ struct TrellisIde : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     div(ctx, mk(page.ent(), 900),
         ComponentConfig{}
             .with_absolute_position(16.f * s, 10.f * s)
-            .with_size({pixels(420.f * s), pixels(34.f * s)})
+            .with_size({pixels(330.f * s), pixels(34.f * s)})
             .with_label("Pulse — Trellis IDE")
             .with_font("FredokaMockBold", pixels(22.f * s))
             .with_custom_text_color(afterhours::Color{235, 240, 250, 255})
             .with_transparent_bg()
             .with_ignore_pointer_events());
+    // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_layout(); });
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+    // Bottom 48px of the page is reserved for the global HUD.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,
-               1256.f * s, 656.f * s},
+               1256.f * s, 620.f * s},
               dt);
   }
 };

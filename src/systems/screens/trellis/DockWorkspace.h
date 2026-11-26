@@ -221,6 +221,30 @@ inline std::string serialize_doc(const Doc &d) {
   return s;
 }
 
+// --- Global chrome safe areas (gallery shell) ---
+// ScreenNavigator's "Browse screens" launcher (layer 2000) sits at the
+// top-right: x = screen_width - 212, y = 8, 200x32. Trellis toolbars that
+// extend under it lose clicks to that layer. These helpers let Trellis
+// chrome reserve that strip (Trellis-local; the shell itself is untouched).
+inline RectangleType global_launcher_rect(float screen_w) {
+  return {screen_w - 212.f, 8.f, 200.f, 32.f};
+}
+inline bool rects_intersect(RectangleType a, RectangleType b) {
+  return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height &&
+         a.y + a.height > b.y;
+}
+// Page-local x so a toolbar of `toolbar_w` ends 12px left of the launcher.
+// `page_screen_x` is the page's screen-space origin.
+inline float toolbar_x_ending_before_launcher(float screen_w,
+                                              float page_screen_x,
+                                              float toolbar_w) {
+  const float launcher_left_page =
+      global_launcher_rect(screen_w).x - page_screen_x;
+  return std::max(launcher_left_page - 12.f - toolbar_w, 0.f);
+}
+// How many tab-strip pixels are usable before header controls (F/x) start.
+inline constexpr float kHeaderControlsReserve = 80.f;
+
 template <typename Ctx> struct PanelDef {
   std::string title;
   Color color{120, 140, 200, 255};
@@ -267,6 +291,59 @@ template <typename Ctx> struct Workspace {
   float last_click_t = -10.f;
   std::string last_click_panel;
   float clock_s = 0.f;
+  // Hysteresis: the last committed drop target; a new candidate only wins
+  // once the pointer leaves the committed preview (inflated), so targets
+  // don't flicker while dragging across a panel.
+  int stable_drop_edge = -1;
+  std::string stable_drop_target;
+  RectangleType stable_drop_preview{0, 0, 0, 0};
+
+  static constexpr float kToolbarWidth = 452.f;  // 5 buttons * 84 + 4 * 8
+
+  // Full workspace reset: layout is the caller's job (each app rebuilds its
+  // own tree); this clears everything the workspace itself remembers so a
+  // full app reset truly returns to defaults.
+  void reset_camera_history() {
+    view = root_rect;
+    view_target = root_rect;
+    history.clear();
+    hist_at = -1;
+    focused.clear();
+    dragging = false;
+    drag_panel.clear();
+    drag_moved = false;
+    drop_target.clear();
+    drop_edge = -1;
+    drop_preview = {0, 0, 0, 0};
+    stable_drop_edge = -1;
+    stable_drop_target.clear();
+    stable_drop_preview = {0, 0, 0, 0};
+    drag_divider_split = nullptr;
+    drag_divider_index = -1;
+    drag_float_move = false;
+    last_click_t = -10.f;
+    last_click_panel.clear();
+  }
+
+  std::string drop_label() const {
+    const char *edge = "Float";
+    switch (drop_edge) {
+      case 0: edge = "Split left"; break;
+      case 1: edge = "Split right"; break;
+      case 2: edge = "Split top"; break;
+      case 3: edge = "Split bottom"; break;
+      case 4: edge = "Tab"; break;
+      case 5: edge = "Float"; break;
+      case 6: edge = "Dock left"; break;
+      case 7: edge = "Dock right"; break;
+      case 8: edge = "Dock top"; break;
+      case 9: edge = "Dock bottom"; break;
+      default: break;
+    }
+    std::string label = edge;
+    if (!drop_target.empty()) label += " onto " + drop_target;
+    return label;
+  }
 
   void solve(Node *n, RectangleType r) {
     if (!n) return;
@@ -416,7 +493,7 @@ template <typename Ctx> struct Workspace {
     for (auto &f : doc.floating) rects[f.id] = f.rect;
 
     const float k = cam_k(area);
-    const float header_h = std::clamp(30.f * k, 18.f, 34.f);
+    const float header_h = std::clamp(34.f * k, 24.f, 40.f);
     const Vector2Type mpos = ctx.mouse.pos;
     const Vector2Type mws = to_ws(area, mpos);
 
@@ -450,24 +527,45 @@ template <typename Ctx> struct Workspace {
               .with_absolute_position(drop_preview.x, drop_preview.y)
               .with_size({pixels(drop_preview.width),
                           pixels(drop_preview.height)})
-              .with_custom_background(Color{80, 160, 255, 70})
-              .with_border(Color{80, 160, 255, 220}, 2.f)
+              .with_custom_background(Color{50, 120, 255, 110})
+              .with_border(Color{30, 100, 240, 255}, 3.f)
               .with_corner_radius(6.f)
               .with_ignore_pointer_events()
               .with_debug_name("dock_preview"));
+      // Readable target label, centered in the preview.
+      const float label_w = std::min(drop_preview.width, 300.f);
+      div(ctx, mk(parent, 9002),
+          ComponentConfig{}
+              .with_absolute_position(
+                  drop_preview.x + (drop_preview.width - label_w) / 2.f,
+                  drop_preview.y + std::max(drop_preview.height / 2.f - 16.f, 4.f))
+              .with_size({pixels(label_w), pixels(32.f)})
+              .with_custom_background(Color{20, 28, 45, 245})
+              .with_border(Color{120, 180, 255, 255}, 1.5f)
+              .with_corner_radius(8.f)
+              .with_label(drop_label())
+              .with_font("FredokaMockBold", pixels(14.f))
+              .with_custom_text_color(Color{255, 255, 255, 255})
+              .with_alignment(TextAlignment::Center)
+              .with_ignore_pointer_events()
+              .with_debug_name("dock_preview_label"));
     }
     if (dragging && drag_moved) {
       auto it = defs.find(drag_panel);
+      const std::string title = it != defs.end() ? it->second.title : drag_panel;
+      const float ghost_w =
+          std::clamp(drop_preview.width, 200.f, 340.f);
       div(ctx, mk(parent, 9001),
           ComponentConfig{}
               .with_absolute_position(drag_pos.x - drag_grab.x,
                                       drag_pos.y - drag_grab.y)
-              .with_size({pixels(220.f), pixels(40.f)})
-              .with_custom_background(Color{30, 34, 44, 220})
+              .with_size({pixels(ghost_w), pixels(48.f)})
+              .with_custom_background(Color{25, 32, 48, 245})
+              .with_border(Color{120, 180, 255, 255}, 2.f)
               .with_corner_radius(8.f)
-              .with_label(it != defs.end() ? it->second.title : drag_panel)
-              .with_font("FredokaMockBold", pixels(16.f))
-              .with_custom_text_color(Color{240, 244, 250, 255})
+              .with_label(title + " \u2014 " + drop_label())
+              .with_font("FredokaMockBold", pixels(14.f))
+              .with_custom_text_color(Color{255, 255, 255, 255})
               .with_alignment(TextAlignment::Center)
               .with_ignore_pointer_events()
               .with_debug_name("dock_ghost"));
@@ -489,13 +587,13 @@ template <typename Ctx> struct Workspace {
                               : RectangleType{a.x + a.width, a.y,
                                               b.x - (a.x + a.width), a.height};
       RectangleType srect = to_screen(area, gap);
-      // widen hit area
+      // widen hit area (20px: the 6px gap plus a generous grab margin)
       if (n->vertical) {
-        srect.y -= 4;
-        srect.height += 8;
+        srect.y -= 7;
+        srect.height += 14;
       } else {
-        srect.x -= 4;
-        srect.width += 8;
+        srect.x -= 7;
+        srect.width += 14;
       }
       dividers.push_back({n, (int)i, srect, n->vertical});
     }
@@ -532,7 +630,10 @@ template <typename Ctx> struct Workspace {
     if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       if (dragging) {
         dragging = false;
+        drag_moved = false;
         drop_edge = -1;
+        stable_drop_edge = -1;
+        drop_target.clear();
       } else {
         step_out();
       }
@@ -603,7 +704,9 @@ template <typename Ctx> struct Workspace {
       if (ctx.mouse.just_released) {
         apply_drop(area);
         dragging = false;
+        drag_moved = false;
         drop_edge = -1;
+        stable_drop_edge = -1;
       }
       return;
     }
@@ -633,7 +736,7 @@ template <typename Ctx> struct Workspace {
       RectangleType header{sr.x, sr.y, sr.width, header_h};
       if (!inside(mpos, header)) continue;
       // let header buttons (right side) have their clicks
-      if (mpos.x > sr.x + sr.width - 74.f) continue;
+      if (mpos.x > sr.x + sr.width - kHeaderControlsReserve) continue;
       focused = id;
       if (is_floating(id)) raise_float(id);
 
@@ -664,44 +767,66 @@ template <typename Ctx> struct Workspace {
   }
 
   void update_drop_target(RectangleType area, Vector2Type mpos, float k) {
+    const int prev_edge = drop_edge;
+    const std::string prev_target = drop_target;
+    const RectangleType prev_preview = drop_preview;
     drop_edge = 5;  // float
     drop_target = "";
     drop_preview = {mpos.x - drag_grab.x, mpos.y - drag_grab.y, 220.f, 40.f};
 
-    // workspace edges -> dock to root
-    const float edge_band = 26.f;
-    if (mpos.x < area.x + edge_band) { drop_edge = 6; drop_preview = {area.x, area.y, area.width * 0.3f, area.height}; return; }
-    if (mpos.x > area.x + area.width - edge_band) { drop_edge = 7; drop_preview = {area.x + area.width * 0.7f, area.y, area.width * 0.3f, area.height}; return; }
-    if (mpos.y < area.y + edge_band) { drop_edge = 8; drop_preview = {area.x, area.y, area.width, area.height * 0.3f}; return; }
-    if (mpos.y > area.y + area.height - edge_band) { drop_edge = 9; drop_preview = {area.x, area.y + area.height * 0.7f, area.width, area.height * 0.3f}; return; }
-
-    for (auto &[id, wr] : rects) {
-      if (id == drag_panel || is_floating(id)) continue;
-      RectangleType sr = to_screen(area, wr);
-      if (!inside(mpos, sr)) continue;
-      const float fx = (mpos.x - sr.x) / std::max(sr.width, 1.f);
-      const float fy = (mpos.y - sr.y) / std::max(sr.height, 1.f);
-      const float dmin = std::min({fx, 1.f - fx, fy, 1.f - fy});
-      drop_target = id;
-      if (dmin > 0.26f) {
-        drop_edge = 4;
-        drop_preview = sr;
-      } else if (fx == dmin) {
-        drop_edge = 0;
-        drop_preview = {sr.x, sr.y, sr.width / 2.f, sr.height};
-      } else if (1.f - fx == dmin) {
-        drop_edge = 1;
-        drop_preview = {sr.x + sr.width / 2.f, sr.y, sr.width / 2.f, sr.height};
-      } else if (fy == dmin) {
-        drop_edge = 2;
-        drop_preview = {sr.x, sr.y, sr.width, sr.height / 2.f};
-      } else {
-        drop_edge = 3;
-        drop_preview = {sr.x, sr.y + sr.height / 2.f, sr.width, sr.height / 2.f};
+    // workspace edges -> dock to root (44px bands: easy to hit at 720p)
+    const float edge_band = 44.f;
+    if (mpos.x < area.x + edge_band) { drop_edge = 6; drop_preview = {area.x, area.y, area.width * 0.3f, area.height}; }
+    else if (mpos.x > area.x + area.width - edge_band) { drop_edge = 7; drop_preview = {area.x + area.width * 0.7f, area.y, area.width * 0.3f, area.height}; }
+    else if (mpos.y < area.y + edge_band) { drop_edge = 8; drop_preview = {area.x, area.y, area.width, area.height * 0.3f}; }
+    else if (mpos.y > area.y + area.height - edge_band) { drop_edge = 9; drop_preview = {area.x, area.y + area.height * 0.7f, area.width, area.height * 0.3f}; }
+    else {
+      for (auto &[id, wr] : rects) {
+        if (id == drag_panel || is_floating(id)) continue;
+        RectangleType sr = to_screen(area, wr);
+        if (!inside(mpos, sr)) continue;
+        const float fx = (mpos.x - sr.x) / std::max(sr.width, 1.f);
+        const float fy = (mpos.y - sr.y) / std::max(sr.height, 1.f);
+        const float dmin = std::min({fx, 1.f - fx, fy, 1.f - fy});
+        drop_target = id;
+        // Wide center zone (34%): tabify is the default drop, edges split.
+        if (dmin > 0.34f) {
+          drop_edge = 4;
+          drop_preview = sr;
+        } else if (fx == dmin) {
+          drop_edge = 0;
+          drop_preview = {sr.x, sr.y, sr.width / 2.f, sr.height};
+        } else if (1.f - fx == dmin) {
+          drop_edge = 1;
+          drop_preview = {sr.x + sr.width / 2.f, sr.y, sr.width / 2.f, sr.height};
+        } else if (fy == dmin) {
+          drop_edge = 2;
+          drop_preview = {sr.x, sr.y, sr.width, sr.height / 2.f};
+        } else {
+          drop_edge = 3;
+          drop_preview = {sr.x, sr.y + sr.height / 2.f, sr.width, sr.height / 2.f};
+        }
+        break;
       }
-      return;
     }
     (void)k;
+    // Hysteresis: while the pointer stays inside the committed preview
+    // (inflated 14px), keep that target even if raw geometry now prefers a
+    // neighbour — no twitchy switching near boundaries.
+    if (prev_edge >= 0 && prev_preview.width > 0.f &&
+        (drop_edge != prev_edge || drop_target != prev_target)) {
+      const RectangleType inflated{prev_preview.x - 14.f, prev_preview.y - 14.f,
+                                   prev_preview.width + 28.f,
+                                   prev_preview.height + 28.f};
+      if (inside(mpos, inflated)) {
+        drop_edge = prev_edge;
+        drop_target = prev_target;
+        drop_preview = prev_preview;
+      }
+    }
+    stable_drop_edge = drop_edge;
+    stable_drop_target = drop_target;
+    stable_drop_preview = drop_preview;
   }
 
   void apply_drop(RectangleType area) {
@@ -760,28 +885,35 @@ template <typename Ctx> struct Workspace {
 
 
   // Small chrome row: title-agnostic navigation for the workspace.
+  // Safe-area: the clamped x keeps the whole row left of the global
+  // "Browse screens" launcher (layer 2000, top-right) so Reset & friends
+  // are never hidden under it.
   void toolbar(Ctx &ctx, afterhours::Entity &parent, float x, float y,
-               const std::function<void()> &on_reset) {
+               const std::function<void()> &on_reset,
+               float page_screen_x = 0.f, float screen_width = 1280.f) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+    const float safe_x = toolbar_x_ending_before_launcher(
+        screen_width, page_screen_x, kToolbarWidth);
+    const float bx0 = std::min(x, safe_x);
     auto mkbtn = [&](int id, float bx, const char *label, const char *name) {
       return button(ctx, mk(parent, 8000 + id),
                     ComponentConfig{}
                         .with_absolute_position(bx, y)
-                        .with_size({pixels(96.f), pixels(30.f)})
+                        .with_size({pixels(84.f), pixels(30.f)})
                         .with_label(label)
-                        .with_font("FredokaMockBold", pixels(13.f))
-                        .with_custom_text_color(Color{40, 48, 64, 255})
-                        .with_custom_background(Color{255, 255, 255, 235})
-                        .with_border(Color{196, 202, 214, 255}, 1.f)
+                        .with_font("FredokaMockBold", pixels(12.5f))
+                        .with_custom_text_color(Color{28, 36, 54, 255})
+                        .with_custom_background(Color{255, 255, 255, 245})
+                        .with_border(Color{105, 118, 145, 255}, 1.5f)
                         .with_corner_radius(8.f)
                         .with_debug_name(name));
     };
-    if (mkbtn(0, x, "Overview", "dock_overview")) frame_all();
-    if (mkbtn(1, x + 104.f, "< Back", "dock_back")) nav_back();
-    if (mkbtn(2, x + 208.f, "Forward >", "dock_forward")) nav_forward();
-    if (mkbtn(3, x + 312.f, "Step out", "dock_step_out")) step_out();
-    if (on_reset && mkbtn(4, x + 416.f, "Reset", "dock_reset")) on_reset();
+    if (mkbtn(0, bx0, "Overview", "dock_overview")) frame_all();
+    if (mkbtn(1, bx0 + 92.f, "< Back", "dock_back")) nav_back();
+    if (mkbtn(2, bx0 + 184.f, "Forward >", "dock_forward")) nav_forward();
+    if (mkbtn(3, bx0 + 276.f, "Step out", "dock_step_out")) step_out();
+    if (on_reset && mkbtn(4, bx0 + 368.f, "Reset", "dock_reset")) on_reset();
   }
 
   void draw_panel(Ctx &ctx, afterhours::Entity &parent, const std::string &id,
@@ -808,10 +940,10 @@ template <typename Ctx> struct Workspace {
             .with_absolute_position(sr.x, sr.y)
             .with_size({pixels(std::max(sr.width, 8.f)),
                         pixels(std::max(sr.height, 8.f))})
-            .with_custom_background(Color{252, 252, 253, 255})
-            .with_border(is_focused ? Color{80, 160, 255, 255}
-                                    : Color{196, 202, 214, 255},
-                         is_focused ? 2.f : 1.f)
+            .with_custom_background(Color{250, 250, 252, 255})
+            .with_border(is_focused ? Color{40, 110, 230, 255}
+                                    : Color{110, 122, 148, 255},
+                         is_focused ? 2.5f : 1.5f)
             .with_corner_radius(8.f)
             .with_debug_name("dock_" + id));
 
@@ -844,8 +976,8 @@ template <typename Ctx> struct Workspace {
         ComponentConfig{}
             .with_absolute_position(0.f, 0.f)
             .with_size({pixels(sr.width), pixels(header_h)})
-            .with_custom_background(is_focused ? Color{232, 240, 252, 255}
-                                               : Color{240, 242, 246, 255})
+            .with_custom_background(is_focused ? Color{198, 218, 248, 255}
+                                               : Color{218, 226, 242, 255})
             .with_corner_radius(8.f)
             .with_ignore_pointer_events()
             .with_debug_name("dock_header_" + id));
@@ -853,10 +985,16 @@ template <typename Ctx> struct Workspace {
     if (tabbed) {
       float tx = 6.f;
       int ti = 0;
+      // Truncate the strip before the header controls (F/x, 80px reserve)
+      // so tabs never run under them; remaining tabs stay reachable by
+      // dragging the panel wider or tabifying elsewhere.
       for (const std::string &pid : host->panels) {
         auto pd = defs.find(pid);
         const std::string title = pd != defs.end() ? pd->second.title : pid;
-        const float tw = 26.f + (float)title.size() * 7.5f * std::min(k, 1.f) + 18.f;
+        float tw = 26.f + (float)title.size() * 7.5f * std::min(k, 1.f) + 18.f;
+        const float avail = sr.width - kHeaderControlsReserve - tx;
+        if (avail < 40.f) break;
+        tw = std::min(tw, avail);
         const bool active_tab = pid == id;
         auto tab = button(
             ctx, mk(frame.ent(), 10 + ti),
@@ -865,10 +1003,11 @@ template <typename Ctx> struct Workspace {
                 .with_size({pixels(tw), pixels(header_h - 8.f)})
                 .with_label(title)
                 .with_font("FredokaMockBold", pixels(12.f))
-                .with_custom_text_color(active_tab ? Color{30, 38, 52, 255}
-                                                   : Color{120, 128, 144, 255})
+                .with_custom_text_color(active_tab ? Color{20, 28, 44, 255}
+                                                   : Color{62, 72, 92, 255})
                 .with_custom_background(active_tab ? Color{255, 255, 255, 255}
-                                                   : Color{222, 226, 234, 255})
+                                                   : Color{198, 208, 228, 255})
+                .with_border(Color{110, 122, 148, 255}, 1.f)
                 .with_corner_radius(6.f)
                 .with_debug_name("dock_tab_" + pid));
         if (tab) {
@@ -886,7 +1025,7 @@ template <typename Ctx> struct Workspace {
                           pixels(header_h)})
               .with_label(def.title)
               .with_font("FredokaMockBold", pixels(13.f))
-              .with_custom_text_color(Color{60, 68, 84, 255})
+              .with_custom_text_color(Color{28, 36, 54, 255})
               .with_alignment(TextAlignment::Left)
               .with_transparent_bg()
               .with_ignore_pointer_events()
@@ -901,8 +1040,9 @@ template <typename Ctx> struct Workspace {
             .with_size({pixels(30.f), pixels(header_h - 8.f)})
             .with_label(is_floating(id) ? "D" : "F")
             .with_font("FredokaMockBold", pixels(12.f))
-            .with_custom_text_color(Color{90, 100, 120, 255})
+            .with_custom_text_color(Color{45, 55, 75, 255})
             .with_custom_background(Color{255, 255, 255, 255})
+            .with_border(Color{110, 122, 148, 255}, 1.f)
             .with_corner_radius(6.f)
             .with_debug_name("dock_float_" + id));
     if (float_btn) {
@@ -929,8 +1069,9 @@ template <typename Ctx> struct Workspace {
             .with_size({pixels(30.f), pixels(header_h - 8.f)})
             .with_label("x")
             .with_font("FredokaMockBold", pixels(12.f))
-            .with_custom_text_color(Color{200, 70, 80, 255})
+            .with_custom_text_color(Color{180, 50, 60, 255})
             .with_custom_background(Color{255, 255, 255, 255})
+            .with_border(Color{110, 122, 148, 255}, 1.f)
             .with_corner_radius(6.f)
             .with_debug_name("dock_close_" + id));
     if (close_btn) close_panel(id);

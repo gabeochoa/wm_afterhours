@@ -7,9 +7,25 @@ wait 0.2
 click_ui desk_counter_inc
 wait 0.2
 expect_text "Count: 1"
+click_ui dock_reset
+wait 0.3
+click_ui desk_spawn_counter
+wait 0.2
+expect_text "Count: 0"
+click_ui desk_counter_inc
+wait 0.2
+expect_text "Count: 1"
 drag_to 340 145 1262 360
 wait 0.3
 screenshot trellis_desktop_docked
 click_ui dock_overview
 wait 0.3
+assert_within_parents
+goto_screen trellis_paint
+wait 0.5
+goto_screen trellis_desktop
+wait 0.5
+click_ui desk_spawn_counter
+wait 0.2
+expect_text "Count: 0"
 assert_within_parents
