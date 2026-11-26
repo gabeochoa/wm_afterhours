@@ -1,0 +1,55 @@
+# Leave/return must restore defaults. Plain members reset by screen
+# recreation (src/game.cpp load_screen -> ExampleScreenRegistry::create_screen);
+# motion::anim global tracks must be re-seeded from defaults by the fresh
+# instance (regression: seg/toggle tracks survived the switch because GummyShop
+# seeded them only while !started(), i.e. once per process).
+goto_screen gummy_shop
+resize 1280 720
+wait 0.5
+expect_text "$4.50"
+expect_text "Free delivery at $25"
+expect_text "12"
+
+# Edit everything editable: flavor, toggle, size, qty, chips, gift, heart.
+click_ui gummy_star_4
+click_ui gummy_radio_1
+wait 0.2
+click_ui gummy_toggle_track
+wait 0.6
+click_ui gummy_seg_2
+wait 1.0
+click_ui gummy_qty_plus
+click_ui gummy_qty_plus
+wait 0.2
+expect_text "3"
+click_ui gummy_chip_0
+click_ui gummy_chip_2
+wait 0.2
+click_ui gummy_gift_box
+wait 0.2
+click_ui gummy_heart
+wait 0.3
+expect_text "13"
+drag_to 1183 251 700 251
+wait 0.3
+
+# Leave to another screen, then come back.
+goto_screen buttons
+wait 0.3
+goto_screen gummy_shop
+wait 0.3
+
+# Plain members back at defaults (recreation).
+expect_text "$4.50"
+expect_text "Free delivery at $25"
+expect_text "12"
+expect_no_text "13"
+expect_no_text "3"
+
+# Global motion tracks back at defaults (re-seeded on first frame):
+# size pill over Small, toggle knob right (on), slider knob at full.
+assert_ui gummy_seg_pill x=544 y=334 w=129 h=54
+assert_ui gummy_toggle_knob x=1160 y=86 w=50 h=50
+assert_ui gummy_slider_knob x=1152 y=220 w=62 h=62
+screenshot gummy_shop_reset
+assert_within_parents
