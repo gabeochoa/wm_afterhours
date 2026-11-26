@@ -51,15 +51,20 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     built = true;
     seed_defaults();
     ws.defs["notes"] = {"Notes", {248, 185, 40, 255},
-                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_notes(c, p, r); }};
+                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_notes(c, p, r); },
+                        230.f, 150.f};
     ws.defs["clock"] = {"Clock", {23, 86, 227, 255},
-                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_clock(c, p, r); }};
+                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_clock(c, p, r); },
+                        190.f, 150.f};
     ws.defs["gallery"] = {"Gallery", {214, 24, 60, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_gallery(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_gallery(c, p, r); },
+                          240.f, 160.f};
     ws.defs["music"] = {"Music", {79, 26, 165, 255},
-                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_music(c, p, r); }};
+                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_music(c, p, r); },
+                        230.f, 140.f};
     ws.defs["counter"] = {"Counter", {62, 178, 32, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_counter(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_counter(c, p, r); },
+                          190.f, 120.f};
     reset_layout();
   }
 
@@ -230,7 +235,8 @@ struct TrellisDesktop : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     // Toolbar clamps itself left of the global launcher (see DockWorkspace);
     // +Counter sits between the title and the toolbar, clear of both.
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width,
+               s);
     auto spawn = button(ctx, mk(page.ent(), 910),
                         ComponentConfig{}
                             .with_absolute_position(352.f * s, 10.f * s)

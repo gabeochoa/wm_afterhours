@@ -57,13 +57,17 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     built = true;
     seed_defaults();
     ws.defs["chart"] = {"Latency (live)", {23, 86, 227, 255},
-                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_chart(c, p, r); }};
+                        [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_chart(c, p, r); },
+                        260.f, 170.f};
     ws.defs["metrics"] = {"Metrics", {62, 178, 32, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_metrics(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_metrics(c, p, r); },
+                          190.f, 180.f};
     ws.defs["logs"] = {"Logs", {45, 52, 72, 255},
-                       [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_logs(c, p, r); }};
+                       [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_logs(c, p, r); },
+                       240.f, 120.f};
     ws.defs["runbook"] = {"Runbook", {248, 185, 40, 255},
-                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_runbook(c, p, r); }};
+                          [this](Ctx &c, afterhours::Entity &p, RectangleType r, float) { draw_runbook(c, p, r); },
+                          260.f, 190.f};
     reset_layout();
   }
 
@@ -128,8 +132,9 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     using namespace afterhours::ui::imm;
     auto b = button(ctx, mk(parent, 3),
                     ComponentConfig{}
-                        .with_absolute_position(10.f, 100.f)
-                        .with_size({pixels(130.f), pixels(36.f)})
+                        .with_absolute_position(
+                            10.f, std::min(100.f, std::max(84.f, r.height - 44.f)))
+                        .with_size({pixels(std::min(130.f, r.width - 20.f)), pixels(36.f)})
                         .with_label(paused ? "Resume" : "Pause")
                         .with_font("FredokaMockBold", pixels(13.f))
                         .with_corner_radius(8.f)
@@ -150,11 +155,12 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     using namespace afterhours::ui::imm;
     const char *steps[4] = {"1. Check error budget", "2. Roll canary to 5%",
                             "3. Watch p99 for 10 min", "4. Promote to 100%"};
+    const float row_h = std::clamp((r.height - 32.f) / 4.f, 26.f, 38.f);
     for (int i = 0; i < 4; ++i) {
       auto b = button(ctx, mk(parent, i),
                       ComponentConfig{}
-                          .with_absolute_position(8.f, 8.f + i * 44.f)
-                          .with_size({pixels(r.width - 16.f), pixels(38.f)})
+                          .with_absolute_position(8.f, 8.f + i * (row_h + 6.f))
+                          .with_size({pixels(r.width - 16.f), pixels(row_h)})
                           .with_label(std::string(runbook_done[static_cast<size_t>(i)] ? "[done] " : "[    ] ") + steps[i])
                           .with_font("FredokaMockBold", pixels(13.f))
                           .with_custom_text_color(afterhours::Color{40, 48, 64, 255})
@@ -205,7 +211,8 @@ struct TrellisOps : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             .with_ignore_pointer_events());
     // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width,
+               s);
     // Bottom 48px of the page is reserved for the global HUD.
     ws.render(ctx, page.ent(),
               {page.cmp().rect().x + 12.f * s, page.cmp().rect().y + 52.f * s,

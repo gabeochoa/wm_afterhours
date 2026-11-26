@@ -96,27 +96,32 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                          [this](Ctx &ctx, afterhours::Entity &parent,
                                 RectangleType r, float) {
                            draw_canvas(ctx, parent, r, false);
-                         }};
+                         },
+                         260.f, 180.f};
     ws.defs["brush"] = {"Brush", {23, 86, 227, 255},
                         [this](Ctx &ctx, afterhours::Entity &parent,
                                RectangleType r, float) {
                           draw_brush(ctx, parent, r);
-                        }};
+                        },
+                        238.f, 248.f};
     ws.defs["colors"] = {"Color", {79, 26, 165, 255},
                          [this](Ctx &ctx, afterhours::Entity &parent,
                                 RectangleType r, float) {
                            draw_colors(ctx, parent, r);
-                         }};
+                         },
+                         238.f, 222.f};
     ws.defs["layers"] = {"Layers", {62, 178, 32, 255},
                          [this](Ctx &ctx, afterhours::Entity &parent,
                                 RectangleType r, float) {
                            draw_layers(ctx, parent, r);
-                         }};
+                         },
+                         232.f, 250.f};
     ws.defs["navigator"] = {"Navigator", {248, 185, 40, 255},
                             [this](Ctx &ctx, afterhours::Entity &parent,
                                    RectangleType r, float) {
                               draw_canvas(ctx, parent, r, true);
-                            }};
+                            },
+                            180.f, 150.f};
     reset_layout();
   }
 
@@ -187,15 +192,16 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             .with_ignore_pointer_events());
   }
 
-  void draw_brush(Ctx &ctx, afterhours::Entity &parent, RectangleType) {
+  void draw_brush(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
     const char *tools[3] = {"Brush", "Eraser", "Fill"};
+    const float tool_w = std::clamp((r.width - 36.f) / 3.f, 44.f, 68.f);
     for (int i = 0; i < 3; ++i) {
       auto b = button(ctx, mk(parent, i),
                       ComponentConfig{}
-                          .with_absolute_position(10.f + i * 76.f, 10.f)
-                          .with_size({pixels(68.f), pixels(34.f)})
+                          .with_absolute_position(10.f + i * (tool_w + 8.f), 10.f)
+                          .with_size({pixels(tool_w), pixels(34.f)})
                           .with_label(tools[i])
                           .with_font("FredokaMockBold", pixels(13.f))
                           .with_custom_text_color(tool == i
@@ -228,23 +234,25 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                            .with_corner_radius(8.f)
                            .with_debug_name("paint_brush_plus"));
     if (plus && brush_size < 5) ++brush_size;
-    small_label(ctx, parent, 9, 10.f, 170.f, "Drag headers to dock.");
-    small_label(ctx, parent, 10, 10.f, 192.f, "Double-click zooms in.");
+    small_label(ctx, parent, 9, 10.f, 164.f, "Drag headers to dock.");
+    small_label(ctx, parent, 10, 10.f, 186.f, "Double-click zooms in.");
   }
 
   static bool same_color(afterhours::Color a, afterhours::Color b) {
     return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
   }
 
-  void draw_colors(Ctx &ctx, afterhours::Entity &parent, RectangleType) {
+  void draw_colors(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+    const float cell = std::clamp((r.width - 44.f) / 4.f, 28.f, 48.f);
     for (int i = 0; i < (int)palette.size(); ++i) {
-      const float x = 10.f + (i % 4) * 56.f, y = 10.f + (i / 4) * 56.f;
+      const float x = 10.f + (i % 4) * (cell + 8.f);
+      const float y = 10.f + (i / 4) * (cell + 8.f);
       auto sw = button(ctx, mk(parent, i),
                        ComponentConfig{}
                            .with_absolute_position(x, y)
-                           .with_size({pixels(48.f), pixels(48.f)})
+                           .with_size({pixels(cell), pixels(cell)})
                            .with_custom_background(palette[static_cast<size_t>(i)])
                            .with_border(same_color(palette[static_cast<size_t>(i)], brush)
                                             ? afterhours::Color{30, 38, 52, 255}
@@ -259,9 +267,11 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     }
   }
 
-  void draw_layers(Ctx &ctx, afterhours::Entity &parent, RectangleType) {
+  void draw_layers(Ctx &ctx, afterhours::Entity &parent, RectangleType r) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+    const float row_w = std::clamp(r.width - 80.f, 90.f, 150.f);
+    const float eye_x = 18.f + row_w;
     for (int i = 2; i >= 0; --i) {
       const int row = 2 - i;
       const float y = 10.f + row * 52.f;
@@ -269,7 +279,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
           ctx, mk(parent, i * 2),
           ComponentConfig{}
               .with_absolute_position(10.f, y)
-              .with_size({pixels(150.f), pixels(44.f)})
+              .with_size({pixels(row_w), pixels(44.f)})
               .with_label(layers[i].name)
               .with_font("FredokaMockBold", pixels(14.f))
               .with_custom_text_color(afterhours::Color{40, 48, 64, 255})
@@ -281,7 +291,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       if (rowb) active_layer = i;
       auto eye = button(ctx, mk(parent, i * 2 + 1),
                         ComponentConfig{}
-                            .with_absolute_position(168.f, y)
+                            .with_absolute_position(eye_x, y)
                             .with_size({pixels(52.f), pixels(44.f)})
                             .with_label(layers[i].visible ? "On" : "Off")
                             .with_font("FredokaMockBold", pixels(13.f))
@@ -292,7 +302,7 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     auto clear = button(ctx, mk(parent, 9),
                         ComponentConfig{}
                             .with_absolute_position(10.f, 170.f)
-                            .with_size({pixels(210.f), pixels(36.f)})
+                            .with_size({pixels(std::clamp(r.width - 20.f, 100.f, 210.f)), pixels(36.f)})
                             .with_label("Clear layer")
                             .with_font("FredokaMockBold", pixels(13.f))
                             .with_corner_radius(8.f)
@@ -331,7 +341,8 @@ struct PaintApp : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
             .with_ignore_pointer_events());
     // Toolbar clamps itself left of the global launcher (see DockWorkspace).
     ws.toolbar(ctx, page.ent(), 760.f * s, 10.f * s,
-               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width);
+               [this] { reset_all(); }, page.cmp().rect().x, ctx.screen_width,
+               s);
     // Bottom 48px of the page is reserved for the global HUD
     // (bottom-left name + bottom-right index) so panels never hide under it.
     ws.render(ctx, page.ent(),

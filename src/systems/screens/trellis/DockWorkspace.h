@@ -252,6 +252,10 @@ template <typename Ctx> struct PanelDef {
   // coords). `k` is the camera scale (1 = unzoomed). Use mk(parent, n) with
   // panel-local ids.
   std::function<void(Ctx &, afterhours::Entity &, RectangleType, float)> draw;
+  // Screen-space size below which the panel becomes a semantic-zoom tile
+  // instead of drawing fixed-size content that would spill or be cut off.
+  float min_w = 220.f;
+  float min_h = 150.f;
 };
 
 template <typename Ctx> struct Workspace {
@@ -262,6 +266,7 @@ template <typename Ctx> struct Workspace {
   RectangleType view{0, 0, 1280, 720};         // camera rect (workspace units)
   RectangleType view_target{0, 0, 1280, 720};
   RectangleType root_rect{0, 0, 1280, 720};    // workspace space size
+  bool root_ready = false;
   std::vector<RectangleType> history;
   int hist_at = -1;
 
@@ -343,6 +348,61 @@ template <typename Ctx> struct Workspace {
     std::string label = edge;
     if (!drop_target.empty()) label += " onto " + drop_target;
     return label;
+  }
+
+  void clamp_floating_to_root() {
+    for (FloatWin &f : doc.floating) {
+      f.rect.width =
+          std::clamp(f.rect.width, 80.f, std::max(root_rect.width, 80.f));
+      f.rect.height =
+          std::clamp(f.rect.height, 60.f, std::max(root_rect.height, 60.f));
+      f.rect.x = std::clamp(f.rect.x, root_rect.x,
+                            root_rect.x + root_rect.width - f.rect.width);
+      f.rect.y = std::clamp(f.rect.y, root_rect.y,
+                            root_rect.y + root_rect.height - f.rect.height);
+    }
+  }
+
+  // Apps build/reset before the first render, when root_rect is still the
+  // 1280x720 default. Adopt the real render area as the workspace root on
+  // first use (and rescale workspace-space state on later area changes), so
+  // the overview camera is exactly the root (k=1) instead of a mismatched
+  // 1280x720 view squeezed into a shorter area.
+  void sync_root_to_area(RectangleType area) {
+    const RectangleType desired{0, 0, area.width, area.height};
+    if (!root_ready) {
+      root_rect = desired;
+      view = desired;
+      view_target = desired;
+      history.clear();
+      hist_at = -1;
+      root_ready = true;
+      clamp_floating_to_root();
+      return;
+    }
+    if (desired.width == root_rect.width &&
+        desired.height == root_rect.height) {
+      clamp_floating_to_root();
+      return;
+    }
+    const float sx = desired.width / std::max(root_rect.width, 1.f);
+    const float sy = desired.height / std::max(root_rect.height, 1.f);
+    auto scale = [&](RectangleType r) {
+      return RectangleType{r.x * sx, r.y * sy, r.width * sx, r.height * sy};
+    };
+    view = scale(view);
+    view_target = scale(view_target);
+    for (RectangleType &h : history) h = scale(h);
+    for (FloatWin &f : doc.floating) f.rect = scale(f.rect);
+    root_rect = desired;
+    dragging = false;
+    drag_moved = false;
+    drop_edge = -1;
+    stable_drop_edge = -1;
+    drop_target.clear();
+    drag_divider_split = nullptr;
+    drag_divider_index = -1;
+    clamp_floating_to_root();
   }
 
   void solve(Node *n, RectangleType r) {
@@ -475,7 +535,7 @@ template <typename Ctx> struct Workspace {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
     clock_s += dt;
-    root_rect = {0, 0, area.width, area.height};
+    sync_root_to_area(area);
 
     // camera animation (one house motion: fast exp settle ~460ms feel)
     const float blend = 1.f - std::exp(-dt * 9.f);
@@ -890,30 +950,36 @@ template <typename Ctx> struct Workspace {
   // are never hidden under it.
   void toolbar(Ctx &ctx, afterhours::Entity &parent, float x, float y,
                const std::function<void()> &on_reset,
-               float page_screen_x = 0.f, float screen_width = 1280.f) {
+               float page_screen_x = 0.f, float screen_width = 1280.f,
+               float ui_scale = 1.f) {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+    const float scale = std::max(ui_scale, 0.1f);
+    const float toolbar_w = kToolbarWidth * scale;
     const float safe_x = toolbar_x_ending_before_launcher(
-        screen_width, page_screen_x, kToolbarWidth);
+        screen_width, page_screen_x, toolbar_w);
     const float bx0 = std::min(x, safe_x);
     auto mkbtn = [&](int id, float bx, const char *label, const char *name) {
       return button(ctx, mk(parent, 8000 + id),
                     ComponentConfig{}
                         .with_absolute_position(bx, y)
-                        .with_size({pixels(84.f), pixels(30.f)})
+                        .with_size({pixels(84.f * scale),
+                                    pixels(30.f * scale)})
                         .with_label(label)
-                        .with_font("FredokaMockBold", pixels(12.5f))
+                        .with_font("FredokaMockBold", pixels(12.5f * scale))
                         .with_custom_text_color(Color{28, 36, 54, 255})
                         .with_custom_background(Color{255, 255, 255, 245})
-                        .with_border(Color{105, 118, 145, 255}, 1.5f)
-                        .with_corner_radius(8.f)
+                        .with_border(Color{105, 118, 145, 255}, 1.5f * scale)
+                        .with_corner_radius(8.f * scale)
                         .with_debug_name(name));
     };
     if (mkbtn(0, bx0, "Overview", "dock_overview")) frame_all();
-    if (mkbtn(1, bx0 + 92.f, "< Back", "dock_back")) nav_back();
-    if (mkbtn(2, bx0 + 184.f, "Forward >", "dock_forward")) nav_forward();
-    if (mkbtn(3, bx0 + 276.f, "Step out", "dock_step_out")) step_out();
-    if (on_reset && mkbtn(4, bx0 + 368.f, "Reset", "dock_reset")) on_reset();
+    if (mkbtn(1, bx0 + 92.f * scale, "< Back", "dock_back")) nav_back();
+    if (mkbtn(2, bx0 + 184.f * scale, "Forward >", "dock_forward"))
+      nav_forward();
+    if (mkbtn(3, bx0 + 276.f * scale, "Step out", "dock_step_out")) step_out();
+    if (on_reset && mkbtn(4, bx0 + 368.f * scale, "Reset", "dock_reset"))
+      on_reset();
   }
 
   void draw_panel(Ctx &ctx, afterhours::Entity &parent, const std::string &id,
@@ -931,7 +997,7 @@ template <typename Ctx> struct Workspace {
     const int base = 100 + seq * 40;
     seq++;
 
-    const bool tiny = sr.width < 110.f || sr.height < 84.f;
+    const bool tiny = sr.width < def.min_w || sr.height < def.min_h;
     const bool is_focused = focused == id;
 
     auto frame = div(
@@ -1086,6 +1152,7 @@ template <typename Ctx> struct Workspace {
                         .with_size({pixels(content.width),
                                     pixels(content.height)})
                         .with_transparent_bg()
+                        .with_overflow(Overflow::Hidden)
                         .with_debug_name("dock_body_" + id));
     if (def.draw) def.draw(ctx, body.ent(), content, k);
   }
