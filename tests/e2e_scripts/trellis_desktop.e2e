@@ -1,0 +1,15 @@
+goto_screen trellis_desktop
+resize 1280 720
+wait 0.5
+expect_text "Ship the fractal desktop."
+click_ui desk_spawn_counter
+wait 0.2
+click_ui desk_counter_inc
+wait 0.2
+expect_text "Count: 1"
+drag_to 340 145 1262 360
+wait 0.3
+screenshot trellis_desktop_docked
+click_ui dock_overview
+wait 0.3
+assert_within_parents

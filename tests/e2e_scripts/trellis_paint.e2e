@@ -1,0 +1,15 @@
+goto_screen trellis_paint
+resize 1280 720
+wait 0.5
+expect_text "Untitled-1"
+expect_text "Brush"
+drag_to 640 360 760 400
+wait 0.2
+click_ui paint_brush_plus
+wait 0.2
+drag_to 1040 130 640 660
+wait 0.3
+screenshot trellis_paint_docked
+click_ui dock_overview
+wait 0.3
+assert_within_parents
