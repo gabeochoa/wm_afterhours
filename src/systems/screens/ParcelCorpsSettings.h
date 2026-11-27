@@ -154,10 +154,15 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color frame{209, 57, 43, 255};
     const afterhours::Color teal{73, 190, 205, 255};
     const afterhours::Color dark{31, 52, 59, 255};
+    const afterhours::Color skin{190, 130, 78, 255};
+    const afterhours::Color orange{244, 130, 40, 255};
     const float cx = r.x + r.width * .50f;
-    const float wheel_cy = r.y + r.height * .78f;
-    const float wr = r.width * .30f;
-    // Front wheel (large, facing the viewer).
+    const float wheel_cy = r.y + r.height * .80f;
+    const float wr = r.width * .27f;
+    // Ground shadow under the front wheel.
+    afterhours::draw_ellipse(static_cast<int>(cx), static_cast<int>(wheel_cy + wr * .72f),
+                             wr * .95f, wr * .22f, {60, 30, 25, 120});
+    // Front wheel (large, facing the viewer, slightly slimmer than pass 1).
     afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(wheel_cy),
                                   wr, tire);
     afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(wheel_cy),
@@ -176,42 +181,50 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     const float ry = wheel_cy - wr * .55f;
     afterhours::draw_circle_lines(static_cast<int>(rx), static_cast<int>(ry),
                                   wr * .38f, tire);
-    // Frame triangle from front wheel up to the seat.
+    // Frame triangle from front wheel up to the seat; orange down tube.
     const float seat_x = cx - wr * .25f;
-    const float seat_y = r.y + r.height * .42f;
+    const float seat_y = r.y + r.height * .46f;
     afterhours::draw_line_ex({cx, wheel_cy}, {seat_x, seat_y}, 8.f, frame);
     afterhours::draw_line_ex({seat_x, seat_y}, {rx, ry}, 8.f, frame);
     afterhours::draw_line_ex({cx, wheel_cy}, {rx, ry}, 6.f, frame);
+    afterhours::draw_line_ex({cx, wheel_cy}, {seat_x, seat_y}, 3.f, orange);
     // Handlebar wide across, stem down to the wheel.
-    const float bars_y = r.y + r.height * .47f;
-    afterhours::draw_line_ex({cx - wr * .55f, bars_y}, {cx + wr * .55f, bars_y},
+    const float bars_y = r.y + r.height * .50f;
+    afterhours::draw_line_ex({cx - wr * .52f, bars_y}, {cx + wr * .52f, bars_y},
                              7.f, dark);
     afterhours::draw_line_ex({cx, bars_y}, {cx, wheel_cy}, 7.f, frame);
-    // Legs straddling the frame.
-    afterhours::draw_line_ex(
-        {seat_x, seat_y},
-        {cx - wr * .15f, r.y + r.height * .66f}, 10.f, dark);
-    afterhours::draw_line_ex(
-        {seat_x, seat_y + wr * .06f},
-        {cx + wr * .22f, r.y + r.height * .63f}, 10.f, dark);
-    // Torso upright, teal jersey.
+    // Shorts + legs straddling the frame, feet on the pedals.
     afterhours::draw_rectangle_rounded(
-        {cx - wr * .55f, r.y + r.height * .24f, wr * 1.10f, r.height * .22f},
-        .25f, 18, teal, RoundedCorners().all_round());
-    // Arms from shoulders down to the bar ends.
-    afterhours::draw_line_ex({cx - wr * .50f, r.y + r.height * .30f},
-                             {cx - wr * .55f, bars_y}, 8.f, teal);
-    afterhours::draw_line_ex({cx + wr * .50f, r.y + r.height * .30f},
-                             {cx + wr * .55f, bars_y}, 8.f, teal);
-    // Head + helmet + visor, facing the viewer.
+        {cx - wr * .42f, r.y + r.height * .42f, wr * .84f, r.height * .10f}, .3f, 12,
+        dark, RoundedCorners().all_round());
+    afterhours::draw_line_ex(
+        {cx - wr * .22f, r.y + r.height * .51f},
+        {cx - wr * .32f, r.y + r.height * .68f}, 9.f, skin);
+    afterhours::draw_line_ex(
+        {cx + wr * .22f, r.y + r.height * .51f},
+        {cx + wr * .30f, r.y + r.height * .66f}, 9.f, skin);
+    // Torso upright, teal jersey, slimmer than pass 1.
+    afterhours::draw_rectangle_rounded(
+        {cx - wr * .42f, r.y + r.height * .26f, wr * .84f, r.height * .18f},
+        .25f, 16, teal, RoundedCorners().all_round());
+    // Arms from shoulders down-out to the bar ends, hands gripping.
+    afterhours::draw_line_ex({cx - wr * .40f, r.y + r.height * .31f},
+                             {cx - wr * .52f, bars_y}, 7.f, teal);
+    afterhours::draw_line_ex({cx + wr * .40f, r.y + r.height * .31f},
+                             {cx + wr * .52f, bars_y}, 7.f, teal);
+    afterhours::draw_circle(static_cast<int>(cx - wr * .52f), static_cast<int>(bars_y),
+                            5.f, skin);
+    afterhours::draw_circle(static_cast<int>(cx + wr * .52f), static_cast<int>(bars_y),
+                            5.f, skin);
+    // Head + helmet dome + visor, facing the viewer.
     afterhours::draw_circle(static_cast<int>(cx),
-                            static_cast<int>(r.y + r.height * .17f),
-                            wr * .30f, afterhours::Color{190, 130, 78, 255});
-    afterhours::draw_rectangle({cx - wr * .32f, r.y + r.height * .09f,
-                                wr * .64f, r.height * .09f},
-                               teal);
-    afterhours::draw_rectangle({cx - wr * .26f, r.y + r.height * .15f,
-                                wr * .52f, wr * .10f}, dark);
+                            static_cast<int>(r.y + r.height * .19f),
+                            wr * .26f, skin);
+    afterhours::draw_rectangle_rounded(
+        {cx - wr * .29f, r.y + r.height * .10f, wr * .58f, r.height * .10f}, .5f, 14,
+        teal, RoundedCorners().all_round());
+    afterhours::draw_rectangle({cx - wr * .24f, r.y + r.height * .16f,
+                                wr * .48f, wr * .09f}, dark);
   }
 
   // The reference shows the phone in 3D perspective (top receding, left edge
@@ -353,6 +366,73 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_circle(static_cast<int>(r.x + 637 * s), static_cast<int>(r.y + 270 * s), 2.5f * s, {46, 50, 43, 255});
           afterhours::draw_line_ex({r.x + 623 * s, r.y + 283 * s}, {r.x + 634 * s, r.y + 283 * s}, 2 * s, {95, 65, 48, 255});
           afterhours::draw_ellipse(static_cast<int>(r.x + 724 * s), static_cast<int>(r.y + 351 * s), 8 * s, 5 * s, {191, 140, 92, 255});
+          // Street depth behind the tilted phone, drawn over the town art as
+          // flat shapes: brick building with windows (right), tree canopy
+          // (left), silver crowd barriers with shadows (mid-ground), road
+          // markings (dashed centre line + zebra stripes near the barriers),
+          // and ground shadows under the pedestrians.
+          const afterhours::Color brick{150, 84, 66, 255};
+          const afterhours::Color brick_dark{118, 62, 48, 255};
+          const afterhours::Color window{62, 70, 82, 255};
+          const afterhours::Color canopy{74, 140, 62, 255};
+          const afterhours::Color trunk{110, 78, 50, 255};
+          const afterhours::Color silver{196, 198, 202, 255};
+          const afterhours::Color silver_dark{120, 122, 126, 255};
+          const afterhours::Color marking{235, 230, 210, 190};
+          const afterhours::Color ground_shadow{70, 40, 30, 100};
+          // Building (right edge, receding).
+          afterhours::draw_rectangle({r.x + 1052 * s, r.y, 228 * s, 250 * s}, brick);
+          afterhours::draw_rectangle({r.x + 1052 * s, r.y, 228 * s, 26 * s}, brick_dark);
+          for (int wy = 0; wy < 3; ++wy) {
+            for (int wx = 0; wx < 3; ++wx) {
+              afterhours::draw_rectangle({r.x + (1078 + wx * 66) * s,
+                                          r.y + (56 + wy * 62) * s, 44 * s, 40 * s}, window);
+              afterhours::draw_line_ex({r.x + (1100 + wx * 66) * s, r.y + (56 + wy * 62) * s},
+                                       {r.x + (1100 + wx * 66) * s, r.y + (96 + wy * 62) * s},
+                                       2 * s, brick_dark);
+            }
+          }
+          // Tree canopy (left).
+          afterhours::draw_rectangle({r.x + 110 * s, r.y + 96 * s, 14 * s, 120 * s}, trunk);
+          afterhours::draw_rectangle({r.x + 300 * s, r.y + 70 * s, 12 * s, 110 * s}, trunk);
+          afterhours::draw_ellipse(static_cast<int>(r.x + 120 * s), static_cast<int>(r.y + 84 * s),
+                                   120 * s, 62 * s, canopy);
+          afterhours::draw_ellipse(static_cast<int>(r.x + 306 * s), static_cast<int>(r.y + 58 * s),
+                                   104 * s, 56 * s, canopy);
+          // Road markings: dashed centre line + zebra near the barriers.
+          for (int i = 0; i < 7; ++i) {
+            const float mx = 620.f + static_cast<float>(i) * 84.f;
+            afterhours::draw_rectangle({r.x + mx * s, r.y + 668 * s, 44 * s, 6 * s}, marking);
+          }
+          for (int i = 0; i < 5; ++i) {
+            afterhours::draw_rectangle({r.x + (830 + i * 52) * s, r.y + 396 * s, 26 * s, 44 * s},
+                                       marking);
+          }
+          // Pedestrian shadows.
+          afterhours::draw_ellipse(static_cast<int>(r.x + 477 * s), static_cast<int>(r.y + 252 * s),
+                                   20 * s, 6 * s, ground_shadow);
+          afterhours::draw_ellipse(static_cast<int>(r.x + 827 * s), static_cast<int>(r.y + 247 * s),
+                                   20 * s, 6 * s, ground_shadow);
+          // Silver crowd barriers with shadows, mid-ground row.
+          for (int b = 0; b < 3; ++b) {
+            const float bx = (770.f + static_cast<float>(b) * 128.f) * s;
+            const float by = 224 * s, bw = 118 * s, bh = 74 * s;
+            afterhours::draw_ellipse(
+                static_cast<int>(bx + bw / 2), static_cast<int>(by + bh + 8 * s),
+                bw * .55f, 9 * s, ground_shadow);
+            afterhours::draw_rectangle({bx, by, bw, bh}, silver);
+            for (int v = 0; v < 7; ++v) {
+              afterhours::draw_line_ex({bx + v * bw / 6.f, by}, {bx + v * bw / 6.f, by + bh},
+                                       3 * s, silver_dark);
+            }
+            afterhours::draw_line_ex({bx, by + bh * .5f}, {bx + bw, by + bh * .5f},
+                                     3 * s, silver_dark);
+            afterhours::draw_line_ex({bx, by}, {bx, by + bh + 8 * s}, 4 * s, silver_dark);
+            afterhours::draw_line_ex({bx + bw, by}, {bx + bw, by + bh + 8 * s}, 4 * s, silver_dark);
+          }
+          // Third pedestrian deeper in the scene, smaller.
+          draw_pedestrian({r.x + 980 * s, r.y + 118 * s, 22 * s, 76 * s},
+                          {90, 110, 170, 255});
         }).with_debug_name("parcel_root"));
     const auto hud_text = [&](int id, const std::string &label, float x, float y,
                               float w, float h, float size, afterhours::Color color) {
@@ -468,6 +548,34 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (language) language_idx = (language_idx + 1) % static_cast<int>(languages.size());
     icon(1001, 174, Icon::Language, green);
     text(1002, "Text Language", 108, 179, 162, 28, 20, white);
+    // Union flag chip left of the language value, as the reference shows.
+    div(context, mk(phone.ent()), box(scale, 252, 182, 22, 15)
+        .with_ignore_pointer_events().with_debug_name("parcel_language_flag")
+        .with_on_draw_fg([scale](RectangleType r) {
+          const float s = scale;
+          afterhours::draw_rectangle(r, afterhours::Color{48, 72, 150, 255});
+          afterhours::draw_rectangle({r.x, r.y, r.width, 4 * s},
+                                     afterhours::Color{200, 40, 60, 255});
+          afterhours::draw_rectangle({r.x, r.y + 11 * s, r.width, 4 * s},
+                                     afterhours::Color{200, 40, 60, 255});
+          afterhours::draw_rectangle({r.x + 8 * s, r.y, 5 * s, r.height},
+                                     afterhours::Color{240, 240, 240, 255});
+          afterhours::draw_rectangle({r.x, r.y + 5 * s, r.width, 5 * s},
+                                     afterhours::Color{240, 240, 240, 255});
+          afterhours::draw_rectangle({r.x + 9.5f * s, r.y, 2.5 * s, r.height},
+                                     afterhours::Color{200, 40, 60, 255});
+          afterhours::draw_rectangle({r.x, r.y + 6.5f * s, r.width, 2.5 * s},
+                                     afterhours::Color{200, 40, 60, 255});
+        }));
+    // Chevron at the row's right edge, as the reference invites a tap.
+    div(context, mk(phone.ent()), box(scale, 424, 180, 22, 26)
+        .with_ignore_pointer_events().with_debug_name("parcel_language_chevron")
+        .with_on_draw_fg([scale, this](RectangleType r) {
+          afterhours::draw_line_ex({r.x + 6 * scale, r.y + 4 * scale},
+                                   {r.x + 16 * scale, r.y + 13 * scale}, 2 * scale, white);
+          afterhours::draw_line_ex({r.x + 16 * scale, r.y + 13 * scale},
+                                   {r.x + 6 * scale, r.y + 22 * scale}, 2 * scale, white);
+        }));
     text(1003, languages[static_cast<size_t>(language_idx)], 276, 179, 164, 28, 20, white, "parcel_language_value", TextAlignment::Right);
     row(1010, 216, 38, "Subtitles", Icon::Subtitles, green, "parcel_subtitles_row");
     toggle(1014, 216, subtitles, "parcel_subtitles_toggle");

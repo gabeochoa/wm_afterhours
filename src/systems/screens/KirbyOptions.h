@@ -186,11 +186,89 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       return result;
     };
     decoration(0);
+    // Desk-scene depth: paper-stack edges peeking from under the notebook,
+    // a spare pencil on the desk, and soft contact shadows under the tab row.
+    // Drawn shapes only (no extracted art), drawn after the desk texture.
+    div(context, mk(root.ent()), box(scale, 0, 0, 1280, 720)
+        .with_ignore_pointer_events().with_debug_name("kirby_desk_depth")
+        .with_on_draw_fg([scale](RectangleType r) {
+          const float s = scale;
+          const afterhours::Color paper_edge{238, 230, 205, 255};
+          const afterhours::Color shadow{104, 78, 48, 70};
+          // Paper stack edges under the notebook (left + bottom).
+          afterhours::draw_rectangle({r.x + 14 * s, r.y + 176 * s, 44 * s, 440 * s}, paper_edge);
+          afterhours::draw_rectangle({r.x + 20 * s, r.y + 168 * s, 44 * s, 440 * s}, paper_edge);
+          afterhours::draw_rectangle({r.x + 44 * s, r.y + 632 * s, 300 * s, 9 * s}, paper_edge);
+          afterhours::draw_rectangle({r.x + 52 * s, r.y + 638 * s, 292 * s, 8 * s}, paper_edge);
+          // Spare pencil lying on the desk, top-left of the notebook.
+          afterhours::draw_rectangle({r.x + 56 * s, r.y + 96 * s, 110 * s, 7 * s},
+                                     afterhours::Color{211, 104, 51, 255});
+          afterhours::draw_triangle({r.x + 166 * s, r.y + 92 * s}, {r.x + 166 * s, r.y + 107 * s},
+                                    {r.x + 184 * s, r.y + 99.5f * s},
+                                    afterhours::Color{240, 217, 170, 255});
+          afterhours::draw_rectangle({r.x + 56 * s, r.y + 96 * s, 12 * s, 7 * s},
+                                     afterhours::Color{250, 220, 196, 255});
+          // Drop shadow under the tab pills.
+          afterhours::draw_rectangle_rounded({r.x + 392 * s, r.y + 64 * s, 744 * s, 88 * s},
+                                             .35f, 28, shadow, RoundedCorners().all_round());
+        }));
     for (size_t i = 0; i < 6; ++i) decoration(13 + i * 2 + (selected_tab == i ? 1 : 0));
+    div(context, mk(root.ent()), box(scale, 386, 148, 836, 564)
+        .with_ignore_pointer_events().with_debug_name("kirby_board_shadow")
+        .with_on_draw_bg([scale](RectangleType r) {
+          afterhours::draw_rectangle_rounded(r, .02f, 12,
+                                             afterhours::Color{104, 78, 48, 85},
+                                             RoundedCorners().all_round());
+        }));
     decoration(1);
+    div(context, mk(root.ent()), box(scale, 564, 206, 426, 96)
+        .with_ignore_pointer_events().with_debug_name("kirby_name_shadow")
+        .with_on_draw_bg([scale](RectangleType r) {
+          afterhours::draw_rectangle_rounded(r, .5f, 40,
+                                             afterhours::Color{104, 78, 48, 60},
+                                             RoundedCorners().all_round());
+        }));
     decoration(3);
     decoration(4);
+    div(context, mk(root.ent()), box(scale, 35, 162, 350, 486)
+        .with_ignore_pointer_events().with_debug_name("kirby_notebook_shadow")
+        .with_on_draw_bg([scale](RectangleType r) {
+          afterhours::draw_rectangle_rounded(r, .02f, 8,
+                                             afterhours::Color{104, 78, 48, 70},
+                                             RoundedCorners().all_round());
+        }));
     decoration(2);
+    // Paper-checklist detail over the tilted notebook: empty checkbox squares
+    // in a left column, first one ticked. Positions are notebook-local and
+    // rotated about the notebook centre by the same -6 degrees as the
+    // notebook texture, so they sit on the printed rows.
+    div(context, mk(root.ent()), box(scale, 27, 154, 350, 486)
+        .with_ignore_pointer_events().with_debug_name("kirby_checklist")
+        .with_on_draw_fg([scale](RectangleType r) {
+          const float cos6 = 0.99452f, sin6 = -0.10453f;
+          const float cx = r.x + r.width / 2.f, cy = r.y + r.height / 2.f;
+          const auto rot = [=](float lx, float ly) {
+            const float dx = (lx - r.width / 2.f) * scale;
+            const float dy = (ly - r.height / 2.f) * scale;
+            return std::pair<float, float>{cx + dx * cos6 - dy * sin6,
+                                           cy + dx * sin6 + dy * cos6};
+          };
+          const afterhours::Color ink{69, 64, 67, 255};
+          const afterhours::Color check{60, 140, 90, 255};
+          constexpr std::array<float, 4> rows{252.f, 300.f, 348.f, 396.f};
+          for (size_t i = 0; i < rows.size(); ++i) {
+            auto [px, py] = rot(30.f, rows[i]);
+            const float hs = 13.f * scale;
+            raylib::DrawRectangleLinesEx({px - hs, py - hs, hs * 2, hs * 2}, 2.f * scale, ink);
+            if (i == 0) {
+              auto [a, b] = rot(25.f, rows[i] + 2.f);
+              auto [c, d] = rot(30.f, rows[i] + 8.f);
+              auto [e, f] = rot(38.f, rows[i] - 8.f);
+              afterhours::draw_line_ex({a, b}, {c, d}, 3.f * scale, check);
+              afterhours::draw_line_ex({c, d}, {e, f}, 3.f * scale, check);
+            }
+          }
+        }));
     constexpr std::array<const char *, 6> tab_names{"Network", "Controller", "Home", "Messages", "Favorites", "Options"};
     // Reference tabs are large unlabeled icon pills; the selected tab is named
     // by the purple banner beneath it instead of a label on the pill.
@@ -206,6 +284,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_ignore_pointer_events().with_debug_name("kirby_banner"));
       label(150, tab_names[selected_tab], a.x, 144, 112, 34, 16,
             raylib::WHITE, "kirby_title");
+      // White keyline on the selected pill, as the reference lifts it out of
+      // the row.
+      div(context, mk(root.ent()), box(scale, a.x + 3, a.y + 3, a.w - 6, a.h - 6)
+          .with_ignore_pointer_events().with_debug_name("kirby_tab_ring")
+          .with_on_draw_fg([scale](RectangleType r) {
+            afterhours::draw_rectangle_rounded_lines_ex(r, .35f, 36, 3 * scale, raylib::WHITE);
+          }));
     }
     if (action(20, "L", 350, 83, 32, 32, "kirby_previous_tab", true, 17))
       choose_tab((selected_tab + 5) % 6);
@@ -229,7 +314,72 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         const auto &c = cells[i];
         div(context, mk(root.ent(), 170 + static_cast<int>(i)), box(scale, c[0], c[1], c[2], c[3])
             .with_border({162, 151, 125, 255}, scale).with_corner_radius(6 * scale).with_ignore_pointer_events());
-        decoration(8 + i);
+        // Category icon fidelity: the reference draws the glyph itself in
+        // purple on the card, not a solid badge, so the atlas badge is
+        // replaced with an outline glyph drawn as shapes.
+        div(context, mk(root.ent(), 170 + static_cast<int>(i)),
+            box(scale, c[0] + (c[2] - 56) / 2.f, c[1] + 16, 56, 56)
+                .with_ignore_pointer_events()
+                .with_debug_name("kirby_option_icon_" + std::to_string(i))
+                .with_on_draw_fg([scale, icon = i, paper_c = paper](RectangleType r) {
+                  const float s = scale;
+                  const afterhours::Color g{149, 96, 211, 255};
+                  const float w = 5.f * s;
+                  const auto line = [=](float x, float y, float xx, float yy, float wd = 0.f) {
+                    afterhours::draw_line_ex({r.x + x * s, r.y + y * s},
+                                             {r.x + xx * s, r.y + yy * s},
+                                             wd > 0.f ? wd : w, g);
+                  };
+                  if (icon == 0) {  // Controller: gamepad outline + d-pad + dots.
+                    afterhours::draw_rectangle_rounded(
+                        {r.x + 8 * s, r.y + 16 * s, 40 * s, 26 * s}, .45f, 16, g,
+                        RoundedCorners().all_round());
+                    afterhours::draw_rectangle_rounded(
+                        {r.x + 11 * s, r.y + 19 * s, 34 * s, 20 * s}, .45f, 12, paper_c,
+                        RoundedCorners().all_round());
+                    line(19, 26, 19, 36); line(14, 31, 24, 31);
+                    afterhours::draw_circle(static_cast<int>(r.x + 35 * s),
+                                            static_cast<int>(r.y + 27 * s), 2.6f * s, g);
+                    afterhours::draw_circle(static_cast<int>(r.x + 40 * s),
+                                            static_cast<int>(r.y + 32 * s), 2.6f * s, g);
+                    return;
+                  }
+                  if (icon == 1) {  // Display: monitor + stand.
+                    raylib::DrawRectangleLinesEx(
+                        {r.x + 10 * s, r.y + 13 * s, 36 * s, 26 * s}, 4.f * s, g);
+                    line(28, 39, 28, 47); line(20, 47, 36, 47);
+                    return;
+                  }
+                  if (icon == 2) {  // Accessibility: person.
+                    afterhours::draw_circle(static_cast<int>(r.x + 28 * s),
+                                            static_cast<int>(r.y + 11 * s), 5.5f * s, g);
+                    line(28, 17, 28, 33);
+                    line(28, 21, 15, 30); line(28, 21, 41, 30);
+                    line(28, 33, 18, 49); line(28, 33, 38, 49);
+                    return;
+                  }
+                  if (icon == 3) {  // Sound: speaker + two wave arcs.
+                    afterhours::draw_rectangle({r.x + 9 * s, r.y + 19 * s, 9 * s, 18 * s}, g);
+                    afterhours::draw_triangle({r.x + 18 * s, r.y + 14 * s},
+                                              {r.x + 18 * s, r.y + 42 * s},
+                                              {r.x + 29 * s, r.y + 28 * s}, g);
+                    line(34, 22, 39, 28); line(39, 28, 34, 34);
+                    line(42, 18, 49, 28); line(49, 28, 42, 38);
+                    return;
+                  }
+                  // Online: globe with meridian ellipse.
+                  afterhours::draw_circle_lines(static_cast<int>(r.x + 28 * s),
+                                                static_cast<int>(r.y + 28 * s), 17 * s, g);
+                  line(11, 28, 45, 28);
+                  for (int i = 0; i < 12; ++i) {
+                    const float a0 = static_cast<float>(i) * 3.14159f / 6.f;
+                    const float a1 = static_cast<float>(i + 1) * 3.14159f / 6.f;
+                    afterhours::draw_line_ex(
+                        {r.x + (28 + std::cos(a0) * 8) * s, r.y + (28 + std::sin(a0) * 17) * s},
+                        {r.x + (28 + std::cos(a1) * 8) * s, r.y + (28 + std::sin(a1) * 17) * s},
+                        w, g);
+                  }
+                }));
         label(30 + static_cast<int>(i), names[i], c[0] + 10, c[1] + 75,
               c[2] - 20, 44, 22, ink, "kirby_option_label_" + std::to_string(i));
         if (action(40 + static_cast<int>(i), "", c[0], c[1], c[2], c[3],

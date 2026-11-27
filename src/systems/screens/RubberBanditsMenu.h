@@ -194,9 +194,20 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
           const afterhours::Color bill_dark{52, 119, 62, 255};
           const afterhours::Color gold{255, 203, 46, 255};
           const afterhours::Color skin{227, 180, 141, 255};
-          for (int i = 0; i < 26; ++i) {
-            const float bx = ox + (382.f + static_cast<float>((i * 37) % 860)) * scale;
-            const float by = oy + (542.f + static_cast<float>((i * 13) % 3) * 9.f) * scale;
+          const afterhours::Color floor_shadow{150, 100, 5, 170};
+          // Floor shadows under each standing bandit (feet sit near the
+          // character-panel line): the reference grounds the whole row.
+          const std::array<std::array<float, 3>, 8> feet{{
+              {545, 592, 52}, {758, 585, 68}, {880, 596, 46}, {935, 598, 44},
+              {1005, 600, 42}, {1045, 598, 44}, {1085, 596, 46}, {1140, 594, 48}}};
+          for (const auto &f : feet) {
+            afterhours::draw_ellipse(
+                static_cast<int>(ox + f[0] * scale), static_cast<int>(oy + f[1] * scale),
+                f[2] * scale, 9 * scale, floor_shadow);
+          }
+          for (int i = 0; i < 56; ++i) {
+            const float bx = ox + (362.f + static_cast<float>((i * 37) % 880)) * scale;
+            const float by = oy + (540.f + static_cast<float>((i * 13) % 6) * 9.f) * scale;
             afterhours::draw_rectangle({bx, by, 22 * scale, 11 * scale}, bill);
             afterhours::draw_line_ex({bx, by}, {bx + 22 * scale, by + 11 * scale},
                                      1 * scale, bill_dark);
@@ -204,6 +215,37 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                     static_cast<int>(by + 5.5f * scale), 2.5f * scale,
                                     bill_dark);
           }
+          // Money piles: stacked bills fanned into low mounds.
+          const auto pile = [=](float fx, float fy, int n) {
+            for (int i = 0; i < n; ++i) {
+              const float w = 30.f * scale - static_cast<float>(i) * 2.4f * scale;
+              afterhours::draw_rectangle(
+                  {ox + fx * scale - w / 2, oy + (fy - static_cast<float>(i) * 4.f) * scale,
+                   w, 5 * scale},
+                  i % 2 == 0 ? bill : bill_dark);
+            }
+          };
+          pile(610, 600, 5); pile(700, 604, 4); pile(880, 604, 5); pile(1010, 606, 4);
+          pile(1180, 602, 5); pile(470, 604, 3);
+          // Burst suitcases at the lineup's feet, bills spilling out.
+          const auto suitcase = [=](float fx, float fy, float w, float h) {
+            const afterhours::Color case_c{138, 44, 62, 255};
+            const afterhours::Color case_dark{96, 28, 42, 255};
+            afterhours::draw_rectangle_rounded(
+                {ox + fx * scale, oy + fy * scale, w * scale, h * scale}, .12f, 8,
+                case_c, RoundedCorners().all_round());
+            afterhours::draw_rectangle({ox + fx * scale, oy + (fy + h * .42f) * scale,
+                                        w * scale, h * .09f}, case_dark);
+            afterhours::draw_rectangle_rounded(
+                {ox + (fx + w * .38f) * scale, oy + (fy - 5) * scale, w * .24f * scale,
+                 7 * scale},
+                .4f, 6, case_dark, RoundedCorners().all_round());
+            afterhours::draw_rectangle({ox + fx * scale + 4 * scale, oy + (fy + h) * scale,
+                                        26 * scale, 8 * scale}, bill);
+            afterhours::draw_rectangle({ox + fx * scale + w * scale - 30 * scale,
+                                        oy + (fy + h) * scale, 26 * scale, 8 * scale}, bill);
+          };
+          suitcase(500, 540, 104, 48); suitcase(830, 548, 116, 50);
           const auto mini_bandit = [&](float fx, float fy, afterhours::Color body) {
             afterhours::draw_rectangle_rounded(
                 {ox + (fx - 16) * scale, oy + fy * scale, 32 * scale, 44 * scale}, .2f,
@@ -226,10 +268,15 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
           mini_bandit(425, 488, afterhours::Color{69, 166, 171, 255});
           mini_bandit(1215, 478, afterhours::Color{196, 115, 57, 255});
           mini_bandit(1175, 494, afterhours::Color{140, 95, 60, 255});
-          for (int i = 0; i < 5; ++i) {
+          // Spilled coins between the piles.
+          for (int i = 0; i < 9; ++i) {
             afterhours::draw_circle(
-                static_cast<int>(ox + (760.f + static_cast<float>(i * 12)) * scale),
-                static_cast<int>(oy + (566.f - static_cast<float>(i % 2) * 6.f) * scale),
+                static_cast<int>(ox + (655.f + static_cast<float>(i * 13)) * scale),
+                static_cast<int>(oy + (600.f - static_cast<float>(i % 3) * 5.f) * scale),
+                7 * scale, gold);
+            afterhours::draw_circle(
+                static_cast<int>(ox + (935.f + static_cast<float>(i * 11)) * scale),
+                static_cast<int>(oy + (602.f - static_cast<float>((i + 1) % 3) * 5.f) * scale),
                 7 * scale, gold);
           }
         }));
@@ -241,8 +288,22 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     label(4, "thia9uers - Online", 32, 6, 300, 28, 22, white, "rb_online");
     // Keep player/coin labels clear of the launcher HUD corner (x1068..1268,
     // y8..40); they sit left of it in the bar. PR #38 moved this there too.
-    label(6, "Players  " + std::to_string(player_count), 700, 4, 170, 32, 20, white, "rb_player_count");
-    label(7, "Coins  " + std::to_string(coins), 880, 4, 150, 32, 20, white, "rb_coins");
+    // Chips behind each readout, as the reference pills Players/Coins.
+    div(context, mk(root.ent()), box(scale, 692, 6, 176, 28)
+        .with_custom_background(afterhours::Color{31, 122, 168, 200})
+        .with_corner_radius(14 * scale).with_ignore_pointer_events().with_debug_name("rb_players_chip"));
+    div(context, mk(root.ent()), box(scale, 876, 6, 172, 28)
+        .with_custom_background(afterhours::Color{31, 122, 168, 200})
+        .with_corner_radius(14 * scale).with_ignore_pointer_events().with_debug_name("rb_coins_chip"));
+    div(context, mk(root.ent()), box(scale, 900, 13, 14, 14)
+        .with_ignore_pointer_events().with_debug_name("rb_coins_dot")
+        .with_on_draw_fg([scale](RectangleType r) {
+          afterhours::draw_circle(static_cast<int>(r.x + r.width / 2),
+                                  static_cast<int>(r.y + r.height / 2), r.width / 2,
+                                  afterhours::Color{255, 203, 46, 255});
+        }));
+    label(6, "Players  " + std::to_string(player_count), 704, 4, 170, 32, 20, white, "rb_player_count");
+    label(7, "Coins  " + std::to_string(coins), 922, 4, 130, 32, 20, white, "rb_coins");
     auto promo = button(context, mk(root.ent()), box(scale, 938, 72, 310, 138)
         .with_custom_background(afterhours::Color{165, 124, 29, 235})
         .with_border(white, 2 * scale).with_corner_radius(12 * scale)
@@ -252,13 +313,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .2f, 24, 1 * scale, afterhours::Color{255, 236, 150, 255});
           draw_lightning(r, scale);
         }).with_debug_name("rb_promo"));
-    label(11, "Get more bandits!", 956, 83, 250, 30, 24, white, "rb_promo_title");
+    label(11, "Get more bandits!", 956, 82, 260, 32, 26, white, "rb_promo_title");
     label(12, supporter_selected ? "Cosmetic pack preview" : "Buy the supporter pack",
-          956, 118, 240, 24, 14, white, "rb_promo_description");
+          956, 118, 240, 24, 15, white, "rb_promo_description");
     label(120, supporter_selected ? "" : "and show off!",
-          956, 140, 240, 24, 14, white, "rb_promo_description2");
+          956, 141, 240, 24, 15, white, "rb_promo_description2");
     label(13, supporter_selected ? "No purchase in this demo" : "View pack  >", 956, 163,
-          250, 28, 19, white, "rb_promo_action");
+          250, 28, 20, white, "rb_promo_action");
     if (promo) {
       supporter_selected = !supporter_selected;
       footer_message = supporter_selected ? "Supporter pack preview" : menu_hints[selected_item];
