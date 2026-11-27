@@ -1,4 +1,4 @@
-# Empire Tycoon faithful layout.
+# Empire Tycoon faithful layout: centered square stage.
 goto_screen empire_tycoon
 resize 1280 720
 wait 0.5
@@ -13,13 +13,13 @@ expect_text "Expand - 35%"
 expect_text "Happiness"
 expect_text "Next Milestone"
 assert_ui empire_root x=0 y=0 w=1280 h=720
-assert_ui empire_cash_pill x=777 y=33 w=402
-assert_ui empire_tabs_panel x=86 y=246 w=138
-assert_ui empire_tab_0 x=98 y=256 w=112
-assert_ui empire_dashboard x=254 y=257 w=942
-assert_ui empire_production_list x=282 y=330 w=430
-assert_ui empire_project_list x=738 y=330 w=430
-assert_ui empire_action_0 x=282 y=517 w=278
+assert_ui empire_cash_pill x=672 y=16 w=312 h=60
+assert_ui empire_tabs_panel x=296 y=172 w=104 h=352
+assert_ui empire_tab_0 x=304 y=182 w=88 h=60
+assert_ui empire_dashboard x=414 y=180 w=570 h=320
+assert_ui empire_production_list x=430 y=236 w=262 h=150
+assert_ui empire_project_list x=712 y=236 w=262 h=150
+assert_ui empire_action_0 x=426 y=512 w=176 h=44
 click_ui empire_tab_2
 wait 0.2
 expect_text "Upgrades department selected"
@@ -48,6 +48,6 @@ screenshot empire_tycoon_review
 resize 1920 1080
 wait 0.3
 assert_ui empire_root x=0 y=0 w=1920 h=1080
-assert_ui empire_cash_pill x=1166 y=50 w=603
-assert_ui empire_dashboard x=381 y=386 w=1413
-assert_ui empire_action_0 x=423 y=776 w=417
+assert_ui empire_cash_pill x=1008 y=24 w=468 h=90
+assert_ui empire_dashboard x=621 y=270 w=855 h=480
+assert_ui empire_action_0 x=639 y=768 w=264 h=66

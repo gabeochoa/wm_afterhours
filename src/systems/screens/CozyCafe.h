@@ -193,7 +193,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_on_draw_fg(outline(16, 2, brown_border))
             .with_debug_name("rating_box"));
     // Rating label
-    label(31, "Rating:", 888, 44, 70, 28, 17, dark_text, "rating_value");
+    label(31, "Rating:", 888, 44, 84, 28, 16, dark_text, "rating_value");
     for (int i = 0; i < 5; ++i) {
       if (i == 4) {
         div(context, mk(entity, 38),
@@ -343,13 +343,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== MUSIC SLIDER ==========
-    label(303, "Music: " + std::to_string(static_cast<int>(
-                                std::round(music_volume * 100))) + "%",
-          153, 536, 161, 35, 24, dark_text, "music_label", "GaeguMock");
+    // Ref order: slider first, "Music: N%" label below it.
     slider(context, mk(entity), music_volume,
            box(320, 537, 373, 36, {0, 0, 0, 0}, 18)
                .with_debug_name("music_slider"),
            SliderHandleValueLabelPosition::None);
+    label(303, "Music: " + std::to_string(static_cast<int>(
+                                std::round(music_volume * 100))) + "%",
+          153, 578, 161, 24, 22, dark_text, "music_label", "GaeguMock");
     div(context, mk(entity),
         box(324, 548, 365, 14, {205, 186, 148, 255}, 7)
             .with_ignore_pointer_events()
