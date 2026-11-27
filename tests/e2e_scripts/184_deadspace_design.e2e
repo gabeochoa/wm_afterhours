@@ -8,9 +8,9 @@ expect_text "Esc"
 expect_no_text "INFORMATION"
 expect_no_text "Set difficulty, objectives,"
 assert_ui ds_root x=0 y=0 w=1280 h=720
-assert_ui ds_front_header x=338 y=114 w=465 h=40
-assert_ui ds_category_7 x=338 y=495 w=465 h=44
-assert_ui ds_front_footer x=338 y=586 w=465 h=54
+assert_ui ds_front_header x=358 y=114 w=425 h=40
+assert_ui ds_category_7 x=358 y=495 w=425 h=44
+assert_ui ds_front_footer x=358 y=586 w=425 h=54
 assert_within_parents
 screenshot deadspace_design
 click_ui ds_category_3
@@ -70,14 +70,14 @@ expect_no_text "Choose voice and text languages,"
 resize 1920 1080
 wait 0.3
 assert_ui ds_root x=0 y=0 w=1920 h=1080
-assert_ui ds_front_header x=507 y=171 w=698 h=60
+assert_ui ds_front_header x=537 y=171 w=638 h=60
 assert_within_parents
 screenshot deadspace_design_1080
 resize 1024 768
 wait 0.3
 assert_ui ds_root x=0 y=0 w=1024 h=768
-assert_ui ds_front_header x=270 y=187 w=372 h=32
-assert_ui ds_front_footer x=270 y=565 w=372 h=43
+assert_ui ds_front_header x=286 y=187 w=340 h=32
+assert_ui ds_front_footer x=286 y=565 w=340 h=43
 assert_within_parents
 click_ui ds_category_5
 wait 0.2

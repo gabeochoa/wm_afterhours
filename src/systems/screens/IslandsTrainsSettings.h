@@ -35,7 +35,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color empty{205, 194, 164, 255};
 
   std::array<std::string, 3> modes = {"Borderless", "Windowed", "Fullscreen"};
-  std::array<std::string, 3> resolutions = {"1920 x 1080", "2560 x 1440", "3840 x 2160"};
+  std::array<std::string, 3> resolutions = {"1920x1080", "2560x1440", "3840x2160"};
 
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
     return ComponentConfig{}
@@ -95,8 +95,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_section(UIContext<InputAction> &context, afterhours::Entity &parent,
                       float scale, int id, const std::string &label, float y) {
-    div(context, mk(parent, id), box(scale, 352, y, 576, 26).with_label(label)
-        .with_font("Gaegu-Bold", pixels(25 * scale)).with_custom_text_color(heading)
+    div(context, mk(parent, id), box(scale, 452, y, 376, 26).with_label(label)
+        .with_font("Gaegu-Bold", pixels(20 * scale)).with_custom_text_color(heading)
         .with_alignment(TextAlignment::Left));
   }
 
@@ -122,49 +122,45 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                         float scale, int id, const std::string &label,
                         int &value, const std::array<std::string, 3> &values,
                         float y, const std::string &debug_base) {
-    div(context, mk(parent, id), box(scale, 352, y, 576, 40)
+    div(context, mk(parent, id), box(scale, 448, y, 384, 38)
         .with_custom_background(row).with_corner_radius(6 * scale)
         .with_debug_name(debug_base + "_row"));
-    div(context, mk(parent, id + 1), box(scale, 368, y + 4, 224, 32)
-        .with_label(label).with_font("GaeguMock", pixels(26 * scale))
+    div(context, mk(parent, id + 1), box(scale, 460, y + 3, 188, 32)
+        .with_label(label).with_font("GaeguMock", pixels(19 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Left));
-    if (arrow(context, parent, scale, id + 2, 604, y + 3, false, debug_base + "_prev"))
+    if (arrow(context, parent, scale, id + 2, 652, y + 2, false, debug_base + "_prev"))
       cycle_value(value, -1, static_cast<int>(values.size()));
-    if (arrow(context, parent, scale, id + 4, 872, y + 3, true, debug_base + "_next"))
+    if (arrow(context, parent, scale, id + 4, 792, y + 2, true, debug_base + "_next"))
       cycle_value(value, 1, static_cast<int>(values.size()));
-    div(context, mk(parent, id + 3), box(scale, 644, y + 4, 220, 32)
+    div(context, mk(parent, id + 3), box(scale, 684, y + 3, 108, 32)
         .with_label(values[static_cast<size_t>(value)])
-        .with_font("Gaegu-Bold", pixels(25 * scale)).with_custom_text_color(text)
+        .with_font("Gaegu-Bold", pixels(19 * scale)).with_custom_text_color(text)
         .with_alignment(TextAlignment::Center).with_debug_name(debug_base + "_value"));
   }
 
   void render_step_row(UIContext<InputAction> &context, afterhours::Entity &parent,
                        float scale, int id, const std::string &label, int &value,
                        float y, const std::string &debug_base, bool percentage = false) {
-    div(context, mk(parent, id), box(scale, 352, y, 576, 40)
+    (void)percentage;
+    div(context, mk(parent, id), box(scale, 448, y, 384, 38)
         .with_custom_background(row).with_corner_radius(6 * scale)
         .with_debug_name(debug_base + "_row"));
-    div(context, mk(parent, id + 1), box(scale, 368, y + 4, 228, 32)
-        .with_label(label).with_font("GaeguMock", pixels(25 * scale))
+    div(context, mk(parent, id + 1), box(scale, 460, y + 3, 188, 32)
+        .with_label(label).with_font("GaeguMock", pixels(19 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Left));
-    if (arrow(context, parent, scale, id + 2, 604, y + 3, false, debug_base + "_prev"))
+    if (arrow(context, parent, scale, id + 2, 652, y + 2, false, debug_base + "_prev"))
       value = std::max(0, value - 1);
-    if (arrow(context, parent, scale, id + 22, 872, y + 3, true, debug_base + "_next"))
+    if (arrow(context, parent, scale, id + 22, 792, y + 2, true, debug_base + "_next"))
       value = std::min(10, value + 1);
     for (int i = 0; i < 10; ++i) {
       const auto color = i < value ? filled : empty;
       div(context, mk(parent, id + 10 + i),
-          box(scale, 646 + static_cast<float>(i) * 13, y, 12, 40)
+          box(scale, 688 + static_cast<float>(i) * 10, y, 10, 38)
               .with_on_draw_fg([=](RectangleType r) {
-                afterhours::draw_rectangle({r.x + 2 * scale, r.y + 10 * scale,
-                                            8 * scale, 20 * scale}, color);
+                afterhours::draw_rectangle(r, color);
               }).with_ignore_pointer_events()
               .with_debug_name(debug_base + "_segment_" + std::to_string(i + 1)));
     }
-    div(context, mk(parent, id + 3), box(scale, 788, y + 4, 72, 32)
-        .with_label(percentage ? fmt::format("{}%", value * 10) : fmt::format("{}/10", value))
-        .with_font("Gaegu-Bold", pixels(25 * scale)).with_custom_text_color(text)
-        .with_alignment(TextAlignment::Center).with_debug_name(debug_base + "_value"));
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -213,20 +209,20 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(root.ent()),
-        box(scale, 320, 0, 640, 720)
+        box(scale, 420, 0, 440, 720)
             .with_on_draw_bg([](RectangleType r) { draw_paper(r); })
             .with_debug_name("it_paper"));
 
     if (button(context, mk(root.ent()),
-               box(scale, 894, 18, 42, 42)
+               box(scale, 1206, 16, 56, 56)
                    .with_label("")
                    .with_on_draw_bg([](RectangleType r) { draw_close_shape(r); })
                    .with_on_draw_fg([this, scale](RectangleType r) {
                      const float cx = r.x + r.width / 2, cy = r.y + r.height / 2;
-                     afterhours::draw_line_ex({cx - 9 * scale, cy - 9 * scale},
-                                              {cx + 9 * scale, cy + 9 * scale}, 5 * scale, text);
-                     afterhours::draw_line_ex({cx - 9 * scale, cy + 9 * scale},
-                                              {cx + 9 * scale, cy - 9 * scale}, 5 * scale, text);
+                     afterhours::draw_line_ex({cx - 12 * scale, cy - 12 * scale},
+                                              {cx + 12 * scale, cy + 12 * scale}, 6 * scale, text);
+                     afterhours::draw_line_ex({cx - 12 * scale, cy + 12 * scale},
+                                              {cx + 12 * scale, cy - 12 * scale}, 6 * scale, text);
                    })
                    .with_font("GaeguMock", pixels((44.f) * scale))
                    .with_custom_text_color(text)
@@ -241,7 +237,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(root.ent()), box(scale, 450, 18, 380, 48)
-        .with_label("SETTINGS").with_font("Gaegu-Bold", pixels(38 * scale))
+        .with_label("SETTINGS").with_font("Gaegu-Bold", pixels(32 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
         .with_debug_name("it_title"));
     render_section(context, root.ent(), scale, 20, "DISPLAY", 106);
@@ -250,15 +246,13 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     render_cycle_row(context, root.ent(), scale, 40, "Resolution", resolution,
                      resolutions, 180, "it_resolution");
     render_section(context, root.ent(), scale, 60, "CONTROLS", 238);
-    detail_label(context, root.ent(), scale, 61, "Low 0 / 10 High", 684, 240, 244, 23, 20,
-                 TextAlignment::Right);
-    render_step_row(context, root.ent(), scale, 70, "Pan speed", cam_pan_speed,
+    render_step_row(context, root.ent(), scale, 70, "Cam panning speed", cam_pan_speed,
                     266, "it_pan");
-    render_step_row(context, root.ent(), scale, 100, "Rotation speed", cam_rotate_speed,
+    render_step_row(context, root.ent(), scale, 100, "Cam rotating speed", cam_rotate_speed,
                     312, "it_rotate");
-    if (button(context, mk(root.ent()), box(scale, 352, 358, 576, 36)
-        .with_label("Keyboard controls").with_custom_background({207, 219, 190, 255})
-        .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale).with_font("Gaegu-Bold", pixels(25 * scale))
+    if (button(context, mk(root.ent()), box(scale, 448, 358, 384, 36)
+        .with_label("KEYBOARD").with_custom_background({207, 219, 190, 255})
+        .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale).with_font("Gaegu-Bold", pixels(20 * scale))
         .with_custom_text_color(text).with_alignment(TextAlignment::Center)
         .with_on_draw_fg([this, scale](RectangleType r) {
           const float x = r.x + r.width - 27 * scale, y = r.y + r.height / 2;
@@ -266,15 +260,13 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           afterhours::draw_line_ex({x + 3 * scale, y}, {x - 5 * scale, y + 7 * scale}, 3 * scale, text);
         }).with_debug_name("it_keyboard"))) view = View::Keyboard;
     render_section(context, root.ent(), scale, 140, "AUDIO", 412);
-    render_step_row(context, root.ent(), scale, 150, "Effects volume", effects_volume,
+    render_step_row(context, root.ent(), scale, 150, "Effects Volume", effects_volume,
                     440, "it_effects", true);
-    render_step_row(context, root.ent(), scale, 180, "Music volume", music_volume,
+    render_step_row(context, root.ent(), scale, 180, "Music Volume", music_volume,
                     486, "it_music", true);
-    render_section(context, root.ent(), scale, 210, "TUTORIAL", 544);
-    detail_label(context, root.ent(), scale, 211,
-                 "Practice panning, track laying and a train run.", 352, 572, 576, 24, 21);
-    if (button(context, mk(root.ent()), box(scale, 352, 602, 576, 36)
-        .with_label("PLAY TUTORIAL").with_font("Gaegu-Bold", pixels(25 * scale))
+    render_section(context, root.ent(), scale, 210, "TUTORIAL", 530);
+    if (button(context, mk(root.ent()), box(scale, 448, 578, 384, 36)
+        .with_label("PLAY TUTORIAL").with_font("Gaegu-Bold", pixels(20 * scale))
         .with_custom_text_color(text).with_custom_background({231, 230, 184, 255})
         .with_border({144, 153, 103, 255}, scale).with_corner_radius(6 * scale)
         .with_alignment(TextAlignment::Center).with_on_draw_fg([this, scale](RectangleType r) {
@@ -287,13 +279,11 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       tutorial_step = 0; camera_offset = 0; track_placed = false;
       train_running = false; train_progress = 0;
     }
-    if (button(context, mk(root.ent()), box(scale, 352, 664, 294, 38)
-        .with_label("RESET TO DEFAULTS").with_font("Gaegu-Bold", pixels(25 * scale))
+    if (button(context, mk(root.ent()), box(scale, 448, 672, 384, 36)
+        .with_label("RESET TO DEFAULTS").with_font("Gaegu-Bold", pixels(20 * scale))
         .with_custom_text_color(text).with_border({139, 151, 111, 255}, scale)
         .with_corner_radius(6 * scale).with_alignment(TextAlignment::Center)
         .with_debug_name("it_reset"))) reset_defaults();
-    detail_label(context, root.ent(), scale, 231, "All six settings", 670, 664, 258, 38, 22,
-                 TextAlignment::Right);
   }
 
   void detail_label(UIContext<InputAction> &c, afterhours::Entity &p, float scale,

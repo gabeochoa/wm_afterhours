@@ -192,11 +192,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Subtle cold holographic glow behind the stacked front panels.
     if (settings_open) {
       div(context, mk(content.ent()),
-          box(scale, 322, 98, 497, 558)
+          box(scale, 342, 98, 457, 558)
               .with_custom_background(afterhours::Color{62, 140, 155, 11})
               .with_ignore_pointer_events());
       div(context, mk(content.ent()),
-          box(scale, 330, 106, 481, 542)
+          box(scale, 350, 106, 441, 542)
               .with_custom_background(afterhours::Color{80, 180, 195, 8})
               .with_ignore_pointer_events());
     }
@@ -260,31 +260,31 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(content.ent()),
-        box(scale, 338, 62, 465, 42)
+        box(scale, 358, 62, 425, 42)
             .with_label("MORE SETTINGS")
-            .with_font("ArchivoMockBold", pixels(36.f * scale))
+            .with_font("ArchivoMockBold", pixels(32.f * scale))
             .with_custom_text_color(afterhours::Color{158, 211, 220, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("ds_more_settings"));
 
     div(context, mk(content.ent()),
-        box(scale, 338, 114, 465, 40)
+        box(scale, 358, 114, 425, 40)
             .with_label("")
-            .with_on_draw_bg([fill = afterhours::Color{69, 103, 117, 140},
+            .with_on_draw_bg([fill = afterhours::Color{46, 74, 84, 140},
                               line = panel_line](RectangleType r) {
               draw_holo_plate(r, fill, line, true);
             })
             .with_debug_name("ds_front_header"));
     div(context, mk(content.ent()),
-        box(scale, 362, 119, 420, 30)
+        box(scale, 382, 119, 380, 30)
             .with_label("// SETTINGS")
-             .with_font("ArchivoMockBold", pixels(26.f * scale))
+             .with_font("ArchivoMockBold", pixels(22.f * scale))
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Left)
             .with_ignore_pointer_events());
 
     div(context, mk(content.ent()),
-        box(scale, 338, 114, 465, 526)
+        box(scale, 358, 114, 425, 526)
             .with_ignore_pointer_events()
             .with_debug_name("ds_front_layer"));
 
@@ -292,7 +292,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       const bool active = i == active_tab;
       const float y = 166.f + static_cast<float>(i) * 47.f;
       if (button(context, mk(content.ent(), 100 + static_cast<int>(i)),
-                 box(scale, 338, y, 465, 44)
+                 box(scale, 358, y, 425, 44)
                      .with_label("")
                      .with_custom_text_color(
                          active ? text : afterhours::Color{183, 223, 225, 230})
@@ -300,10 +300,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_on_draw_bg([active](RectangleType r) {
                        draw_holo_plate(
                            r,
-                           active ? afterhours::Color{100, 150, 159, 238}
-                                  : afterhours::Color{31, 50, 59, 224},
-                           active ? afterhours::Color{237, 255, 254, 230}
-                                  : afterhours::Color{130, 180, 190, 140},
+                           active ? afterhours::Color{72, 128, 136, 235}
+                                  : afterhours::Color{19, 34, 43, 225},
+                           active ? afterhours::Color{150, 220, 228, 230}
+                                  : afterhours::Color{94, 138, 148, 140},
                            active);
                      })
                      .with_debug_name("ds_category_" + std::to_string(i)))) {
@@ -311,9 +311,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         detail_open = true;
       }
       div(context, mk(content.ent(), 300 + static_cast<int>(i)),
-          box(scale, 362, y + 5.f, 410, 35)
+          box(scale, 382, y + 5.f, 360, 35)
               .with_label(categories[i])
-              .with_font(active ? "ArchivoMockBold" : "ArchivoMock", pixels((i >= 6 ? 27.f : 31.f) * scale))
+              .with_font(active ? "ArchivoMockBold" : "ArchivoMock", pixels((i >= 6 ? 23.f : 26.f) * scale))
               .with_custom_text_color(
                   active ? text : afterhours::Color{183, 223, 225, 230})
               .with_alignment(TextAlignment::Left)
@@ -321,8 +321,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(content.ent()),
-        box(scale, 338, 586, 465, 54)
-            .with_on_draw_bg([fill = afterhours::Color{37, 66, 75, 180},
+        box(scale, 358, 586, 425, 54)
+            .with_on_draw_bg([fill = afterhours::Color{24, 48, 56, 180},
                               line = panel_line](RectangleType r) {
               draw_holo_plate(r, fill, line, false);
             })
@@ -330,27 +330,27 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Centered prompt group inside the chamfered footer bar:
     // [Enter] SELECT  [Esc] BACK
     div(context, mk(content.ent()),
-        box(scale, 506, 601, 76, 28)
+        box(scale, 509, 603, 69, 24)
             .with_label("SELECT")
-            .with_font("ArchivoMockBold", pixels(20.f * scale))
+            .with_font("ArchivoMockBold", pixels(16.f * scale))
             .with_custom_text_color(text)
             .with_debug_name("ds_prompt_select"));
     if (button(context, mk(content.ent()),
-        box(scale, 652, 601, 62, 28)
+        box(scale, 640, 603, 57, 24)
             .with_label("BACK")
-            .with_font("ArchivoMockBold", pixels(20.f * scale))
+            .with_font("ArchivoMockBold", pixels(16.f * scale))
             .with_custom_text_color(text)
             .with_debug_name("ds_prompt_back"))) {
       if (detail_was_open) detail_open = false;
       else settings_open = false;
     }
 
-    div(context, mk(content.ent()), box(scale, 434, 601, 62, 28)
-        .with_label("Enter").with_font("ArchivoMockBold", pixels(19 * scale))
+    div(context, mk(content.ent()), box(scale, 444, 603, 57, 24)
+        .with_label("Enter").with_font("ArchivoMockBold", pixels(15 * scale))
         .with_custom_background(text).with_custom_text_color(panel_dark).with_corner_radius(3 * scale)
         .with_debug_name("ds_key_enter"));
-    div(context, mk(content.ent()), box(scale, 592, 601, 50, 28)
-        .with_label("Esc").with_font("ArchivoMockBold", pixels(19 * scale))
+    div(context, mk(content.ent()), box(scale, 586, 603, 46, 24)
+        .with_label("Esc").with_font("ArchivoMockBold", pixels(15 * scale))
         .with_custom_background(text).with_custom_text_color(panel_dark).with_corner_radius(3 * scale)
         .with_debug_name("ds_key_esc"));
     if (!detail_open) {

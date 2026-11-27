@@ -442,6 +442,29 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             afterhours::draw_rectangle_outline(r, white, 2 * scale);
           }));
     }
+    // Reference shot shows the Anti-Aliasing dropdown OPEN by default:
+    // 4 samples overlay the following rows with the current value checked.
+    if (active_tab == 2 && selected_row == 4 && settings_open && settings.size() > 4) {
+      auto &aa = settings[4];
+      const auto order = std::vector<size_t>{3, 2, 1, 0};
+      for (size_t k = 0; k < order.size(); ++k) {
+        const size_t opt = order[k];
+        const bool current = opt == aa.option_idx;
+        if (button(context, mk(root.ent(), 500 + static_cast<int>(k)),
+                   box(scale, 433, 363 + static_cast<float>(k) * 30, 251, 30)
+                       .with_label(aa.options[opt] + std::string(current ? "  ✓" : ""))
+                       .with_custom_background(current ? selected : value_blue)
+                       .with_font("ArchivoMockBold", pixels(18.f * scale))
+                       .with_custom_text_color(current ? navy : white)
+                       .with_alignment(TextAlignment::Left)
+                       .with_text_inset(0)
+                       .disable_rounded_corners()
+                       .with_debug_name("pw_aa_option_" + std::to_string(k)))) {
+          aa.option_idx = opt;
+          status = aa.label + ": " + aa.options[opt];
+        }
+      }
+    }
     div(context, mk(root.ent(), 390),
         box(scale, 700, 132, 2, 431)
             .with_custom_background(afterhours::Color{94, 134, 184, 255})
