@@ -3,7 +3,7 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
-#include "trellis/DockWorkspace.h"
+#include "../../plugins/dock_workspace/DockWorkspace.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/form.h>
 

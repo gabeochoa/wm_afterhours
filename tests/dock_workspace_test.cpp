@@ -5,7 +5,7 @@
 #include "../src/external.h"
 #include "../src/input_mapping.h"
 #include "../src/plugins/gallery_shell/ExampleScreenRegistry.h"
-#include "../src/systems/screens/trellis/DockWorkspace.h"
+#include "../src/plugins/dock_workspace/DockWorkspace.h"
 #include <cassert>
 #include <cmath>
 
