@@ -46,7 +46,7 @@ ALLOWLIST = {
     "DividerShowcase.h": (5, "grandfathered raw colours in this screen; shrink, do not grow"),
     "DragDropShowcase.h": (2, "grandfathered raw colours in this screen; shrink, do not grow"),
     "DropdownShowcase.h": (4, "grandfathered raw colours in this screen; shrink, do not grow"),
-    "EmpireTycoon.h": (34, "grandfathered raw colours in this screen; shrink, do not grow"),
+    "EmpireTycoon.h": (30, "grandfathered raw colours in this screen; shrink, do not grow"),
     "EntityIndexLab.h": (8, "grandfathered raw colours in this screen; shrink, do not grow"),
     "ExampleAccessibility.h": (7, "grandfathered raw colours in this screen; shrink, do not grow"),
     "ExampleBevelBorders.h": (6, "grandfathered raw colours in this screen; shrink, do not grow"),

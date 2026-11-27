@@ -1,9 +1,11 @@
+# Neon Strike faithful layout: centered square stage, icon rail, minimap.
 goto_screen neon_strike
 resize 1280 720
 wait 0.5
-assert_ui neon_root w=1280 h=720
-assert_ui neon_reload x=282 y=565 w=316 h=60
+assert_ui neon_root x=280 y=0 w=720 h=720
+assert_ui neon_reload x=506 y=566 w=190 h=46
 expect_text "35/210"
+expect_text "KILLSTREAK"
 assert_no_overflow
 assert_within_parents
 click_ui neon_reload
@@ -34,8 +36,8 @@ expect_text "Grenade selected"
 screenshot neon_strike_selected
 resize 1920 1080
 wait 0.3
-assert_ui neon_root w=1920 h=1080
-assert_ui neon_reload x=423 y=848 w=474 h=90
+assert_ui neon_root x=420 y=0 w=1080 h=1080
+assert_ui neon_reload x=759 y=849 w=285 h=69
 assert_no_overflow
 assert_within_parents
 key R

@@ -27,7 +27,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   bool new_project_started = false;
   raylib::Texture2D park_texture{};
   std::array<raylib::Texture2D, 9> icons{};
-  std::string chat_status = "New area unlocked!";
+  std::string chat_status = "GlobalChat: New area unlocked!";
 
   struct Production {
     std::string name;
@@ -43,6 +43,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       {"Toys", 5200}, {"Snacks", 3800}, {"Gadgets", 3100}};
   std::vector<Project> projects = {
       {"New Rollercoaster", 80},
+      {"Expand", 35},
       {"Develop Robot Mascot", 10},
   };
 
@@ -56,9 +57,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color yellow_dark{244, 166, 46, 255};
   const afterhours::Color green{118, 179, 211, 255};
 
-  std::array<std::string, 4> tabs = {"Rides", "Food Stalls", "Upgrades",
-                                     "Finance"};
-  std::array<std::string, 3> tools = {"Shop", "Settings", "Leaderboard"};
+  std::array<std::string, 5> tabs = {"Rides", "Food Stalls", "Upgrades",
+                                     "Blueprint", "Finance"};
+  std::array<std::string, 3> tools = {"Shop", "Settings", "Leaderboards"};
 
   void load_texture_if_needed() {
     if (texture_loaded)
@@ -108,6 +109,19 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       ++count;
     }
     return "$" + result;
+  }
+
+  static std::string format_rate(int rate) {
+    std::string s = std::to_string(rate);
+    std::string result;
+    int count = 0;
+    for (int i = static_cast<int>(s.size()) - 1; i >= 0; --i) {
+      if (count > 0 && count % 3 == 0)
+        result = "," + result;
+      result = s[static_cast<size_t>(i)] + result;
+      ++count;
+    }
+    return result;
   }
 
   static void draw_coin(RectangleType r) {
@@ -248,7 +262,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         context.screen_height > 0.f
             ? context.screen_height
             : static_cast<float>(Settings::get().get_screen_height());
-    const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
+    // Square stage: the square ref (1024x1024) fits a centered 720x720
+    // stage; park art shows in the side margins on wide windows.
+    const float scale = std::min(screen_w / 720.f, screen_h / 720.f);
 
     if (context.pressed(InputAction::WidgetDown))
       select_tab(selected_tab + 1);
@@ -280,8 +296,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("empire_root"));
 
     auto content = div(context, mk(root.ent()), ComponentConfig{}
-        .with_size({pixels(1280 * scale), pixels(720 * scale)})
-        .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
+        .with_size({pixels(720 * scale), pixels(720 * scale)})
+        .with_absolute_position((screen_w - 720 * scale) / 2, (screen_h - 720 * scale) / 2)
         .with_background(Theme::Usage::None).with_corner_radius(0));
 
     auto icon = [&](int id, size_t index, float x, float y, float w, float h) {
@@ -292,51 +308,51 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     div(context, mk(content.ent()),
-        box(scale, 88, 23, 330, 105)
+        box(scale, 16, 12, 300, 60)
             .with_label("DREAM")
-            .with_font("FredokaMockBold", pixels(100.f * scale))
+            .with_font("FredokaMockBold", pixels(56.f * scale))
             .with_custom_text_color(white)
             .with_text_stroke(stroke, 2.4f)
             .with_text_shadow(afterhours::Color{101, 185, 229, 255}, 0.f,
-                              7.f * scale)
-            .with_letter_spacing(-3.f * scale)
+                              6.f * scale)
+            .with_letter_spacing(-2.f * scale)
             .with_debug_name("empire_title_dream"));
     div(context, mk(content.ent()),
-        box(scale, 89, 113, 320, 56)
+        box(scale, 16, 76, 270, 34)
             .with_label("INCORPORATED")
-            .with_font("FredokaMockBold", pixels(49.f * scale))
+            .with_font("FredokaMockBold", pixels(31.f * scale))
             .with_custom_text_color(white)
             .with_text_stroke(stroke, 1.9f)
             .with_text_shadow(afterhours::Color{101, 185, 229, 255}, 0.f,
-                              6.f * scale)
-            .with_letter_spacing(-2.f * scale)
+                              4.f * scale)
+            .with_letter_spacing(-1.3f * scale)
             .with_debug_name("empire_title_incorporated"));
 
     div(context, mk(content.ent()),
-        box(scale, 777, 33, 402, 78)
+        box(scale, 392, 16, 312, 60)
             .with_custom_background(afterhours::Color{128, 211, 246, 245})
             .with_border(stroke, 3.f)
-            .with_corner_radius(39.f * scale)
+            .with_corner_radius(30.f * scale)
             .with_on_draw_fg([=, this](RectangleType r) {
-              outline(r, 39.f * scale, 3.f * scale, stroke);
+              outline(r, 30.f * scale, 3.f * scale, stroke);
             })
             .with_debug_name("empire_cash_pill"));
     div(context, mk(content.ent()),
-        box(scale, 788, 40, 65, 65)
+        box(scale, 400, 22, 48, 48)
             .with_on_draw_fg([](RectangleType r) { draw_coin(r); })
             .with_ignore_pointer_events()
             .with_debug_name("empire_coin"));
-    div(context, mk(content.ent()), box(scale, 794, 45, 49, 49)
-        .with_label("$").with_font("FredokaMockBold", pixels(38 * scale))
+    div(context, mk(content.ent()), box(scale, 406, 27, 36, 36)
+        .with_label("$").with_font("FredokaMockBold", pixels(28 * scale))
         .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
 
     div(context, mk(content.ent()),
-        box(scale, 858, 43, 285, 62)
+        box(scale, 452, 24, 240, 44)
             .with_label(format_money(cash))
-            .with_font("FredokaMockBold", pixels(46.f * scale))
+            .with_font("FredokaMockBold", pixels(32.f * scale))
             .with_custom_text_color(ink)
             .with_alignment(TextAlignment::Center)
-            .with_letter_spacing(-1.3f * scale)
+            .with_letter_spacing(-1.f * scale)
             .with_debug_name("empire_cash"));
 
     struct Gauge {
@@ -347,64 +363,65 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     };
     std::array<Gauge, 2> gauges = {
         {{"Happiness", happiness_pct, afterhours::Color{83, 168, 87, 255},
-          780.f},
+          414.f},
          {"Resources", resources_pct, afterhours::Color{31, 129, 180, 255},
-          1012.f}}};
+          566.f}}};
     for (size_t i = 0; i < gauges.size(); ++i) {
       const auto &g = gauges[i];
       div(context, mk(content.ent(), 30 + static_cast<int>(i) * 10),
-          box(scale, g.x, 127, 143, 62)
+          box(scale, g.x, 86, 128, 54)
               .with_on_draw_fg([pct = g.pct, fill = g.fill, resource = i == 1](RectangleType r) {
                 draw_gauge(r, pct, fill, resource);
               })
               .with_ignore_pointer_events()
               .with_debug_name("empire_gauge_" + std::to_string(i)));
       div(context, mk(content.ent(), 31 + static_cast<int>(i) * 10),
-          box(scale, g.x - 22, 211, 186, 34)
+          box(scale, g.x - 16, 142, 160, 26)
               .with_label(g.label + std::string(" ") +
                           std::to_string(static_cast<int>(std::lround(g.pct * 100.f))) + "%")
               .with_custom_background(afterhours::Color{184, 241, 255, 230})
               .with_border(stroke, 2.f)
-              .with_corner_radius(17.f * scale)
-              .with_font("FredokaMockBold", pixels(21.f * scale))
+              .with_corner_radius(13.f * scale)
+              .with_font("FredokaMockBold", pixels(17.f * scale))
               .with_custom_text_color(ink)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("empire_gauge_label_" + std::to_string(i)));
       for (int endpoint = 0; endpoint < 2; ++endpoint)
         div(context, mk(content.ent(), 32 + static_cast<int>(i) * 10 + endpoint),
-            box(scale, g.x - 10 + endpoint * 124.f, 184, 38, 22)
-                .with_label(endpoint == 0 ? "0" : "100").with_font("FredokaMockBold", pixels(16 * scale))
+            box(scale, g.x - 6 + endpoint * 108.f, 124, 26, 18)
+                .with_label(endpoint == 0 ? "0" : "100").with_font("FredokaMockBold", pixels(13 * scale))
                 .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     }
 
     div(context, mk(content.ent()),
-        box(scale, 86, 246, 138, 333)
+        box(scale, 16, 172, 104, 352)
             .with_custom_background(afterhours::Color{191, 238, 255, 245})
             .with_border(stroke, 3.f)
-            .with_corner_radius(24.f * scale)
+            .with_corner_radius(20.f * scale)
             .with_on_draw_fg([=, this](RectangleType r) {
-              outline(r, 24.f * scale, 3.f * scale, stroke);
+              outline(r, 20.f * scale, 3.f * scale, stroke);
             })
             .with_debug_name("empire_tabs_panel"));
 
-    const std::array<afterhours::Color, 4> tab_colors = {{{114, 201, 237, 255},
+    const std::array<afterhours::Color, 5> tab_colors = {{{114, 201, 237, 255},
                                                           {161, 216, 91, 255},
                                                           {233, 151, 194, 255},
+                                                          {159, 213, 243, 255},
                                                           {255, 195, 85, 255}}};
+    const std::array<int, 5> tab_icons = {1, 2, 3, -1, 4};
     for (size_t i = 0; i < tabs.size(); ++i) {
-      const float y = 259.f + static_cast<float>(i) * 82.f;
+      const float y = 182.f + static_cast<float>(i) * 68.f;
       const bool active = i == selected_tab;
       if (button(context, mk(content.ent(), 100 + static_cast<int>(i)),
-                 box(scale, 98, y, 112, 68)
+                 box(scale, 24, y, 88, 60)
                      .with_label("")
                      .with_custom_background(tab_colors[i])
                      .with_border(active ? afterhours::Color{255, 248, 181, 255}
                                          : afterhours::Color{72, 107, 131, 255},
                                   active ? 4.f : 2.f)
                      .with_corner_radius(4.f * scale)
-                     .with_font("FredokaMockBold", pixels(18.f * scale))
-                     .with_custom_text_color(white)
-                     .with_text_stroke(stroke, 1.3f)
+                     .with_font("FredokaMockBold", pixels(15.f * scale))
+                     .with_custom_text_color(ink)
                      .with_alignment(TextAlignment::Center)
                      .with_on_draw_fg([=, this](RectangleType r) {
                        outline(r, 4.f * scale, 2.f * scale, stroke);
@@ -415,22 +432,23 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         select_tab(i);
       }
 
-      icon(710 + static_cast<int>(i), i + 1, 128, y + 3, 52, 42);
+      if (tab_icons[i] >= 0)
+        icon(710 + static_cast<int>(i), static_cast<size_t>(tab_icons[i]), 40, y + 4, 56, 36);
       div(context, mk(content.ent(), 720 + static_cast<int>(i)),
-          box(scale, 98, y + 42, 112, 28)
+          box(scale, 24, y + 40, 88, 20)
               .with_label(tabs[i])
-              .with_font("FredokaMockBold", pixels(20.f * scale))
+              .with_font("FredokaMockBold", pixels(15.f * scale))
               .with_custom_text_color(ink)
               .with_ignore_pointer_events()
               .with_alignment(TextAlignment::Center));
       if (i == 2) {
         div(context, mk(content.ent(), 130),
-            box(scale, 179, y + 2, 28, 28)
+            box(scale, 98, y + 2, 24, 24)
                 .with_label("!")
                 .with_custom_background(afterhours::Color{242, 108, 105, 255})
                 .with_border(afterhours::Color{118, 62, 64, 255}, 2.f)
-                .with_corner_radius(14.f * scale)
-                .with_font("FredokaMockBold", pixels(24.f * scale))
+                .with_corner_radius(12.f * scale)
+                .with_font("FredokaMockBold", pixels(20.f * scale))
                 .with_custom_text_color(white)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("empire_upgrade_badge"));
@@ -438,75 +456,57 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(content.ent()),
-        box(scale, 254, 257, 942, 342)
+        box(scale, 134, 180, 570, 320)
             .with_on_draw_bg([](RectangleType r) { draw_panel(r); })
             .with_debug_name("empire_dashboard"));
 
     auto heading = [&](int id, float x, const char *label) {
       div(context, mk(content.ent(), id),
-          box(scale, x, 287, 330, 35)
+          box(scale, x, 198, 262, 30)
               .with_label(label)
-              .with_font("FredokaMockBold", pixels(28.f * scale))
+              .with_font("FredokaMockBold", pixels(24.f * scale))
               .with_custom_text_color(ink)
               .with_alignment(TextAlignment::Center));
     };
-    heading(210, 294, "Production Overview");
-    heading(211, 820, "Current Projects");
+    heading(210, 150, "Production Overview");
+    heading(211, 432, "Current Projects");
 
     div(context, mk(content.ent()),
-        box(scale, 282, 330, 430, 170)
+        box(scale, 150, 236, 262, 150)
             .with_custom_background(card_bg)
             .with_border(afterhours::Color{93, 153, 184, 255}, 2.f)
-            .with_corner_radius(16.f * scale)
+            .with_corner_radius(14.f * scale)
             .with_on_draw_fg([=, this](RectangleType r) {
-              outline(r, 16.f * scale, 2.f * scale, panel_edge);
+              outline(r, 14.f * scale, 2.f * scale, panel_edge);
             })
             .with_debug_name("empire_production_list"));
-    div(context, mk(content.ent()), box(scale, 301, 331, 390, 21)
-        .with_label("items/min / change from starting rate").with_font("FredokaMockBold", pixels(16 * scale))
-        .with_custom_text_color(ink).with_ignore_pointer_events());
     for (size_t i = 0; i < production.size(); ++i) {
-      const float y = 348.f + static_cast<float>(i) * 40.f;
+      const float y = 252.f + static_cast<float>(i) * 42.f;
       div(context, mk(content.ent(), 221 + static_cast<int>(i) * 3),
-          box(scale, 301, y, 346, 38)
+          box(scale, 162, y, 208, 36)
               .with_label(production[i].name + ": " +
-                          std::to_string(production[i].rate / 1000) + "," +
-                          std::to_string((production[i].rate % 1000) / 100) +
-                          "00 items/min")
-              .with_font("FredokaMockBold", pixels(21.f * scale))
+                          format_rate(production[i].rate) + "/min")
+              .with_font("FredokaMockBold", pixels(19.f * scale))
               .with_custom_text_color(ink)
               .with_alignment(TextAlignment::Left)
               .with_debug_name("empire_prod_" + std::to_string(i)));
-      const std::array<int, 3> starting_rates{5200, 3800, 3100};
-      div(context, mk(content.ent(), 222 + static_cast<int>(i) * 3), box(scale, 650, y + 3, 52, 28)
-          .with_label("+" + std::to_string(production[i].rate - starting_rates[i]))
-          .with_font("FredokaMockBold", pixels(19 * scale)).with_custom_text_color({37, 118, 69, 255})
-          .with_alignment(TextAlignment::Right).with_ignore_pointer_events());
-      div(context, mk(content.ent(), 223 + static_cast<int>(i) * 3),
-          box(scale, 301, y + 35, 390, 2)
-              .with_custom_background(afterhours::Color{220, 238, 245, 255}));
+      icon(223 + static_cast<int>(i) * 3, 8, 376, y + 5, 26, 26);
     }
-    div(context, mk(content.ent(), 240),
-        box(scale, 301, 473, 390, 24)
-            .with_label("All systems running smoothly")
-            .with_font("FredokaMockBold", pixels(19.f * scale))
-            .with_custom_text_color(afterhours::Color{63, 105, 119, 255})
-            .with_alignment(TextAlignment::Center));
 
     div(context, mk(content.ent(), 250),
-        box(scale, 738, 330, 430, 170)
+        box(scale, 432, 236, 262, 150)
             .with_custom_background(card_bg)
             .with_border(afterhours::Color{93, 153, 184, 255}, 2.f)
-            .with_corner_radius(16.f * scale)
+            .with_corner_radius(14.f * scale)
             .with_on_draw_fg([=, this](RectangleType r) {
-              outline(r, 16.f * scale, 2.f * scale, panel_edge);
+              outline(r, 14.f * scale, 2.f * scale, panel_edge);
             })
             .with_debug_name("empire_project_list"));
     for (size_t i = 0; i < projects.size(); ++i) {
       const auto &p = projects[i];
-      const float y = 340.f + static_cast<float>(i) * 78.f;
+      const float y = 246.f + static_cast<float>(i) * 48.f;
       if (button(context, mk(content.ent(), 260 + static_cast<int>(i) * 6),
-          box(scale, 751, y, 405, 70)
+          box(scale, 442, y, 242, 44)
               .with_border(afterhours::Color{116, 164, 191, 255}, 1.5f)
               .with_corner_radius(8.f * scale)
               .with_custom_background(i == selected_project ? afterhours::Color{222, 240, 250, 255} : card_bg)
@@ -515,58 +515,34 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         chat_status = p.name + " selected";
       }
       div(context, mk(content.ent(), 261 + static_cast<int>(i) * 6),
-          box(scale, 760, y + 5, 330, 29)
-              .with_label((i == selected_project ? "> " : "") + p.name)
-              .with_ignore_pointer_events()
-              .with_font("FredokaMockBold", pixels(20.f * scale))
-              .with_custom_text_color(ink)
-              .with_debug_name("empire_project_title_" + std::to_string(i)));
-      div(context, mk(content.ent(), 800 + static_cast<int>(i)),
-          box(scale, 1090, y + 5, 58, 29)
-              .with_label(std::to_string(p.progress) + "%")
-              .with_font("FredokaMockBold", pixels(20.f * scale))
-              .with_custom_text_color(ink)
-              .with_ignore_pointer_events()
-              .with_alignment(TextAlignment::Right));
-      div(context, mk(content.ent(), 262 + static_cast<int>(i) * 6),
-          box(scale, 760, y + 31, 390, 5)
-              .with_custom_background(afterhours::Color{219, 241, 250, 255}));
-      div(context, mk(content.ent(), 263 + static_cast<int>(i) * 6),
-          box(scale, 760, y + 31,
-              390.f * static_cast<float>(p.progress) / 100.f, 5)
-              .with_custom_background(green)
-              .with_debug_name("empire_project_progress_" + std::to_string(i)));
-      div(context, mk(content.ent(), 264 + static_cast<int>(i) * 6),
-          box(scale, 761, y + 39, 330, 24)
-              .with_label(std::to_string(100 - p.progress) + "% of work remaining")
+          box(scale, 450, y + 8, 226, 28)
+              .with_label((i == selected_project ? "> " : "") + p.name +
+                          " - " + std::to_string(p.progress) + "%")
               .with_ignore_pointer_events()
               .with_font("FredokaMockBold", pixels(17.f * scale))
               .with_custom_text_color(ink)
-              .with_alignment(TextAlignment::Left));
-
+              .with_debug_name("empire_project_title_" + std::to_string(i)));
     }
 
-    const std::array<std::string, 3> actions{"Speed Up / +5% work", "Prioritize selected", new_project_started ? "Expand garden" : "New Project"};
-    const std::array<std::string, 3> action_notes{"Free / +$25,000 cash", "$5,000 / +10% selected work",
-        new_project_started ? "$12,000 / +5% garden work" : "$12,000 / start Sky Garden"};
+    const std::array<std::string, 3> actions{"Speed Up", "Prioritize", "New Project"};
     for (size_t i = 0; i < actions.size(); ++i) {
-      const float x = 282.f + static_cast<float>(i) * 304.f;
+      const float x = 146.f + static_cast<float>(i) * 184.f;
       if (button(context, mk(content.ent(), 300 + static_cast<int>(i)),
-                 box(scale, x, 517, 278, 44)
+                 box(scale, x, 512, 176, 44)
                      .with_label(actions[i])
                      .with_tooltip(i == 0 ? "Free boost: +$25,000; +400 items/min per line; +5% work per project; +2 happiness; +4 resources; +5 park development."
                                           : i == 1 ? "Spend $5,000 to add 10 percentage points of work to the selected project."
                                                    : "Spend $12,000 to start Sky Garden, or add 5 percentage points after it has started.")
-                     .with_custom_background(i == 2 ? yellow : afterhours::Color{215, 243, 253, 255})
+                     .with_custom_background(yellow)
                      .with_disabled((i == 1 && (cash < 5000 || projects[selected_project].progress >= 100)) ||
                                     (i == 2 && (cash < 12000 || (new_project_started && projects.back().progress >= 100))))
                      .with_border(afterhours::Color{70, 89, 112, 255}, 3.f)
-                     .with_corner_radius(15.f * scale)
-                     .with_font("FredokaMockBold", pixels(23.f * scale))
+                     .with_corner_radius(12.f * scale)
+                     .with_font("FredokaMockBold", pixels(20.f * scale))
                      .with_custom_text_color(ink)
                      .with_alignment(TextAlignment::Center)
                      .with_on_draw_fg([=, this](RectangleType r) {
-                       outline(r, 15.f * scale, 3.f * scale, stroke);
+                       outline(r, 12.f * scale, 3.f * scale, stroke);
                      })
                      .with_debug_name("empire_action_" + std::to_string(i)))) {
         if (i == 0)
@@ -576,47 +552,36 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         else
           new_project();
       }
-      div(context, mk(content.ent(), 320 + static_cast<int>(i)), box(scale, x, 565, 278, 26)
-          .with_label(action_notes[i]).with_font("FredokaMockBold", pixels(19 * scale))
-          .with_custom_text_color(ink).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     }
 
-    div(context, mk(content.ent(), 400), box(scale, 68, 616, 388, 80)
+    div(context, mk(content.ent(), 400), box(scale, 16, 600, 270, 96)
         .with_custom_background(card_bg).with_corner_radius(12 * scale).with_debug_name("empire_chat"));
-    div(context, mk(content.ent(), 401), box(scale, 184, 625, 256, 28)
-        .with_label(chat_status).with_font("FredokaMockBold", pixels(20 * scale))
+    div(context, mk(content.ent(), 401), box(scale, 28, 608, 246, 26)
+        .with_label(chat_status).with_font("FredokaMockBold", pixels(16 * scale))
         .with_custom_text_color(ink).with_text_overflow(TextOverflow::Ellipsis).with_debug_name("empire_chat_status"));
-    div(context, mk(content.ent(), 402), box(scale, 184, 660, 256, 26)
-        .with_label("Ferris Wheel queue booming!").with_font("FredokaMockBold", pixels(20 * scale)).with_custom_text_color(ink));
-    div(context, mk(content.ent(), 403), box(scale, 84, 625, 88, 28)
-        .with_label("GLOBAL").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
-    div(context, mk(content.ent()), box(scale, 84, 660, 88, 26)
-        .with_label("PARKS").with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color({48, 107, 141, 255}));
-    div(context, mk(content.ent()), box(scale, 474, 617, 386, 32)
-        .with_label("Park development " + std::to_string(static_cast<int>(std::lround(milestone_pct * 100))) + "%")
-        .with_font("FredokaMockBold", pixels(23 * scale)).with_custom_text_color(ink)
+    div(context, mk(content.ent(), 402), box(scale, 28, 660, 246, 26)
+        .with_label("DevTeam: Update v2.0 is live").with_font("FredokaMockBold", pixels(16 * scale)).with_custom_text_color(ink));
+    div(context, mk(content.ent()), box(scale, 296, 602, 194, 28)
+        .with_label("Next Milestone")
+        .with_font("FredokaMockBold", pixels(20 * scale)).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Center).with_debug_name("empire_milestone_title"));
-    div(context, mk(content.ent()), box(scale, 474, 650, 386, 28)
-        .with_label(milestone_rewarded ? "$50,000 reward collected" : "Goal: 100% / Reward: $50,000")
-        .with_font("FredokaMockBold", pixels(21 * scale)).with_custom_text_color(ink)
-        .with_alignment(TextAlignment::Center));
-    div(context, mk(content.ent()), box(scale, 490, 682, 354, 14)
-        .with_custom_background({76, 95, 122, 255}).with_corner_radius(7 * scale).with_debug_name("empire_milestone_bar"));
-    div(context, mk(content.ent()), box(scale, 492, 684, 350 * milestone_pct, 10)
-        .with_custom_background(yellow).with_corner_radius(5 * scale).with_debug_name("empire_milestone_fill"));
+    div(context, mk(content.ent()), box(scale, 310, 642, 166, 16)
+        .with_custom_background({76, 95, 122, 255}).with_corner_radius(8 * scale).with_debug_name("empire_milestone_bar"));
+    div(context, mk(content.ent()), box(scale, 312, 644, 162 * milestone_pct, 12)
+        .with_custom_background(yellow).with_corner_radius(6 * scale).with_debug_name("empire_milestone_fill"));
 
-    const std::array<float, 3> tool_positions{920, 1026, 1140};
-    const std::array<float, 3> caption_widths{80, 96, 124};
+    const std::array<float, 3> tool_positions{500, 568, 638};
+    const std::array<float, 3> caption_widths{46, 58, 82};
     for (size_t i = 0; i < tools.size(); ++i) {
       const float x = tool_positions[i];
       const float caption_width = caption_widths[i];
       if (button(
               context, mk(content.ent(), 500 + static_cast<int>(i)),
-              box(scale, x, 620, 49, 49)
+              box(scale, x, 606, 40, 40)
                   .with_label("")
                   .with_custom_background(afterhours::Color{245, 194, 95, 255})
                   .with_border(stroke, 2.f)
-                  .with_corner_radius(24.5f * scale)
+                  .with_corner_radius(20.f * scale)
                   .with_font("FredokaMockBold", pixels(26.f * scale))
                   .with_custom_text_color(white)
                   .with_text_stroke(stroke, 1.f)
@@ -624,12 +589,12 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_debug_name("empire_tool_" + std::to_string(i)))) {
         chat_status = tools[i] + " opened";
       }
-      icon(730 + static_cast<int>(i), i + 5, x + 6, 626, 37, 37);
+      icon(730 + static_cast<int>(i), i + 5, x + 5, 611, 30, 30);
 
       div(context, mk(content.ent(), 510 + static_cast<int>(i)),
-          box(scale, x + (49 - caption_width) / 2, 676, caption_width, 24)
+          box(scale, x + (40 - caption_width) / 2, 652, caption_width, 20)
               .with_label(tools[i])
-              .with_font("FredokaMockBold", pixels(21.f * scale))
+              .with_font("FredokaMockBold", pixels(12.f * scale))
               .with_custom_text_color(ink)
               .with_custom_background({244, 252, 255, 230})
               .with_corner_radius(4 * scale)
