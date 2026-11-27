@@ -46,7 +46,7 @@ TEST(devtools_manifest_registry) {
   // ApplyBlurPass + font_config are manifest-only in Batch P-C with
   // precise, checkable promotion gates.
   const auto *blur = find("apply_blur_pass");
-  devtools_assert(blur->header == "src/systems/ApplyBlurPass.h",
+  devtools_assert(blur->header == "src/plugins/render_passes/ApplyBlurPass.h",
                   "apply_blur_pass header path");
   devtools_assert(blur->owner == Owner::WmLocal, "apply_blur_pass is WM-local");
   const auto *font = find("font_config");
