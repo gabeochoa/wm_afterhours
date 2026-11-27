@@ -280,17 +280,17 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(darker)
             .with_debug_name("sports_tabs"));
     div(context, mk(root.ent()),
-        box(scale, 30, 11, 48, 30)
+        box(scale, 32, 14, 32, 22)
             .with_label("LB")
             .with_custom_background(white)
-            .with_font("AtkinsonMockBold", pixels(17.f * scale))
+            .with_font("AtkinsonMockBold", pixels(12.f * scale))
             .with_custom_text_color(green_dark)
             .with_alignment(TextAlignment::Center));
     div(context, mk(root.ent()),
-        box(scale, 672, 11, 48, 30)
+        box(scale, 674, 14, 32, 22)
             .with_label("RB")
             .with_custom_background(white)
-            .with_font("AtkinsonMockBold", pixels(17.f * scale))
+            .with_font("AtkinsonMockBold", pixels(12.f * scale))
             .with_custom_text_color(green_dark)
             .with_alignment(TextAlignment::Center));
     for (size_t i = 0; i < tabs.size(); ++i) {
@@ -312,11 +312,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(root.ent(), 30 + static_cast<int>(i)),
             box(scale, std::array<float, 4>{96, 252, 390, 524}[i], 46,
                 std::array<float, 4>{142, 122, 120, 136}[i], 4)
-                .with_custom_background(green)
-                .with_on_draw_fg([scale](RectangleType r) {
-                  for (float x = r.x; x + 4 * scale < r.x + r.width; x += 8 * scale)
-                    afterhours::draw_line_ex({x, r.y + r.height}, {x + 4 * scale, r.y}, scale, {28, 106, 70, 255});
-                }).with_ignore_pointer_events());
+                .with_custom_background(green).with_ignore_pointer_events());
       }
     }
 
@@ -403,12 +399,12 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_on_draw_fg([count = row.options.size(), idx = row.option_idx, active, this, scale](RectangleType r) {
                   const auto color = active ? green_dark : green;
                   const float cy = r.y + r.height - 4 * scale;
-                  const float total = static_cast<float>(count) * 12 * scale;
-                  float x = r.x + r.width / 2 - total / 2 + 6 * scale;
+                  const float total = static_cast<float>(count) * 7 * scale;
+                  float x = r.x + r.width / 2 - total / 2 + 3.5f * scale;
                   for (size_t d = 0; d < count; ++d) {
-                    if (d == idx) afterhours::draw_poly({x, cy}, 4, 4 * scale, 0, color);
-                    else afterhours::draw_circle(static_cast<int>(x), static_cast<int>(cy), 2.2f * scale, color);
-                    x += 12 * scale;
+                    if (d == idx) afterhours::draw_poly({x, cy}, 4, 3 * scale, 0, color);
+                    else afterhours::draw_circle(static_cast<int>(x), static_cast<int>(cy), 1.6f * scale, color);
+                    x += 7 * scale;
                   }
                 }).with_debug_name("sports_value_" + std::to_string(i)));
         value.ent().get<HasLabel>().alignment = TextAlignment::Center;
@@ -421,7 +417,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
     div(context, mk(root.ent()),
         box(scale, 620, 124, 2, 498)
-            .with_custom_background(afterhours::Color{159, 174, 189, 110})
+            .with_custom_background(afterhours::Color{92, 255, 162, 255})
             .with_debug_name("sports_divider"));
     const auto &selected = current[selected_row];
     div(context, mk(root.ent()),
