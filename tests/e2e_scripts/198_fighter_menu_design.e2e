@@ -12,7 +12,7 @@ expect_text "Change Entry"
 expect_text "Enter"
 expect_text "Esc"
 assert_ui fighter_root x=0 y=0 w=1280 h=720
-assert_ui fighter_title x=26 y=13 w=480 h=105
+assert_ui fighter_title x=48 y=20 w=480 h=105
 assert_ui fighter_tab_0 y=130 h=46
 assert_ui fighter_tab_3 y=130 h=46
 assert_ui fighter_previous_tab x=78 y=136 w=38 h=38

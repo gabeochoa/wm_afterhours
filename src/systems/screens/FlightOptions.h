@@ -153,19 +153,37 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto root = div(context, mk(entity, 0), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)}).with_corner_radius(0)
         .with_debug_name("flight_root")
-        .with_on_draw_bg([texture = airspace](RectangleType r) {
+        .with_on_draw_bg([texture = airspace, scale](RectangleType r) {
           paint(texture, r);
-          afterhours::draw_rectangle(r, afterhours::Color{2, 9, 19, 90});
-          afterhours::draw_rectangle_gradient_v(
-              {r.x + r.width * .28f, r.y + r.height * .26f, r.width * .44f, r.height * .22f},
-              afterhours::Color{64, 120, 170, 0}, afterhours::Color{64, 120, 170, 34});
-          afterhours::draw_rectangle_gradient_v(
-              {r.x + r.width * .38f, r.y + r.height * .50f, r.width * .30f, r.height * .14f},
-              afterhours::Color{52, 96, 140, 28}, afterhours::Color{52, 96, 140, 0});
+          afterhours::draw_rectangle(r, afterhours::Color{1, 5, 14, 125});
+          const auto glow = [=](float cx, float cy, float radius, afterhours::Color inner) {
+            afterhours::draw_circle_gradient(
+                static_cast<int>(r.x + r.width * cx), static_cast<int>(r.y + r.height * cy),
+                radius * scale, inner, afterhours::Color{inner.r, inner.g, inner.b, 0});
+          };
+          glow(.26f, .34f, 430, afterhours::Color{54, 106, 156, 34});
+          glow(.16f, .72f, 320, afterhours::Color{44, 92, 140, 28});
+          glow(.84f, .28f, 460, afterhours::Color{42, 82, 138, 30});
+          glow(.72f, .12f, 280, afterhours::Color{52, 96, 146, 22});
+          glow(.55f, .88f, 380, afterhours::Color{36, 74, 124, 22});
+          glow(.66f, .52f, 90, afterhours::Color{90, 140, 190, 24});
+          glow(.80f, .66f, 64, afterhours::Color{90, 140, 190, 19});
+          glow(.58f, .18f, 70, afterhours::Color{90, 140, 190, 17});
+          glow(.92f, .44f, 56, afterhours::Color{90, 140, 190, 17});
+          const auto dark = afterhours::Color{0, 2, 8, 0};
+          const auto shade = afterhours::Color{0, 2, 8, 110};
+          afterhours::draw_rectangle_gradient_v({r.x, r.y, r.width, r.height * .16f}, shade, dark);
+          afterhours::draw_rectangle_gradient_v({r.x, r.y + r.height * .84f, r.width, r.height * .16f}, dark, shade);
+          afterhours::draw_rectangle_gradient_h({r.x, r.y, r.width * .14f, r.height}, shade, dark);
+          afterhours::draw_rectangle_gradient_h({r.x + r.width * .86f, r.y, r.width * .14f, r.height}, dark, shade);
           afterhours::draw_line_ex({r.x + r.width * .06f, r.y}, {r.x + r.width * .22f, r.y + r.height},
-                                   1.f, afterhours::Color{140, 190, 225, 70});
+                                   1.f, afterhours::Color{140, 190, 225, 58});
           afterhours::draw_line_ex({r.x, r.y + r.height * .18f}, {r.x + r.width * .38f, r.y + r.height * .30f},
-                                   1.f, afterhours::Color{140, 190, 225, 55});
+                                   1.f, afterhours::Color{140, 190, 225, 46});
+          afterhours::draw_line_ex({r.x + r.width * .9f, r.y + r.height * .06f}, {r.x + r.width * .62f, r.y + r.height * .42f},
+                                   1.f, afterhours::Color{120, 170, 210, 30});
+          afterhours::draw_line_ex({r.x + r.width * .06f, r.y + r.height * .94f}, {r.x + r.width * .5f, r.y + r.height * .58f},
+                                   1.f, afterhours::Color{120, 170, 210, 26});
         }));
     auto content = div(context, mk(root.ent()), ComponentConfig{}
         .with_size({pixels(1280 * scale), pixels(720 * scale)})
@@ -187,7 +205,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
           .with_disabled(disabled).with_click_activation(ClickActivationMode::Release).with_debug_name(name));
     };
-    label(1, "OPTIONS", 136, 48, 380, 40, 36, bright, "flight_title", true);
+    label(1, "OPTIONS", 136, 48, 380, 40, 32, cyan, "flight_title", true);
     if (!options_open) {
       label(2, "OPTIONS CLOSED", 136, 180, 590, 38, 28, bright);
       label(3, status, 136, 230, 590, 36, 20, cyan, "flight_status");
@@ -204,15 +222,24 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     const auto category_y = [](size_t i) {
       return 140.f + static_cast<float>(i) * 30;
     };
-    div(context, mk(content.ent()), box(scale, 118, category_y(active_tab) - 2, 420, 28)
-        .with_custom_background({109, 93, 53, 105}).with_ignore_pointer_events());
-    div(context, mk(content.ent()), box(scale, 118, category_y(active_tab) + 2, 4, 20)
+    const float glow_y = category_y(active_tab);
+    div(context, mk(content.ent()), box(scale, 118, glow_y, 640, 28)
+        .with_on_draw_bg([scale](RectangleType glow) {
+          afterhours::draw_rectangle_gradient_h(
+              glow, afterhours::Color{255, 196, 96, 64}, afterhours::Color{255, 196, 96, 0});
+          afterhours::draw_rectangle({glow.x, glow.y + glow.height * .46f, glow.width * .9f, 2.f * scale},
+                                     afterhours::Color{255, 224, 150, 150});
+          afterhours::draw_circle_gradient(static_cast<int>(glow.x), static_cast<int>(glow.y + glow.height * .5f),
+                                           10.f * scale, afterhours::Color{255, 230, 170, 200},
+                                           afterhours::Color{255, 230, 170, 0});
+        }).with_ignore_pointer_events());
+    div(context, mk(content.ent()), box(scale, 118, glow_y + 2, 4, 20)
         .with_custom_background(gold).with_ignore_pointer_events());
     for (size_t i = 0; i < categories.size(); ++i) {
       auto category = action(20 + static_cast<int>(i), categories[i].name,
-          136, category_y(i), 240, 28, 21, "flight_category_" + std::to_string(i),
+          136, category_y(i), 240, 28, 18, "flight_category_" + std::to_string(i),
           false, active_tab == i ? bright : cyan);
-      category.ent().get<HasLabel>().text_x_offset = 10 * scale;
+      category.ent().get<HasLabel>().text_x_offset = 8 * scale;
       if (category) choose_category(i);
       if (focus_category == static_cast<int>(i)) {
         context.set_focus(category.ent().id);
