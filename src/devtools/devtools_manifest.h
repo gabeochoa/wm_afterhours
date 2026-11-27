@@ -36,7 +36,8 @@ struct PluginDescriptor {
 // README is re-aligned).
 inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
     {"headless_screenshots", "Headless screenshots + headless test runner",
-     "src/headless_screenshots.h", "src/headless_screenshots.cpp",
+     "src/devtools/headless_harness/headless_screenshots.h",
+     "src/devtools/headless_harness/headless_screenshots.cpp",
      Owner::WmLocal,
      "run_headless_screenshots(), run_all_tests_headless(), "
      "run_focus_ring_test(), run_layout_summary()",
@@ -49,8 +50,8 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "AH has graphics headless mode + e2e harness, but WM owns the "
      "screen-registry sweep, multi-resolution loop, and coroutine runner."},
     {"screenshot_validation", "Screenshot baseline validation",
-     "src/testing/screenshot_validation.h",
-     "src/testing/screenshot_validation.cpp", Owner::WmLocal,
+     "src/devtools/headless_harness/screenshot_validation.h",
+     "src/devtools/headless_harness/screenshot_validation.cpp", Owner::WmLocal,
      "screenshot_validation::set_update_baselines(), "
      "calculate_image_diff_percentage(), validate_screen_against_baseline()",
      "Promote only after threshold parity with AH: WM DIFF_THRESHOLD_PCT "
@@ -61,7 +62,8 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Vendor overlap: afterhours/src/plugins/e2e_testing/"
      "screenshot_baseline.h + screenshot capture in harness.h/runner.h."},
     {"layout_summary", "Flat layout summary (named-element bounds)",
-     "src/testing/layout_summary.h", "src/testing/layout_summary.cpp",
+     "src/devtools/layout_audit/layout_summary.h",
+     "src/devtools/layout_audit/layout_summary.cpp",
      Owner::WmLocal,
      "layout_summary::write(std::ostream&), write_to_file()",
      "DO NOT promote until layout-intent API is upstream: AH must expose the "
@@ -71,7 +73,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Depends on AH ui_commands::ui_query + get_screen_rect (already "
      "upstream); the WM part is the flat named-element print."},
     {"ui_tree_dump", "JSON UI tree dump with layout intent",
-     "src/testing/ui_tree_dump.h", "header-only", Owner::WmLocal,
+     "src/devtools/layout_audit/ui_tree_dump.h", "header-only", Owner::WmLocal,
      "ui_tree_dump::build(), size_json()",
      "DO NOT promote until layout-intent API is upstream (see "
      "layout_summary): desired/min/max specs, flex_direction, "
@@ -81,7 +83,8 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Header-only by design (inline JSON builders); the intent half is the "
      "point (lets a CSS layout engine independently solve the same input)."},
     {"focus_audit", "Focus geometry / focus-ring audit",
-     "src/testing/focus_audit.h", "src/testing/focus_audit.cpp",
+     "src/devtools/layout_audit/focus_audit.h",
+     "src/devtools/layout_audit/focus_audit.cpp",
      Owner::WmLocal,
      "focus_audit::snapshot(), write(), capture_crop(), register_systems(); "
      "E2E command audit_ui",
@@ -92,7 +95,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Uses AH focus/clip/menu/tooltip systems; WM owns the snapshot/crop "
      "format and the audit_ui command."},
     {"frame_stats", "Per-frame stats ring (fps/avg/p95/max)",
-     "src/frame_stats.h", "header-only", Owner::WmLocal,
+     "src/devtools/profiling/frame_stats.h", "header-only", Owner::WmLocal,
      "FrameStats::push(dt)",
      "Promote only if AH profiling Snapshot (avg/p95/p99/fps in "
      "profiling.h) provably matches WM ring math (120-frame ring, recompute "
@@ -103,7 +106,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Vendor overlap: afterhours/src/plugins/profiling.h Snapshot + "
      "select_frames(). WM ring is standalone and dependency-free."},
     {"profiler_overlay", "In-game profiler overlay chrome",
-     "src/systems/ProfilerOverlay.h", "header-only", Owner::WmLocal,
+     "src/devtools/profiling/ProfilerOverlay.h", "header-only", Owner::WmLocal,
      "ProfilerOverlay (System<UIContext<InputAction>>)",
      "Promote only if AH ships chrome parity: vendor ui/profiler.h "
      "profiler_panel + profiling.h default_collector are already upstream; "
@@ -113,7 +116,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "./output/ui_tester.exe --profile (F3 panel); --run-all-tests",
      "Thin WM chrome over upstream profiling collector + profiler_panel."},
     {"e2e_integration", "E2E system registration shim",
-     "src/testing/e2e_integration.h", "header-only", Owner::WmLocal,
+     "src/testing/screen_command_pack/e2e_integration.h", "header-only", Owner::WmLocal,
      "e2e::register_e2e_systems(), configure_runner(); re-exports "
      "parse_e2e_args/should_run_e2e/count_e2e_scripts/screenshot_path",
      "Promote only after AH e2e_testing exposes an app-command "
@@ -123,7 +126,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Upstream owns runner + arg parsing + screenshot paths; this file "
      "wires WM callbacks into it."},
     {"e2e_commands", "App-specific E2E commands",
-     "src/testing/e2e_commands.h", "header-only", Owner::WmLocal,
+     "src/testing/screen_command_pack/e2e_commands.h", "header-only", Owner::WmLocal,
      "HandleOpenScreenCommand, HandleNextScreenCommand, "
      "HandlePrevScreenCommand, HandleGotoScreenCommand, "
      "HandleValidateScreenCommand",
@@ -135,7 +138,7 @@ inline constexpr std::array<PluginDescriptor, 11> kDescriptors{{
      "Vendor overlap: afterhours/src/plugins/e2e_testing/screen_commands.h "
      "is the upstream counterpart for generic screen commands."},
     {"apply_blur_pass", "Blur post-process pass (screen-space)",
-     "src/systems/ApplyBlurPass.h", "header-only", Owner::WmLocal,
+     "src/plugins/render_passes/ApplyBlurPass.h", "header-only", Owner::WmLocal,
      "ApplyBlurPass::once(float); consumes ui::blur_requests()",
      "PRECISE: promote to AH effects.h only when AH BlurPass exposes (a) "
      "the direct-to-window scale path (scale = GetRenderWidth() / "
