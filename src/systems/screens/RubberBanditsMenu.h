@@ -24,12 +24,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
   raylib::Texture2D logo_texture{};
   std::string footer_message = "Change the game's settings";
 
-  const std::array<std::string, 6> menu_items{
-      "OPTIONS", "CONTROLS", "LEADERBOARD", "ARMORY", "CREDITS", "CLOSE MENU"};
-  const std::array<std::string, 6> menu_hints{
+  const std::array<std::string, 7> menu_items{
+      "OPTIONS", "CONTROLS", "LEADERBOARD", "ARMORY", "REPORT PLAYER",
+      "PLAY CREDITS", "BACK"};
+  const std::array<std::string, 7> menu_hints{
       "Change the game's settings", "Learn the controls",
-      "See the best bandits", "Choose your loadout", "Meet the team",
-      "Return to the character lineup"};
+      "See the best bandits", "Choose your loadout", "Report a player",
+      "Meet the team", "Return to the character lineup"};
   const std::array<std::string, 4> character_names{
       "EARL THE BIRD", "THE GENTLEMAN", "HOT HEAD", "THE OUTLAW"};
 
@@ -181,17 +182,67 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     sprite(context, mk(root.ent()), cast_texture,
         {0, 0, static_cast<float>(cast_texture.width), static_cast<float>(cast_texture.height)},
         box(scale, 0, 0, 1280, 720).with_ignore_pointer_events().with_debug_name("rb_cast"));
+    // The reference lineup is busier than the cast image alone: extra loose
+    // bills and a couple of small bandits crowd the floor between the menu
+    // and the hero. Drawn as plain shapes (no extracted art).
+    div(context, mk(root.ent()), box(scale, 360, 470, 920, 140)
+        .with_ignore_pointer_events().with_debug_name("rb_money_props")
+        .with_on_draw_fg([scale](RectangleType r) {
+          const float ox = r.x - 360.f * scale;
+          const float oy = r.y - 470.f * scale;
+          const afterhours::Color bill{89, 176, 92, 255};
+          const afterhours::Color bill_dark{52, 119, 62, 255};
+          const afterhours::Color gold{255, 203, 46, 255};
+          const afterhours::Color skin{227, 180, 141, 255};
+          for (int i = 0; i < 26; ++i) {
+            const float bx = ox + (382.f + static_cast<float>((i * 37) % 860)) * scale;
+            const float by = oy + (542.f + static_cast<float>((i * 13) % 3) * 9.f) * scale;
+            afterhours::draw_rectangle({bx, by, 22 * scale, 11 * scale}, bill);
+            afterhours::draw_line_ex({bx, by}, {bx + 22 * scale, by + 11 * scale},
+                                     1 * scale, bill_dark);
+            afterhours::draw_circle(static_cast<int>(bx + 11 * scale),
+                                    static_cast<int>(by + 5.5f * scale), 2.5f * scale,
+                                    bill_dark);
+          }
+          const auto mini_bandit = [&](float fx, float fy, afterhours::Color body) {
+            afterhours::draw_rectangle_rounded(
+                {ox + (fx - 16) * scale, oy + fy * scale, 32 * scale, 44 * scale}, .2f,
+                12, body, RoundedCorners().all_round());
+            afterhours::draw_circle(static_cast<int>(ox + fx * scale),
+                                    static_cast<int>(oy + (fy - 8) * scale),
+                                    15 * scale, skin);
+            afterhours::draw_rectangle_rounded(
+                {ox + (fx - 14) * scale, oy + (fy - 14) * scale, 28 * scale,
+                 9 * scale},
+                .3f, 9, afterhours::Color{20, 20, 20, 255},
+                RoundedCorners().all_round());
+            afterhours::draw_rectangle(
+                {ox + (fx - 11) * scale, oy + (fy + 44) * scale, 8 * scale, 8 * scale},
+                afterhours::Color{70, 50, 30, 255});
+            afterhours::draw_rectangle(
+                {ox + (fx + 3) * scale, oy + (fy + 44) * scale, 8 * scale, 8 * scale},
+                afterhours::Color{70, 50, 30, 255});
+          };
+          mini_bandit(425, 488, afterhours::Color{69, 166, 171, 255});
+          mini_bandit(1215, 478, afterhours::Color{196, 115, 57, 255});
+          mini_bandit(1175, 494, afterhours::Color{140, 95, 60, 255});
+          for (int i = 0; i < 5; ++i) {
+            afterhours::draw_circle(
+                static_cast<int>(ox + (760.f + static_cast<float>(i * 12)) * scale),
+                static_cast<int>(oy + (566.f - static_cast<float>(i % 2) * 6.f) * scale),
+                7 * scale, gold);
+          }
+        }));
     sprite(context, mk(root.ent()), logo_texture,
         {0, 0, static_cast<float>(logo_texture.width), static_cast<float>(logo_texture.height)},
         box(scale, 52, 78, 330, 183).with_ignore_pointer_events().with_debug_name("rb_logo"));
     div(context, mk(root.ent()), box(scale, 0, 0, 1280, 40)
         .with_custom_background(afterhours::Color{43, 150, 201, 255}).with_debug_name("rb_online_bar"));
-    label(4, "thia9uers", 32, 6, 154, 28, 22, white, "rb_online");
-    div(context, mk(root.ent()), box(scale, 196, 8, 96, 24)
-        .with_custom_background(afterhours::Color{30, 109, 135, 255}).with_corner_radius(12 * scale));
-    label(5, "Online", 196, 8, 96, 24, 18, white, "rb_connection", TextAlignment::Center);
-    label(6, "Players  " + std::to_string(player_count), 980, 4, 136, 32, 20, white, "rb_player_count");
-    label(7, "Coins  " + std::to_string(coins), 1132, 4, 124, 32, 20, white, "rb_coins");
+    label(4, "thia9uers - Online", 32, 6, 300, 28, 22, white, "rb_online");
+    // Keep player/coin labels clear of the launcher HUD corner (x1068..1268,
+    // y8..40); they sit left of it in the bar. PR #38 moved this there too.
+    label(6, "Players  " + std::to_string(player_count), 700, 4, 170, 32, 20, white, "rb_player_count");
+    label(7, "Coins  " + std::to_string(coins), 880, 4, 150, 32, 20, white, "rb_coins");
     auto promo = button(context, mk(root.ent()), box(scale, 938, 72, 310, 138)
         .with_custom_background(afterhours::Color{165, 124, 29, 235})
         .with_border(white, 2 * scale).with_corner_radius(12 * scale)
@@ -201,22 +252,24 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .2f, 24, 1 * scale, afterhours::Color{255, 236, 150, 255});
           draw_lightning(r, scale);
         }).with_debug_name("rb_promo"));
-    label(11, "Supporter pack", 956, 83, 190, 30, 24, white, "rb_promo_title");
-    label(12, supporter_selected ? "Cosmetic pack preview" : "More looks for your bandits.",
-          956, 118, 200, 24, 14, white, "rb_promo_description");
-    label(13, supporter_selected ? "Preview" : "View pack  >", 956, 163,
-          190, 28, 19, white, "rb_promo_action");
+    label(11, "Get more bandits!", 956, 83, 250, 30, 24, white, "rb_promo_title");
+    label(12, supporter_selected ? "Cosmetic pack preview" : "Buy the supporter pack",
+          956, 118, 240, 24, 14, white, "rb_promo_description");
+    label(120, supporter_selected ? "" : "and show off!",
+          956, 140, 240, 24, 14, white, "rb_promo_description2");
+    label(13, supporter_selected ? "No purchase in this demo" : "View pack  >", 956, 163,
+          250, 28, 19, white, "rb_promo_action");
     if (promo) {
       supporter_selected = !supporter_selected;
       footer_message = supporter_selected ? "Supporter pack preview" : menu_hints[selected_item];
     }
     if (menu_open) {
-      const std::array<float, 6> row_y{324, 370, 416, 462, 508, 577};
+      const std::array<float, 7> row_y{300, 340, 380, 420, 460, 500, 560};
       for (size_t i = 0; i < menu_items.size(); ++i) {
         const bool selected = i == selected_item;
         auto item = button(context, mk(root.ent(), 20 + static_cast<int>(i)),
             box(scale, 48, row_y[i], 354, 42).with_label(menu_items[i])
-                .with_font("FredokaMockBold", pixels((i == 5 ? 25 : 32) * scale))
+                .with_font("FredokaMockBold", pixels((i == 6 ? 25 : 32) * scale))
                 .with_custom_text_color(white).with_alignment(TextAlignment::Left)
                 .with_text_inset(0, 0).with_letter_spacing(-.3f * scale)
                 .with_click_activation(ClickActivationMode::Release)
@@ -231,9 +284,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         if (!item) continue;
         selected_item = i;
         footer_message = menu_hints[i];
-        if (i == 5) menu_open = false;
+        if (i == 6) menu_open = false;
       }
-      div(context, mk(root.ent()), box(scale, 70, 564, 310, 1)
+      div(context, mk(root.ent()), box(scale, 70, 550, 310, 1)
           .with_custom_background(afterhours::Color{142, 109, 30, 135}));
     } else {
       if (button(context, mk(root.ent()), box(scale, 48, 324, 354, 48)

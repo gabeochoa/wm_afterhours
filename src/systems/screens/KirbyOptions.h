@@ -42,7 +42,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   std::array<Art, 25> art{{
       {"desk", 0.f, 0.f, 1280.f, 720.f},
       {"board", 378.f, 140.f, 836.f, 564.f},
-      {"notebook", 12.f, 154.f, 350.f, 486.f},
+      {"notebook", 27.f, 154.f, 350.f, 486.f},
       {"name", 556.f, 198.f, 426.f, 96.f},
       {"delete", 1052.f, 198.f, 132.f, 94.f},
       {"options_label", 916.f, 114.f, 203.f, 46.f},
@@ -136,7 +136,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                                 (context.screen_height - 720 * scale) / 2)
         .with_debug_name("kirby_root"));
     const std::array<const char *, 10> help{
-        "Choose a category to customize your rider.", "Edit the name shown on this profile.",
+        "Enter a new name and customize your controls.", "Edit the name shown on this profile.",
         "Choose your control style and rumble preference.", "Adjust screen brightness and camera distance.",
         "Choose text size and color assistance.", "Set music and sound effects levels.",
         "Choose who can see your player in this local demo.", "Review saved data before choosing whether to delete it.",
@@ -145,9 +145,22 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     auto decoration = [&](size_t i) {
       const auto &asset = art[i];
+      // The reference shows the notebook as a tilted checklist on the desk.
+      // Custom draw callbacks ignore div rotation, so the notebook's texture
+      // is drawn with a real -6 degree rotation about its centre instead.
+      const bool tilt = (i == 2);
       div(context, mk(root.ent(), 100 + static_cast<int>(i)),
           box(scale, asset.x, asset.y, asset.w, asset.h).with_ignore_pointer_events()
-          .with_on_draw_bg([texture = atlas, frame = kirby_artwork_frames[i]](RectangleType r) { paint(texture, frame, r); }));
+          .with_on_draw_bg([texture = atlas, frame = kirby_artwork_frames[i], tilt](RectangleType r) {
+            if (!tilt) { paint(texture, frame, r); return; }
+            if (texture.id == 0) return;
+            // MarloKart's paint() pattern: pivot on the centre by shifting
+            // the dest rect by the origin before DrawTexturePro.
+            const raylib::Vector2 center{r.width / 2.f, r.height / 2.f};
+            raylib::DrawTexturePro(texture, frame,
+                                   {r.x + center.x, r.y + center.y, r.width, r.height},
+                                   center, -6.0f, raylib::WHITE);
+          }));
     };
     auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
                      float size, afterhours::Color color,
@@ -179,19 +192,26 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     decoration(4);
     decoration(2);
     constexpr std::array<const char *, 6> tab_names{"Network", "Controller", "Home", "Messages", "Favorites", "Options"};
+    // Reference tabs are large unlabeled icon pills; the selected tab is named
+    // by the purple banner beneath it instead of a label on the pill.
     for (size_t i = 0; i < 6; ++i) {
       const auto &a = art[13 + i * 2 + (selected_tab == i ? 1 : 0)];
-      label(150 + static_cast<int>(i), tab_names[i], a.x + 3, 114, 106, 25,
-            12.5f, raylib::WHITE, "kirby_tab_label_" + std::to_string(i));
       if (action(10 + static_cast<int>(i), "", a.x, a.y, a.w, a.h,
                  "kirby_tab_" + std::to_string(i))) choose_tab(i);
+    }
+    {
+      const auto &a = art[13 + selected_tab * 2 + 1];
+      div(context, mk(root.ent()), box(scale, a.x, 144, 112, 34)
+          .with_custom_background(purple).with_corner_radius(5 * scale)
+          .with_ignore_pointer_events().with_debug_name("kirby_banner"));
+      label(150, tab_names[selected_tab], a.x, 144, 112, 34, 16,
+            raylib::WHITE, "kirby_title");
     }
     if (action(20, "L", 350, 83, 32, 32, "kirby_previous_tab", true, 17))
       choose_tab((selected_tab + 5) % 6);
     if (action(21, "R", 1152, 83, 32, 32, "kirby_next_tab", true, 17))
       choose_tab((selected_tab + 1) % 6);
-    label(23, profile.name, 635, 207, 326, 46, 34, ink, "kirby_profile_name");
-    label(161, "Edit name", 635, 253, 326, 28, 16, ink, "kirby_edit_name", "FredokaMockBold");
+    label(23, profile.name, 635, 222, 326, 46, 34, ink, "kirby_profile_name");
     label(24, "Delete Data", 1056, 252, 124, 32, 16, {120, 67, 83, 255}, "kirby_delete_label");
     div(context, mk(root.ent()), box(scale, 414, 304, 130, 28)
         .with_custom_background({112, 102, 84, 255}));
@@ -199,14 +219,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     if (action(26, "", 556, 198, 426, 96, "kirby_name", false, 22, help[1], 48)) open(Detail::Name);
     if (action(27, "", 1052, 198, 132, 94, "kirby_data", false, 22, help[7])) open(Detail::Data);
     if (action(28, "", 212, 269, 106, 56, "kirby_customize", false, 22, help[1])) open(Detail::Name);
-    label(163, "Profile customization", 50, 332, 282, 31, 15, ink, "kirby_profile_caption", "FredokaMockBold");
     if (detail == Detail::None) {
       constexpr std::array<const char *, 5> names{"Controller", "Display", "Accessibility", "Sound", "Online"};
       constexpr std::array<std::array<float, 4>, 5> cells{{
           {414, 340, 258, 130}, {672, 340, 258, 130}, {930, 340, 258, 130},
           {414, 500, 387, 130}, {801, 500, 387, 130}}};
-      label(164, "Controls & visibility", 572, 304, 578, 28, 15, ink, "", "FredokaMockBold");
-      label(165, "Sound & connection", 414, 469, 774, 25, 15, ink, "", "FredokaMockBold");
+
       for (size_t i = 0; i < 5; ++i) {
         const auto &c = cells[i];
         div(context, mk(root.ent(), 170 + static_cast<int>(i)), box(scale, c[0], c[1], c[2], c[3])
@@ -296,7 +314,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           profile.favorite = (profile.favorite + 1) % modes.size();
       }
     }
-    div(context, mk(root.ent()), box(scale, 414, 642, 774, 36)
+    div(context, mk(root.ent()), box(scale, 414, 646, 774, 36)
         .with_label(!status.empty() ? status : !hover_help.empty() ? hover_help : help[static_cast<size_t>(detail)])
         .with_font("FredokaMockBold", pixels(21 * scale)).with_text_overflow(TextOverflow::Wrap).with_custom_text_color(ink)
         .with_alignment(TextAlignment::Left).with_ignore_pointer_events()
