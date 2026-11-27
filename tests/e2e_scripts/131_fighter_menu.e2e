@@ -11,7 +11,7 @@ expect_text "System Options"
 expect_text "Change various settings in the game, such as vibration, save, and autosave functions."
 
 assert_ui fighter_root x=0 y=0 w=1280 h=720
-assert_ui fighter_title x=26 y=13 w=480 h=105
+assert_ui fighter_title x=48 y=20 w=480 h=105
 assert_ui fighter_tabs x=73 y=130 w=1135 h=53
 assert_ui fighter_option_0 x=0 y=256 w=558 h=48
 assert_ui fighter_option_5 x=0 y=546 w=558 h=48

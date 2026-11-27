@@ -225,13 +225,26 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             box(scale, 0, 0, 1280, 720)
                 .with_absolute_position((screen_w - 1280 * scale) / 2,
                                         (screen_h - 720 * scale) / 2)
-                .with_on_draw_bg([texture = lobby_texture](RectangleType r) {
+                .with_on_draw_bg([texture = lobby_texture, scale](RectangleType r) {
                   afterhours::draw_rectangle(
                       r, afterhours::Color{155, 150, 119, 255});
                   paint(texture, r);
                   afterhours::draw_rectangle(
                       {r.x, r.y, r.width, r.height * .29f},
                       {155, 150, 119, 85});
+                  const auto fx = [r](float x) { return r.x + r.width * x; };
+                  const auto fy = [r](float y) { return r.y + r.height * y; };
+                  const afterhours::Color gold{198, 168, 92, 255};
+                  afterhours::draw_line_ex({fx(.30f), fy(.10f)}, {fx(.72f), fy(.10f)}, 5.f * scale, {gold.r, gold.g, gold.b, 110});
+                  afterhours::draw_line_ex({fx(.36f), fy(.10f)}, {fx(.66f), fy(.10f)}, 3.f * scale, {gold.r, gold.g, gold.b, 90});
+                  afterhours::draw_line_ex({fx(.44f), fy(.10f)}, {fx(.44f), fy(.30f)}, 4.f * scale, {gold.r, gold.g, gold.b, 80});
+                  afterhours::draw_line_ex({fx(.58f), fy(.10f)}, {fx(.58f), fy(.30f)}, 4.f * scale, {gold.r, gold.g, gold.b, 80});
+                  draw_triangle_ccw({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, {fx(.84f), fy(1.f)}, {218, 220, 208, 255});
+                  draw_triangle_ccw({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, {fx(.18f), fy(1.f)}, {202, 206, 192, 255});
+                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.50f), fy(1.f)}, 2.f * scale, {150, 155, 140, 255});
+                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.20f), fy(1.f)}, 2.f * scale, {155, 160, 145, 255});
+                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.82f), fy(1.f)}, 2.f * scale, {155, 160, 145, 255});
+                  afterhours::draw_line_ex({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, 3.f * scale, {120, 110, 80, 255});
                 })
                 .with_debug_name("fighter_root"));
 
@@ -242,19 +255,22 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                          c);
               draw_triangle_ccw({r.x + r.width * 0.65f, r.y},
                                 {r.x + r.width, r.y}, {r.x, r.y + r.height}, c);
+              afterhours::draw_line_ex({r.x + r.width * 0.65f, r.y}, {r.x, r.y + r.height},
+                                       3.f, afterhours::Color{40, 238, 36, 255});
             })
             .with_ignore_pointer_events()
             .with_debug_name("title_wedge"));
 
-    div(context, mk(root.ent()),
-        box(scale, 26, 13, 480, 105)
+    auto title = div(context, mk(root.ent()),
+        box(scale, 48, 20, 480, 105)
             .with_label("MainMenu")
             .with_font("Garamond", pixels(96.f * scale))
-            .with_custom_text_color(white)
-            .with_text_shadow(afterhours::Color{125, 230, 45, 255}, 2.f * scale,
-                              3.f * scale)
+            .with_custom_text_color(lime)
+            .with_text_stroke(black, 4.f * scale)
+            .with_text_shadow(white, 0, -3.f * scale)
             .with_letter_spacing(-1.f * scale)
             .with_debug_name("fighter_title"));
+    title.ent().addComponentIfMissing<HasUIModifiers>().rotation = -11.f;
 
     div(context, mk(root.ent()),
         box(scale, 942, 48, 282, 52)
@@ -372,7 +388,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                   : afterhours::Color{0, 0, 0, 245},
                            active ? afterhours::Color{0, 0, 0, 255}
                                   : afterhours::Color{119, 123, 119, 255},
-                           20.f * scale, 28.f * scale);
+                           28.f * scale, 38.f * scale);
                      })
                      .with_debug_name("fighter_option_" + std::to_string(i)))) {
         active_option = i;
@@ -427,22 +443,23 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         box(scale, 850, 204, 376, 286)
             .with_on_draw_bg([scale, fill = holo](RectangleType r) {
-              const float cut = 24 * scale;
-              afterhours::draw_rectangle({r.x + cut, r.y, r.width - 2 * cut, r.height}, fill);
-              draw_triangle_ccw({r.x + cut, r.y}, {r.x, r.y + r.height},
-                                {r.x + cut, r.y + r.height}, fill);
-              draw_triangle_ccw({r.x + r.width - cut, r.y}, {r.x + r.width, r.y},
-                                {r.x + r.width - cut, r.y + r.height}, fill);
+              const float skew = 52 * scale;
+              const Vector2Type tl{r.x + skew, r.y};
+              const Vector2Type tr{r.x + r.width, r.y + skew * .55f};
+              const Vector2Type br{r.x + r.width - skew, r.y + r.height};
+              const Vector2Type bl{r.x, r.y + r.height - skew * .55f};
+              draw_triangle_ccw(tl, tr, br, fill);
+              draw_triangle_ccw(tl, br, bl, fill);
+              draw_triangle_ccw(tl, {r.x + r.width * .52f, r.y + r.height * .44f}, tr, {180, 255, 235, 130});
+              draw_triangle_ccw(bl, {r.x + r.width * .52f, r.y + r.height * .44f}, br, {40, 200, 160, 110});
               const afterhours::Color frame{209, 255, 230, 255};
-              afterhours::draw_line_ex({r.x + cut, r.y}, {r.x + r.width, r.y}, 2 * scale, frame);
-              afterhours::draw_line_ex({r.x + r.width, r.y},
-                                       {r.x + r.width - cut, r.y + r.height}, 2 * scale, frame);
-              afterhours::draw_line_ex({r.x + r.width - cut, r.y + r.height},
-                                       {r.x, r.y + r.height}, 2 * scale, frame);
-              afterhours::draw_line_ex({r.x, r.y + r.height}, {r.x + cut, r.y}, 2 * scale, frame);
-              afterhours::draw_line_ex({r.x + cut, r.y - 5 * scale},
-                                       {r.x + r.width, r.y - 5 * scale}, 2 * scale,
-                                       {129, 215, 71, 200});
+              afterhours::draw_line_ex(tl, tr, 3 * scale, frame);
+              afterhours::draw_line_ex(tr, br, 3 * scale, frame);
+              afterhours::draw_line_ex(br, bl, 3 * scale, frame);
+              afterhours::draw_line_ex(bl, tl, 3 * scale, frame);
+              afterhours::draw_line_ex({r.x + r.width * .18f, r.y + r.height * .18f},
+                                       {r.x + r.width * .62f, r.y + r.height * .06f}, 4 * scale,
+                                       {255, 255, 255, 170});
             }).with_debug_name("fighter_holo_card"));
     if (active_option == 5) {
       div(context, mk(root.ent()), box(scale, 953, 280, 140, 140)
@@ -458,11 +475,12 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
              box(scale, 1023 - width / 2, 345 - height / 2, width, height)
                  .with_ignore_pointer_events().with_debug_name("fighter_holo_gear"));
     }
-    div(context, mk(root.ent()), box(scale, 826, 418, 432, 70)
+    auto selected_name = div(context, mk(root.ent()), box(scale, 826, 418, 432, 70)
         .with_label(current.label).with_font("Garamond", pixels(54 * scale))
         .with_letter_spacing(-1 * scale).with_custom_text_color(white)
-        .with_text_stroke(black, 3 * scale).with_text_shadow(lime, 0, 2 * scale)
+        .with_text_stroke(black, 4 * scale).with_text_shadow(lime, 0, 3 * scale)
         .with_debug_name("fighter_selected_name"));
+    selected_name.ent().addComponentIfMissing<HasUIModifiers>().rotation = -9.f;
     div(context, mk(root.ent()), box(scale, 804, 492, 476, 170)
         .with_on_draw_bg([scale, bg = deep_black](RectangleType r) {
           afterhours::draw_rectangle({r.x + 24 * scale, r.y, r.width - 24 * scale, r.height}, bg);
