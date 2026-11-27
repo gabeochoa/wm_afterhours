@@ -121,63 +121,152 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                {x, r.y + r.height * .39f}, 4.f,
                                afterhours::Color{220, 216, 176, 140});
     }
-    draw_cyclist({r.x + r.width * .40f, r.y + r.height * .24f, r.width * .25f,
-                  r.height * .58f});
+    // NOTE: town.png carries the street, barriers and a side-profile rider.
+    // The reference rider faces the viewer, so the front-facing cyclist and
+    // background pedestrians are drawn over the texture (see on_draw_bg).
+    // Silver crowd barriers on the pavement (under the texture, kept for
+    // completeness when no town art is present).
+    for (int b = 0; b < 3; ++b) {
+      const float bx = r.x + r.width * (.62f + static_cast<float>(b) * .13f);
+      const float by = r.y + r.height * .30f;
+      const float bw = r.width * .115f;
+      const float bh = r.height * .13f;
+      afterhours::draw_rectangle({bx, by, bw, bh},
+                                 afterhours::Color{196, 198, 202, 200});
+      for (int v = 0; v < 6; ++v) {
+        afterhours::draw_line_ex({bx + v * bw / 5.f, by},
+                                 {bx + v * bw / 5.f, by + bh}, 2.f,
+                                 afterhours::Color{120, 122, 126, 200});
+      }
+      afterhours::draw_line_ex({bx, by + bh * .45f}, {bx + bw, by + bh * .45f},
+                               2.f, afterhours::Color{120, 122, 126, 200});
+    }
     afterhours::draw_rectangle_gradient_v(r, afterhours::Color{0, 0, 0, 0},
                                           afterhours::Color{28, 21, 18, 40});
   }
 
+  // Front three-quarter view like the reference: the cyclist rides toward
+  // the viewer, front wheel large and centered, torso upright, arms down to
+  // a wide handlebar. Flat shapes only.
   static void draw_cyclist(RectangleType r) {
     const afterhours::Color tire{31, 37, 35, 255};
+    const afterhours::Color rim{218, 214, 190, 255};
     const afterhours::Color frame{209, 57, 43, 255};
     const afterhours::Color teal{73, 190, 205, 255};
-    const float wx1 = r.x + r.width * .22f;
-    const float wx2 = r.x + r.width * .74f;
-    const float wy = r.y + r.height * .70f;
-    const float rr = r.width * .15f;
-    afterhours::draw_circle_lines(static_cast<int>(wx1), static_cast<int>(wy),
-                                  rr, tire);
-    afterhours::draw_circle_lines(static_cast<int>(wx2), static_cast<int>(wy),
-                                  rr, tire);
-    for (int i = 0; i < 12; ++i) {
-      const float a = static_cast<float>(i) * 3.14159f / 6.f;
-      afterhours::draw_line_ex({wx1, wy},
-                               {wx1 + std::cos(a) * rr, wy + std::sin(a) * rr},
-                               1.f, afterhours::Color{218, 214, 190, 150});
-      afterhours::draw_line_ex({wx2, wy},
-                               {wx2 + std::cos(a) * rr, wy + std::sin(a) * rr},
-                               1.f, afterhours::Color{218, 214, 190, 150});
+    const afterhours::Color dark{31, 52, 59, 255};
+    const float cx = r.x + r.width * .50f;
+    const float wheel_cy = r.y + r.height * .78f;
+    const float wr = r.width * .30f;
+    // Front wheel (large, facing the viewer).
+    afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(wheel_cy),
+                                  wr, tire);
+    afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(wheel_cy),
+                                  wr * .86f, rim);
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(wheel_cy),
+                            wr * .10f, frame);
+    for (int i = 0; i < 8; ++i) {
+      const float a = static_cast<float>(i) * 3.14159f / 4.f;
+      afterhours::draw_line_ex({cx, wheel_cy},
+                               {cx + std::cos(a) * wr * .86f,
+                                wheel_cy + std::sin(a) * wr * .86f},
+                               1.5f, afterhours::Color{218, 214, 190, 170});
     }
+    // Rear wheel hint behind, offset up-left.
+    const float rx = cx - wr * 1.15f;
+    const float ry = wheel_cy - wr * .55f;
+    afterhours::draw_circle_lines(static_cast<int>(rx), static_cast<int>(ry),
+                                  wr * .38f, tire);
+    // Frame triangle from front wheel up to the seat.
+    const float seat_x = cx - wr * .25f;
+    const float seat_y = r.y + r.height * .42f;
+    afterhours::draw_line_ex({cx, wheel_cy}, {seat_x, seat_y}, 8.f, frame);
+    afterhours::draw_line_ex({seat_x, seat_y}, {rx, ry}, 8.f, frame);
+    afterhours::draw_line_ex({cx, wheel_cy}, {rx, ry}, 6.f, frame);
+    // Handlebar wide across, stem down to the wheel.
+    const float bars_y = r.y + r.height * .47f;
+    afterhours::draw_line_ex({cx - wr * .55f, bars_y}, {cx + wr * .55f, bars_y},
+                             7.f, dark);
+    afterhours::draw_line_ex({cx, bars_y}, {cx, wheel_cy}, 7.f, frame);
+    // Legs straddling the frame.
     afterhours::draw_line_ex(
-        {wx1, wy}, {r.x + r.width * .45f, r.y + r.height * .55f}, 7.f, frame);
-    afterhours::draw_line_ex({r.x + r.width * .45f, r.y + r.height * .55f},
-                             {wx2, wy}, 7.f, frame);
-    afterhours::draw_line_ex({r.x + r.width * .45f, r.y + r.height * .55f},
-                             {r.x + r.width * .36f, r.y + r.height * .43f}, 7.f,
-                             frame);
-    afterhours::draw_rectangle({r.x + r.width * .37f, r.y + r.height * .28f,
-                                r.width * .20f, r.height * .22f},
+        {seat_x, seat_y},
+        {cx - wr * .15f, r.y + r.height * .66f}, 10.f, dark);
+    afterhours::draw_line_ex(
+        {seat_x, seat_y + wr * .06f},
+        {cx + wr * .22f, r.y + r.height * .63f}, 10.f, dark);
+    // Torso upright, teal jersey.
+    afterhours::draw_rectangle_rounded(
+        {cx - wr * .55f, r.y + r.height * .24f, wr * 1.10f, r.height * .22f},
+        .25f, 18, teal, RoundedCorners().all_round());
+    // Arms from shoulders down to the bar ends.
+    afterhours::draw_line_ex({cx - wr * .50f, r.y + r.height * .30f},
+                             {cx - wr * .55f, bars_y}, 8.f, teal);
+    afterhours::draw_line_ex({cx + wr * .50f, r.y + r.height * .30f},
+                             {cx + wr * .55f, bars_y}, 8.f, teal);
+    // Head + helmet + visor, facing the viewer.
+    afterhours::draw_circle(static_cast<int>(cx),
+                            static_cast<int>(r.y + r.height * .17f),
+                            wr * .30f, afterhours::Color{190, 130, 78, 255});
+    afterhours::draw_rectangle({cx - wr * .32f, r.y + r.height * .09f,
+                                wr * .64f, r.height * .09f},
                                teal);
-    afterhours::draw_rectangle({r.x + r.width * .46f, r.y + r.height * .50f,
-                                r.width * .16f, r.height * .16f},
+    afterhours::draw_rectangle({cx - wr * .26f, r.y + r.height * .15f,
+                                wr * .52f, wr * .10f}, dark);
+  }
+
+  // The reference shows the phone in 3D perspective (top receding, left edge
+  // leaning), not front-on. The box the UI lives in stays the asserted
+  // 40,26,440,674; the drawn body is a skewed quad inside it with a darker
+  // edge thickness on the leaning side. UI content stays upright on top.
+  // Small background pedestrian like the two walkers behind the rider in
+  // the reference. Flat shapes, drawn over the street art.
+  static void draw_pedestrian(RectangleType r, afterhours::Color top) {
+    const float cx = r.x + r.width * .5f;
+    afterhours::draw_circle(static_cast<int>(cx),
+                            static_cast<int>(r.y + r.height * .12f),
+                            r.width * .28f, afterhours::Color{190, 130, 78, 255});
+    afterhours::draw_rectangle_rounded(
+        {cx - r.width * .32f, r.y + r.height * .22f, r.width * .64f,
+         r.height * .44f},
+        .3f, 12, top, RoundedCorners().all_round());
+    afterhours::draw_rectangle({cx - r.width * .30f, r.y + r.height * .62f,
+                                r.width * .22f, r.height * .30f},
                                afterhours::Color{31, 52, 59, 255});
-    afterhours::draw_circle(static_cast<int>(r.x + r.width * .47f),
-                            static_cast<int>(r.y + r.height * .20f),
-                            r.width * .075f,
-                            afterhours::Color{190, 130, 78, 255});
-    afterhours::draw_rectangle({r.x + r.width * .39f, r.y + r.height * .12f,
-                                r.width * .18f, r.height * .08f},
-                               teal);
+    afterhours::draw_rectangle({cx + r.width * .08f, r.y + r.height * .62f,
+                                r.width * .22f, r.height * .30f},
+                               afterhours::Color{31, 52, 59, 255});
   }
 
   static void draw_phone(RectangleType r) {
     const float s = r.width / 440;
-    afterhours::draw_rectangle_rounded(r, .12f, 18, {5, 7, 8, 255}, std::bitset<4>().set());
-    afterhours::draw_rectangle_rounded_lines_ex(r, .12f, 18, 6 * s, {38, 45, 41, 255});
-    afterhours::draw_rectangle_rounded({r.x + 17 * s, r.y + 21 * s, r.width - 34 * s, r.height - 42 * s},
-        .06f, 12, {34, 39, 34, 255}, std::bitset<4>().set());
-    afterhours::draw_rectangle_rounded({r.x + r.width / 2 - 42 * s, r.y + 17 * s, 84 * s, 8 * s},
-        .5f, 8, {6, 8, 8, 255}, std::bitset<4>().set());
+    const Vector2Type tl{r.x + 52 * s, r.y + 72 * s};
+    const Vector2Type tr{r.x + 440 * s, r.y + 10 * s};
+    const Vector2Type br{r.x + 430 * s, r.y + 612 * s};
+    const Vector2Type bl{r.x + 10 * s, r.y + 674 * s};
+    // Shadow under the leaning body.
+    const Vector2Type sh_tl{tl.x + 10 * s, tl.y + 12 * s};
+    const Vector2Type sh_tr{tr.x + 10 * s, tr.y + 12 * s};
+    const Vector2Type sh_br{br.x + 10 * s, br.y + 12 * s};
+    const Vector2Type sh_bl{bl.x + 10 * s, bl.y + 12 * s};
+    afterhours::draw_quad({sh_tl, sh_tr, sh_br, sh_bl}, {10, 14, 14, 110});
+    // Body + edge thickness (the quad behind, offset up-left, reads as the
+    // phone's side near the leaning bottom edge).
+    afterhours::draw_quad({tl, tr, br, bl}, {38, 45, 41, 255});
+    const Vector2Type b_tl{tl.x + 14 * s, tl.y + 17 * s};
+    const Vector2Type b_tr{tr.x - 10 * s, tr.y + 20 * s};
+    const Vector2Type b_br{br.x - 16 * s, br.y - 18 * s};
+    const Vector2Type b_bl{bl.x + 16 * s, bl.y - 20 * s};
+    afterhours::draw_quad({b_tl, b_tr, b_br, b_bl}, {5, 7, 8, 255});
+    // Screen face, inset within the skewed body.
+    const Vector2Type s_tl{b_tl.x + 6 * s, b_tl.y + 4 * s};
+    const Vector2Type s_tr{b_tr.x - 8 * s, b_tr.y + 4 * s};
+    const Vector2Type s_br{b_br.x - 6 * s, b_br.y - 4 * s};
+    const Vector2Type s_bl{b_bl.x + 6 * s, b_bl.y - 4 * s};
+    afterhours::draw_quad({s_tl, s_tr, s_br, s_bl}, {34, 39, 34, 255});
+    // Notch near the top of the leaning screen.
+    afterhours::draw_rectangle_rounded(
+        {s_tl.x + 130 * s, s_tl.y + 2 * s, 84 * s, 9 * s}, .5f, 8,
+        {6, 8, 8, 255}, std::bitset<4>().set());
   }
 
   enum class Icon { Language, Subtitles, Display, Texture, Motion, Sync, Audio };
@@ -249,7 +338,18 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         .with_on_draw_bg([texture = town_texture](RectangleType r) {
           draw_scene(r);
           paint(texture, r);
+          // Reference: rider faces the viewer with a long shadow, and two
+          // pedestrians cross behind him. Drawn over the town art so the
+          // front-facing pose reads.
           const float s = r.width / 1280;
+          afterhours::draw_ellipse(static_cast<int>(r.x + 700 * s),
+                                   static_cast<int>(r.y + 610 * s), 90 * s,
+                                   18 * s, {60, 30, 25, 130});
+          draw_pedestrian({r.x + 462 * s, r.y + 150 * s, 30 * s, 100 * s},
+                          {222, 190, 60, 255});
+          draw_pedestrian({r.x + 812 * s, r.y + 140 * s, 30 * s, 105 * s},
+                          {86, 130, 80, 255});
+          draw_cyclist({r.x + 480 * s, r.y + 150 * s, 300 * s, 470 * s});
           afterhours::draw_circle(static_cast<int>(r.x + 637 * s), static_cast<int>(r.y + 270 * s), 2.5f * s, {46, 50, 43, 255});
           afterhours::draw_line_ex({r.x + 623 * s, r.y + 283 * s}, {r.x + 634 * s, r.y + 283 * s}, 2 * s, {95, 65, 48, 255});
           afterhours::draw_ellipse(static_cast<int>(r.x + 724 * s), static_cast<int>(r.y + 351 * s), 8 * s, 5 * s, {191, 140, 92, 255});
@@ -263,19 +363,20 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()), box(scale, 520, 34, 400, 108)
         .with_custom_background(blue).with_corner_radius(12 * scale)
         .with_render_layer(1).with_debug_name("parcel_quest"));
-    hud_text(1201, "Grow your delivery network", 536, 45, 318, 31, 24, white);
-    hud_text(1202, "Sign up 4 businesses: 1 / 4", 536, 81, 356, 25, 20, white);
-    hud_text(1203, "First business signed up", 558, 109, 334, 25, 18, white);
-    div(context, mk(root.ent()), box(scale, 864, 46, 42, 28)
-        .with_label("Lv 0").with_font("ArchivoMockBold", pixels(18 * scale))
-        .with_custom_background({6, 24, 32, 255}).with_border({255, 255, 255, 255}, scale)
-        .with_corner_radius(4 * scale)
-        .with_custom_text_color(white)
-        .with_alignment(TextAlignment::Center).with_render_layer(1).with_debug_name("parcel_level"));
-    div(context, mk(root.ent()), box(scale, 538, 114, 13, 14)
+    // Reference quest banner: two checked/unchecked lines in caps. Smaller
+    // type so each line fits the 400px banner; checkboxes drawn at left.
+    hud_text(1201, "SIGN UP A BUSINESS TO YOUR DELIVERY APP", 552, 40, 360, 26, 15, white);
+    hud_text(1202, "SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP", 552, 74, 360, 26, 15, white);
+    div(context, mk(root.ent()), box(scale, 534, 44, 13, 13)
         .with_render_layer(1).with_on_draw_fg([scale](RectangleType r) {
-          afterhours::draw_line_ex({r.x, r.y + 7 * scale}, {r.x + 4 * scale, r.y + 12 * scale}, 2 * scale, {230, 255, 238, 255});
-          afterhours::draw_line_ex({r.x + 4 * scale, r.y + 12 * scale}, {r.x + 12 * scale, r.y}, 2 * scale, {230, 255, 238, 255});
+          const auto c = afterhours::Color{230, 255, 238, 255};
+          afterhours::draw_line_ex({r.x, r.y + 7 * scale}, {r.x + 4 * scale, r.y + 11 * scale}, 2 * scale, c);
+          afterhours::draw_line_ex({r.x + 4 * scale, r.y + 11 * scale}, {r.x + 12 * scale, r.y}, 2 * scale, c);
+          raylib::DrawRectangleLinesEx(r, 1.5f * scale, c);
+        }));
+    div(context, mk(root.ent()), box(scale, 534, 78, 13, 13)
+        .with_render_layer(1).with_on_draw_fg([scale](RectangleType r) {
+          raylib::DrawRectangleLinesEx(r, 1.5f * scale, {230, 255, 238, 255});
         }));
     div(context, mk(root.ent()), box(scale, 944, 34, 288, 212)
         .with_custom_background({32, 56, 57, 245}).with_corner_radius(12 * scale)
@@ -340,7 +441,6 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
     if (chevron(13, 68, 109, false, "parcel_back")) settings_open = false;
     text(14, "Settings", 114, 101, 320, 46, 36, white, "parcel_title");
-    text(15, "LANGUAGE & TEXT", 68, 148, 384, 23, 16, {141, 221, 150, 255});
     text(16, "DISPLAY", 68, 258, 384, 23, 16, {244, 198, 127, 255});
     text(17, "AUDIO", 68, 536, 384, 23, 16, {237, 155, 147, 255});
     const auto icon = [&](int id, float y, Icon symbol, afterhours::Color color) {
@@ -391,7 +491,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     row(1070, 492, 38, "V-sync", Icon::Sync, orange, "parcel_vsync_row");
     toggle(1074, 492, vsync, "parcel_vsync_toggle");
     const auto volume = [&](int id, float y, const std::string &label, float &value, const std::string &debug) {
-      row(id, y, 40, label, Icon::Audio, red, debug + "_row");
+      row(id, y, 36, label, Icon::Audio, red, debug + "_row");
       const float drawn_value = value;
       auto input = slider(context, mk(phone.ent(), id + 4), value,
           box(scale, 280, y + 5, 100, 30).with_custom_background({0, 0, 0, 0})
@@ -420,8 +520,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(id + 5, fmt::format("{:.0f}%", value * 100), 389, y + 5, 51, 30, 18, white, debug + "_value", TextAlignment::Right);
       if (input) status = fmt::format("{}: {:.0f}%", label, value * 100);
     };
-    volume(1080, 556, "Audio Volume", audio_volume, "parcel_audio");
-    volume(1090, 600, "Music Volume", music_volume, "parcel_music");
+    volume(1080, 564, "Audio Volume", audio_volume, "parcel_audio");
+    volume(1090, 608, "Music Volume", music_volume, "parcel_music");
     text(1500, status, 68, 644, 384, 25, 17, muted, "parcel_status");
   }
 };
