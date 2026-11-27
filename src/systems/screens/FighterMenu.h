@@ -229,22 +229,79 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                   afterhours::draw_rectangle(
                       r, afterhours::Color{155, 150, 119, 255});
                   paint(texture, r);
-                  afterhours::draw_rectangle(
-                      {r.x, r.y, r.width, r.height * .29f},
-                      {155, 150, 119, 85});
                   const auto fx = [r](float x) { return r.x + r.width * x; };
                   const auto fy = [r](float y) { return r.y + r.height * y; };
                   const afterhours::Color gold{198, 168, 92, 255};
-                  afterhours::draw_line_ex({fx(.30f), fy(.10f)}, {fx(.72f), fy(.10f)}, 5.f * scale, {gold.r, gold.g, gold.b, 110});
-                  afterhours::draw_line_ex({fx(.36f), fy(.10f)}, {fx(.66f), fy(.10f)}, 3.f * scale, {gold.r, gold.g, gold.b, 90});
-                  afterhours::draw_line_ex({fx(.44f), fy(.10f)}, {fx(.44f), fy(.30f)}, 4.f * scale, {gold.r, gold.g, gold.b, 80});
-                  afterhours::draw_line_ex({fx(.58f), fy(.10f)}, {fx(.58f), fy(.30f)}, 4.f * scale, {gold.r, gold.g, gold.b, 80});
+                  const auto gold_line = [=](Vector2Type a, Vector2Type b, float w, unsigned char a_) {
+                    afterhours::draw_line_ex(a, b, w, afterhours::Color{gold.r, gold.g, gold.b, a_});
+                  };
+                  gold_line({fx(.24f), fy(.08f)}, {fx(.78f), fy(.08f)}, 6.f * scale, 120);
+                  gold_line({fx(.30f), fy(.13f)}, {fx(.72f), fy(.13f)}, 4.f * scale, 100);
+                  gold_line({fx(.44f), fy(.08f)}, {fx(.44f), fy(.38f)}, 4.f * scale, 85);
+                  gold_line({fx(.58f), fy(.08f)}, {fx(.58f), fy(.38f)}, 4.f * scale, 85);
+                  gold_line({fx(.20f), fy(.08f)}, {fx(.20f), fy(.40f)}, 5.f * scale, 70);
+                  gold_line({fx(.82f), fy(.08f)}, {fx(.82f), fy(.40f)}, 5.f * scale, 70);
+                  const float ex = fx(.51f), ey = fy(.19f);
+                  afterhours::draw_ring(static_cast<int>(ex), static_cast<int>(ey), 104.f * scale, 116.f * scale, 48, {gold.r, gold.g, gold.b, 120});
+                  afterhours::draw_ring(static_cast<int>(ex), static_cast<int>(ey), 76.f * scale, 82.f * scale, 48, {gold.r, gold.g, gold.b, 100});
+                  for (int i = 0; i < 12; ++i) {
+                    const float a = static_cast<float>(i) * 6.28318f / 12.f;
+                    afterhours::draw_line_ex({ex + 86.f * scale * std::cos(a), ey + 86.f * scale * std::sin(a)},
+                                             {ex + 110.f * scale * std::cos(a), ey + 110.f * scale * std::sin(a)},
+                                             3.f * scale, {gold.r, gold.g, gold.b, 90});
+                  }
+                  afterhours::draw_ellipse_lines(static_cast<int>(ex), static_cast<int>(ey - 128.f * scale), 36.f * scale, 10.f * scale, {gold.r, gold.g, gold.b, 110});
+                  draw_triangle_ccw({ex, ey - 36.f * scale}, {ex + 16.f * scale, ey}, {ex, ey + 36.f * scale}, {gold.r, gold.g, gold.b, 110});
+                  draw_triangle_ccw({ex, ey - 36.f * scale}, {ex - 16.f * scale, ey}, {ex, ey + 36.f * scale}, {gold.r, gold.g, gold.b, 110});
                   draw_triangle_ccw({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, {fx(.84f), fy(1.f)}, {218, 220, 208, 255});
                   draw_triangle_ccw({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, {fx(.18f), fy(1.f)}, {202, 206, 192, 255});
-                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.50f), fy(1.f)}, 2.f * scale, {150, 155, 140, 255});
-                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.20f), fy(1.f)}, 2.f * scale, {155, 160, 145, 255});
-                  afterhours::draw_line_ex({fx(.50f), fy(.72f)}, {fx(.82f), fy(1.f)}, 2.f * scale, {155, 160, 145, 255});
+                  draw_triangle_ccw({fx(.02f), fy(.72f)}, {fx(.18f), fy(.72f)}, {fx(.02f), fy(1.f)}, {170, 168, 148, 255});
+                  draw_triangle_ccw({fx(.84f), fy(.72f)}, {fx(.98f), fy(.72f)}, {fx(.98f), fy(1.f)}, {170, 168, 148, 255});
+                  const afterhours::Color tile{150, 155, 140, 255};
+                  const float vx = fx(.51f), vy = fy(.72f);
+                  const std::array<float, 7> bottoms{{.05f, .18f, .32f, .51f, .68f, .82f, .95f}};
+                  for (const float bx : bottoms) {
+                    afterhours::draw_line_ex({vx, vy}, {fx(bx), fy(1.f)}, 2.f * scale, tile);
+                  }
+                  const std::array<float, 5> rows{{.84f, .88f, .92f, .96f, 1.f}};
+                  for (const float t : rows) {
+                    const float y = fy(.72f) + (fy(1.f) - fy(.72f)) * (t - .72f) / .28f;
+                    const float lx = fx(.18f) + (fx(.02f) - fx(.18f)) * (t - .72f) / .28f;
+                    const float rx = fx(.84f) + (fx(.98f) - fx(.84f)) * (t - .72f) / .28f;
+                    afterhours::draw_line_ex({lx, y}, {rx, y}, 2.f * scale, tile);
+                  }
+                  afterhours::draw_line_ex({fx(.05f), fy(1.f)}, {fx(.68f), fy(.82f)}, 2.f * scale, {165, 170, 155, 255});
+                  afterhours::draw_line_ex({fx(.95f), fy(1.f)}, {fx(.68f), fy(.82f)}, 2.f * scale, {165, 170, 155, 255});
+                  afterhours::draw_line_ex({fx(.32f), fy(.72f)}, {fx(.82f), fy(.88f)}, 2.f * scale, {165, 170, 155, 255});
+                  afterhours::draw_line_ex({fx(.68f), fy(.72f)}, {fx(.18f), fy(.88f)}, 2.f * scale, {165, 170, 155, 255});
+                  afterhours::draw_ellipse_lines(static_cast<int>(fx(.50f)), static_cast<int>(fy(1.02f)), 620.f * scale, 130.f * scale, {120, 110, 80, 200});
                   afterhours::draw_line_ex({fx(.18f), fy(.72f)}, {fx(.84f), fy(.72f)}, 3.f * scale, {120, 110, 80, 255});
+                  const float cx = fx(.50f), hy = fy(.47f);
+                  afterhours::draw_ellipse(static_cast<int>(cx), static_cast<int>(hy + 138.f * scale), 42.f * scale, 10.f * scale, {40, 40, 38, 140});
+                  afterhours::draw_rectangle({cx - 30.f * scale, hy + 96.f * scale, 20.f * scale, 38.f * scale}, {45, 38, 34, 255});
+                  afterhours::draw_rectangle({cx + 10.f * scale, hy + 96.f * scale, 20.f * scale, 38.f * scale}, {45, 38, 34, 255});
+                  draw_triangle_ccw({cx - 36.f * scale, hy + 30.f * scale}, {cx + 36.f * scale, hy + 30.f * scale}, {cx + 28.f * scale, hy + 100.f * scale}, {196, 48, 52, 255});
+                  draw_triangle_ccw({cx - 36.f * scale, hy + 30.f * scale}, {cx + 28.f * scale, hy + 100.f * scale}, {cx - 28.f * scale, hy + 100.f * scale}, {178, 38, 44, 255});
+                  for (int i = -2; i <= 2; ++i) {
+                    const float x = cx + static_cast<float>(i) * 14.f * scale;
+                    afterhours::draw_line_ex({x, hy + 32.f * scale}, {x - 2.f * scale, hy + 98.f * scale}, 2.f * scale, {240, 190, 150, 170});
+                    const float y = hy + 66.f * scale + static_cast<float>(i) * 13.f * scale;
+                    afterhours::draw_line_ex({cx - 32.f * scale, y}, {cx + 32.f * scale, y}, 2.f * scale, {240, 190, 150, 140});
+                  }
+                  const float hr = 42.f * scale;
+                  for (int i = 0; i < 12; ++i) {
+                    const float a = -1.5708f + static_cast<float>(i - 6) * .34f;
+                    const float len = (i % 2 == 0 ? 40.f : 26.f) * scale;
+                    draw_triangle_ccw({cx + hr * std::cos(a - .18f), hy + hr * std::sin(a - .18f)},
+                                      {cx + hr * std::cos(a + .18f), hy + hr * std::sin(a + .18f)},
+                                      {cx + (hr + len) * std::cos(a), hy + (hr + len) * std::sin(a)},
+                                      {238, 238, 232, 255});
+                  }
+                  afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(hy), hr, {238, 238, 232, 255});
+                  afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(hy + 20.f * scale), 19.f * scale, {255, 226, 190, 255});
+                  afterhours::draw_circle(static_cast<int>(cx - 7.f * scale), static_cast<int>(hy + 18.f * scale), 3.f * scale, {30, 25, 25, 255});
+                  afterhours::draw_circle(static_cast<int>(cx + 7.f * scale), static_cast<int>(hy + 18.f * scale), 3.f * scale, {30, 25, 25, 255});
+                  afterhours::draw_line_ex({cx - 5.f * scale, hy + 27.f * scale}, {cx + 5.f * scale, hy + 27.f * scale}, 2.f * scale, {150, 90, 80, 255});
                 })
                 .with_debug_name("fighter_root"));
 
@@ -448,18 +505,57 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               const Vector2Type tr{r.x + r.width, r.y + skew * .55f};
               const Vector2Type br{r.x + r.width - skew, r.y + r.height};
               const Vector2Type bl{r.x, r.y + r.height - skew * .55f};
+              const Vector2Type ctr{r.x + r.width * .52f, r.y + r.height * .44f};
+              const Vector2Type mid_top{r.x + r.width * .52f, r.y + r.height * .06f};
+              const Vector2Type mid_right{r.x + r.width * .94f, r.y + r.height * .5f};
+              const Vector2Type mid_bottom{r.x + r.width * .48f, r.y + r.height * .94f};
+              const Vector2Type mid_left{r.x + r.width * .06f, r.y + r.height * .5f};
               draw_triangle_ccw(tl, tr, br, fill);
               draw_triangle_ccw(tl, br, bl, fill);
-              draw_triangle_ccw(tl, {r.x + r.width * .52f, r.y + r.height * .44f}, tr, {180, 255, 235, 130});
-              draw_triangle_ccw(bl, {r.x + r.width * .52f, r.y + r.height * .44f}, br, {40, 200, 160, 110});
+              draw_triangle_ccw(tl, mid_top, ctr, {215, 255, 246, 175});
+              draw_triangle_ccw(mid_top, tr, ctr, {110, 235, 200, 160});
+              draw_triangle_ccw(tr, mid_right, ctr, {45, 205, 180, 165});
+              draw_triangle_ccw(mid_right, br, ctr, {20, 165, 160, 175});
+              draw_triangle_ccw(br, mid_bottom, ctr, {15, 135, 140, 180});
+              draw_triangle_ccw(mid_bottom, bl, ctr, {35, 175, 165, 170});
+              draw_triangle_ccw(bl, mid_left, ctr, {95, 225, 200, 165});
+              draw_triangle_ccw(mid_left, tl, ctr, {185, 255, 240, 170});
               const afterhours::Color frame{209, 255, 230, 255};
+              afterhours::draw_line_ex(tl, ctr, 2 * scale, {220, 255, 240, 120});
+              afterhours::draw_line_ex(tr, ctr, 2 * scale, {220, 255, 240, 120});
+              afterhours::draw_line_ex(br, ctr, 2 * scale, {220, 255, 240, 120});
+              afterhours::draw_line_ex(bl, ctr, 2 * scale, {220, 255, 240, 120});
               afterhours::draw_line_ex(tl, tr, 3 * scale, frame);
               afterhours::draw_line_ex(tr, br, 3 * scale, frame);
               afterhours::draw_line_ex(br, bl, 3 * scale, frame);
               afterhours::draw_line_ex(bl, tl, 3 * scale, frame);
+              draw_triangle_ccw({r.x + r.width * .16f, r.y + r.height * .22f},
+                                {r.x + r.width * .30f, r.y + r.height * .04f},
+                                {r.x + r.width * .62f, r.y + r.height * .06f}, {255, 255, 255, 110});
               afterhours::draw_line_ex({r.x + r.width * .18f, r.y + r.height * .18f},
                                        {r.x + r.width * .62f, r.y + r.height * .06f}, 4 * scale,
-                                       {255, 255, 255, 170});
+                                       {255, 255, 255, 190});
+              afterhours::draw_line_ex({r.x + r.width * .62f, r.y + r.height * .06f},
+                                       {r.x + r.width * .70f, r.y + r.height * .14f}, 3 * scale,
+                                       {255, 255, 255, 140});
+              const float gx = r.x + r.width * .46f, gy = r.y + r.height * .5f;
+              afterhours::draw_ring(static_cast<int>(gx), static_cast<int>(gy), 58.f * scale, 74.f * scale, 40, {240, 255, 248, 200});
+              for (int i = 0; i < 8; ++i) {
+                const float a = static_cast<float>(i) * 6.28318f / 8.f + .39f;
+                afterhours::draw_circle(static_cast<int>(gx + 66.f * scale * std::cos(a)),
+                                        static_cast<int>(gy + 66.f * scale * std::sin(a)),
+                                        13.f * scale, {240, 255, 248, 200});
+              }
+              afterhours::draw_circle(static_cast<int>(gx), static_cast<int>(gy), 60.f * scale, {240, 255, 248, 170});
+              afterhours::draw_circle(static_cast<int>(gx), static_cast<int>(gy), 26.f * scale, {90, 200, 185, 190});
+              const std::array<Vector2Type, 4> dots{{Vector2Type{r.x + r.width * .24f, r.y + r.height * .68f},
+                                                     Vector2Type{r.x + r.width * .78f, r.y + r.height * .28f},
+                                                     Vector2Type{r.x + r.width * .12f, r.y + r.height * .36f},
+                                                     Vector2Type{r.x + r.width * .86f, r.y + r.height * .72f}}};
+              for (const Vector2Type d : dots) {
+                afterhours::draw_circle(static_cast<int>(d.x), static_cast<int>(d.y), 14.f * scale, {30, 120, 115, 140});
+                afterhours::draw_circle_lines(static_cast<int>(d.x), static_cast<int>(d.y), 14.f * scale, {220, 255, 240, 200});
+              }
             }).with_debug_name("fighter_holo_card"));
     if (active_option == 5) {
       div(context, mk(root.ent()), box(scale, 953, 280, 140, 140)
