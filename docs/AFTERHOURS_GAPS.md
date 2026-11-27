@@ -1570,4 +1570,32 @@ Proposed integration: promote `DockWorkspace.h` to
 then wire the 150-item follow-ups in `docs/TRELLIS_LEARNINGS.md`
 (allow-rules, snapshot rendering during motion, keymap/a11y, e2e dock
 commands). Until then it stays local to `wm/src/` per owner direction —
-test it here first.
+test it here first. Update: WM PR #41 converts it to the canonical local
+plugin at `src/plugins/dock_workspace/` (old screen-local path is a shim),
+stacked on the tab-drag PR #40 and root-scaling PR #37.
+
+## Faithful-remake feature requests — 2026-11-27
+
+Filed from the 14-screen faithful-remake fidelity pass (WM PRs #42-#45,
+#47) plus the layout/tab work (#37-#40). These are **feature flags for
+afterhours**, not WM bugs: each row names the WM workaround that proved
+the need, what already exists upstream, and the narrow ask. Button-by-button
+real-game functions/destinations for the same screens are researched in
+`docs/REMAKE_BUTTON_RESEARCH.md` (sourced; unverified rows are marked).
+
+| # | Feature needed | WM evidence / workaround | Already upstream | Ask |
+|---|---|---|---|---|
+| F1 | **Word-art text**: gradient fill, stroke/outline, shadow/glow, skew on labels with correct measured bounds | FighterMenu angled "MainMenu"/selected name uses raw `HasUIModifiers().rotation` (PR #42); TransitionsLab `pro_text`/`get_pro` hand-roll a `gradient.fs` shader for glowing text | Rotation exists (`with_rotation` #282, subtree rotation + rotated images #474 — needs WM vendor bump); shimmer band #336 | Label-level fill/stroke/shadow + skew in `ComponentConfig`, both renderers, measurement/hitbox = transformed bounds |
+| F2 | **UI subtree 2.5D transforms**: rotate + skew + perspective + **scale** inherited by children, custom draws, images, clipping and hit testing | Parcel phone is hand-drawn skewed quads; Kirby notebook uses `DrawTexturePro` because custom draw callbacks ignore div rotation (PR #45); Trellis panels were cut off when camera scale ≠ content scale (PR #37) | Subtree rotation inheritance #474 (upstream, pre-bump) | Scale/skew/perspective siblings of rotation inheritance; `on_draw_*` receives the composed ancestor transform |
+| F3 | **Quad / chamfer / clip-path surfaces** for buttons and cards (background, border, clip in one config) | Fighter crystal card and Parcel phone are manual `draw_triangle_ccw`/`draw_quad` facets (PRs #42/#45); angled menu blades everywhere | Chamfered corners PR #306 open | Land #306, then quad/clip-path background+border so faceted cards are configs, not triangle soup |
+| F4 | **Element shader effects**: attach a fragment shader + uniforms/progress to a UI element, masked to its rect/rounded corners | TransitionsLab goo/dissolve/shimmer/bend are custom `.fs` via `Effect::load`; Flight smoke is stacked gradient rects (PR #42) | Blur shader #309, uniform cache #383, shimmer #336; effect uniforms/matrix #314 open | Land #314 and add an element-level shader config (uniforms, progress track, corner/clip mask, none-backend no-op) |
+| F5 | **Multi-stop gradient backgrounds** in `ComponentConfig` (angle + stops), not only separate fill components | Frozen `src/ui_workarounds/GradientBackground.h`; remake skies/smoke hand-stack `draw_rectangle_gradient_v` bands | imm gradient fill/line PR #256 open | Land #256 and/or add config-level background gradients usable by buttons/cards |
+| F6 | **Drag-and-drop + tab-strip primitives**: press-threshold drag state, ghost chip, insertion caret, reorder, drag-out to split/float | Motion catalog G1 (five coordinated tracks in TransitionsLab `dragdrop`); DockWorkspace tab drag/reorder is ~300 lines of manual hit-testing (PR #40) | Drag-group list reorder #100/#346, pointer ownership #218, press arbitration #227 | A composite drag helper (follow/tilt/spring-home/settle) and a tab-strip drag model, ideally as part of the dock-workspace promotion above |
+| F7 | **Layout QA geometry API**: named bounds, parent-overflow, interactive-pair overlap, partial off-screen — scroll-clip aware | `assert_within_parents` missed Trellis panel-body overflow (Paint/Ops, PR #37); WM grew `scripts/audit_screen_control_overlaps.py` + ad-hoc rect detectors | Layout-summary/intent is WM-local (`src/devtools/layout_audit/`); AH intent query still pending (see manifest gates) | E2E/layout query returning bounds + overflow/overlap findings so every consumer gets the same audit |
+| F8 | **App-chrome safe areas** for example/gallery harnesses: reserved rects (launcher, HUD) screens can clamp against | 45 controls hid under WM's Browse launcher/HUD (PRs #38/#39); Trellis hand-clamps its toolbar (`toolbar_x_ending_before_launcher`) | WM gallery shell only | Optional examples-harness safe-inset API if the gallery shell is ever promoted; otherwise keep WM-local |
+| F9 | **Vector icon/gauge primitives**: arc/ring-sector, semicircular gauge, small drawn-icon helpers | Angry Birds wifi fan + prohibition ring and Tycoon gauges are hand-drawn shapes (PR #47/#44) | `draw_poly`/polyline/chevron exist | Arc/sector/ring-progress + gauge primitives with the same styling knobs as other shapes |
+
+Still AH-blocked from the pluginization list (unchanged): runtime
+log-level/`log_once_per` parity for the WM log shim, and native
+gradient-background + notification-badge primitives to replace the frozen
+`src/ui_workarounds/` files (F5 covers the gradient half).
