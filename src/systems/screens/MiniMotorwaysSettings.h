@@ -42,7 +42,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color day_edge{211, 220, 228, 255};
   const afterhours::Color day_center{240, 245, 237, 255};
   const afterhours::Color day_road{250, 252, 251, 255};
-  const afterhours::Color day_grid{203, 219, 231, 24};
+  const afterhours::Color day_grid{203, 219, 231, 48};
   const afterhours::Color day_ink{46, 53, 57, 255};
   const afterhours::Color night_edge{29, 42, 47, 255};
   const afterhours::Color night_center{51, 67, 70, 255};
@@ -76,7 +76,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   void draw_backdrop(RectangleType r, float scale) const {
     const auto edge = night_mode ? night_edge : day_edge;
     const auto center = night_mode ? night_center : day_center;
-    const auto road = mix(center, night_mode ? night_road : day_road, .42f);
+    const auto road = mix(center, night_mode ? night_road : day_road, .62f);
     const auto grid = night_mode ? night_grid : day_grid;
     afterhours::draw_rectangle(r, edge);
 
@@ -446,7 +446,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(702, "Wellington, New Zealand", 507.f, 260.f, 570.f, 45.f, 27.f);
     }
 
-    text(800, "Mini Motorways release-10-patch-2 (202207010917)", 24, 664, 620, 30, 19);
+    text(800, "Mini Motorways release-10-patch-2 (202207010917)", 24, 656, 650, 38, 24);
     auto tutorial = button(context, mk(root.ent()), box(scale, 1042, 642, 196, 52)
         .with_label("Tutorial").with_font("AtkinsonMock", pixels(31 * scale))
         .with_custom_background(teal).with_custom_text_color({255, 255, 255, 255})
