@@ -2,7 +2,7 @@
 
 Feedback and feature requests for the afterhours engine, discovered while working on kart-afterhours.
 
-Last re-triaged 2026-08-29 against afterhours `fc4d625`. Every entry below was
+Last re-triaged against afterhours `5383fc6c` (bump landed in 5d2f7af; e2e/audio adoptions in follow-up commits). Every entry below was
 checked against the current submodule, not carried forward on trust.
 
 **Score: 10 of 17 previously-open gaps are now closed.** All three Windows
@@ -12,16 +12,148 @@ blockers and every headless workaround but one are gone.
 
 ## Still open
 
-### e2e: no `--screenshot-dir` flag
-The runner still writes to a hardcoded `screenshots/` path (`src/e2e_integration.h:32`, `:65`).
-This is the one gap that directly blocks a clean baseline workflow: `make update-baselines`
-and `make validate-screenshots` have to write to the same directory and then `cp` out of it,
-which is why neither target can safely skip a `clean-screenshots` first.
+Found while writing e2e tests against `5383fc6c` (2026-11-27). Every entry
+below was checked against the current submodule; the kart-side workarounds
+named in them are in the working tree at the time of writing. The first
+three mislead in the same way: the script passes, or times out, for a
+reason unrelated to what it claims to test.
 
-**Ideal:** `--screenshot-dir <path>`, or a settable `e2e::screenshot_directory`.
+### e2e: `expect_slider` tolerance is silently dropped by the script parser
+The handler documents `expect_slider name value [tolerance]` and reads
+`pos[2]` as the tolerance (`ui_commands.h:1000`, `:1017-1020`). The
+script parser never delivers it: `expect_slider` is in
+`two_arg_commands` (`runner.h:126-129`), and the parse branch reads
+exactly 2 args (`runner.h:367-371`). A script asserting
+`expect_slider max_speed 0.5 0.5` therefore runs with the default 0.01
+tolerance and times out reporting the value 0.4737 — a difference of
+0.026 against a tolerance of 0.5 that was never applied. The same
+truncation applies to the inner command of `wait_until`, which re-parses
+through the same table.
 
-### e2e: no `--e2e-speed` flag
-No way to scale wait durations. Useful for CI. wordproc's runner has one.
+**Current workaround:** never pass a tolerance; assert the exact value a
+`set_slider` just landed on (default tolerance only). That is what
+the debug-screen probe did: `set_slider max_speed 0.8` followed by
+`expect_slider max_speed 0.8` passes, whereas `expect_slider
+max_speed 0.5 0.5` timed out at a value 0.026 away from expected.
+
+**Ideal:** `expect_slider` needs an optional-arg parse (or a
+`three_arg_commands`-style entry with the third arg optional), so the
+documented tolerance reaches the handler. Any other two-arg command that
+grows an optional third argument will hit the same table.
+
+### e2e: `select_dropdown` ignores the option it requires
+`HandleSelectDropdownCommand` requires `name and option`
+(`ui_commands.h:870`), then never reads `pos[1]`: it clicks the centre
+of the dropdown entity and consumes the command. The tray opens, no
+option is selected, the selection does not change, and the script passes
+believing it selected something. The tray options themselves are named
+`dropdown_opt_{i}` per dropdown (`imm_containers.h:199`) with no
+dropdown identity, so even the manual follow-up click needs
+`under=<dropdown>` scoping to pick the right tray.
+
+**Current workaround:** `select_dropdown <name> <option>` to open the
+tray, then `click_ui dropdown_opt_N under=<dropdown>` to choose. Kart
+probed this against the resolution dropdown (which also exposed a
+kart-side null deref, fixed on our side, not the engine's).
+
+**Ideal:** after opening the tray, the handler should click the tray
+option whose label equals the requested option (over frames, like
+`set_slider`'s press/move/release phases), and fail naming the
+available options if none matches. A command that requires an argument
+it never reads should not consume.
+
+### e2e: `expect_no_text` can never pass on a screen with no visible labels
+`HandleExpectNoTextCommand` retries while `seen_render == gen ||
+registry.get_all().empty()` (`command_handlers.h:746`). The registry is
+cleared before every render pass (`ui/utilities.h:369`) and `clear()`
+bumps the generation (`visible_text.h:24-27`), so a fresh render with
+zero labels is already definitive absence — but the `empty` clause
+retries regardless of how many generations have moved. In gameplay,
+where no UI labels render, the command times out after 30 frames
+reporting an empty registry, even though the text is genuinely absent.
+The generation check alone already distinguishes "not yet rendered"
+from "rendered with nothing in it".
+
+**Current workaround:** assert positively instead — e.g. `expect_text
+"paused"` after Escape proves the game left the menu. Kart dropped
+the `expect_no_text "select map"` gameplay assertion for exactly
+this reason.
+
+**Ideal:** drop the `|| registry.get_all().empty()` clause (or only
+retry on empty while the generation has not moved). `expect_no_text`
+should be provable on label-free screens, not only on screens that
+happen to show other text.
+
+### Capture: `draw_texture_pro` records nothing, so `expect_drawn` is blind to sprites
+Every other primitive records into the capture buffer — `rectangle`,
+`circle`, `line`, `triangle`, and `texture_quad`
+(`backends/raylib/drawing_helpers.h:240,521,494,600,578`).
+`draw_texture_pro` does not, on either backend
+(`backends/raylib/drawing_helpers.h:688`,
+`backends/sokol/drawing_helpers.h:1575`). `texture_manager::draw_texture_pro`
+— the path every sprite draw in kart funnels through
+(`plugins/texture_manager.h:247`) — therefore leaves no trace, and
+`expect_drawn` / `expect_drawn_at` / `dump_draws` cannot see a car
+sprite, only UI draws that happen to go through the other helpers.
+
+**Current workaround:** kart's `11_draw_assertions.e2e` asserts recorded
+UI draws only; sprites are covered by screenshot baselines.
+
+**Ideal:** `capture::record("texture", dest, tint)` in both backends'
+`draw_texture_pro`, matching the `texture_quad` op in shape. Shipping
+builds already pay the one-branch check per draw, so this is the
+same cost as the primitives that already record.
+
+### Composite widgets lose their label before naming, so every instance shares a debug name
+`add_missing_components` derives a debug name from `config.label` when
+no explicit debug name is set (`component_init.h:709-715`). Composite
+widgets clear `config.label` before `init_component`, so that branch
+never fires for them:
+
+- `slider()` clears the label (`imm_value.h:122`) and passes the
+  literal fallback `"slider"` (`imm_value.h:131`) — every slider on
+a screen is named `slider`.
+- `checkbox()` clears the label (`imm_controls.h:183`) and passes
+  `"checkbox_row"` (`imm_controls.h:190`) — every checkbox shares
+  one name.
+- `dropdown()` clears the label (`imm_containers.h:70-73`) and passes
+  no fallback at all — a dropdown with no explicit debug name has
+  an empty name, unaddressable by any DebugName lookup.
+
+Name-based commands (`set_slider`, `expect_slider`, `expect_checkbox`,
+`select_dropdown`, `focus_ui`, `click_ui`) then fail ambiguous or
+not-found unless the caller sets `with_debug_name` on every instance.
+An explicit debug name already wins (`component_init.h:709-710`), so
+this is a defaults-only fix.
+
+**Current workaround:** kart sets `with_debug_name` on every volume
+slider, dropdown, checkbox, debug-screen slider, pause button,
+round-settings nav bar and weapon group (`src/ui/ui_systems.cpp`).
+
+**Ideal:** derive the default name from the saved label before it is
+cleared — e.g. `"<label> slider"`, `"<label> dropdown"`,
+`"<label> checkbox"` — so the common case (labelled widgets, no
+explicit name) is addressable without per-instance boilerplate.
+
+### e2e: `drag` is not a drag
+`HandleDragCommand` (`command_handlers.h:373`) calls
+`simulate_click` at the start point, then moves the pointer to the
+end point in the same invocation. `simulate_click` auto-releases
+after one frame (`test_input.h:119-122`, press with `auto_release`), so
+by the time any system could see the pointer at the end point, the
+button is already up: no drag gesture is ever delivered. `drag_to`
+(`command_handlers.h:586`) does it correctly over three frames
+(press, move while held, release), as does
+`mouse_down_ui` + `mouse_move_ui` + `mouse_up`.
+
+**Current workaround:** kart's drag test uses `drag_to` (slider landed
+at 0.93) and the named mouse gestures (0.76); plain `drag` was not
+used.
+
+**Ideal:** make `drag` share `drag_to`'s phase machine, or document
+it as click-then-move and steer scripts to `drag_to`. Two commands
+with the same four arguments should not differ in whether the button
+is held.
 
 ### `GetFontDefault()` returns an invalid font in headless mode
 Still open. `backends/raylib/font_helper.h:33,88,96,107` return `raylib::GetFontDefault()`
@@ -41,196 +173,40 @@ whose children are often taller than the row, producing
 
 **Ideal:** `checkbox_row` auto-sizes to its children, or the children respect the parent height.
 
-**No longer hit here:** the Options screen was the last caller. Its toggles are now
-`round_rules::toggle_row`, which is a button with an `on_draw_fg` knob.
-
-### `imm::slider` with a label always overflows its own parent
-`slider` (`plugins/ui/imm_components.h:1382`) gives itself `config.size`, then lays two
-children in a Row inside it: `slider_text` at `config.size.scale_x(0.5f)` (`:1418`) and
-`slider_background` at `config.size.x - 6px` (`:1433-1441`). 0.5 + ~1.0 of the parent width,
-so the overflow is unconditional and roughly half the configured width — there is no value of
-`config.size` that makes it fit, because both children are derived from that same size.
-
-Verified: 462 occurrences each of `'slider_text' extends outside parent 'slider'` and
-`'slider_background' extends outside parent 'slider'` in one e2e run, from the three volume
-sliders. `child_size=[200,40]` and `[194,40]` against `parent_size=[400,25.6]` — over on both
-axes, since neither child respects the parent's height either.
-
-**Also unstylable.** `ComponentConfig::inherit_from` (`component_config.h:1008`) forwards only
-`apply_inheritable_from`'s list (`:1016-1032`): alignment, disabled/hidden, tabbing, font,
-internal, render layer, image alignment. No colour, no border, no `on_draw_*`. The track and
-handle therefore take `Theme::Usage::Secondary` and `Primary` and cannot be overridden from the
-caller at all. The handle is also 25% of the track wide and travels 0..75%, so it is a block,
-not a knob.
-
-**Workaround (in place on Options):** don't use it. `options::volume_row`
-(`src/ui/ui_systems.cpp`) draws the meter in an `on_draw_fg` and attaches
-`HasDragListener` + `HasLeftRightListener` to the element by hand — the same two components
-`slider` attaches at `:1495` and `:1576`. Both are driven by generic systems
-(`systems.h:1123`, `:1159`) keyed on the component, so a caller-built widget gets drag and
-keyboard for free. `can_be_focused` (`systems.h:974`) is "has a click or drag listener", so the
-element is tabbable on the same terms.
-
-**Ideal:** give `slider_text` and `slider_background` complementary fractions of the parent, and
-forward the visual fields through `inherit_from` so the track can be themed per call site.
-
-### `with_opacity()` paints a dark rectangle over a transparent element
-`colors::opacity_pct` (`plugins/color.h:148`) **assigns** `a = 255 * pct` rather than
-scaling the colour's existing alpha. The background fill path
-(`plugins/ui/rendering.h:1531-1540`) calls it whenever `effective_opacity < 1`, then draws
-if `col.a > 0`.
-
-So an element with `with_transparent_bg()` — which is `Color{0,0,0,0}`
-(`component_config.h:347`) — plus any `with_opacity(v)` below 1 gets its alpha *raised*
-from 0 to `255v` and is filled with **black at that alpha**. Asking for 55% opacity on a
-transparent label paints a 55%-black box behind it.
-
-Verified: a `with_transparent_bg().with_opacity(0.55f)` div over the `#1B1040` panel
-sampled `(9,5,22)`; the identical div without the opacity call sampled the panel colour.
-0.85 came out darker than 0.55, which is the giveaway — higher requested opacity, more
-black.
-
-**Current workaround (in place):** never combine `with_opacity` with a transparent
-background. `round_rules::weapon_row` (`src/ui/ui_systems.cpp`) dims disabled weapon rows
-by choosing a muted text/tint colour instead.
-
-**Ideal:** `opacity_pct` should be `a = color.a * pct`. That is the meaning every caller
-already assumes, and it makes the `col.a > 0` guard actually skip transparent fills.
-
 ### `with_slide_in()` config option
 Open as originally written, but effectively obsoleted: `Anim::on_appear().opacity().translate_x()`
 covers the use case now. The real remaining item is on our side — adopt the declarative API and
 delete `src/ui/animation_slide_in.h`. See the TODO.
 
-### `with_gap()` ignores the `Size` dim and reads the value as raw pixels
-`ComponentConfig::with_gap` (`plugins/ui/component_config.h:605`) stores a full `Size`, and
-`component_init.h:177` copies it to `UIComponent::desired_gap`. Every consumer then reads only the
-scalar: `autolayout.h:678`, `:1088` and `:1306` all call
-`resolve_pixels(widget.desired_gap.value, widget)`, and `resolve_pixels` (`:102`) does nothing but
-multiply by `ui_scale`. Nothing ever looks at `desired_gap.dim`, unlike the size constraints, which
-go through a dim-aware path (`:264`, `:340`, `:380`).
-
-So a gap expressed in anything other than `pixels()` is silently wrong by that dim's conversion
-factor. `ui::w1280(16.f)` is `screen_pct(16/1280)` (`layout_types.h:172-173`, `:147`), i.e.
-`.value == 0.0125` — a 0.0125px gap. The `> 0.f` guards at `:1087` and `:1305` still pass, so it is
-applied, just 1280x too small. It fails silently in the direction that looks like "gap is not
-implemented".
-
-Verified here: `map_selection`'s body hstack with `.with_gap(ui::w1280(16.f))` laid its two children
-out at `x=36 w=420` and `x=456 w=732` — 420 + 732 = 1152 = the full parent width, zero gap inserted
-(`dump_ui`, headless 1280x720). Swapping to `pixels(24.f)` produced exactly the 24px asked for, and
-`09_map_selection_interactions.e2e` now pins it with `assert_ui map_preview_panel x=456`.
-
-Consequence: this is why the Round Settings panels touched, and the character-select paint
-swatches. Every `with_gap` in `src/` now passes `pixels()` — `ui_systems.cpp:703`
-(`character_select::paint_palette`), `:1352` (`round_rules::mode_tabs`), `:2381`
-(`round_settings_panels`), `:2524` and `:2580` (`map_selection`). Grep for `with_gap(ui::` before
-adding another; a screen-relative gap compiles, applies, and does nothing visible.
-
-**Workaround (in place on Track Select):** pass `pixels()`. It still scales with resolution, because
-`resolve_pixels` applies `ui_scale` in Adaptive mode.
-
-**Ideal:** resolve `desired_gap` through the same dim-aware path the size constraints use.
-
 ---
 
-### `with_absolute_position()` resolves **x** against the screen *height*
-`apply_modifiers` (`plugins/ui/component_init.h:431-443`) reads one number:
+## Closed by the `fc4d625 -> 5383fc6c` bump
 
-    float screen_height = 720.f;
-    if (auto *pcr = ...ProvidesCurrentResolution>()) screen_height = pcr->current_resolution.height;
-    float resolved_tx = resolve_to_pixels(config.translate_x, screen_height, scaling, uis);
-    float resolved_ty = resolve_to_pixels(config.translate_y, screen_height, scaling, uis);
+### e2e: `--screenshot-dir` flag — **CLOSED**
+The shipped harness (`e2e_testing/harness.h: E2EArgs`, `parse_e2e_args`,
+`configure_runner`) parses `--screenshot-dir`, and kart wires it through
+`e2e_integration::init(argc, argv)` (`screenshot_path_for`, verified with
+`--screenshot-dir /tmp/e2e-json`). `--results-json`, `--timeout` and
+single-script selection (`--test-script` / `--test-script-dir`) came with it.
 
-and hands `screen_height` to both axes. For an absolute element those two values *are* its
-position (`:446-452`), so an x expressed as a fraction lands at `pct * height`, never
-`pct * width`. Sizes do not have this problem — `ComponentSize` goes through the dim-aware
-path, so the same `screen_pct` means different pixels for `x` and for `w` on the same element.
+### e2e: `--e2e-speed` flag — **CLOSED (parsed, not applied)**
+`parse_e2e_args` accepts `--e2e-speed` as a spelling of `--time-scale`.
+Kart parses it but deliberately does not apply it: kart's loop is
+variable-dt, not fixed-step, so scaling `dt` would speed up the game
+itself. Applying it needs the fixed-step wiring (`apply_time_scale` /
+`run_fixed_steps`), which kart does not have.
 
-Verified here: the pause card at `.with_absolute_position(screen_pct(0.34375f), ...)` measured
-`x=248` — `0.34375 * 720` — where centring a 400px card in 1280 needs 440 (`dump_ui`, headless
-1280x720). Respelling it `ui::h720(440.f)` produced exactly `x=440`.
+### Checkbox internal layout overflow — **CLOSED (kart-specific)**
+"A labelled checkbox's toggle fits its row (kart)" in the changelog. The
+`checkbox label extends outside parent checkbox_row` layout warning no
+longer appears in e2e runs after the bump (verified in the `make e2e`
+output of the bump commit).
 
-**Consequence beyond the one call site.** Every redesigned screen positions its content box at
-`screen_pct(0.05f)` and sizes it `screen_pct(0.90f, 1.f)`. The size is dim-aware and gives 1152;
-the position is not and gives 36, not 64. So all five screens sit in a 36px / 92px left-right
-frame rather than 64 / 64 — off centre by 28px, on `ui_systems.cpp:1758`, `:2315`, `:2429`,
-`:2697` and `:2959`. Not corrected: the five would have to move together and every baseline
-with them.
-
-**Workaround (in place on Pause):** spell an absolute x with `ui::h720(px)`, which is the same
-"px at 720p, scales with the window" contract the resolver actually implements. Commented at the
-call site, because `h720` on an x coordinate reads like a typo.
-
-**Ideal:** resolve `translate_x` against width when the element is absolute, the way
-`ComponentSize` already distinguishes the axes.
-
----
-
-### `disable_rounded_corners()` gives you a rounded focus ring
-`disable_rounded_corners` (`plugins/ui/component_config.h:484`) sets `rounded_corners` to an
-all-zero `bitset<4>`. `apply_visuals` (`plugins/ui/component_init.h:331`) attaches
-`HasRoundedCorners` only when `config.rounded_corners.value().any()` is true — so for an all-zero
-bitset the component is never attached at all. `focus_ring_for` (`plugins/ui/rendering.h:252`) then
-tests `entity.has<HasRoundedCorners>()`, sees false, and falls back to `context.theme.corner_radius`
-and `theme.rounded_corners`.
-
-Net effect: asking for square corners gets a square *border* and a theme-**rounded** focus ring
-inside it. The two disagree only while the element is focused, which is why it reads as a stray
-outline rather than a corner setting.
-
-"All corners off" and "nothing specified" are the same value here, so the config cannot express the
-difference. Found on the track tiles, where a selected tile drew a square butter frame with a
-rounded cream ring inside it.
-
-**Workaround (in place):** `.with_rounded_corners(RoundedCorners{}).with_corner_radius(0.f)` —
-corners on, radius zero. That passes `.any()`, so the component attaches and the ring matches.
-
-**Ideal:** attach `HasRoundedCorners` whenever `rounded_corners.has_value()`, regardless of `.any()`.
-
-**Still affected in our code** (square border, rounded focus ring): `ui_systems.cpp:309`, `:368`,
-`:395`, `:1632`, `:3004`. Only the track tile at `:1530` uses the workaround.
-
----
-
-### `UIStylingDefaults::apply_overrides` silently drops most visual fields
-`apply_overrides` (`plugins/ui/component_config.h:920`) merges a caller's config onto a
-registered default by forwarding an explicit, hand-maintained field list. Anything not on
-that list is discarded without warning. Verified against the current submodule: it forwards
-padding, margin, size, colors, label, corners, disabled/hidden, tabbing, font, texture,
-absolute, flex and debug fields — and never forwards
-
-    opacity, scale, translate_x, translate_y, flex_gap,
-    border_config, shadow_config, text_shadow_config,
-    on_draw_bg, on_draw_fg
-
-all of which are real `ComponentConfig` members (`:65`, `:119-122`, `:130-131`, `:141-153`).
-
-This only bites elements that *have* a registered default, i.e. everything routed through
-`SetupGameStylingDefaults` — `imm::button`, slider, checkbox, dropdown, navigation_bar.
-
-**Consequence beyond styling:** `animation_control::apply_slide_in()` animates via opacity
-and translate, both dropped, so on `create_styled_button` that call does nothing.
-
-**Corrected 2026-08-31 — this paragraph used to claim the slide-in was therefore a no-op on
-every button in the game, and it is not.** The slide-in is driven by `UpdateUISlideIn` and
-`ApplyInitialSlideInMask` (`src/ui/animation_slide_in.h`), which write `HasUIModifiers` and
-`HasOpacity` onto the entity directly and never touch `ComponentConfig`, so `apply_overrides`
-cannot drop them. `tests/e2e/10_slide_in_animation.e2e` now captures the main-menu buttons
-mid-flight; with `enable_animations` removed the three frames collapse to byte-identical
-again, which is the discriminating check.
-
-What the dropped fields actually cost is `apply_slide_in` itself: dead at
-`ui_systems.cpp:202`, and redundant at `:409` and `:2796` where `keep_visuals` bypasses the
-merge but only sets the same first-frame state the mask system sets anyway.
-
-**Current workaround (in place):** `with_internal(true)` at the call site to bypass the
-defaults merge, then re-apply the font by hand. Commented where used.
-
-**Ideal:** one forwarding line per dropped field. The custom-draw hooks matter most — there
-is no caller-side way to get `on_draw_bg` onto a styled button.
-
----
+### `with_slide_in()` config option — **CLOSED by the motion rewrite**
+The declarative API it pointed at is itself gone. Kart's slide-in is now
+`motion::Track` chains in `src/ui/animation_slide_in.h` (the file is
+still hand-rolled, as the declarative widget sugar does not cover a
+per-entity staggered slide-in driven by a system). No engine gap remains.
 
 ## Closed by the `12a4571 -> fc4d625` bump
 

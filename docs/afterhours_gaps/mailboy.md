@@ -1,256 +1,250 @@
-# afterhours gaps — mailboy
+# afterhours gaps — mailboy (Web / Emscripten backend)
 
-## 2026-10-19 — ROOT-CAUSED: zig ReleaseSafe failure was an LLVM 21 miscompile of an `inline` constant table, not app UB (mailboy)
-- Symptom: `zig build -Doptimize=ReleaseSafe` deterministically failed
-  tests/upgrades.e2e (expect_day_duration 780 got 540) + tests/modifiers.e2e
-  (first: expect_stamps 127 got 115), while make clang -O0/-O1/-O2 (Apple
-  clang 17, system libc++) and zig Debug passed both. Every modifier
-  effect read as the identity *except* Rush Hour, whose offer text / BPM /
-  stamps kept working.
-- Bisect (each variant: `zig build` at ReleaseSafe unless noted, then only
-  tests/upgrades.e2e):
-  - Baseline ReleaseSafe: FAIL. Baseline Debug: PASS.
-  - `-fno-strict-aliasing`: FAIL (not aliasing).
-  - `-fwrapv` + `-fno-strict-overflow`: FAIL (not signed overflow).
-  - UBSan print mode (`-fsanitize=object-size`, no trap): FAIL, no
-    diagnostic — the optimizer folds the check away.
-  - Manual `zig c++ -O2` build (same compiler, same bundled libc++): PASS.
-    Diffing the `zig build` clang line vs the manual one left only
-    zig-added flags: `-fsanitize=undefined -fsanitize-trap=...`,
-    `-D_FORTIFY_SOURCE=2`, `-fstack-protector-strong`, `NDEBUG` (manual
-    only). Adding just the UBSan flags to the manual build flipped it to
-    FAIL.
-  - UBSan check groups: `object-size` FAIL, `pointer-overflow` FAIL, and
-    `return` / `returns-nonnull-attribute` / `shift-base` / every other
-    group PASS. Both `object-size` and `pointer-overflow` singles FAIL.
-  - Minimal repro (60 lines, no game code): an `inline constexpr` table of
-    `{enum id, string_view name, ...}` rows, searched by name then by id,
-    compiled with `zig c++ -O2 -fsanitize=object-size
-    -fsanitize-trap=object-size`, returns the TABLE[1] (Rush Hour) row for
-    every id != 0/1. `static constexpr` / bare `constexpr` / `extern`
-    tables read correctly; Apple clang 17 + UBSan reads the `inline`
-    table correctly. So the trigger is vague linkage (`inline`,
-    `linkonce_odr` in the IR) + LLVM 21 + UBSan object-size/pointer-overflow
-    at -O2. No application UB was found: no UBSan diagnostic fires in any
-    mode, and the same code is correct at -O0 / under Apple clang.
-- Fix (code, not flags): `src/components.h` — `DAY_MODIFIER_TABLE` changed
-  from `inline constexpr` to plain `constexpr` (internal linkage, one copy
-  per TU; no code relies on the table having one address across TUs — all
-  uses are local reads). Only this table has the search-by-name-then-by-id
-  pattern; the other header tables are indexed directly. The flag was NOT
-  kept as a workaround: no `-fno-...` was added. `build.zig` now defaults
-  to ReleaseSafe (`b.option("optimize") orelse .ReleaseSafe`, so every
-  `-Doptimize` value still works; `preferred_optimize_mode` was deliberately
-  not used — it ignores `-Doptimize` when no `--release` flag is given).
-- Verification: `zig build test` (default ReleaseSafe) 52 PASS / 0 FAIL;
-  `zig build -Doptimize=Debug test` 52 PASS / 0 FAIL;
-  `zig build -Doptimize=ReleaseFast` + upgrades.e2e PASS;
-  `make test-headless` (make -O0, Homebrew pkg-config first on PATH)
-  52 PASS / 0 FAIL + RENDER_TEST PASS. Existing tests/upgrades.e2e +
-  tests/modifiers.e2e are the regression coverage for this (they failed
-  under the bug, pass after the fix); no new test file was added.
-- Note the earlier "latent UB" hypothesis in this file (bottom entry) was
-  wrong: the code had no UB. The failure was a toolchain miscompile.
+Filed after wiring up Emscripten 6.0.3 + Raylib 5.5 web builds in `mailboy` and
+comparing against `afterhours` (`216b0245`: `tools/web.mk`, `tools/web/shell.html`,
+`src/graphics/web.h`).
 
-## 2026-10-18 — Zig 0.16.0 build (`build.zig`): afterhours compiles clean under zig's bundled libc++, but zig is NOT Apple clang + system libc++
-- New `build.zig` (fresh file; no sibling repo has one) mirrors the
-  Makefile: 15 `src/*.cpp` + `vendor/afterhours/src/plugins/files.cpp` +
-  `vendor/afterhours/src/plugins/settings.cpp`, Makefile `FLAGS`/`NOFLAGS`
-  verbatim, `-Ivendor/ -Isrc/`, `-framework OpenGL -framework
-  CoreGraphics`, default build -> `zig-out/bin/mailboy`, `run` step
-  (forwards args after `--`), `test` step (`--test --headless`, cwd = repo
-  root, no timeout — wrap with `perl -e 'alarm 300; exec @ARGV'` if one is
-  wanted). No `build.zig.zon` needed (verified: zig 0.16 builds without
-  one). No `vendor/` edits, Makefile untouched and still working, nothing
-  committed.
-- No PCH in the zig build: the Makefile precompiles `src/pch.h` and injects
-  it with `-include-pch`; no source `#include`s `pch.h`, they all rely on
-  injection. Zig compiles with `-include <abs>/src/pch.h` normally instead.
-  Verified via `zig build --verbose-cc`: the `-include .../src/pch.h` flag
-  is present in every TU compile line. No afterhours change needed for
-  this; the PCH is a Makefile-only mechanism.
-- Friction 1 — zig's C++ is a different toolchain, not Apple clang.
-  `zig build --verbose-cc` shows each TU compiled by zig's bundled clang
-  with `-nostdinc -nostdinc++`, `-isystem <zig>/lib/libcxx/include` +
-  `libcxxabi/include`, `-target aarch64-apple-macosx27.0.1`, and the
-  bundled libc++ linked statically (`otool -L zig-out/bin/mailboy` shows no
-  `/usr/lib/libc++.1.dylib`, unlike the make binary). Afterhours + mailboy
-  compile and pass all tests under this libc++ with zero source changes,
-  but it is a real toolchain divergence: ABI/behavior differences between
-  zig's libc++ and Apple's libc++ would surface here first, and the zig
-  binary is 33M vs the make binary's 6.4M (static libc++ + dwarf-4 debug
-  info vs dynamic system libc++).
-- Friction 2 — zig Debug adds UBSan to C++ TUs the Makefile never has.
-  Verbose compile lines show `-fsanitize=undefined
-  -fno-sanitize=vptr,function`, plus `-fstack-protector-strong` and
-  `-fno-omit-frame-pointer`, on top of the shared `-O0`. Measured effect on
-  the offline render (`--render-song /tmp/*.wav --song=2`): zig binary
-  3.405s real vs make binary 1.015s real (~3.4x), with byte-identical WAV
-  output (`cmp` clean) and identical render summaries (peak 0.891263,
-  87.4593s duration). The UBSan instrumentation is the likely cause; it is
-  default zig Debug behavior, not an afterhours problem.
-- Friction 3 — zig 0.16 DOES support pkg-config
-  (`linkSystemLibrary("raylib", .{})` defaults to `use_pkg_config = .yes`,
-  via `runPkgConfig` in `std/Build/Step/Compile.zig`), but it resolves
-  bare `pkg-config` from PATH and on any failure silently falls back to
-  `-lraylib` by name — no error, no hint about which pkg-config ran. In
-  this shell PATH puts MacPorts `/opt/local/bin/pkg-config` first, whose
-  `pc_path` (`/opt/local/lib/pkgconfig:...`) has no raylib, so the
-  pkg-config path misses and the fallback must save the build. `build.zig`
-  therefore also adds the Homebrew Cellar dirs
-  (`/Users/gabeochoa/homebrew/Cellar/raylib/5.5/include|lib`, guarded by an
-  on-disk existence check) as `-isystem`/`-L`; the verbose log shows the
-  Cellar include on all TU lines in this shell. With Homebrew's
-  `pkg-config` first on PATH, pkg-config supplies the same dirs instead.
-  Assumption documented in README "Building with Zig".
-- Friction 4 (zig 0.16 stdlib API churn, not afterhours): `std.fs`
-  filesystem helpers are gone in 0.16 — `std.fs.openFileAbsolute` does not
-  exist. The existence check in `build.zig` uses
-  `std.Io.Dir.accessAbsolute(b.graph.io, path, .{})` instead.
-- Verification (2026-10-18): clean `rm -rf zig-out .zig-cache && zig build`
-  green with 0 warnings on stderr. `zig build test` green: 52 `[PASS]`, 0
-  `[FAIL]`, `E2E tests PASSED`. `make test-headless` (same tree) also
-  green: 52 `[PASS]`, 0 `[FAIL]`, `E2E tests PASSED`, plus `RENDER_TEST
-  PASS` lines — the zig `test` step deliberately runs only
-  `--test --headless`, not `--render-test`. Note the brief's "51 files" was
-  off by one: `tests/` holds 52 `.e2e` files and the runner reports 52
-  passes under both builds. `zig build run -- --render-song ... --song=2`
-  verified: forwards args, WAV byte-identical to make's.
-- `zig build test` inherits the pre-existing runner behavior from the
-  2026-10-16 screenshot entry: no self-timeout. The zig step adds none by
-  design (per spec); use the perl alarm wrapper externally.
+## 1. `tools/web/shell.html` does not unlock WebAudio on `keydown`
+- **Symptom:** On keyboard-driven games (e.g. pressing `SPACE` to start), audio
+  stays completely silent in Chrome/Safari until the player clicks the mouse.
+- **Root cause:** Raylib 5.5's `miniaudio.h` only registers `miniaudio.unlock` on
+  `["touchend", "click"]` — not `keydown` or `pointerdown`. If a player starts
+  and plays purely with the keyboard, `device.webaudio` remains `suspended`.
+- **Suggested fix in `tools/web/shell.html`:** Track created `AudioContext`
+  instances (or iterate `window.miniaudio.devices`) and call `ctx.resume()`
+  inside `keydown`, `mousedown`, `pointerdown`, and `touchstart` listeners.
 
-## 2026-10-18 — set_path_override is NOT missing at d1d7f0e: no upstream request, no app-side reimplementation
-- Claim checked: "`src/main.cpp:274/281` call
-  `afterhours::settings::set_path_override`, but that API only exists in a
-  locally-updated `settings.h`; the submodule pointer `d1d7f0e` does not
-  contain it, so fresh clones fail." The claim is FALSE. `git show
-  d1d7f0e:src/plugins/settings.h` in `vendor/afterhours` contains it at
-  line 107 (`static void set_path_override(const fs::path &path)`), with
-  `path_override_`, `clear_path_override()`, `root_path()`, and
-  `get_save_path()` alongside. It was added upstream in `a0dd57d`
-  (2026-09-27, "Settings: code-overridable root path"), before the pinned
-  commit. The submodule working tree was clean at `d1d7f0e` throughout.
-- Consequence: the app-side reimplementation (options a/b/c) was NOT done,
-  and neither `set_path_override` call site was deleted. Deleting working
-  plugin calls to reimplement the same redirect app-side would be pure
-  churn with real regression risk; the plugin API is the correct layer.
-  Real-run settings behavior is unchanged (nothing in `src/` changed).
-  There is NO upstream API request to file for this: the API already
-  exists upstream. Do not re-file it.
-- Fresh-clone proof (pristine clone, no local changes): `git clone
-  https://github.com/gabeochoa/mailboy /tmp/mb-check`, then `git -c
-  url.https://github.com/.insteadOf=git@github.com: submodule update --init
-  --recursive` (see gotcha below), then `make -j4` + `make
-  test-headless` passed: 49 e2e `[PASS]`, 0 `[FAIL]`, including
-  `[PASS] meta_loop` (the persistence round-trip), plus `RENDER_TEST
-  PASS`. Test-mode settings went to
-  `/tmp/mailboy_e2e_settings/mailboy_settings.json`, not the real save.
-- Fresh-clone gotcha (not a code bug): `git clone --recursive -c
-  url.https://github.com/.insteadOf=git@github.com: ...` does NOT
-  propagate the `-c` rewrite to the submodule clone — it still tried
-  `ssh: connect to host github.com port 22: Operation not permitted` and
-  aborted. The two-step form above works. The submodule URL in
-  `.gitmodules` is still `git@github.com:gabeochoa/afterhours.git`; anyone
-  cloning without SSH needs the two-step form or a global
-  `url.https://github.com/.insteadOf` config.
-- json note (mailboy-vendored, not afterhours): `vendor/nlohmann/json.hpp`
-  bumped 3.11.2 -> 3.11.3 (see below). This supersedes the 2026-10-18 fmt
-  entry's "left alone" note about `operator"" _json` warnings: 3.11.3
-  adds the no-space `operator""_json` form, so the warnings are gone
-  without any scoped `-Wno-deprecated-literal-operator`.
+## 2. `tools/web/shell.html` does not prevent page scroll on `Space` / Arrow keys
+- **Symptom:** When embedded in an itch.io iframe (or any scrollable page),
+  pressing `Space` or `ArrowUp`/`ArrowDown` scrolls the host page instead of
+  staying inside the game.
+- **Suggested fix in `tools/web/shell.html`:** Add a non-passive `keydown`
+  listener calling `e.preventDefault()` for `Space`, `ArrowUp`, `ArrowDown`,
+  `ArrowLeft`, and `ArrowRight`, and auto-focus `#canvas` on
+  `onRuntimeInitialized`.
 
-## 2026-10-18 — nlohmann json.hpp 3.11.2 -> 3.11.3 (mailboy-vendored)
-- `/tmp/json.hpp` verified as 3.11.3: `NLOHMANN_JSON_VERSION_PATCH 3`
-  (`vendor/nlohmann/json.hpp:70` after replacement). Copied byte-identical
-  over `vendor/nlohmann/json.hpp` (`cmp` clean). No scoped `-Wno-...` or
-  pragma wrapper was needed.
-- Warning proof (Apple clang 17, `-Wdeprecated-literal-operator`, TU that
-  only includes `<nlohmann/json.hpp>`): 3.11.2 emits 4 warnings per TU
-  (`operator "" _json` / `operator "" _json_pointer` + the two `using`
-  declarations); 3.11.3 emits 0. The default `make` build does not enable
-  that warning, so the fresh-clone build on 3.11.2 showed no json warnings;
-  the probe with the flag explicit is the discriminating check.
-- Build/test proof on 3.11.3 in `~/p/mailboy`: clean rebuild `make -j4`
-  succeeds (only pre-existing unrelated warnings: `-Wshadow` in
-  afterhours `animation/track.h`, unused `sl0`/`sr0` in
-  `src/render_systems.cpp`); `make test-headless` green: 49 e2e `[PASS]`,
-  0 `[FAIL]`, `[PASS] meta_loop`, `RENDER_TEST PASS`. Uncommitted, like
-  everything in this pass; the pristine fresh clone above still has 3.11.2
-  and also passes.
+## 3. Emscripten 6.0+ requires `HEAPF32` exported (already in `tools/web.mk`, easy to miss standalone)
+- **Symptom:** Silent audio with `TypeError: Cannot read properties of undefined
+  (reading 'buffer')` in `onaudioprocess` when building without `tools/web.mk`.
+- **Note:** `tools/web.mk` already includes `-sEXPORTED_RUNTIME_METHODS=...,HEAPF32`
+  and avoids `-sALLOW_MEMORY_GROWTH=1` (whose buffer reallocation detaches
+  miniaudio's cached `intermediaryBufferView`). Documenting this prominently in
+  `src/graphics/web.h` or `docs/` helps games not using `web.mk`.
 
-## 2026-10-18 — fmt 8.0.1 -> 11.2.0 re-vendor: afterhours does NOT vendor fmt
-- Afterhours itself vendors no copy of fmt: there is no `vendor/fmt` under
-  `vendor/afterhours`. Its headers include `<fmt/...>` / `"fmt/format.h"`
-  and rely on the HOST to supply fmt headers. Mailboy supplies them from
-  `vendor/fmt/` via `-Ivendor/`; afterhours' own tests/examples Makefiles
-  instead point at the Homebrew include dir ("fmt is header-only here; its
-  headers live under the Homebrew include dir"). So afterhours is affected
-  by the host's fmt version, not by any copy it controls.
-- Afterhours' fmt usage is unaffected by the 8 -> 11 jump: `fmt::format`
-  (~66 sites), plus `translation.h`'s `fmt::vformat` +
-  `fmt::dynamic_format_arg_store<fmt::format_context>` + `fmt::arg`. All
-  still exist in fmt 11.2.0. Verified compiling clean: full mailboy build
-  on Apple clang 17, and `vendor/afterhours/src/plugins/settings.cpp`
-  (which pulls in the fmt-using UI headers) on Homebrew clang 21.1.8.
-  No afterhours edits were needed (and none were made).
-- Latent gap (not fixed; do not edit `vendor/afterhours`): afterhours
-  headers include fmt BEFORE any std header (`translation.h:3-4`
-  includes `<fmt/args.h>` / `<fmt/format.h>` first; the UI headers use
-  quoted `"fmt/format.h"`). fmt 11.2's `format.h` uses unqualified
-  `::malloc` / `::free` without including `<cstdlib>`, so a TU that
-  reaches fmt without a prior `<cstdlib>` / `<iostream>` fails on
-  clang 21 (verified: `<string>`-only or `<cstdio>`-only first fails,
-  `<cstdlib>`/`<iostream>`-first passes). Mailboy is safe because every
-  TU loads the PCH first (`src/pch.h` includes `<iostream>` etc. before
-  fmt). Afterhours standalone TUs that include `translation.h` first
-  would break on newer toolchains. Upstream fix would be `<cstdlib>`
-  before fmt in `translation.h` (or fmt upstream including `<cstdlib>`
-  in `format.h`).
-- Unrelated observation from the same clang 21 probe: `settings.cpp`
-  emits deprecated-literal-operator warnings from `vendor/nlohmann/json.hpp`
-  (`operator"" _json`), not from fmt. Pre-existing, different vendor lib,
-  left alone.
+## 4. `tools/web.mk` portability & bundle-size ergonomics
+- **Windows-only defaults:** `EMSDK ?= F:/emsdk` and `RAYLIB_WEB_SRC ?= F:/raylib-src`
+  fail out of the box on macOS/Linux (e.g. Homebrew `emcc` on PATH). Defaulting
+  `RAYLIB_WEB_SRC` to a platform-neutral path (or auto-cloning Raylib 5.5 into
+  `$(OBJ_DIR)/raylib-src` on `web-raylib`) would make `make web` zero-config.
+- **512 MB default `WEB_INITIAL_MEMORY`:** `536870912` can OOM on mobile Safari
+  and is overkill for small jam games; a smaller default (e.g. 64–128 MB,
+  overridable per game) is safer for itch.io web embeds.
+- **Always-on `-sASYNCIFY`:** Games using `emscripten_set_main_loop` don't need
+  Asyncify's ~30% `.wasm` size/runtime overhead. Gating it behind
+  `WEB_USE_ASYNCIFY ?= 1` lets callback-loop games ship smaller bundles.
 
-## 2026-10-16 — submodule bump d537763 -> d1d7f0e (heads/main)
-- **Breaking: host type macros.** New `src/developer.h` requires the host to define
-  `ColorType` and `FontType` (and `Vector3Type`) macros before including afterhours,
-  in addition to the previously-required `RectangleType`/`Vector2Type`/`TextureType`.
-  Error was cryptic: `no type named 'col' in namespace 'afterhours::detail_rl_types'`.
-  Fix was app-side (3 lines in `src/rl.h`), but afterhours should either provide
-  raylib defaults itself or document the full required macro list in one place.
-- Otherwise the bump was clean: no other API breakage found yet on this pass.
-- **Breaking: `log_error` must be a single statement.** New `src/crash_handler.h`
-  `report()` does `if (...) log_error(...) else log_error(...)`. Mailboy's
-  `AFTER_HOURS_REPLACE_LOGGING` macro expanded to `if (...) log_me(...); assert(false)`,
-  which mis-binds the `else` ("expected expression" at crash_handler.h:52).
-  Host macros now need `do { ... } while (0)`. Undocumented; afterhours should
-  document the statement-safety requirement for replacement logging macros.
+## 5. `src/crash_handler.h` fails to compile on real Emscripten (`emscripten_get_callstack()` wrong arity)
+- **Symptom:** Compiling any game including `afterhours/ah.h` with `em++` (Emscripten 6.0.3) fails at `vendor/afterhours/src/crash_handler.h:76` and `:94`:
+  ```
+  error: no matching function for call to 'emscripten_get_callstack'
+  note: candidate function not viable: requires 3 arguments, but 0 were provided
+  ```
+- **Root cause:** `crash_handler.h` calls `const char *stack = emscripten_get_callstack()`, which only matches `tests/web_sim/emscripten.h`'s mock. Real `<emscripten.h>` declares `int emscripten_get_callstack(int flags, char *out, int maxbytes)`.
+- **Suggested fix in `afterhours/src/crash_handler.h`:** Allocate a small stack buffer (`char buf[2048]`) and call `emscripten_get_callstack(EM_LOG_C_STACK | EM_LOG_JS_STACK, buf, sizeof(buf))` (and update `tests/web_sim/emscripten.h` to match the real 3-arg signature).
+- **Local workaround in `mailboy`:** `src/components.h` defines a 0-arg C++ overload wrapping the 3-arg Emscripten function before `#include <afterhours/ah.h>`.
 
-## 2026-10-16 — screenshot.e2e hangs headless
-- `mailboy.exe --test-file tests/screenshot.e2e` (no --test flag) ran 30+ min at
-  high CPU without exiting (pid 60411, killed). The e2e runner needs a hard
-  timeout wrapper (`perl -e 'alarm 300; exec @ARGV'`); single-test invocation
-  without `--test` also does not complete as a single test (pre-existing arg
-  handling). Runner should self-timeout and exit nonzero instead of spinning.
+---
 
-## Zig ReleaseSafe exposes a latent bug (2026-10-18, mailboy) — RESOLVED 2026-10-19, see top entry
-`zig build -Doptimize=ReleaseSafe` binary (3.5M, render 0.47s vs make 1.0s,
-WAV byte-identical) deterministically FAILS tests/upgrades.e2e:
-expect_day_duration 780 got 540 — caffeine_level contributes 0 under
-optimization (Debug zig + make clang -O0 both pass). Likely UB the optimizer
-exploits (strict aliasing / signed overflow / uninit read in the upgrade
-path). Zig default stays Debug until root-caused. Filed here because the
-pattern (singleton state mutated via buy()) may live in shared helpers.
-RESOLUTION: the "latent UB" hypothesis was wrong — no app UB was found.
-Root cause was an LLVM 21 miscompile of the `inline` DAY_MODIFIER_TABLE
-under zig's UBSan (see top entry); the fix was internal linkage for that
-table, and `build.zig` now defaults to ReleaseSafe.
+# afterhours gaps — mailboy (UI, graphics, plugins migration)
 
-## Gamepad test injection missing (2026-10-19)
-afterhours e2e test_input injects keys/mouse/wheel/pinch only; gamepad
-buttons/axes bypass the injector (input_system reads raylib directly), so
-pad input cannot be driven by the e2e runner. Mailboy works around it with
-a game-side synthetic pad in src/game_input.h (same shim real hardware
-reads through), but an upstream gamepad injector (queue_gamepad_press /
-axis state in test_input) would let every game test pads for real.
+Filed while migrating Mailboy's UI, window/frame lifecycle, input, clipboard,
+and reduced-motion handling from hand-rolled Raylib code onto `afterhours`
+plugins (`AFTER_HOURS_USE_RAYLIB` + `AFTER_HOURS_IMM_UI`).
+
+## 6. `plugins/toast.h` spawns entities in `EntityHelper` instead of `UICollectionHolder`
+- **Symptom:** Under the default multi-collection `afterhours::ui` setup (i.e.
+  without `AFTER_HOURS_UI_SINGLE_COLLECTION`), `toast::schedule()` creates
+  `Toast` entities in `EntityHelper::createEntity()` and `ToastLayoutSystem`
+  queues their `entity.id` into `UIContext::queue_render(...)`. However,
+  `UIPluginRenderBridge` resolves queued `RenderInfo` IDs against
+  `UICollectionHolder::get().collection`, so toasts never render (or resolve the
+  wrong entity).
+- **Also:** `toast::register_layout_systems` registers as a render system, so
+  calling it after `ui::register_render_systems` runs layout *after*
+  `UIPluginRenderBridge` has already flushed the render queue.
+- **Suggested fix:** Create/query `Toast` entities in
+  `UICollectionHolder::get().collection` (or route through `UIPluginPreUpdateBridge`
+  / `UIPluginPostUpdateBridge`), and document or enforce ordering before
+  `UIPluginRenderBridge`.
+
+## 7. `plugins/settings.h` & `plugins/files.h` have no Emscripten `localStorage` backend
+- **Symptom:** `settings.h` / `files.h` persist via `std::ofstream` + POSIX
+  `fsync` + `rename`. On Emscripten/Web builds, those writes go to volatile
+  in-memory MEMFS and disappear on page reload, so web games still have to
+  hand-roll `localStorage` JS bridges.
+- **Suggested fix:** Provide an `#ifdef __EMSCRIPTEN__` storage backend in
+  `files.h` / `settings.h` (keyed by app/file name in `localStorage`) so
+  `settings` works identically on desktop and web.
+
+## 8. `plugins/clipboard.h` on `AFTER_HOURS_USE_RAYLIB` is a no-op on Emscripten
+- **Symptom:** `clipboard::set_text()` calls `raylib::SetClipboardText()`, which
+  in Raylib 5.5 web builds does not call `navigator.clipboard.writeText()`.
+- **Suggested fix:** Under `#if defined(AFTER_HOURS_USE_RAYLIB) && defined(__EMSCRIPTEN__)`,
+  call `navigator.clipboard.writeText(...)` via `EM_ASM` inside `clipboard::detail::set_text()`.
+
+## 9. `DisplayMode::Headless` (`backends/raylib/headless.h`) crashes if any system polls Raylib input
+- **Symptom:** `RaylibHeadless::init()` creates a `HeadlessGL` context without
+  `InitWindow()`, so GLFW's window pointer is null. Running `afterhours::input`
+  (`input::register_update_systems`) or any `raylib::IsKeyDown` / `GetMousePosition`
+  call segfaults in `DisplayMode::Headless`.
+- **Local workaround in `mailboy`:** Use `DisplayMode::Windowed` with
+  `cfg.config_flags = raylib::FLAG_WINDOW_HIDDEN` + `graphics::capture_frame()`
+  for offscreen screenshot capture (matching `examples/imm_visual_check.cpp`).
+- **Suggested fix:** Guard Raylib input queries in `input_system.h` when
+  `graphics::is_headless()` is true (return empty input state instead of calling
+  into GLFW).
+
+## 10. `ui::init_ui_plugin()` / `ui::setup_with_resolution()` leave singleton entities unmerged
+- **Symptom:** Creating `InputCollector`, `ui_root`, and `TooltipState` during
+  setup without calling `EntityHelper::merge_entity_arrays()` causes
+  `[ERROR] query will miss N ents in temp` on the first frame unless the host
+  manually calls `EntityHelper::merge_entity_arrays()` after init.
+- **Suggested fix:** Call `EntityHelper::merge_entity_arrays()` at the end of
+  `ui::setup_with_resolution()` (and `input::add_singleton_components()`).
+
+## 11. `imm::div(...).with_texture(tex)` does not center under parent `AlignItems::Center`
+- **Symptom:** Placing a fixed-size `imm::div` with `.with_texture(tex)` directly
+  inside a `FlexDirection::Column` + `AlignItems::Center` container left-aligned
+  the texture instead of centering it horizontally.
+- **Local workaround in `mailboy`:** Wrap in a `percent(1.0f)` `FlexDirection::Row`
+  with `JustifyContent::Center` and draw via `with_on_draw_fg`.
+
+## 12. `plugins/input_system.h` deduplicates multiple simultaneous keys bound to one action
+- **Symptom:** Rhythm games that support alternating multi-key rolls (e.g. pressing
+  `J` and `K` on the same frame -> `tossCount == 2`) cannot read a per-frame hit
+  count from `InputCollector::inputs_pressed`, because `InputSystem` emits at most
+  one `ActionDone` per action ID per frame.
+- **Suggested fix:** Either expose a `press_count` field on `ActionDone` (number
+  of distinct bound inputs that fired on this frame) or emit one `ActionDone` per
+  firing binding when configured.
+
+## 13. `BeginUIContextManager::inputs_as_bits` crashes with `std::bad_optional_access` on non-UI action IDs
+- **Symptom:** `vendor/afterhours/src/plugins/ui/systems.h:260` calls
+  `magic_enum::enum_index<InputAction>(static_cast<InputAction>(input.action)).value()`
+  without checking `.has_value()`. If a game uses `ui::DefaultAction` for UI and
+  adds its own gameplay action IDs to `ProvidesInputMapping`, pressing any
+  gameplay key throws `std::bad_optional_access`.
+- **Suggested fix:** Guard with `if (auto idx = magic_enum::enum_index<InputAction>(...)) output[*idx] = true;`
+  so `InputCollector` can safely carry actions outside the UI enum.
+- **Local workaround in `mailboy`:** Unified UI + gameplay actions into a single
+  `MailboyAction` enum passed to `UIContext<MailboyAction>`.
+
+## 14. `graphics::begin_frame()` / `end_frame()` do not present to the window or poll events
+- **Symptom:** Calling `graphics::begin_frame()` / `graphics::end_frame()` looks
+  like a drop-in replacement for `BeginDrawing()` / `EndDrawing()`, but
+  `RaylibWindowed` only binds/unbinds an offscreen `RenderTexture2D`. Without a
+  manual `begin_drawing()` + Y-flipped `DrawTexturePro` + `end_drawing()` pass,
+  nothing renders to the window, `GetFrameTime()` stays `0`, and GLFW never polls
+  events.
+- **Inverse footgun:** Calling `begin_drawing()` / `end_drawing()` when
+  `FLAG_WINDOW_HIDDEN` is set (for offscreen screenshot capture) stalls on macOS
+  waiting for display VSync.
+- **Suggested fix:** Provide a single `graphics::present()` (or have `end_frame()`
+  auto-present when visible and skip swap when hidden/headless) so callers don't
+  have to hand-roll the Y-flipped FBO blit and hidden-window special case.
+
+## 15. `plugins/reduced_motion.h` fails to link on macOS without explicit `-lobjc`
+- **Symptom:** Including `plugins/reduced_motion.h` causes linker errors
+  (`_objc_getClass`, `_objc_msgSend`, `_sel_registerName`) in C++ targets that
+  link Raylib via `pkg-config` without `-lobjc` or `-framework AppKit`.
+- **Suggested fix:** Document `-lobjc` prominently at the top of the header or
+  add `#pragma comment` / Makefile snippet in `PLUGIN_API.md`.
+
+## 16. `plugins/autolayout.h` requires external `fmt/format.h` (not vendored alongside `magic_enum`)
+- **Symptom:** `vendor/afterhours/vendor/` bundles `magic_enum`, `stb`, `sokol`,
+  etc., so `ah.h` works out of the box, but enabling `plugins/ui.h` fails with
+  `fatal error: 'fmt/format.h' file not found` unless the consumer adds Homebrew's
+  include path + `-DFMT_HEADER_ONLY` (which also significantly increases
+  Emscripten compile time).
+- **Suggested fix:** Either vendor `fmt` in `vendor/afterhours/vendor/` or use
+  C++23 `<format>` when available.
+
+## 17. Namespace split between `afterhours::ui` and `afterhours::ui::imm`
+- **Symptom:** Layout/theme types (`FlexDirection`, `AlignItems`, `Padding`,
+  `pixels`, `percent`, `Theme`) live in `afterhours::ui`, while `ComponentConfig`
+  and `SliderHandleValueLabelPosition` live in `afterhours::ui::imm`, causing
+  immediate compiler errors when writing `ui::ComponentConfig`.
+- **Suggested fix:** Re-export `ComponentConfig` and widget option enums into
+  `afterhours::ui` with `using` aliases.
+
+---
+
+# afterhours gaps — mailboy (Direct Raylib calls without afterhours wrappers)
+
+Filed while auditing remaining direct `raylib::` calls in `mailboy` to remove
+`using namespace raylib;` cleanly.
+
+## 18. No 3D matrix stack or textured box/quad helpers in `drawing_helpers_3d.h`
+- **Needed for:** `drawTexBox` (tiled UV boxes for carpet, walls, ceiling,
+  cubicle fabric, desk laminate, parcels), `drawPlaqueQuad`, and rotated 3D
+  transforms for the cart, CRT monitor, and tumbling mail-bin parcels.
+- **Current direct calls:** `rlPushMatrix`, `rlPopMatrix`, `rlTranslatef`,
+  `rlRotatef`, `rlBegin(RL_QUADS)`, `rlEnd`, `rlSetTexture`, `rlTexCoord2f`,
+  `rlVertex3f`, `rlNormal3f`, `rlColor4ub`.
+- **Suggested fix:** Add `push_matrix` / `pop_matrix` / `translate_3d` /
+  `rotate_3d` and `draw_textured_cube` / `draw_textured_quad_3d` (with UV tiling)
+  to `drawing_helpers_3d.h`.
+
+## 19. No procedural `Image` baking + `SetTextureWrap` helper
+- **Needed for:** Generating procedural textures, song labels, and desk name
+  plaques at startup without shipping texture files on disk.
+- **Current direct calls:** `GenImageColor`, `ImageDrawPixel`,
+  `ImageDrawRectangle`, `ImageDrawRectangleLines`, `ImageTextEx`,
+  `GetImageColor`, `LoadTextureFromImage`, `UnloadImage`, `SetTextureWrap`.
+- **Suggested fix:** Add a small procedural image builder + `set_texture_wrap`
+  wrapper in `src/image.h` / `src/graphics.h`.
+
+## 20. Missing 2D rotated/ring/triangle/polygon primitives in `drawing_helpers.h`
+- **Needed for:** Curved SongSelect playlist wheel (`DrawRing`, `DrawRingLines`,
+  `DrawRectanglePro`, `DrawTextPro`), playhead arrow (`DrawTriangle`), coworker
+  star popups (`DrawPoly`), and AudioSync beat ring (`DrawCircleLines`).
+- **Suggested fix:** Expose `draw_rectangle_pro`, `draw_text_pro`, `draw_ring`,
+  `draw_ring_lines`, `draw_triangle`, `draw_poly`, and `draw_circle_lines` in
+  `drawing_helpers.h`.
+
+## 21. No procedural PCM `Wave` synthesis or `LoadSoundAlias` pooling in `plugins/sound_system.h`
+- **Needed for:** Mailboy synthesizes every drum, bass, Rhodes, synth, sax,
+  bell, and door-whoosh `Wave` procedurally in C++ at startup (zero `.wav` files)
+  and pools overlapping voices via `LoadSoundAlias`.
+- **Current direct calls:** `InitAudioDevice`, `CloseAudioDevice`,
+  `LoadSoundFromWave`, `LoadSoundAlias`, `PlaySound`, `SetSoundVolume`,
+  `SetSoundPitch`, `SetMasterVolume`, `UnloadSound`, `UnloadSoundAlias`.
+- **Suggested fix:** Add `load_sound_from_pcm(samples, sample_rate, channels)`
+  and alias/voice-pool support to `plugins/sound_system.h`.
+
+## 22. No cross-platform `open_url` helper
+- **Needed for:** About screen's `choicehoney.itch.io` link (uses Raylib's
+  `OpenURL` on desktop and `window.open` via `EM_ASM` on Emscripten).
+- **Suggested fix:** Add `afterhours::os::open_url(std::string_view url)`
+  (wrapping `OpenURL` on desktop and `window.open` on `__EMSCRIPTEN__`).
+
+## 23. `BeginUIContextManager` stores `last_action` as a single scalar instead of a bitset
+- **Symptom:** `vendor/afterhours/src/plugins/ui/systems.h:297` loops over
+  `inpc.inputs_pressed()` and overwrites `context.last_action` with the last
+  entry. If a physical key (e.g. `ENTER`, `TAB`, `DOWN`) is bound to both a UI
+  action (`WidgetPress`, `WidgetNext`, `WidgetDown`) and a higher-numbered game
+  action (`Confirm`, `Diff`, `NavDown`), the game action always overwrites
+  `context.last_action`, so `ctx.pressed(WidgetPress)` / `WidgetNext` /
+  `WidgetDown` silently return `false` and keyboard UI navigation breaks completely.
+- **Suggested fix:** Store `pressed_actions` as an `InputBitset` alongside
+  `all_actions`, and have `UIContext::pressed(action)` test that bitset instead
+  of comparing against a single scalar `last_action`.
+- **Local workaround in `mailboy`:** `filterUiInputForScreen()` strips gameplay
+  actions (`> MenuBack`) from `InputCollector` on modal screens before
+  `uiSystems.run()`.
+
+
+
+
+
+
